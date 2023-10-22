@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_secondary30"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/background"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="15dp"
@@ -38,7 +38,6 @@
             android:hint="@string/Email"
             android:inputType="textEmailAddress"
             android:textSize="20sp"
-            app:passwordToggleEnabled="true"
             tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -52,9 +51,12 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        app:passwordToggleEnabled="true">
+
 
         <com.google.android.material.textfield.TextInputEditText
+
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +66,8 @@
             android:maxEms="32"
             android:minEms="6"
             android:textSize="20sp"
-            tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
+            app:passwordToggleEnabled="true"
+            tools:ignore="VisualLintTextFieldSize,TextContrastCheck, NewApi" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
