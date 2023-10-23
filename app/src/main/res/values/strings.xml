@@ -17,4 +17,11 @@
     <string name="kliknijabyzalogowac">Kliknij tutaj, aby się zalogować</string>
     <string name="kliknijabyzarejestrowac">Kliknij tutaj, aby się zarejestrować</string>
     <string name="wylogujKonto">Wyloguj się</string>
+    <!-- Side panel menu: -->
+    <string name="navigation_drawer_open">Otwórz menu</string>
+    <string name="navigation_drawer_close">Zamknij menu</string>
+    <string name="homeButton">Home</string>
+    <string name="wyloguuuj">Wyloguuuj</string>
+
+
 </resources>
