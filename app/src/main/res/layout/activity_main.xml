@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/material_dynamic_secondary20"
     android:fitsSystemWindows="true"
-    android:gravity="center"
-    android:orientation="vertical"
+    tools:context=".AccountManagementActivity"
+    tools:openDrawer="start">
 
-    tools:context=".AccountManagementActivity">
-
-    <TextView
-        android:id="@+id/informacjeOUzytkowniku"
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationViewSidePanel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        app:headerLayout="@layout/side_panel"
+        app:menu="@menu/sidemenu"
+        android:layout_gravity="start"/>
 
-    <Button
-        android:id="@+id/wylogujKontoPrzycisk"
-        android:layout_width="233dp"
-        android:layout_height="147dp"
-        android:text="@string/wylogujKonto" />
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/material_dynamic_secondary20"
+        android:fitsSystemWindows="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/informacjeOUzytkowniku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:layout_width="233dp"
+            android:layout_height="147dp"
+            android:text="@string/wylogujKonto" />
+    </LinearLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
