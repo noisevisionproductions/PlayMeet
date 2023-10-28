@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="HardcodedText">
 
-    <group>
+    <item
+        android:id="@+id/nav_account"
+        android:title="My Account" />
 
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/home_icon"
-            android:title="@string/homeButton" />
-        <item
-            android:id="@+id/wylogujKontoPrzycisk"
-            android:title="@string/wyloguuuj" />
-    </group>
+    <item
+        android:id="@+id/nav_settings"
+        android:title="Settings" />
+
+    <item
+        android:id="@+id/wylogujKontoPrzycisk"
+        android:enabled="true"
+        android:title="Logout" />
 
 </menu>
