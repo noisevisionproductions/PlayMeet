@@ -1,37 +1,34 @@
 package com.example.zagrajmy;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class Login extends AppCompatActivity {
-    TextInputEditText edytujPoleEmail, edytujPoleHaslo;
-    Button przyciskLoginu;
-    ProgressBar pasekPostepu;
-    FirebaseAuth mAuth;
-    TextView textView;
+
+    private AuthenticationManager authManager;
+    private String email, password;
+    private TextInputEditText edytujPoleEmail, edytujPoleHaslo;
+    private FirebaseAuth mAuth;
+    private TextView textView;
 
     @Override
     public void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            Intent intent = new Intent(getApplicationContext(), Login.class);
             startActivity(intent);
             finish();
         }
@@ -42,66 +39,60 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        authManager = new AuthenticationManager();
+
         mAuth = FirebaseAuth.getInstance();
         edytujPoleEmail = findViewById(R.id.email);
         edytujPoleHaslo = findViewById(R.id.password);
-        przyciskLoginu = findViewById(R.id.loginButton);
-       // pasekPostepu = findViewById(R.id.pasekPostepu);
+        Button przyciskLoginu = findViewById(R.id.loginButton);
         textView = findViewById(R.id.stworzKonto);
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Register.class);
-                startActivity(intent);
-                finish();
+
+        switchToRegister();
+
+        przyciskLoginu.setOnClickListener(view -> {
+            email = String.valueOf(edytujPoleEmail.getText());
+            password = String.valueOf(edytujPoleHaslo.getText());
+
+            if (emptyLoginFieldsErrorHandle()) {
+                return;
             }
-        });
 
-        przyciskLoginu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email, password;
-                email = String.valueOf(edytujPoleEmail.getText());
-                password = String.valueOf(edytujPoleHaslo.getText());
-
-                if (TextUtils.isEmpty(email)) {
-                    Toast.makeText(Login.this, "Wprowadź email", Toast.LENGTH_SHORT).show();
-                    return;
+            authManager.userLogin(email, password, task -> {
+                if (task.isSuccessful()) {
+                    Toast.makeText(getApplicationContext(), "Zalogowano", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplicationContext(), AccountManagementActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
+                    Toast.makeText(Login.this, "Authentication failed: " + errorMessage,
+                            Toast.LENGTH_SHORT).show();
                 }
-                if (TextUtils.isEmpty(password)) {
-                    Toast.makeText(Login.this, "Wprowadź hasło", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                /*if (password.length() < 7){
-                    Toast.makeText(Login.this, "Hasło jest zbyt krótkie (min. 8 znaków)", Toast.LENGTH_SHORT).show();
-                    return;
-                }  */
-                if (password.length() > 32){
-                    Toast.makeText(Login.this, "Hasło jest zbyt długie (max. 32 znaków)", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                zalogujUzytkownika(email, password);
-            }
+            });
         });
     }
 
-    public void zalogujUzytkownika(String email, String password){
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+    public boolean emptyLoginFieldsErrorHandle() {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(Login.this, "Wprowadź e-mail oraz haslo", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (TextUtils.isEmpty(password)) {
+            Toast.makeText(Login.this, "Wprowadź hasło", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (TextUtils.isEmpty(email)) {
+            Toast.makeText(Login.this, "Wprowadź e-mail", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
 
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Zalogowano", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(getApplicationContext(), AccountManagementActivity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            Toast.makeText(Login.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+    public void switchToRegister() {
+        textView.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), Register.class);
+            startActivity(intent);
+            finish();
+        });
     }
 }
