@@ -37,12 +37,13 @@ android {
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.4.0"))
+    implementation("mysql:mysql-connector-java:8.0.28")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment:2.7.4")
     implementation("androidx.navigation:navigation-ui:2.7.4")
-    implementation ("androidx.navigation:navigation-common:2.7.4")
+    implementation("androidx.navigation:navigation-common:2.7.4")
     implementation("com.google.firebase:firebase-auth:22.2.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
