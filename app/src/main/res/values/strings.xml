@@ -3,8 +3,10 @@
     <!-- Strings used for fragments for navigation -->
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
+    <!-- Account management -->
     <string name="login">Logowanie</string>
+    <string name="loginButton">Zaloguj się</string>
+    <string name="wylogujKonto">Wyloguj się</string>=
     <string name="Email">przykład@email.com</string>
     <string name="Password">Wprowadź swoje hasło</string>
     <string name="e_mail">E-mail</string>
@@ -13,10 +15,9 @@
     <string name="potwierdzhaslo">Potwierdź hasło</string>
     <string name="hasloponownie">Wprowadź hasło ponownie</string>
     <string name="registerButton">Zarejestruj się</string>
-    <string name="loginButton">Zaloguj się</string>
     <string name="kliknijabyzalogowac">Kliknij tutaj, aby się zalogować</string>
     <string name="kliknijabyzarejestrowac">Kliknij tutaj, aby się zarejestrować</string>
-    <string name="wylogujKonto">Wyloguj się</string>
+
     <!-- Side panel menu: -->
     <string name="navigation_drawer_open">Otwórz menu</string>
     <string name="navigation_drawer_close">Zamknij menu</string>

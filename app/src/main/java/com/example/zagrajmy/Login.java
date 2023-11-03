@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
+
 public class Login extends AppCompatActivity {
 
     private AuthenticationManager authManager;
@@ -23,9 +24,11 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView textView;
 
+
     @Override
     public void onStart() {
         super.onStart();
+
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             Intent intent = new Intent(getApplicationContext(), Login.class);

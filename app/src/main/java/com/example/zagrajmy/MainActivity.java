@@ -10,11 +10,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         Intent intent = new Intent(getApplicationContext(), Login.class);
         startActivity(intent);
         finish();
 
-        super.onCreate(savedInstanceState);
 
 
     }

@@ -56,6 +56,7 @@ public class AccountManagementActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {  // pomaga w testowaniu aplikacji
         super.onDestroy();
+
         if (user != null) {
             FirebaseAuth.getInstance().signOut();
         }
@@ -65,7 +66,7 @@ public class AccountManagementActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(menuItem -> {
             int id = menuItem.getItemId();
 
-            if (id == R.id.wylogujKontoPrzycisk) {
+            if (id == R.id.wylogujKonto) {
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(getApplicationContext(), Login.class);
                 startActivity(intent);
