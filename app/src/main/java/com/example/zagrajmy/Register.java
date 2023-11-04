@@ -76,7 +76,7 @@ public class Register extends AppCompatActivity {
             if (task.isSuccessful()) {
                 Toast.makeText(Register.this, "Konto założone",
                         Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), AccountManagementActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                 startActivity(intent);
                 finish();
             } else {

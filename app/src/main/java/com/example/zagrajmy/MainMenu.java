@@ -3,6 +3,7 @@ package com.example.zagrajmy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,17 +18,12 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
-public class AccountManagementActivity extends AppCompatActivity {
+public class MainMenu extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
     private FirebaseUser user;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+    private void setupDrawerLayout() {
         drawerLayout = findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
@@ -36,12 +32,22 @@ public class AccountManagementActivity extends AppCompatActivity {
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.navigationViewSidePanel);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+        setupDrawerLayout();
+
         logout();
+        findPlayerButtonHandle();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -75,8 +81,15 @@ public class AccountManagementActivity extends AppCompatActivity {
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
-
     }
 
+    public void findPlayerButtonHandle(){
+        Button findPlayer = findViewById(R.id.findPlayerButton);
 
+        findPlayer.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), PostCreatingLogic.class);
+            startActivity(intent);
+            finish();
+        });
+    }
 }
