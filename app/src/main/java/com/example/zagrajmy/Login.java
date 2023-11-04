@@ -63,7 +63,7 @@ public class Login extends AppCompatActivity {
             authManager.userLogin(email, password, task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(getApplicationContext(), "Zalogowano", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), AccountManagementActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainMenu.class);
                     startActivity(intent);
                     finish();
                 } else {
