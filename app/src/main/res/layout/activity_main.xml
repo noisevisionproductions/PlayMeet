@@ -5,22 +5,34 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AccountManagementActivity"
-    tools:ignore="HardcodedText"
+    tools:context=".MainMenu"
     tools:openDrawer="start">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/material_dynamic_secondary20"
+        android:background="@color/background"
         android:gravity="center"
-        android:orientation="vertical"/>
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigationViewSidePanel"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/side_panel"
-        app:menu="@menu/sidemenu" />
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/findPlayerButton"
+            android:text="@string/findPlayerButton"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+        <TextView
+            android:text="lub"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:text="Utwórz nowy post"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
+    </LinearLayout>
+
+    <include layout="@layout/navigation_view_side_panel"/>
+
 </androidx.drawerlayout.widget.DrawerLayout>

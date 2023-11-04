@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arrays_sport_names">
+        <item>Wybierz swój sport</item>
+        <item>Tenis</item>
+        <item>Piłka Nożna</item>
+        <item>Squash</item>
+    </string-array>
+
+</resources>

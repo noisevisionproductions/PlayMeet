@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Zagrajmy</string>
     <!-- Strings used for fragments for navigation -->
@@ -23,6 +24,10 @@
     <string name="navigation_drawer_close">Zamknij menu</string>
     <string name="homeButton">Home</string>
     <string name="wyloguuuj">Wyloguuuj</string>
+
+    <!--Post creating-->
+    <string name="wybierzSport">Wybierz sport</string>
+    <string name="findPlayerButton">Znajdź gracza</string>
 
 
 </resources>
