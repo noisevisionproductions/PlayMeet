@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/material_dynamic_secondary30"
+    android:background="@color/background"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="15dp"
