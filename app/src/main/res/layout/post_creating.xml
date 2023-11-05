@@ -13,16 +13,19 @@
 
     <!--nazwa sportu-->
     <Spinner
+        android:id="@+id/arrays_sport_names"
+        android:entries="@array/arrays_sport_names"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_marginBottom="10dp"
-        android:entries="@array/arrays_sport_names" />
+        android:background="@drawable/layout_border_test" />
 
     <!--poziom gry-->
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/layout_border_test" />
 
     <!--nazwa miasta-->
     <com.google.android.material.textfield.TextInputLayout
@@ -33,9 +36,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/layout_border_test"
             android:hint="test"
             android:inputType="textShortMessage"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!--wybor daty i godziny-->
@@ -47,40 +51,53 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/layout_border_test">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:inputType="date"
+                android:text="test"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/layout_border_test">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:inputType="datetime"
+                android:text="test"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/layout_border_test">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:inputType="time"
+                android:text="test"
                 android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -95,9 +112,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:background="@drawable/layout_border_test"
             android:hint="test"
             android:inputType="text"
-            android:textSize="20sp" />
+            android:textSize="30sp" />
     </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
