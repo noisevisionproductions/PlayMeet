@@ -46,6 +46,7 @@ public class MainMenu extends AppCompatActivity {
 
         logout();
         findPlayerButtonHandle();
+        searchGamesButtonHandle();
     }
 
 
@@ -84,12 +85,22 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void findPlayerButtonHandle(){
-        Button findPlayer = findViewById(R.id.findPlayerButton);
+        Button createNewPostButton = findViewById(R.id.createNewPostButton);
 
-        findPlayer.setOnClickListener(view -> {
+        createNewPostButton.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), PostCreatingLogic.class);
             startActivity(intent);
             finish();
+        });
+    }
+
+    public void searchGamesButtonHandle(){
+        Button findPlayer = findViewById(R.id.findPlayerButton);
+
+        findPlayer.setOnClickListener(view -> {
+           Intent intent = new Intent(getApplicationContext(), PostsOfTheGames.class);
+           startActivity(intent);
+           finish();
         });
     }
 }

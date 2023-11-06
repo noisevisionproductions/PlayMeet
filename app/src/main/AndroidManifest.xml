@@ -14,6 +14,10 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
+            android:name=".PostsOfTheGames"
+            android:theme="@style/AppTheme"
+            android:exported="true" />
+        <activity
             android:name=".PostCreatingLogic"
             android:theme="@style/AppTheme"
             android:exported="true" />
