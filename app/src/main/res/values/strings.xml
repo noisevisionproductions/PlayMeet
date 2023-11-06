@@ -16,8 +16,8 @@
     <string name="potwierdzhaslo">Potwierdź hasło</string>
     <string name="hasloponownie">Wprowadź hasło ponownie</string>
     <string name="registerButton">Zarejestruj się</string>
-    <string name="kliknijabyzalogowac">Kliknij tutaj, aby się zalogować</string>
-    <string name="kliknijabyzarejestrowac">Kliknij tutaj, aby się zarejestrować</string>
+    <string name="kliknijabyzalogowac">Zaloguj się</string>
+    <string name="kliknijabyzarejestrowac">Załóż konto</string>
 
     <!-- Side panel menu: -->
     <string name="navigation_drawer_open">Otwórz menu</string>
