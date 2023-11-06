@@ -3,17 +3,17 @@ package com.example.zagrajmy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Objects;
 
 
 public class Login extends AppCompatActivity {
@@ -40,18 +40,18 @@ public class Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.login_register_bottom_buttons);
 
         authManager = new AuthenticationManager();
 
         mAuth = FirebaseAuth.getInstance();
-        edytujPoleEmail = findViewById(R.id.email);
+   /*     edytujPoleEmail = findViewById(R.id.email);
         edytujPoleHaslo = findViewById(R.id.password);
-        Button przyciskLoginu = findViewById(R.id.loginButton);
-        textView = findViewById(R.id.stworzKonto);
+        Button przyciskLoginu = findViewById(R.id.loginButton);*/
 
+        switchToLogin();
         switchToRegister();
-
+/*
         przyciskLoginu.setOnClickListener(view -> {
             email = String.valueOf(edytujPoleEmail.getText());
             password = String.valueOf(edytujPoleHaslo.getText());
@@ -72,7 +72,7 @@ public class Login extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
             });
-        });
+        });*/
     }
 
     public boolean emptyLoginFieldsErrorHandle() {
@@ -91,11 +91,35 @@ public class Login extends AppCompatActivity {
         return false;
     }
 
+    public void switchToLogin() {
+        Button buttonLogin = findViewById(R.id.kliknijabyzalogowac);
+
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerLogin, LoginFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("login")
+                        .commit();
+            }
+        });
+    }
+
     public void switchToRegister() {
-        textView.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), Register.class);
-            startActivity(intent);
-            finish();
+        Button buttonRegister = findViewById(R.id.kliknijabyzarejestrowac);
+
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerLogin, RegisterFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .addToBackStack("login")
+                        .commit();
+            }
         });
     }
 }
