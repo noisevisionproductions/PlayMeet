@@ -30,7 +30,7 @@
             android:theme="@style/AppTheme"
             android:exported="true" />
         <activity
-            android:name=".Login"
+            android:name=".LoginAndRegisterActivity"
             android:theme="@style/AppTheme"
             android:exported="true">
             <intent-filter>

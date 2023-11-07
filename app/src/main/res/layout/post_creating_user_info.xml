@@ -1,123 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="15dp"
-    tools:context=".PostCreatingLogic"
-    tools:openDrawer="end">
+    tools:context=".PostCreatingLogic">
 
-    <!--nazwa sportu-->
-    <Spinner
-        android:id="@+id/arrays_sport_names"
-        android:entries="@array/arrays_sport_names"
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/layout_border_test" />
+        android:layout_height="match_parent"
+        android:background="@color/background"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="15dp"
+        tools:context=".PostCreatingLogic"
+        tools:openDrawer="end">
 
-    <!--poziom gry-->
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/layout_border_test" />
+        <!--nazwa sportu-->
+        <Spinner
+            android:id="@+id/arrays_sport_names"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/layout_border_test"
+            android:entries="@array/arrays_sport_names" />
 
-    <!--nazwa miasta-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <!--poziom gry-->
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/layout_border_test" />
 
-        <com.google.android.material.textfield.TextInputEditText
+        <!--nazwa miasta-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/layout_border_test"
+                android:hint="test"
+                android:inputType="textShortMessage"
+                android:textSize="30sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--wybor daty i godziny-->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/layout_border_test"
-            android:hint="test"
-            android:inputType="textShortMessage"
-            android:textSize="30sp" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:orientation="horizontal">
 
-    <!--wybor daty i godziny-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/layout_border_test">
-
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:inputType="date"
-                android:text="test"
-                android:textSize="20sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:background="@drawable/layout_border_test">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/layout_border_test">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:inputType="date"
+                    android:text="test"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:inputType="datetime"
-                android:text="test"
-                android:textSize="20sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:background="@drawable/layout_border_test">
 
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:inputType="datetime"
+                    android:text="test"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/layout_border_test">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:inputType="time"
+                    android:text="test"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!--Dodatkowe informacje-->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/layout_border_test">
+            android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:inputType="time"
-                android:text="test"
-                android:textSize="20sp" />
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/layout_border_test"
+                android:hint="test"
+                android:inputType="text"
+                android:textSize="30sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
 
     </LinearLayout>
 
-    <!--Dodatkowe informacje-->
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/backToMainMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backToMainMenu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/layout_border_test"
-            android:hint="test"
-            android:inputType="text"
-            android:textSize="30sp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-</LinearLayout>
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>
