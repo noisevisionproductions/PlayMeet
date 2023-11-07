@@ -11,8 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="15dp"
-        tools:context=".Register">
+        android:padding="15dp">
 
         <TextView
             android:layout_width="match_parent"

@@ -31,6 +31,7 @@
     <string name="test_text">TEST</string>
     <string name="createNewPostButton">Stwórz nowy post</string>
     <string name="backToMainMenu">Menu Główne</string>
+    <string name="submitPost">Utwórz post</string>
 
 
 </resources>

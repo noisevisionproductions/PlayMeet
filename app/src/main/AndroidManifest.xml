@@ -22,10 +22,6 @@
             android:theme="@style/AppTheme"
             android:exported="true" />
         <activity
-            android:name=".Register"
-            android:theme="@style/AppTheme"
-            android:exported="true" />
-        <activity
             android:name=".MainMenu"
             android:theme="@style/AppTheme"
             android:exported="true" />
