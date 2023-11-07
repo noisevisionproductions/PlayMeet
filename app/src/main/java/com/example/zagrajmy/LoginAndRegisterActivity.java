@@ -6,14 +6,17 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import io.realm.Realm;
+
 
 public class LoginAndRegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Realm.init(this);
 
-        setContentView(R.layout.login_register_bottom_buttons);
+        setContentView(R.layout.login_register_main_buttons);
 
         switchToLogin();
         switchToRegister();
