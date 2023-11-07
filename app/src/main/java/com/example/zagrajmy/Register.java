@@ -1,50 +1,25 @@
 package com.example.zagrajmy;
 
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Objects;
-
 public class Register extends AppCompatActivity {
-
+/*
     private String email, passwordFirst, passwordSecond;
     private TextInputEditText edytujPoleEmail;
-    private FirebaseAuth mAuth;
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         edytujPoleEmail = findViewById(R.id.email);
         Button przyciskRejestracji = findViewById(R.id.registerButton);
         TextView textView = findViewById(R.id.zalogujSie);
         textView.setOnClickListener(view -> {
-            Intent intent = new Intent(getApplicationContext(), Login.class);
+            Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
             startActivity(intent);
             finish();
         });
@@ -64,26 +39,26 @@ public class Register extends AppCompatActivity {
                     return;
                 }
 
-                createAccountWithEmailAndPassword(email,passwordFirst);
+                AuthenticationManager authManager = new AuthenticationManager();
+
+                authManager.userRegister(email, passwordFirst, task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(Register.this, "Konto założone",
+                                Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), MainMenu.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
+                        Toast.makeText(Register.this, "Authentication failed: " + errorMessage,
+                                Toast.LENGTH_SHORT).show();            }
+                });
             }
         });
     }
 
     public void createAccountWithEmailAndPassword(String email, String passwordFirst) {
-        AuthenticationManager authManager = new AuthenticationManager();
 
-        authManager.userRegister(email, passwordFirst, task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(Register.this, "Konto założone",
-                        Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), MainMenu.class);
-                startActivity(intent);
-                finish();
-            } else {
-                String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
-                Toast.makeText(Register.this, "Authentication failed: " + errorMessage,
-                        Toast.LENGTH_SHORT).show();            }
-        });
     }
 
     public boolean emptyFieldsErrorHandle(){
@@ -100,5 +75,5 @@ public class Register extends AppCompatActivity {
             return true;
         }
         return false;
-    }
+    }*/
 }
