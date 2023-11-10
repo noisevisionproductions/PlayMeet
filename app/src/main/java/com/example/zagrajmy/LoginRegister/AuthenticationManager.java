@@ -1,4 +1,4 @@
-package com.example.zagrajmy;
+package com.example.zagrajmy.LoginRegister;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.AuthResult;

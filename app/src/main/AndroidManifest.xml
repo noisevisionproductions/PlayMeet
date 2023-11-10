@@ -13,12 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
+
         <activity
-            android:name=".PostsOfTheGames"
+            android:name=".PostsManagement.PostsOfTheGames"
             android:theme="@style/AppTheme"
             android:exported="true" />
         <activity
-            android:name=".PostCreatingLogic"
+            android:name=".PostsManagement.PostCreatingLogic"
             android:theme="@style/AppTheme"
             android:exported="true" />
         <activity
@@ -26,7 +27,7 @@
             android:theme="@style/AppTheme"
             android:exported="true" />
         <activity
-            android:name=".LoginAndRegisterActivity"
+            android:name=".LoginRegister.LoginAndRegisterActivity"
             android:theme="@style/AppTheme"
             android:exported="true">
             <intent-filter>
@@ -36,7 +37,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginRegister.MainActivity"
             android:theme="@style/AppTheme">
 
         </activity>
