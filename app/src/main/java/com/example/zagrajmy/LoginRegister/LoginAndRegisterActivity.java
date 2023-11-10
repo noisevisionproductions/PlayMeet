@@ -1,10 +1,12 @@
-package com.example.zagrajmy;
+package com.example.zagrajmy.LoginRegister;
 
 import android.os.Bundle;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+
+import com.example.zagrajmy.R;
 
 import io.realm.Realm;
 

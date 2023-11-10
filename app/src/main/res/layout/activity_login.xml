@@ -13,7 +13,7 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
-        tools:context=".LoginAndRegisterActivity">
+        tools:context=".LoginRegister.LoginAndRegisterActivity">
 
         <TextView
             android:layout_width="match_parent"
