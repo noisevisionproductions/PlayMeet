@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".PostCreatingLogic">
+    tools:context=".PostsManagement.PostCreatingLogic">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -15,11 +15,11 @@
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
-        tools:context=".PostCreatingLogic"
+        tools:context=".PostsManagement.PostCreatingLogic"
         tools:openDrawer="end">
 
         <!--nazwa sportu-->
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/arrays_sport_names"
             android:layout_width="match_parent"
             android:layout_height="100dp"
