@@ -1,4 +1,4 @@
-package com.example.zagrajmy;
+package com.example.zagrajmy.LoginRegister;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.zagrajmy.LoginRegister.AuthenticationManager;
+import com.example.zagrajmy.MainMenu;
+import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

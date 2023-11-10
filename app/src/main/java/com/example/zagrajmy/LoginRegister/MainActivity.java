@@ -1,4 +1,4 @@
-package com.example.zagrajmy;
+package com.example.zagrajmy.LoginRegister;
 
 import android.content.Intent;
 import android.os.Bundle;

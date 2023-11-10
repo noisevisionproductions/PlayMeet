@@ -44,14 +44,13 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/arrays_sport_names"
+                    android:id="@+id/sportNames"
                     android:textStyle="bold"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@null"
                     android:entries="@array/arrays_sport_names"
                     android:gravity="center"
-                    android:text="@string/test_text"
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
