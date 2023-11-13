@@ -16,7 +16,6 @@ public class PostCreating extends RealmObject {
     private String sportType;
     private String cityName;
     private Date dateTime;
-
     private String skillLevel;
     // private LocalTime hourTime;
     private String additionalInfo;

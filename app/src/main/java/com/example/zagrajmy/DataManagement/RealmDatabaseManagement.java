@@ -1,4 +1,6 @@
-package com.example.zagrajmy;
+package com.example.zagrajmy.DataManagement;
+
+import com.example.zagrajmy.PostCreating;
 
 import io.realm.Realm;
 
