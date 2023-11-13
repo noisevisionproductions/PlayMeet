@@ -21,52 +21,51 @@
         <!--nazwa sportu-->
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/arrays_sport_names"
+            style="@style/MySpinnerStyle"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/layout_border_test"
-            android:entries="@array/arrays_sport_names" />
-
-        <!--poziom gry-->
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/layout_border_test" />
+            android:entries="@array/arrays_sport_names"
+            android:textSize="30sp" />
 
         <!--nazwa miasta-->
-        <com.google.android.material.textfield.TextInputLayout
+        <Spinner
+            android:id="@+id/cities_in_poland"
+            style="@style/MySpinnerStyle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="30sp" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/layout_border_test"
-                android:hint="test"
-                android:inputType="textShortMessage"
-                android:textSize="30sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <!--poziom gry-->
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/arrays_skill_level"
+            style="@style/MySpinnerStyle"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="10dp"
+            android:entries="@array/arrays_skill_level"
+            android:textSize="30sp" />
 
         <!--wybor daty i godziny-->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
+            android:baselineAligned="false"
             android:orientation="horizontal">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_border_test">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:inputType="date"
@@ -77,14 +76,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/layout_border_test">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     android:gravity="center"
                     android:inputType="datetime"
@@ -113,16 +112,20 @@
         <!--Dodatkowe informacje-->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addInfo"
+                style="@style/MySpinnerStyle"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/layout_border_test"
                 android:hint="test"
                 android:inputType="text"
-                android:textSize="30sp" />
+                android:maxLength="100"
+                android:padding="10dp"
+                android:textSize="20sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>

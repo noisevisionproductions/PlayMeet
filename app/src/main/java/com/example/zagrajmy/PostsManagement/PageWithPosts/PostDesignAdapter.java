@@ -13,7 +13,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         // Tutaj zdefiniuj pola dla elementów widoku, które chcesz aktualizować.
@@ -21,6 +21,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // public TextView myTextView;
         public TextInputEditText uniquePostId;
         public TextInputEditText sportNames;
+        public TextInputEditText cityNames;
+        public TextInputEditText skillLevel;
+        public TextInputEditText addInfo;
 
         public MyViewHolder(View v) {
             super(v);
@@ -30,7 +33,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             sportNames = v.findViewById(R.id.sportNames);
             sportNames.setFocusable(false);
 
-            //  uniquePostId.setEditableFactory(false);
+            cityNames = v.findViewById(R.id.chosenCity);
+            cityNames.setFocusable(false);
+
+            skillLevel = v.findViewById(R.id.skilLevel);
+            skillLevel.setFocusable(false);
+
+            addInfo = v.findViewById(R.id.addInfoPost);
+            addInfo.setFocusable(false);
             // Tutaj zainicjalizuj swoje widoki. Na przykład:
             // myTextView = v.findViewById(R.id.my_text_view);
         }
@@ -47,15 +57,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         holder.uniquePostId.setText(String.valueOf(postCreating.getUniqueId()));
         holder.sportNames.setText(postCreating.getSportType());
+        holder.cityNames.setText(postCreating.getCityName());
+        holder.skillLevel.setText(postCreating.getSkillLevel());
+        holder.addInfo.setText(postCreating.getAdditionalInfo());
     }
 
-    public MyAdapter(List<PostCreating> posts) {
+    public PostDesignAdapter(List<PostCreating> posts) {
         this.posts = posts;
     }
 
     @NonNull
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostDesignAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Wczytaj swój plik XML jako nowy widok
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_post_design, parent, false);
         return new MyViewHolder(v);

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.NavigationUtils;
-import com.example.zagrajmy.PostsManagement.PageWithPosts.MyAdapter;
+import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapter;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 
@@ -29,8 +29,8 @@ public class PostsOfTheGames extends AppCompatActivity {
 
         postCreate();
 
-        MyAdapter myAdapter = new MyAdapter(posts);
-        recyclerView.setAdapter(myAdapter);
+        PostDesignAdapter postDesignAdapter = new PostDesignAdapter(posts);
+        recyclerView.setAdapter(postDesignAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         Button button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);

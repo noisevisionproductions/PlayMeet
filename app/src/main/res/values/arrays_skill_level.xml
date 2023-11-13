@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arrays_skill_level">
+        <item>Poziom gry</item>
+        <item>początkujący</item>
+        <item>średnio zaawansowany</item>
+        <item>zaawansowany</item>
+        <item>ekspert</item>
+    </string-array>
+</resources>
