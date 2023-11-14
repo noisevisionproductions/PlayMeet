@@ -38,8 +38,9 @@ public class PostCreatingLogic extends AppCompatActivity {
         setSportType();
         setCityName();
         setSkillLevel();
+        setDate();
+        setHour();
         createPost();
-
     }
 
     public void createPost() {
@@ -89,7 +90,7 @@ public class PostCreatingLogic extends AppCompatActivity {
 
         Collections.sort(cityNames);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.spinner_of_cities, cityNames);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_of_cities, cityNames);
         arrayAdapter.setDropDownViewResource(R.layout.spinner_of_cities);
         chooseCity.setAdapter(arrayAdapter);
 
@@ -133,8 +134,24 @@ public class PostCreatingLogic extends AppCompatActivity {
     public void setAdditionalInfo() {
         TextInputEditText addInfo = findViewById(R.id.addInfo);
 
+
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
         postCreating.setAdditionalInfo(typedInfo);
     }
 
+    public void setDate() {
+        TextInputEditText chooseDate = findViewById(R.id.chooseDate);
+        chooseDate.setFocusable(false);
+
+        DateChoosingLogic dateChoosingLogic = new DateChoosingLogic(this, postCreating);
+        chooseDate.setOnClickListener(v -> dateChoosingLogic.pickDate(chooseDate));
+    }
+
+    public void setHour(){
+        TextInputEditText chooseHour = findViewById(R.id.chooseHour);
+        chooseHour.setFocusable(false);
+
+        DateChoosingLogic dateChoosingLogic = new DateChoosingLogic(this, postCreating);
+        chooseHour.setOnClickListener(v -> dateChoosingLogic.pickHour(chooseHour));
+    }
 }
