@@ -16,14 +16,13 @@ import java.util.List;
 public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        // Tutaj zdefiniuj pola dla elementów widoku, które chcesz aktualizować.
-        // Na przykład, jeśli masz TextView w swoim pliku XML, możesz dodać:
-        // public TextView myTextView;
         public TextInputEditText uniquePostId;
         public TextInputEditText sportNames;
         public TextInputEditText cityNames;
         public TextInputEditText skillLevel;
         public TextInputEditText addInfo;
+        public TextInputEditText chosenDate;
+        public TextInputEditText chosenHour;
 
         public MyViewHolder(View v) {
             super(v);
@@ -41,8 +40,12 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
 
             addInfo = v.findViewById(R.id.addInfoPost);
             addInfo.setFocusable(false);
-            // Tutaj zainicjalizuj swoje widoki. Na przykład:
-            // myTextView = v.findViewById(R.id.my_text_view);
+
+            chosenDate = v.findViewById(R.id.chosenDate);
+            chosenDate.setFocusable(false);
+
+            chosenHour = v.findViewById(R.id.chosenHour);
+            chosenHour.setFocusable(false);
         }
     }
 
@@ -50,9 +53,6 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        // Aktualizuj widoki w holderze danymi z listy
-        // Na przykład:
-        // holder.myTextView.setText(posts.get(position).getText());
         PostCreating postCreating = posts.get(position);
 
         holder.uniquePostId.setText(String.valueOf(postCreating.getUniqueId()));
@@ -60,6 +60,8 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
         holder.cityNames.setText(postCreating.getCityName());
         holder.skillLevel.setText(postCreating.getSkillLevel());
         holder.addInfo.setText(postCreating.getAdditionalInfo());
+        holder.chosenDate.setText(postCreating.getDateTime());
+        holder.chosenHour.setText(postCreating.getHourTime());
     }
 
     public PostDesignAdapter(List<PostCreating> posts) {

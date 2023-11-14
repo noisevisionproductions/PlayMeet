@@ -1,9 +1,6 @@
 package com.example.zagrajmy;
 
 
-import java.util.Date;
-
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.RealmClass;
@@ -15,9 +12,9 @@ public class PostCreating extends RealmObject {
     private int uniqueId;
     private String sportType;
     private String cityName;
-    private Date dateTime;
+    private String dateTime;
+    private String hourTime;
     private String skillLevel;
-    // private LocalTime hourTime;
     private String additionalInfo;
 
 
@@ -33,15 +30,14 @@ public class PostCreating extends RealmObject {
         this.uniqueId = uniqueId;
     }
 
-    public PostCreating(int uniqueId, String sportType, String cityName, String additionalInfo, String skillLevel, Date dateTime, RealmList<String> sportNames) {
+    public PostCreating(int uniqueId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
         this.uniqueId = uniqueId;
         this.sportType = sportType;
         this.cityName = cityName;
         this.additionalInfo = additionalInfo;
         this.skillLevel = skillLevel;
         this.dateTime = dateTime;
-
-        // this.hourTime = hourTime;
+        this.hourTime = hourTime;
     }
 
     public String getSportType() {
@@ -76,13 +72,22 @@ public class PostCreating extends RealmObject {
         this.skillLevel = skillLevel;
     }
 
-    public Date getDateTime() {
+    public String getDateTime() {
         return dateTime;
     }
 
-    public void setDateTime(Date dateTime) {
+    public void setDateTime(String dateTime) {
         this.dateTime = dateTime;
     }
+
+    public String getHourTime() {
+        return hourTime;
+    }
+
+    public void setHourTime(String hourTime) {
+        this.hourTime = hourTime;
+    }
+
 
 }
 
