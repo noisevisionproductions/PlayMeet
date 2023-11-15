@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +12,14 @@ import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Design.MySpinnerAdapter;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -68,8 +69,13 @@ public class PostCreatingLogic extends AppCompatActivity {
     }
 
     public void setSportType() {
-        AppCompatSpinner chooseSport = findViewById(R.id.arrays_sport_names);
-        chooseSport.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        String[] items = getResources().getStringArray(R.array.arrays_sport_names);
+        MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.arrays_sport_names);
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedSport = (String) adapterView.getItemAtPosition(i);
@@ -82,21 +88,27 @@ public class PostCreatingLogic extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     public void setCityName() {
-        Spinner chooseCity = findViewById(R.id.cities_in_poland);
         List<String> cityNames = CityXmlParser.parseCityNames(this);
+        if (cityNames.size() > 1) {
+            List<String> sortedList = new ArrayList<>(cityNames.subList(1, cityNames.size()));
+            Collections.sort(sortedList);
+            cityNames = new ArrayList<>(cityNames.subList(0, 1));
+            cityNames.addAll(sortedList);
+        }
+       // Collections.sort(cityNames);
 
-        Collections.sort(cityNames);
+        MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, cityNames);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, R.layout.spinner_of_cities, cityNames);
-        arrayAdapter.setDropDownViewResource(R.layout.spinner_of_cities);
-        chooseCity.setAdapter(arrayAdapter);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-      /*  SpinnerAdapter spinnerAdapter = new SpinnerAdapter(this, R.layout.spinner_of_cities, cityNames);
-        spinnerAdapter.setDropDownViewResource(R.layout.spinner_of_cities);
-        chooseCity.setAdapter(spinnerAdapter);*/
+        AppCompatSpinner chooseCity = (AppCompatSpinner) findViewById(R.id.cities_in_poland);
+        chooseCity.setAdapter(adapter);
+
         chooseCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -110,13 +122,15 @@ public class PostCreatingLogic extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     public void setSkillLevel() {
-        AppCompatSpinner chooseSkillLevel = findViewById(R.id.arrays_skill_level);
-        chooseSkillLevel.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        String[] items = getResources().getStringArray(R.array.arrays_skill_level);
+        MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.arrays_skill_level);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedSkillLevel = (String) adapterView.getItemAtPosition(i);
@@ -147,7 +161,7 @@ public class PostCreatingLogic extends AppCompatActivity {
         chooseDate.setOnClickListener(v -> dateChoosingLogic.pickDate(chooseDate));
     }
 
-    public void setHour(){
+    public void setHour() {
         TextInputEditText chooseHour = findViewById(R.id.chooseHour);
         chooseHour.setFocusable(false);
 
