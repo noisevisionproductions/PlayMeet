@@ -19,6 +19,7 @@
         tools:openDrawer="end">
 
         <!--nazwa sportu-->
+
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/arrays_sport_names"
             style="@style/MySpinnerStyle"
@@ -29,7 +30,7 @@
             android:textSize="30sp" />
 
         <!--nazwa miasta-->
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/cities_in_poland"
             style="@style/MySpinnerStyle"
             android:layout_width="match_parent"
@@ -68,7 +69,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:hint="Wybierz datę"
                     android:inputType="date"
                     android:textSize="15sp" />
@@ -86,7 +86,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:hint="Wybierz godzinę"
                     android:inputType="date"
                     android:textSize="15sp" />
@@ -104,13 +103,13 @@
                 android:id="@+id/addInfo"
                 style="@style/MySpinnerStyle"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="100dp"
                 android:layout_marginBottom="10dp"
-                android:hint="test"
+                android:hint="Wprowadź dodatkowe informacje"
                 android:inputType="text"
                 android:maxLength="100"
                 android:padding="10dp"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
     </LinearLayout>
