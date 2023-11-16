@@ -5,6 +5,8 @@
         <item name="boxStrokeWidth">0dp</item>
     </style>
 
+    <style name="noBar" parent="Theme.AppCompat.NoActionBar"/>
+
     <style name="TestStyle" parent="Widget.AppCompat.Spinner">
         <item name="android:background">#333333</item>
         <item name="android:textColor">#FFFFFF</item>

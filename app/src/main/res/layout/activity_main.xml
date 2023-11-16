@@ -7,11 +7,14 @@
     tools:context=".MainMenu"
     tools:openDrawer="end">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/alpha_version_info" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background"
+        android:background="@drawable/gradient"
         android:gravity="center"
         android:orientation="vertical">
 

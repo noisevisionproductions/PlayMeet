@@ -3,14 +3,15 @@
 
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:background="@color/material_dynamic_primary95"
+    android:background="@color/background"
     android:orientation="vertical"
     android:gravity="bottom">
 
     <ImageView
         android:layout_width="75dp"
         android:layout_height="75dp"
-        android:background="@color/common_google_signin_btn_text_dark_focused">
+        android:background="@drawable/sample_avatar"
+        android:contentDescription="Zdjęcie profilowe">
 
     </ImageView>
 
