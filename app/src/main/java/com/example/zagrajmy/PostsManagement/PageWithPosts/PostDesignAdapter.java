@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.PostCreating;
@@ -62,6 +63,17 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
         holder.addInfo.setText(postCreating.getAdditionalInfo());
         holder.chosenDate.setText(postCreating.getDateTime());
         holder.chosenHour.setText(postCreating.getHourTime());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayoutCompat infoContainer = v.findViewById(R.id.extraInfoContainer);
+                if (infoContainer.getVisibility() == View.GONE) {
+                    infoContainer.setVisibility(View.VISIBLE);
+                } else {
+                    infoContainer.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     public PostDesignAdapter(List<PostCreating> posts) {

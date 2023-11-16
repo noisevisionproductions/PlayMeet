@@ -5,15 +5,14 @@
 
     <item
         android:id="@+id/nav_account"
-        android:title="My Account" />
+        android:title="Mój profil" />
 
     <item
         android:id="@+id/nav_settings"
-        android:title="Settings" />
+        android:title="Ustawienia" />
 
     <item
         android:id="@+id/wylogujKonto"
         android:enabled="true"
-        android:title="Logout" />
-
+        android:title="@string/wylogujKonto" />
 </menu>

@@ -7,9 +7,15 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
+    <include
+        android:id="@+id/include"
+        layout="@layout/alpha_version_info" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/gradient"
+        android:layout_marginTop="40dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
