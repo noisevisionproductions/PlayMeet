@@ -15,9 +15,32 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutOfPost"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="5dp">
+
+        <!--przycisk do otwierania menu-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/arrowDownOpenMenu"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/baseline_keyboard_arrow_down_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign"
+            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/extraInfoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/expandmenu"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/arrowDownOpenMenu">
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--avatar-->
         <androidx.appcompat.widget.AppCompatImageView
@@ -47,7 +70,6 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
-
 
         <!--nazwa miasta-->
         <com.google.android.material.textfield.TextInputLayout
@@ -135,6 +157,7 @@
 
         <!--dodatkowe info-->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addInfoPostForButtonDesign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:hintEnabled="false"
@@ -155,6 +178,7 @@
 
         <!--unikalne ID-->
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/uniquePostIdForButtonDesign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:hintEnabled="false"
@@ -169,6 +193,9 @@
                 android:inputType="number"
                 android:textSize="8sp"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
         </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.cardview.widget.CardView>
