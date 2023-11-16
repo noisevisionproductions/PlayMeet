@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.NavigationUtils;
-import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapter;
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapter;
 import com.example.zagrajmy.R;
 
 import java.util.ArrayList;
@@ -24,6 +24,7 @@ public class PostsOfTheGames extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_posts_list);
         RecyclerView recyclerView = findViewById(R.id.recycler_view_posts);
 
@@ -40,11 +41,9 @@ public class PostsOfTheGames extends AppCompatActivity {
         Realm realm = Realm.getDefaultInstance();
 
         RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
-        if (allPosts != null){
+        if (allPosts != null) {
             posts.addAll(realm.copyFromRealm(allPosts));
         }
         realm.close();
-
     }
-
 }
