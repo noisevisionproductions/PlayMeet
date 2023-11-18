@@ -1,11 +1,17 @@
 package com.example.zagrajmy.PostsManagement.PageWithPosts;
 
+
+import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.PostCreating;
@@ -24,7 +30,10 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
         public TextInputEditText addInfo;
         public TextInputEditText chosenDate;
         public TextInputEditText chosenHour;
-
+        public CardView cardView;
+        public ConstraintLayout arrowDownOpenMenu;
+        public LinearLayoutCompat extraInfoContainer;
+        public AppCompatButton arrowDownOpenMenuButton;
         public MyViewHolder(View v) {
             super(v);
             uniquePostId = v.findViewById(R.id.uniquePostId);
@@ -47,10 +56,19 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
 
             chosenHour = v.findViewById(R.id.chosenHour);
             chosenHour.setFocusable(false);
+
+            arrowDownOpenMenu = v.findViewById(R.id.arrowDownOpenMenu);
+
+            extraInfoContainer = v.findViewById(R.id.extraInfoContainer);
+
+            cardView = v.findViewById(R.id.layoutOfPost);
+
+            arrowDownOpenMenuButton = v.findViewById(R.id.arrowDownOpenMenuButton);
         }
     }
 
     private final List<PostCreating> posts;
+    private final Context context;
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
@@ -63,21 +81,44 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
         holder.addInfo.setText(postCreating.getAdditionalInfo());
         holder.chosenDate.setText(postCreating.getDateTime());
         holder.chosenHour.setText(postCreating.getHourTime());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LinearLayoutCompat infoContainer = v.findViewById(R.id.extraInfoContainer);
-                if (infoContainer.getVisibility() == View.GONE) {
-                    infoContainer.setVisibility(View.VISIBLE);
-                } else {
-                    infoContainer.setVisibility(View.GONE);
-                }
+
+        extraInfo(holder);
+    }
+
+    //logika rozwijanego menu, dodatkowych informacji
+    public void extraInfo(MyViewHolder holder){
+        ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
+        holder.arrowDownOpenMenu.setOnClickListener(v -> {
+            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
+                holder.extraInfoContainer.setVisibility(View.VISIBLE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
+            } else {
+                holder.extraInfoContainer.setVisibility(View.GONE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
+            }
+        });
+        holder.arrowDownOpenMenuButton.setOnClickListener(v -> {
+            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
+                holder.extraInfoContainer.setVisibility(View.VISIBLE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
+            } else {
+                holder.extraInfoContainer.setVisibility(View.GONE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
             }
         });
     }
 
-    public PostDesignAdapter(List<PostCreating> posts) {
+    public PostDesignAdapter(Context context, List<PostCreating> posts) {
         this.posts = posts;
+        this.context = context;
     }
 
     @NonNull
@@ -87,7 +128,6 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_post_design, parent, false);
         return new MyViewHolder(v);
     }
-
 
     @Override
     public int getItemCount() {

@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".PostsManagement.PostCreatingLogic">
 
+    <!--pasek informujacy o wersji-->
     <include
         android:id="@+id/include"
         layout="@layout/alpha_version_info" />
@@ -24,7 +25,6 @@
         tools:openDrawer="end">
 
         <!--nazwa sportu-->
-
         <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/arrays_sport_names"
             style="@style/MySpinnerStyle"

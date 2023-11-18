@@ -3,16 +3,15 @@ package com.example.zagrajmy;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GravityCompat;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
 import com.example.zagrajmy.PostsManagement.PostCreatingLogic;
 import com.example.zagrajmy.PostsManagement.PostsOfTheGames;
 import com.google.android.material.navigation.NavigationView;
@@ -26,6 +25,15 @@ public class MainMenu extends AppCompatActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
     private FirebaseUser user;
+
+    public DrawerLayout getDrawerLayout() {
+        return drawerLayout;
+    }
+
+    public NavigationView getNavigationView() {
+        return navigationView;
+    }
+
     private void setupDrawerLayout() {
         drawerLayout = findViewById(R.id.drawer_layout);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -45,13 +53,23 @@ public class MainMenu extends AppCompatActivity {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
+        greetNickname();
+
         setupDrawerLayout();
 
-        logout();
+        SidePanelMenu sidePanelMenu = new SidePanelMenu(this);
+        sidePanelMenu.manageDrawerButtons();
+
         findPlayerButtonHandle();
         searchGamesButtonHandle();
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        greetNickname();
+    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -63,32 +81,17 @@ public class MainMenu extends AppCompatActivity {
     }
 
 
-    @Override
+   /* @Override
     protected void onDestroy() {  // pomaga w testowaniu aplikacji
         super.onDestroy();
 
         if (user != null) {
             FirebaseAuth.getInstance().signOut();
         }
-    }
+    }*/
 
-    public void logout() {
-        navigationView.setNavigationItemSelectedListener(menuItem -> {
-            int id = menuItem.getItemId();
-
-            if (id == R.id.wylogujKonto) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
-                startActivity(intent);
-                finish();
-            }
-            drawerLayout.closeDrawer(GravityCompat.START);
-            return true;
-        });
-    }
-
-    public void findPlayerButtonHandle(){
-        Button createNewPostButton = findViewById(R.id.createNewPostButton);
+    public void findPlayerButtonHandle() {
+        AppCompatButton createNewPostButton = findViewById(R.id.createNewPostButton);
 
         createNewPostButton.setOnClickListener(view -> {
             Intent intent = new Intent(getApplicationContext(), PostCreatingLogic.class);
@@ -97,13 +100,31 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
-    public void searchGamesButtonHandle(){
-        Button findPlayer = findViewById(R.id.findPlayerButton);
+    public void searchGamesButtonHandle() {
+        AppCompatButton findPlayer = findViewById(R.id.findPlayerButton);
 
         findPlayer.setOnClickListener(view -> {
-           Intent intent = new Intent(getApplicationContext(), PostsOfTheGames.class);
-           startActivity(intent);
-           finish();
+            Intent intent = new Intent(getApplicationContext(), PostsOfTheGames.class);
+            startActivity(intent);
+            finish();
         });
     }
+
+    public void myActivityButton(){
+        AppCompatButton myActivity = findViewById(R.id.myactivity);
+
+
+    }
+
+    public void greetNickname() {
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            String nick = user.getDisplayName();
+            if (nick != null) {
+                AppCompatTextView displayNickname = findViewById(R.id.nickname);
+                displayNickname.setText(nick);
+            }
+        }
+    }
+
 }
