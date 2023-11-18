@@ -6,6 +6,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.R;
 
 import io.realm.Realm;
@@ -18,6 +19,8 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Realm.init(this);
 
+        RealmDatabaseManagement realm = new RealmDatabaseManagement();
+        //realm.cleanDatabase();
         setContentView(R.layout.login_register_main_buttons);
 
         switchToLogin();

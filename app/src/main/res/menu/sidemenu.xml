@@ -4,13 +4,11 @@
     tools:ignore="HardcodedText">
 
     <item
-        android:id="@+id/nav_account"
+        android:id="@+id/userProfile"
         android:title="Mój profil" />
-
     <item
-        android:id="@+id/nav_settings"
-        android:title="Ustawienia" />
-
+        android:id="@+id/mojaAktywnosc"
+        android:title="Mój profil" />
     <item
         android:id="@+id/wylogujKonto"
         android:enabled="true"
