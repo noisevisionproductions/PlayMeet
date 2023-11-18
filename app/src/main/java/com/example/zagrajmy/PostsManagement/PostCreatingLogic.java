@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.example.zagrajmy.DataManagement.CityXmlParser;
@@ -33,7 +34,7 @@ public class PostCreatingLogic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_creating);
 
-        Button button = findViewById(R.id.backToMainMenu);
+        AppCompatButton button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
 
         setSportType();
@@ -42,6 +43,11 @@ public class PostCreatingLogic extends AppCompatActivity {
         setDate();
         setHour();
         createPost();
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        realmDatabaseManagement.closeRealmDatabase();
     }
 
     public void createPost() {
@@ -147,7 +153,6 @@ public class PostCreatingLogic extends AppCompatActivity {
 
     public void setAdditionalInfo() {
         TextInputEditText addInfo = findViewById(R.id.addInfo);
-
 
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
         postCreating.setAdditionalInfo(typedInfo);

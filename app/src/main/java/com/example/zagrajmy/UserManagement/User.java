@@ -1,9 +1,12 @@
 package com.example.zagrajmy.UserManagement;
 
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class User extends RealmObject {
-    private String name;
+
+    @PrimaryKey
+    private String nickName;
     private String birthDay;
     private String gender;
     private String location;
@@ -13,6 +16,14 @@ public class User extends RealmObject {
     private String avatar;
 
     public User() {
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
 }
