@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
@@ -7,35 +8,58 @@
     tools:context=".MainMenu"
     tools:openDrawer="end">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/alpha_version_info" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/gradient"
         android:gravity="center"
         android:orientation="vertical">
 
-        <Button
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/greetUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="50dp"
+            android:text="Witaj"
+            android:textSize="50sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Twój nick"
+            android:paddingBottom="50dp"
+            android:textColor="@color/material_dynamic_primary95"
+            android:textSize="50sp"
+            app:layout_constraintTop_toBottomOf="@+id/greetUser" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/createNewPostButton"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
             android:text="@string/createNewPostButton"
-            android:layout_width="match_parent"
-            android:layout_height="100dp" />
-        <TextView
-            android:text="lub"
-            android:textSize="20sp"
-            android:padding="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
+            app:layout_constraintTop_toBottomOf="@+id/nickname" />
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/findPlayerButton"
-            android:text="@string/findPlayerButton"
             android:layout_width="match_parent"
-            android:layout_height="100dp" />
-    </LinearLayout>
+            android:layout_height="100dp"
+            android:text="@string/findPlayerButton"
+            app:layout_constraintTop_toBottomOf="@+id/createNewPostButton" />
 
-    <include layout="@layout/navigation_view_side_panel"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/myactivity"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="@string/myactivity"
+            app:layout_constraintTop_toBottomOf="@+id/findPlayerButton" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <include layout="@layout/navigation_view_side_panel" />
 </androidx.drawerlayout.widget.DrawerLayout>

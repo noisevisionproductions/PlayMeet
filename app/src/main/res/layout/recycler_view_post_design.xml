@@ -3,8 +3,9 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="240dp"
     android:layout_margin="10dp"
     app:cardCornerRadius="20dp"
     app:cardElevation="20dp"
@@ -13,24 +14,35 @@
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutOfPost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:layout_margin="5dp">
 
-        <!--przycisk do otwierania menu-->
-        <androidx.appcompat.widget.AppCompatButton
+        <!--przycisk do otwierania dodatkowych opcji-->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/arrowDownOpenMenu"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:background="@drawable/baseline_keyboard_arrow_down_24"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/arrowDownOpenMenuButton"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/baseline_keyboard_arrow_down_24"
+                android:contentDescription="additionalMenu"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--menu do dotatkowych opcji - default: "gone"-->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/extraInfoContainer"
             android:layout_width="match_parent"
@@ -40,6 +52,12 @@
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/arrowDownOpenMenu">
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#1D802F"
+                android:text="@string/signMeIn" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--avatar-->
@@ -140,9 +158,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:hintEnabled="false"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/skilLevel"
@@ -150,6 +167,7 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="center"
+                android:hint="test"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
@@ -182,8 +200,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/uniquePostId"

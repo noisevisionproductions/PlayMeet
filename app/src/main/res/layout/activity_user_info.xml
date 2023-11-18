@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/postCreatingLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PostsManagement.PostCreatingLogic">
+
+    <!--pasek informujacy o wersji-->
+    <include
+        android:id="@+id/include"
+        layout="@layout/alpha_version_info" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/gradient"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:padding="15dp"
+        tools:openDrawer="end">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/greetUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="50dp"
+            android:text="Witaj"
+            android:textSize="50sp"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="Twój nick"
+            android:paddingBottom="50dp"
+            android:textColor="@color/material_dynamic_primary95"
+            android:textSize="50sp"
+            app:layout_constraintTop_toBottomOf="@+id/greetUser" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="Twoje imię"
+                android:inputType="text"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="Skąd pochodzisz"
+                android:inputType="text"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="Wprowadź dodatkowe informacje"
+                android:inputType="text"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="Wprowadź dodatkowe informacje"
+                android:inputType="text"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:hint="Wprowadź dodatkowe informacje"
+                android:inputType="text"
+                android:maxLength="100"
+                android:padding="10dp"
+                android:textSize="15sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/backToMainMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/backToMainMenu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

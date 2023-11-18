@@ -1,9 +1,9 @@
 package com.example.zagrajmy.PostsManagement;
 
 import android.os.Bundle;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,10 +30,11 @@ public class PostsOfTheGames extends AppCompatActivity {
 
         postCreate();
 
-        PostDesignAdapter postDesignAdapter = new PostDesignAdapter(posts);
+        PostDesignAdapter postDesignAdapter = new PostDesignAdapter(this, posts);
         recyclerView.setAdapter(postDesignAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        Button button = findViewById(R.id.backToMainMenu);
+
+        AppCompatButton button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
     }
 
