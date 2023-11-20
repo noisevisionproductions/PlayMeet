@@ -28,8 +28,10 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-public class RegisterFragment extends Fragment {
+import io.realm.Realm;
 
+public class RegisterFragment extends Fragment {
+    private User userClass;
     private String emailText, hasloPierwszeText, hasloDrugieText, nicknameText;
     private AppCompatAutoCompleteTextView email, nicknameFromRegister, hasloPierwsze, hasloDrugie;
 
@@ -39,7 +41,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_register, container, false);
-        User userClass = new User();
+        userClass = new User();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -74,11 +76,15 @@ public class RegisterFragment extends Fragment {
                     Intent intent = new Intent(getContext(), LoginAndRegisterActivity.class);
                     startActivity(intent);
 
+                    String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
+                    userClass.setUserId(userId);
+
                     /*dodawanie nicku do bazy danych realm*/
                     RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
                     realmDatabaseManagement.createUser();
                     realmDatabaseManagement.closeRealmDatabase();
 
+                    /*dodawanie nicku do bazy danych firebase*/
                     saveNicknameToFirebase();
 
                 } else {
@@ -103,6 +109,8 @@ public class RegisterFragment extends Fragment {
     }
 
     public void checkValidation() {
+       /* if (validateAndSetError(nicknameFromRegister, "Użytkownik o tej nazwie już istnieje", this::isUserNameAvailable))
+            return;*/
         if (validateAndSetError(email, "Pole nie może być puste", this::isFieldNotEmpty)) return;
         if (validateAndSetError(nicknameFromRegister, "Pole nie może być puste", this::isFieldNotEmpty))
             return;
@@ -149,9 +157,15 @@ public class RegisterFragment extends Fragment {
         return pattern.matcher(email).matches();
     }
 
-
     public boolean isFieldNotEmpty(String username) {
         return !username.isEmpty();
+    }
+
+    public boolean isUserNameAvailable(String username) {
+        Realm realm = Realm.getDefaultInstance();
+        User user = realm.where(User.class).equalTo("nickName", username).findFirst();
+        realm.close();
+        return user != null;
     }
 
     public boolean isUsernameLongEnough(String username) {
@@ -168,7 +182,6 @@ public class RegisterFragment extends Fragment {
 
 
     //Todo: set user nickname from UserProfileManager class
-
     public void saveNicknameToFirebase() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
