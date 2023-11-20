@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 
 public class RealmDatabaseManagement {
     private final Realm realm = Realm.getDefaultInstance();
@@ -20,6 +21,13 @@ public class RealmDatabaseManagement {
         realm.deleteAll();
         realm.commitTransaction();
     }
+    //Usuwa wszystko z bazy danych realm - do testów
+
+    public void realmMigrationResetDatabaseOnlyForTesting(){
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+    }
+
 
     public void closeRealmDatabase() {
         if (realm != null && !realm.isClosed()) {
@@ -36,6 +44,11 @@ public class RealmDatabaseManagement {
         realm.copyToRealm(postCreating);
         realm.commitTransaction();
     }
+
+    public void getPosts(PostCreating postCreating){
+
+    }
+
 
     public void updatePost(PostCreating postCreating) {
 

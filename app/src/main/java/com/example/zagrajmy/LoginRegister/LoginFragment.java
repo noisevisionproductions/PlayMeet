@@ -11,9 +11,9 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
-import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.MainMenu;
 import com.example.zagrajmy.R;
+import com.example.zagrajmy.UserManagement.User;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -54,10 +54,13 @@ public class LoginFragment extends Fragment {
 
             authManager.userLogin(email, password, task -> {
                 if (task.isSuccessful()) {
+                    User userClass = new User();
                     Toast.makeText(getActivity(), "Zalogowano", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getContext(), MainMenu.class);
                     startActivity(intent);
 
+                    String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
+                    userClass.setUserId(userId);
                 } else {
                     String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
                     Toast.makeText(getActivity(), "Authentication failed: " + errorMessage,

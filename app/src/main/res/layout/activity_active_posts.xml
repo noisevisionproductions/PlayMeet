@@ -10,16 +10,15 @@
         android:id="@+id/include"
         layout="@layout/alpha_version_info" />
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_posts"
+    <ExpandableListView
+        android:id="@+id/expandableList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="40dp"
-        android:background="@drawable/gradient"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:childDivider="#008000"
+        android:divider="#0000FF"
+        android:dividerHeight="2dp">
+    </ExpandableListView>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backToMainMenu"
@@ -27,7 +26,6 @@
         android:layout_height="wrap_content"
         android:text="@string/backToMainMenu"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/recycler_view_posts"
+        app:layout_constraintEnd_toEndOf="@+id/expandableList"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
