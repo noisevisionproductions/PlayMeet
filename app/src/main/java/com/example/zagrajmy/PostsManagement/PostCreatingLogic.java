@@ -17,6 +17,7 @@ import com.example.zagrajmy.Design.MySpinnerAdapter;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
+import com.example.zagrajmy.UserManagement.User;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -51,10 +52,13 @@ public class PostCreatingLogic extends AppCompatActivity {
     }
 
     public void createPost() {
+        User user = new User();
         Button createPost = findViewById(R.id.submitPost);
         createPost.setOnClickListener(view -> {
             setUniqueId();
             setAdditionalInfo();
+
+            postCreating.setUserId(user.getUserId());
             realmDatabaseManagement.addPost(postCreating);
 
             Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();

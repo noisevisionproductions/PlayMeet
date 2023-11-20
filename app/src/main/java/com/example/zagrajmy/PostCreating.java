@@ -10,6 +10,7 @@ public class PostCreating extends RealmObject {
 
     @PrimaryKey
     private int uniqueId;
+    private String userId;
     private String sportType;
     private String cityName;
     private String dateTime;
@@ -20,6 +21,14 @@ public class PostCreating extends RealmObject {
 
     public PostCreating() {
 
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Integer getUniqueId() {

@@ -23,7 +23,7 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view = super.getView(position, convertView, parent);
-        TextView textView = (TextView) view.findViewById(android.R.id.text1);
+        TextView textView = view.findViewById(android.R.id.text1);
         textView.setGravity(Gravity.CENTER);
 
         textView.setTextColor(Color.BLACK);
@@ -33,7 +33,7 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
 
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         View view = super.getDropDownView(position, convertView, parent);
-        TextView textView = (TextView) view.findViewById(android.R.id.text1);
+        TextView textView = view.findViewById(android.R.id.text1);
         textView.setGravity(Gravity.CENTER);
 
         if (position == 0) {
