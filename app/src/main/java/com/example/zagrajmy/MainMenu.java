@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.zagrajmy.PostsManagement.PageWithPosts.UsersActivePosts;
 import com.example.zagrajmy.PostsManagement.PostCreatingLogic;
 import com.example.zagrajmy.PostsManagement.PostsOfTheGames;
 import com.google.android.material.navigation.NavigationView;
@@ -62,6 +63,7 @@ public class MainMenu extends AppCompatActivity {
 
         findPlayerButtonHandle();
         searchGamesButtonHandle();
+        myActivityButton();
     }
 
 
@@ -113,7 +115,11 @@ public class MainMenu extends AppCompatActivity {
     public void myActivityButton(){
         AppCompatButton myActivity = findViewById(R.id.myactivity);
 
-
+        myActivity.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), UsersActivePosts.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     public void greetNickname() {
@@ -122,7 +128,7 @@ public class MainMenu extends AppCompatActivity {
             String nick = user.getDisplayName();
             if (nick != null) {
                 AppCompatTextView displayNickname = findViewById(R.id.nickname);
-                displayNickname.setText(nick);
+                displayNickname.setText(user.getUid());
             }
         }
     }

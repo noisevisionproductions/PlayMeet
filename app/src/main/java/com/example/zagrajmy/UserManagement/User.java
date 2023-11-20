@@ -7,6 +7,7 @@ public class User extends RealmObject {
 
     @PrimaryKey
     private String nickName;
+    private String userId;
     private String birthDay;
     private String gender;
     private String location;
@@ -16,6 +17,13 @@ public class User extends RealmObject {
     private String avatar;
 
     public User() {
+    }
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getNickName() {
