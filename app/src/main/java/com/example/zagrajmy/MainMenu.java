@@ -112,7 +112,7 @@ public class MainMenu extends AppCompatActivity {
         });
     }
 
-    public void myActivityButton(){
+    public void myActivityButton() {
         AppCompatButton myActivity = findViewById(R.id.myactivity);
 
         myActivity.setOnClickListener(view -> {

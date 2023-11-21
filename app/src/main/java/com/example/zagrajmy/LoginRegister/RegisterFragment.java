@@ -78,6 +78,7 @@ public class RegisterFragment extends Fragment {
 
                     String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
                     userClass.setUserId(userId);
+                  //  Log.d("test", userClass.getUserId());
 
                     /*dodawanie nicku do bazy danych realm*/
                     RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
