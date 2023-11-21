@@ -19,22 +19,26 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class PostsOfTheGames extends AppCompatActivity {
+    List<PostCreating> posts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_posts_list);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view_posts);
 
         postCreate();
+
+        PostDesignAdapter postDesignAdapter = new PostDesignAdapter(this, posts);
+        recyclerView.setAdapter(postDesignAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         AppCompatButton button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
     }
 
     public void postCreate() {
-        List<PostCreating> posts = new ArrayList<>();
-
         Realm realm = Realm.getDefaultInstance();
 
         RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
@@ -42,10 +46,5 @@ public class PostsOfTheGames extends AppCompatActivity {
             posts.addAll(realm.copyFromRealm(allPosts));
         }
         realm.close();
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_view_posts);
-        PostDesignAdapter postDesignAdapter = new PostDesignAdapter(this, posts);
-        recyclerView.setAdapter(postDesignAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 }

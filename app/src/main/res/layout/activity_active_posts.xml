@@ -4,21 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     tools:context=".PostsManagement.PostsOfTheGames">
 
     <include
         android:id="@+id/include"
         layout="@layout/alpha_version_info" />
 
-    <ExpandableListView
-        android:id="@+id/expandableList"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/yourPosts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="80dp"
         android:layout_marginTop="40dp"
+        android:text="Twoje posty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </androidx.appcompat.widget.AppCompatButton>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/expandableListOfYourPosts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:childDivider="#008000"
         android:divider="#0000FF"
-        android:dividerHeight="2dp">
-    </ExpandableListView>
+        android:dividerHeight="2dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/yourPosts" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/backToMainMenu"
@@ -26,6 +39,6 @@
         android:layout_height="wrap_content"
         android:text="@string/backToMainMenu"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/expandableList"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
