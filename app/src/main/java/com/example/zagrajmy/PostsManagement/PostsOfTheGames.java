@@ -7,6 +7,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapter;
@@ -20,6 +21,7 @@ import io.realm.RealmResults;
 
 public class PostsOfTheGames extends AppCompatActivity {
     List<PostCreating> posts = new ArrayList<>();
+    private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

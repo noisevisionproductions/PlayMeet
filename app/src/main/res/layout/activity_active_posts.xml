@@ -1,44 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/gradient"
-    tools:context=".PostsManagement.PostsOfTheGames">
+    android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/alpha_version_info" />
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/yourPosts"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerActivePosts"
+        android:name="com.example.zagrajmy.PostsManagement.PageWithPosts.PostsCreatedByUserFragment"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="40dp"
-        android:text="Twoje posty"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_container" />
 
-    </androidx.appcompat.widget.AppCompatButton>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expandableListOfYourPosts"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:childDivider="#008000"
-        android:divider="#0000FF"
-        android:dividerHeight="2dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/yourPosts" />
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backToMainMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/backToMainMenu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/postsAddedByYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/postsAddedByYou" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/backToMainMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/backToMainMenu"
+            android:layout_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/postsSavedByYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/postsSavedByYou" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</RelativeLayout>
