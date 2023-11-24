@@ -9,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.MainMenu;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.User;
@@ -24,11 +26,19 @@ public class LoginFragment extends Fragment {
     private AuthenticationManager authManager;
     private String email, password;
     private TextInputEditText edytujPoleEmail, edytujPoleHaslo;
+    private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public void onDestroy() {
+        realmDatabaseManagement.closeRealmDatabase();
+        super.onDestroy();
+    }
 
-        View currentView = inflater.inflate(R.layout.activity_login, container, false);
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        View currentView = inflater.inflate(R.layout.login_fragment, container, false);
+
 
         authManager = new AuthenticationManager();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -55,12 +65,17 @@ public class LoginFragment extends Fragment {
             authManager.userLogin(email, password, task -> {
                 if (task.isSuccessful()) {
                     User userClass = new User();
+                    String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
+                    userClass.setUserId(userId);
+                    realmDatabaseManagement.addUser(userClass);
+
+                    //   UserUidManager.getInstance().setUser(userClass);
+
                     Toast.makeText(getActivity(), "Zalogowano", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getContext(), MainMenu.class);
                     startActivity(intent);
 
-                    String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
-                    userClass.setUserId(userId);
+
                 } else {
                     String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
                     Toast.makeText(getActivity(), "Authentication failed: " + errorMessage,
