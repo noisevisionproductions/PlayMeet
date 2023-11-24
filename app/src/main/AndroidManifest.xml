@@ -16,39 +16,41 @@
 
         <activity
             android:name=".PostsManagement.PageWithPosts.UsersActivePosts"
-            android:theme="@style/noBar"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/noBar" />
         <activity
             android:name=".UserManagement.UserAccountLogic"
-            android:theme="@style/noBar"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/noBar" />
         <activity
             android:name=".PostsManagement.PostsOfTheGames"
-            android:theme="@style/noBar"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/noBar" />
         <activity
             android:name=".PostsManagement.PostCreatingLogic"
-            android:theme="@style/noBar"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/noBar" />
         <activity
             android:name=".MainMenu"
-            android:theme="@style/AppTheme"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".LoginRegister.LoginAndRegisterActivity"
-            android:theme="@style/AppThemeForLoginAndRegister"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppThemeForLoginAndRegister" />
+        <activity
+            android:name=".LoginRegister.MainActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeForLoginAndRegister" />
+        <activity
+            android:name=".Design.WelcomeActivity"
+            android:exported="true"
+            android:theme="@style/noBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".LoginRegister.MainActivity"
-            android:theme="@style/AppTheme">
-
-        </activity>
     </application>
-
 </manifest>

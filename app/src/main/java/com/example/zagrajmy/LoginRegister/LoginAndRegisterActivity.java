@@ -8,20 +8,19 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.zagrajmy.R;
 
-import io.realm.Realm;
-
 
 public class LoginAndRegisterActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Realm.init(this);
-       /* RealmDatabaseManagement realm = new RealmDatabaseManagement();
+
+
+       /* RealmDatabaseManagement realm = RealmDatabaseManagement.getInstance();
         realm.deleteAllRealmDataUseForTestingOnly();
         realm.realmMigrationResetDatabaseOnlyForTesting();
         realm.closeRealmDatabase();*/
-        setContentView(R.layout.login_register_main_buttons);
+        setContentView(R.layout.activity_login_register);
 
         switchToLogin();
         switchToRegister();
@@ -35,7 +34,6 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerLogin, LoginFragment.class, null)
                     .setReorderingAllowed(true)
-                    .addToBackStack("login")
                     .commit();
         });
     }
@@ -48,7 +46,6 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerLogin, RegisterFragment.class, null)
                     .setReorderingAllowed(true)
-                    .addToBackStack("login")
                     .commit();
         });
     }
