@@ -40,5 +40,7 @@
     <string name="signMeIn">Zapisz mnie!</string>
     <string name="nickname">Nazwa użytkownika</string>
     <string name="myactivity">Moja aktywność</string>
+    <string name="postsAddedByYou">Twoje posty</string>
+    <string name="postsSavedByYou">Zapisane posty</string>
 
 </resources>

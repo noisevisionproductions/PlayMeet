@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 import io.realm.Realm;
 
 public class RegisterFragment extends Fragment {
+    private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
     private User userClass;
     private String emailText, hasloPierwszeText, hasloDrugieText, nicknameText;
     private AppCompatAutoCompleteTextView email, nicknameFromRegister, hasloPierwsze, hasloDrugie;
@@ -40,7 +41,7 @@ public class RegisterFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_register, container, false);
+        View view = inflater.inflate(R.layout.register_fragment, container, false);
         userClass = new User();
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -72,13 +73,10 @@ public class RegisterFragment extends Fragment {
 
             authManager.userRegister(emailText, hasloPierwszeText, task -> {
                 if (task.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Konto założone", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getContext(), LoginAndRegisterActivity.class);
-                    startActivity(intent);
-
+                    User userClass = new User();
                     String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
                     userClass.setUserId(userId);
-                  //  Log.d("test", userClass.getUserId());
+                    realmDatabaseManagement.addUser(userClass);
 
                     /*dodawanie nicku do bazy danych realm*/
                     RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
@@ -88,6 +86,9 @@ public class RegisterFragment extends Fragment {
                     /*dodawanie nicku do bazy danych firebase*/
                     saveNicknameToFirebase();
 
+                    Toast.makeText(getActivity(), "Konto założone", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getContext(), LoginAndRegisterActivity.class);
+                    startActivity(intent);
                 } else {
                     String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
                     Toast.makeText(getActivity(), "Authentication failed: " + errorMessage, Toast.LENGTH_SHORT).show();

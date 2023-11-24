@@ -5,6 +5,7 @@ import android.content.Intent;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
 import com.example.zagrajmy.UserManagement.UserAccountLogic;
 import com.google.android.material.navigation.NavigationView;
@@ -30,6 +31,8 @@ public class SidePanelMenu {
 
             if (id == R.id.wylogujKonto) {
                 FirebaseAuth.getInstance().signOut();
+                RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
+                realmDatabaseManagement.closeRealmDatabase();
                 Intent intent = new Intent(mainMenu.getApplicationContext(), LoginAndRegisterActivity.class);
                 mainMenu.startActivity(intent);
                 mainMenu.finish();

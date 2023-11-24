@@ -5,14 +5,26 @@ import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class RealmDatabaseManagement {
-    private final Realm realm = Realm.getDefaultInstance();
+    private static RealmDatabaseManagement instance;
+    private final Realm realm;
 
     public RealmDatabaseManagement() {
+        realm = Realm.getDefaultInstance();
+    }
 
+    public static RealmDatabaseManagement getInstance(){
+        if (instance == null){
+            instance = new RealmDatabaseManagement();
+        }
+        return instance;
     }
 
     //Usuwa wszystko z bazy danych realm - do testów
@@ -45,8 +57,32 @@ public class RealmDatabaseManagement {
         realm.commitTransaction();
     }
 
-    public void getPosts(PostCreating postCreating){
+    public void addUser(User user){
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(user);
+        realm.commitTransaction();
+    }
 
+    public void isUserAvailable(){
+
+        //realm.copyToRealmOrUpdate();
+    }
+
+    public User getUserId(String userId){
+        realm.beginTransaction();
+        User user = realm.where(User.class).equalTo("userId", userId).findFirst();
+        realm.commitTransaction();
+        return user;
+    }
+
+    public void getPosts(PostCreating postCreating){
+       // Realm realm = Realm.getDefaultInstance();
+
+        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
+        if (allPosts != null) {
+            List<PostCreating> posts = new ArrayList<>(realm.copyFromRealm(allPosts));
+        }
+        realm.close();
     }
 
 

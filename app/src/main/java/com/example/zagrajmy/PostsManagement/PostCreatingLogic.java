@@ -16,8 +16,11 @@ import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.Design.MySpinnerAdapter;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostsManagement.PageWithPosts.UsersActivePosts;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,8 +29,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class PostCreatingLogic extends AppCompatActivity {
-    RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
-    PostCreating postCreating = new PostCreating();
+    private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+    private final PostCreating postCreating = new PostCreating();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class PostCreatingLogic extends AppCompatActivity {
         setHour();
         createPost();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -51,16 +55,21 @@ public class PostCreatingLogic extends AppCompatActivity {
     }
 
     public void createPost() {
+      //  User userId = UserUidManager.getInstance().getUser();
+      //  String userId = String.valueOf(UserUidManager.getInstance().getUser());
+       // User userId = realmDatabaseManagement.getUserId(user.getUserId());
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Button createPost = findViewById(R.id.submitPost);
         createPost.setOnClickListener(view -> {
             setUniqueId();
             setAdditionalInfo();
 
-           // postCreating.setUserId(user.getUserId());
+            assert user != null;
+            postCreating.setUserId(user.getUid());
             realmDatabaseManagement.addPost(postCreating);
 
             Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(PostCreatingLogic.this, PostsOfTheGames.class);
+            Intent intent = new Intent(PostCreatingLogic.this, UsersActivePosts.class);
             startActivity(intent);
         });
     }
@@ -80,7 +89,7 @@ public class PostCreatingLogic extends AppCompatActivity {
         String[] items = getResources().getStringArray(R.array.arrays_sport_names);
         MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.arrays_sport_names);
+        AppCompatSpinner spinner = findViewById(R.id.arrays_sport_names);
         spinner.setAdapter(adapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -108,13 +117,11 @@ public class PostCreatingLogic extends AppCompatActivity {
             cityNames = new ArrayList<>(cityNames.subList(0, 1));
             cityNames.addAll(sortedList);
         }
-       // Collections.sort(cityNames);
-
         MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, cityNames);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        AppCompatSpinner chooseCity = (AppCompatSpinner) findViewById(R.id.cities_in_poland);
+        AppCompatSpinner chooseCity = findViewById(R.id.cities_in_poland);
         chooseCity.setAdapter(adapter);
 
         chooseCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -136,7 +143,7 @@ public class PostCreatingLogic extends AppCompatActivity {
         String[] items = getResources().getStringArray(R.array.arrays_skill_level);
         MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        AppCompatSpinner spinner = (AppCompatSpinner) findViewById(R.id.arrays_skill_level);
+        AppCompatSpinner spinner = findViewById(R.id.arrays_skill_level);
         spinner.setAdapter(adapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
