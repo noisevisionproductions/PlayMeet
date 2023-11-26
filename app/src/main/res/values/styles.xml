@@ -9,17 +9,33 @@
 
     <style name="TestStyle" parent="Widget.AppCompat.Spinner">
         <item name="android:background">#333333</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">#443434</item>
     </style>
     <style name="MySpinnerStyle" parent="Widget.AppCompat.Spinner">
         <item name="android:background">@drawable/spinner_background</item>
         <item name="android:padding">10dp</item>
-        <item name="android:popupBackground">#FFFFFF</item>
-        <item name="android:textColor">#000000</item>
-        <item name="android:textColorHint">#000000</item>
+        <item name="android:popupBackground">#EADBC4</item>
+        <item name="android:textColor">#443434</item>
+        <item name="android:textColorHint">#443434</item>
         <item name="android:gravity">center</item>
     </style>
 
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">#EADBC4</item>
+        <item name="android:textColor">#443434</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
+
+    <style name="MyAppCompatTextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">#443434</item>
+        <item name="android:textColorHint">#EADBC4</item>
+    </style>
+
+    <style name="MyTextInputLayoutDesign" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:textColor">#443434</item>
+        <item name="android:textColorHint">#443434</item>
+    </style>
 
 </resources>
 

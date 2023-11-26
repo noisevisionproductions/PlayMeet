@@ -1,18 +1,15 @@
-package com.example.zagrajmy;
-
+package com.example.zagrajmy.PostsManagement.UserPosts;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.RealmClass;
 
-@RealmClass
-public class PostCreating extends RealmObject {
+public class PostsSavedByUser extends RealmObject {
 
     @PrimaryKey
-    private int postId;
-    private boolean isCreatedByUser = false;
-    private boolean isSavedByUser = false;
+    private int id;
     private String userId;
+    private int postId;
+    private boolean isPostSavedByUser = false;
     private String sportType;
     private String cityName;
     private String dateTime;
@@ -27,52 +24,20 @@ public class PostCreating extends RealmObject {
         this.buttonText = buttonText;
     }
 
-    public PostCreating() {
-
+    public void setIsPostSavedByUser(boolean isPostSavedByUser){
+        this.isPostSavedByUser = isPostSavedByUser;
+    }
+    public boolean isPostSavedByUser() {
+        return isPostSavedByUser;
     }
 
-    public void setIsCreatedByUser(Boolean isCreatedByUser) {
-        this.isCreatedByUser = isCreatedByUser;
+    public String getButtonColor(){
+        return buttonColor;
     }
 
-    public void setIsSavedByUser(Boolean isSavedByUser) {
-        this.isSavedByUser = isSavedByUser;
+    public String getButtonText(){
+        return buttonText;
     }
-
-    public boolean isSavedByUser() {
-        return isSavedByUser;
-    }
-
-    public boolean isCreatedByUser() {
-        return isCreatedByUser;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public Integer getPostId() {
-        return postId;
-    }
-
-    public void setPostId(Integer postId) {
-        this.postId = postId;
-    }
-
-    public PostCreating(int postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
-        this.postId = postId;
-        this.sportType = sportType;
-        this.cityName = cityName;
-        this.additionalInfo = additionalInfo;
-        this.skillLevel = skillLevel;
-        this.dateTime = dateTime;
-        this.hourTime = hourTime;
-    }
-
     public String getSportType() {
         return sportType;
     }
@@ -121,7 +86,27 @@ public class PostCreating extends RealmObject {
         this.hourTime = hourTime;
     }
 
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
 }
-
-
