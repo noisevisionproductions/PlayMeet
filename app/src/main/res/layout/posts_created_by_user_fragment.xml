@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
+    android:background="@color/background"
     tools:context=".PostsManagement.PostsOfTheGames">
 
     <include
@@ -23,9 +23,10 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/noPostInfo"
+        style="@style/MyAppCompatTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:text="Nie stworzyłeś żadnych postów"
         android:textSize="28sp"

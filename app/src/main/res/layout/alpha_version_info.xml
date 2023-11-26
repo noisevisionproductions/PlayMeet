@@ -7,7 +7,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#27241E"
+        android:background="#443434"
         android:elevation="1dp">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -23,7 +23,7 @@
                 android:gravity="center"
                 android:editable="false"
                 android:text="Obecnie korzystasz z wersji alpha aplikacji."
-                android:textColor="#147444"
+                android:textColor="@color/background"
                 android:textSize="18sp" />
         </com.google.android.material.textfield.TextInputLayout>
     </com.google.android.material.appbar.AppBarLayout>
