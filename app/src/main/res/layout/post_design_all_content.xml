@@ -7,8 +7,9 @@
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:layout_margin="10dp"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="20dp"
+    app:cardBackgroundColor="#EADBC4"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="5dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -17,6 +18,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:background="#EADBC4"
         android:layout_margin="5dp">
 
         <!--przycisk do otwierania dodatkowych opcji-->
@@ -53,6 +55,7 @@
             app:layout_constraintTop_toBottomOf="@+id/arrowDownOpenMenu">
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/savePostButton"
                 android:layout_width="200dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -82,6 +85,7 @@
                 android:id="@+id/sportNames"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
+                style="@style/MyTextInputLayoutDesign"
                 android:background="@null"
                 android:entries="@array/arrays_sport_names"
                 android:gravity="center"
@@ -105,6 +109,7 @@
                 android:background="@null"
                 android:gravity="center"
                 android:hint="tesst"
+                style="@style/MyTextInputLayoutDesign"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
@@ -123,6 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
+                style="@style/MyTextInputLayoutDesign"
                 android:background="@null"
                 android:gravity="center"
                 android:hint="test"
@@ -147,6 +153,8 @@
                 android:layout_marginStart="10dp"
                 android:background="@null"
                 android:gravity="center"
+                style="@style/MyTextInputLayoutDesign"
+
                 android:hint="tessst"
                 android:textSize="12sp"
                 android:textStyle="bold"
@@ -170,6 +178,8 @@
                 android:hint="test"
                 android:textSize="12sp"
                 android:textStyle="bold"
+                style="@style/MyTextInputLayoutDesign"
+
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -188,6 +198,8 @@
                 android:layout_height="70dp"
                 android:background="@null"
                 android:hint="@string/nodescription"
+                style="@style/MyTextInputLayoutDesign"
+
                 android:inputType="textCapSentences"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -208,6 +220,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                style="@style/MyTextInputLayoutDesign"
+
                 android:inputType="number"
                 android:textSize="8sp"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />

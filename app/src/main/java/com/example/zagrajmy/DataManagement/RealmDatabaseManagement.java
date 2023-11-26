@@ -1,6 +1,7 @@
 package com.example.zagrajmy.DataManagement;
 
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostsManagement.UserPosts.PostsSavedByUser;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,18 +49,34 @@ public class RealmDatabaseManagement {
     }
 
     public boolean checkIfIdExists(int id) {
-        return realm.where(PostCreating.class).equalTo("uniqueId", id).findFirst() != null;
+        return realm.where(PostCreating.class).equalTo("postId", id).findFirst() != null;
     }
 
-    public void addPost(PostCreating postCreating) {
+    public void addPostToDatabase(PostCreating postCreating) {
+
         realm.beginTransaction();
-        realm.copyToRealm(postCreating);
+        realm.copyToRealmOrUpdate(postCreating);
         realm.commitTransaction();
     }
 
     public void addUser(User user){
+/*
+            realm.executeTransactionAsync(new Realm.Transaction() {
+                @Override
+                public void execute(Realm bgRealm) {
+                    bgRealm.copyToRealmOrUpdate(user);
+                }
+            });
+        */
+
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(user);
+        realm.commitTransaction();
+    }
+
+    public void savePostToDatabaseAsSignedIn(PostsSavedByUser postsSavedByUser){
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(postsSavedByUser);
         realm.commitTransaction();
     }
 
@@ -68,12 +85,6 @@ public class RealmDatabaseManagement {
         //realm.copyToRealmOrUpdate();
     }
 
-    public User getUserId(String userId){
-        realm.beginTransaction();
-        User user = realm.where(User.class).equalTo("userId", userId).findFirst();
-        realm.commitTransaction();
-        return user;
-    }
 
     public void getPosts(PostCreating postCreating){
        // Realm realm = Realm.getDefaultInstance();

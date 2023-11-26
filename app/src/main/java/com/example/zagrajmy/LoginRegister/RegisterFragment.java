@@ -166,7 +166,7 @@ public class RegisterFragment extends Fragment {
     public boolean isUserNameAvailable(String username) {
         Realm realm = Realm.getDefaultInstance();
         User user = realm.where(User.class).equalTo("nickName", username).findFirst();
-        realm.close();
+       // realm.close();
         return user != null;
     }
 

@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.zagrajmy.PostsManagement.PageWithPosts.UsersActivePosts;
+import com.example.zagrajmy.PostsManagement.UserPosts.UsersActivePosts;
 import com.example.zagrajmy.PostsManagement.PostCreatingLogic;
 import com.example.zagrajmy.PostsManagement.PostsOfTheGames;
 import com.google.android.material.navigation.NavigationView;
