@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient"
+        android:background="#7EABAE"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -24,6 +24,7 @@
             android:gravity="center"
             android:paddingTop="50dp"
             android:text="Witaj"
+            android:textColor="#EADBC4"
             android:textSize="50sp"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,21 +36,27 @@
             android:gravity="center"
             android:hint="Twój nick"
             android:paddingBottom="50dp"
-            android:textColor="@color/material_dynamic_primary95"
+            android:textColor="#EADBC4"
             android:textSize="50sp"
             app:layout_constraintTop_toBottomOf="@+id/greetUser" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/createNewPostButton"
+            style="@style/MyButtonStyle"
+            android:background="@drawable/button_style"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            android:layout_margin="20dp"
             android:text="@string/createNewPostButton"
             app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/findPlayerButton"
             android:layout_width="match_parent"
+            style="@style/MyButtonStyle"
+            android:background="@drawable/button_style"
             android:layout_height="100dp"
+            android:layout_margin="20dp"
             android:text="@string/findPlayerButton"
             app:layout_constraintTop_toBottomOf="@+id/createNewPostButton" />
 
@@ -57,6 +64,9 @@
             android:id="@+id/myactivity"
             android:layout_width="match_parent"
             android:layout_height="100dp"
+            style="@style/MyButtonStyle"
+            android:background="@drawable/button_style"
+            android:layout_margin="20dp"
             android:text="@string/myactivity"
             app:layout_constraintTop_toBottomOf="@+id/findPlayerButton" />
     </androidx.constraintlayout.widget.ConstraintLayout>

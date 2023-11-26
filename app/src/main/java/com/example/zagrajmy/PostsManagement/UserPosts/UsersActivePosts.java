@@ -1,4 +1,4 @@
-package com.example.zagrajmy.PostsManagement.PageWithPosts;
+package com.example.zagrajmy.PostsManagement.UserPosts;
 
 import android.os.Bundle;
 import android.widget.Button;
