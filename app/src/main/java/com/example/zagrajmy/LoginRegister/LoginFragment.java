@@ -28,11 +28,11 @@ public class LoginFragment extends Fragment {
     private TextInputEditText edytujPoleEmail, edytujPoleHaslo;
     private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
 
-    @Override
+ /*   @Override
     public void onDestroy() {
         realmDatabaseManagement.closeRealmDatabase();
         super.onDestroy();
-    }
+    }*/
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

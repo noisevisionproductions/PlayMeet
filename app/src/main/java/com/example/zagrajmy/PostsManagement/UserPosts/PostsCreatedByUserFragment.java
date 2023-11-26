@@ -1,4 +1,4 @@
-package com.example.zagrajmy.PostsManagement.PageWithPosts;
+package com.example.zagrajmy.PostsManagement.UserPosts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapter;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,7 +32,7 @@ public class PostsCreatedByUserFragment extends Fragment {
 
         View currentView = inflater.inflate(R.layout.posts_created_by_user_fragment, container, false);
 
-        buttonForUserPosts(currentView);
+        showUserPosts(currentView);
 
         return currentView;
     }
@@ -42,28 +43,33 @@ public class PostsCreatedByUserFragment extends Fragment {
         realm.close();
     }
 
-    public void buttonForUserPosts(View view) {
-        //AppCompatButton yourPosts = view.findViewById(R.id.yourPosts);
+    public void showUserPosts(View view) {
         AppCompatTextView noPosts = view.findViewById(R.id.noPostInfo);
         RecyclerView expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
         FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
+
 
         assert userFirebase != null;
 
         List<PostCreating> newUserPosts = new ArrayList<>();
 
+       // RealmResults<PostCreating> userPostsFromRealm = realm.copyFromRealm("postsCreatedByUser");
+
         RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class).equalTo("userId", userFirebase.getUid()).findAll();
 
         if (userPostsFromRealm != null) {
-            newUserPosts.addAll(realm.copyFromRealm(userPostsFromRealm));
+            for (PostCreating listOfCreatedByUser : userPostsFromRealm.where().equalTo("isCreatedByUser", true).findAll()){
+                newUserPosts.add(realm.copyFromRealm(listOfCreatedByUser));
+            }
         }
+
         if (newUserPosts.isEmpty()) {
             noPosts.setVisibility(View.VISIBLE);
             expandableListOfYourPosts.setVisibility(View.GONE);
         } else {
             expandableListOfYourPosts.setVisibility(View.VISIBLE);
             noPosts.setVisibility(View.GONE);
-            PostDesignAdapter postDesignAdapter = new PostDesignAdapter(getContext(), newUserPosts);
+            PostDesignAdapter postDesignAdapter = new PostDesignAdapter(getContext(), newUserPosts,null);
             expandableListOfYourPosts.setAdapter(postDesignAdapter);
             expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         }

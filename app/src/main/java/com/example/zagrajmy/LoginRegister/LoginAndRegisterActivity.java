@@ -15,11 +15,11 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-       /* RealmDatabaseManagement realm = RealmDatabaseManagement.getInstance();
+        /*RealmDatabaseManagement realm = RealmDatabaseManagement.getInstance();
         realm.deleteAllRealmDataUseForTestingOnly();
         realm.realmMigrationResetDatabaseOnlyForTesting();
         realm.closeRealmDatabase();*/
+
         setContentView(R.layout.activity_login_register);
 
         switchToLogin();
