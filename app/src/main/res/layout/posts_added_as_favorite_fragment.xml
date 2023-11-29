@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutOfAddedPost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
     tools:context=".PostsManagement.PostsOfTheGames">
-
 
     <include
         android:id="@+id/include"
@@ -27,9 +27,9 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/noPostInfo"
+        style="@style/MyAppCompatTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/MyAppCompatTextViewStyle"
         android:layout_marginTop="50dp"
         android:gravity="center"
         android:text="Nie zapisałeś żadnych postów"
@@ -37,5 +37,7 @@
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include layout="@layout/button_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

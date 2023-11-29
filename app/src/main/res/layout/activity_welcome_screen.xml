@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#555555">
+    android:background="@color/background">
 
     <ImageView
         android:id="@+id/welcomeImage"
@@ -11,15 +11,15 @@
         android:layout_centerInParent="true"
         android:contentDescription="test" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/welcomeText"
+        style="@style/MyAppCompatTextViewStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/welcomeImage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp"
         android:text="Witaj w naszej aplikacji!"
-        android:textColor="@android:color/white"
-        android:textSize="24sp" />
+        android:textSize="30sp" />
 
 </RelativeLayout>

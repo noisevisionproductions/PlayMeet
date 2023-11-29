@@ -17,7 +17,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
-import com.example.zagrajmy.MainMenu;
+import com.example.zagrajmy.PostsManagement.PostsOfTheGames;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +47,7 @@ public class RegisterFragment extends Fragment {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(getContext(), MainMenu.class);
+            Intent intent = new Intent(getContext(), PostsOfTheGames.class);
             startActivity(intent);
         }
 

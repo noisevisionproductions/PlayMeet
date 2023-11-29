@@ -11,17 +11,17 @@
         android:id="@+id/include"
         layout="@layout/alpha_version_info" />
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient"
         android:layout_marginTop="40dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
         tools:context=".LoginRegister.LoginAndRegisterActivity">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -30,14 +30,17 @@
             android:textSize="30sp"
             android:textStyle="bold" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+
             android:text="@string/e_mail"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -53,7 +56,8 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/haslo"
@@ -61,6 +65,7 @@
             android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true">
@@ -82,9 +87,11 @@
 
         <Button
             android:id="@+id/loginButton"
+            android:background="@drawable/button_style"
+            style="@style/MyButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/loginButton" />
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </FrameLayout>

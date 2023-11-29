@@ -12,12 +12,12 @@
         android:id="@+id/include"
         layout="@layout/alpha_version_info" />
 
-    <LinearLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="40dp"
-        android:background="@drawable/gradient"
+        android:background="#7EABAE"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
@@ -54,7 +54,7 @@
             android:textSize="30sp" />
 
         <!--wybor daty i godziny-->
-        <LinearLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -96,7 +96,7 @@
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-        </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--Dodatkowe informacje-->
         <com.google.android.material.textfield.TextInputLayout
@@ -117,24 +117,33 @@
                 android:textSize="15sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backToMainMenu"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/backToMainMenu"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/submitPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/submitPost"
-        app:layout_constraintBottom_toTopOf="@id/backToMainMenu"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/backToMainMenu"
+            style="@style/MyButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_style"
+            android:text="@string/backToMainMenu" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/submitPost"
+            style="@style/MyButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_style"
+            android:text="@string/submitPost" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
