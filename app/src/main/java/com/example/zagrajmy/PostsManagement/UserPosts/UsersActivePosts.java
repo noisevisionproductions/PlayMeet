@@ -1,7 +1,6 @@
 package com.example.zagrajmy.PostsManagement.UserPosts;
 
 import android.os.Bundle;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -11,6 +10,8 @@ import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 
 public class UsersActivePosts extends AppCompatActivity {
+    private AppCompatButton buttonYourPosts;
+    private AppCompatButton buttonSavedPosts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,15 +19,22 @@ public class UsersActivePosts extends AppCompatActivity {
 
         setContentView(R.layout.activity_active_posts);
 
+        buttonYourPosts = findViewById(R.id.postsAddedByYou);
+        buttonSavedPosts = findViewById(R.id.postsSavedByYou);
+
+        buttonYourPosts.setSelected(true);
+
         switchToUserPosts();
         switchToFavoritePosts();
         mainMenuButton();
     }
 
     public void switchToUserPosts() {
-        Button buttonLogin = findViewById(R.id.postsAddedByYou);
+        buttonYourPosts.setOnClickListener(view -> {
 
-        buttonLogin.setOnClickListener(view -> {
+            buttonYourPosts.setSelected(true);
+            buttonSavedPosts.setSelected(false);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerActivePosts, PostsCreatedByUserFragment.class, null)
@@ -36,9 +44,9 @@ public class UsersActivePosts extends AppCompatActivity {
     }
 
     public void switchToFavoritePosts() {
-        Button buttonRegister = findViewById(R.id.postsSavedByYou);
-
-        buttonRegister.setOnClickListener(view -> {
+        buttonSavedPosts.setOnClickListener(view -> {
+            buttonYourPosts.setSelected(true);
+            buttonSavedPosts.setSelected(false);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerActivePosts, PostsFavoriteByUserFragment.class, null)
@@ -47,7 +55,7 @@ public class UsersActivePosts extends AppCompatActivity {
         });
     }
 
-    public void mainMenuButton(){
+    public void mainMenuButton() {
         AppCompatButton button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
     }

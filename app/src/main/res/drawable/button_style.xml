@@ -1,8 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#EADBC4" /> <!-- kolor tła przycisku -->
-    <corners android:radius="10dp" /> <!-- zaokrąglenie rogów przycisku -->
-    <stroke
-        android:width="5px"
-        android:color="#443434" /> <!-- kolor i szerokość ramki przycisku -->
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape>
+            <solid android:color="#7EABAE" />
+            <corners android:radius="10dp" />
+            <stroke android:width="5px" android:color="#443434" />
+        </shape>
+    </item>
+    <item android:state_selected="true">
+        <shape>
+            <solid android:color="#7EABAE" />
+            <corners android:radius="10dp" />
+            <stroke android:width="5px" android:color="#443434" />
+        </shape>
+    </item>
+    <item android:state_focused="true">
+        <shape>
+            <solid android:color="#7EABAE" />
+            <corners android:radius="10dp" />
+            <stroke android:width="5px" android:color="#443434" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <solid android:color="#EADBC4" />
+            <corners android:radius="10dp" />
+            <stroke android:width="5px" android:color="#443434" />
+        </shape>
+    </item>
+</selector>

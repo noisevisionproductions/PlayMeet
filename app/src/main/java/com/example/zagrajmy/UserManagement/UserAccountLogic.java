@@ -6,6 +6,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,10 +19,12 @@ public class UserAccountLogic extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
 
         greetNickname();
+        getAddPostButton();
         Button button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
     }
@@ -35,5 +38,9 @@ public class UserAccountLogic extends AppCompatActivity {
                 displayNickname.setText(nick);
             }
         }
+    }
+    public void getAddPostButton() {
+        ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.postCreatingLayout, myFragment).commit();
     }
 }

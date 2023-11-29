@@ -11,7 +11,7 @@ public class PostCreating extends RealmObject {
     @PrimaryKey
     private int postId;
     private boolean isCreatedByUser = false;
-    private boolean isSavedByUser = false;
+    private boolean isPostSavedByUser = false;
     private String userId;
     private String sportType;
     private String cityName;
@@ -19,28 +19,22 @@ public class PostCreating extends RealmObject {
     private String hourTime;
     private String skillLevel;
     private String additionalInfo;
-    private String buttonColor;
-    private String buttonText;
 
-    public void setButtonColorAndText(String buttonColor, String buttonText){
-        this.buttonColor = buttonColor;
-        this.buttonText = buttonText;
-    }
 
     public PostCreating() {
 
     }
 
+    public boolean isPostSavedByUser() {
+        return isPostSavedByUser;
+    }
+
+    public void setPostSavedByUser(boolean postSavedByUser) {
+        isPostSavedByUser = postSavedByUser;
+    }
+
     public void setIsCreatedByUser(Boolean isCreatedByUser) {
         this.isCreatedByUser = isCreatedByUser;
-    }
-
-    public void setIsSavedByUser(Boolean isSavedByUser) {
-        this.isSavedByUser = isSavedByUser;
-    }
-
-    public boolean isSavedByUser() {
-        return isSavedByUser;
     }
 
     public boolean isCreatedByUser() {

@@ -12,9 +12,10 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.zagrajmy.PostsManagement.UserPosts.UsersActivePosts;
+import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.PostsManagement.PostCreatingLogic;
 import com.example.zagrajmy.PostsManagement.PostsOfTheGames;
+import com.example.zagrajmy.PostsManagement.UserPosts.UsersActivePosts;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,10 +59,12 @@ public class MainMenu extends AppCompatActivity {
 
         setupDrawerLayout();
 
+        getAddPostButton();
+
         SidePanelMenu sidePanelMenu = new SidePanelMenu(this);
         sidePanelMenu.manageDrawerButtons();
 
-        findPlayerButtonHandle();
+        createNewPostButton();
         searchGamesButtonHandle();
         myActivityButton();
     }
@@ -92,7 +95,7 @@ public class MainMenu extends AppCompatActivity {
         }
     }*/
 
-    public void findPlayerButtonHandle() {
+    public void createNewPostButton() {
         AppCompatButton createNewPostButton = findViewById(R.id.createNewPostButton);
 
         createNewPostButton.setOnClickListener(view -> {
@@ -133,4 +136,8 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
+    public void getAddPostButton() {
+        ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.mainMenuLayout, myFragment).commit();
+    }
 }

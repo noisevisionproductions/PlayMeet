@@ -1,15 +1,17 @@
 package com.example.zagrajmy.LoginRegister;
 
 import android.os.Bundle;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.zagrajmy.R;
 
 
 public class LoginAndRegisterActivity extends AppCompatActivity {
+    private AppCompatButton buttonLogin;
+    private AppCompatButton buttonRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,14 +24,21 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_login_register);
 
+        buttonLogin = findViewById(R.id.kliknijabyzalogowac);
+        buttonRegister = findViewById(R.id.kliknijabyzarejestrowac);
+
+        buttonLogin.setSelected(true);
+
         switchToLogin();
         switchToRegister();
     }
 
     public void switchToLogin() {
-        Button buttonLogin = findViewById(R.id.kliknijabyzalogowac);
-
         buttonLogin.setOnClickListener(view -> {
+
+            buttonLogin.setSelected(true);
+            buttonRegister.setSelected(false);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerLogin, LoginFragment.class, null)
@@ -39,9 +48,11 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
     }
 
     public void switchToRegister() {
-        Button buttonRegister = findViewById(R.id.kliknijabyzarejestrowac);
-
         buttonRegister.setOnClickListener(view -> {
+
+            buttonRegister.setSelected(true);
+            buttonLogin.setSelected(false);
+
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerLogin, RegisterFragment.class, null)

@@ -8,7 +8,7 @@
         android:title="Mój profil" />
     <item
         android:id="@+id/mojaAktywnosc"
-        android:title="Mój profil" />
+        android:title="@string/myactivity" />
     <item
         android:id="@+id/wylogujKonto"
         android:enabled="true"

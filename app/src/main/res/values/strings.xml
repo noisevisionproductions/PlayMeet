@@ -30,7 +30,7 @@
     <string name="findPlayerButton">Znajdź gracza</string>
     <string name="test_text">TEST</string>
     <string name="createNewPostButton">Stwórz nowy post</string>
-    <string name="backToMainMenu">Menu Główne</string>
+    <string name="backToMainMenu">Pokaż posty</string>
     <string name="submitPost">Utwórz post</string>
     <string name="wybierzMiasto">Wybierz miasto</string>
     <string name="nodescription">Brak dodatkowych informacji.</string>
@@ -39,8 +39,9 @@
     <string name="expandmenu">Rozwiń menu</string>
     <string name="signMeIn">Zapisz mnie!</string>
     <string name="nickname">Nazwa użytkownika</string>
-    <string name="myactivity">Moja aktywność</string>
+    <string name="myactivity">Twoja aktywność</string>
     <string name="postsAddedByYou">Twoje posty</string>
     <string name="postsSavedByYou">Zapisane posty</string>
+    <string name="deletePost">Usuń post</string>
 
 </resources>
