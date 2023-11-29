@@ -15,9 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.UserPosts.PostsSavedByUser;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,7 +25,7 @@ import java.util.List;
 
 import io.realm.Realm;
 
-public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.MyViewHolder> {
+public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextInputEditText uniquePostId;
@@ -42,7 +40,7 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
         private final LinearLayoutCompat extraInfoContainer;
         private final AppCompatButton arrowDownOpenMenuButton;
         private final AppCompatButton savePostButton;
-        private PostsSavedByUser postsSavedByUser;
+        private PostCreating postCreating;
         private Realm realm;
         private FirebaseUser firebaseUser;
 
@@ -84,8 +82,8 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
             savePostButtonLogic();
         }
 
-        public void setPostsSavedByUser(PostsSavedByUser postsSavedByUser) {
-            this.postsSavedByUser = postsSavedByUser;
+        public void setPostsSavedByUser(PostCreating postCreating) {
+            this.postCreating = postCreating;
         }
 
         public void savePostButtonLogic() {
@@ -95,22 +93,22 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
                 PostCreating postCreating = realm.where(PostCreating.class).equalTo("isCreatedByUser", true).findFirst();
 
 
-                postsSavedByUser = new PostsSavedByUser();
+                this.postCreating = new PostCreating();
                 assert firebaseUser != null;
-                postsSavedByUser.setUserId(firebaseUser.getUid());
+                this.postCreating.setUserId(firebaseUser.getUid());
                 assert postCreating != null;
-                postsSavedByUser.setPostId(postCreating.getPostId());
-                postsSavedByUser.setSportType(postCreating.getSportType());
-                postsSavedByUser.setCityName(postCreating.getCityName());
-                postsSavedByUser.setDateTime(postCreating.getDateTime());
-                postsSavedByUser.setHourTime(postCreating.getHourTime());
-                postsSavedByUser.setSkillLevel(postCreating.getSkillLevel());
-                postsSavedByUser.setAdditionalInfo(postCreating.getAdditionalInfo());
-                postsSavedByUser.setButtonColorAndText(String.valueOf(Color.BLACK), "Zapisałeś się!");
-                postsSavedByUser.setIsPostSavedByUser(true);
-                setPostsSavedByUser(postsSavedByUser);
+                this.postCreating.setPostId(postCreating.getPostId());
+                this.postCreating.setSportType(postCreating.getSportType());
+                this.postCreating.setCityName(postCreating.getCityName());
+                this.postCreating.setDateTime(postCreating.getDateTime());
+                this.postCreating.setHourTime(postCreating.getHourTime());
+                this.postCreating.setSkillLevel(postCreating.getSkillLevel());
+                this.postCreating.setAdditionalInfo(postCreating.getAdditionalInfo());
+          /*      this.postCreating.setButtonColorAndText(String.valueOf(Color.BLACK), "Zapisałeś się!");
+                this.postCreating.setIsPostSavedByUser(true);*/
+                setPostsSavedByUser(this.postCreating);
 
-                RealmDatabaseManagement.getInstance().savePostToDatabaseAsSignedIn(postsSavedByUser);
+                //RealmDatabaseManagement.getInstance().savePostToDatabaseAsSignedIn(this.postCreating);
 
                 savePostButton.setBackgroundColor(Color.BLACK);
                 savePostButton.setText("Zapisałeś się!");
@@ -119,14 +117,12 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
 
     }
 
-    private final List<PostCreating> posts;
-    private final List<PostsSavedByUser> postsSavedByUsers;
+    private final List<com.example.zagrajmy.PostCreating> postsCreatedByUser;
     private final Context context;
 
 
-    public PostDesignAdapter(Context context, List<PostCreating> posts, List<PostsSavedByUser> postsSavedByUsers) {
-        this.posts = posts;
-        this.postsSavedByUsers = postsSavedByUsers;
+    public PostDesignAdapterForAllPosts(Context context, List<com.example.zagrajmy.PostCreating> postsCreatedByUser) {
+        this.postsCreatedByUser = postsCreatedByUser;
         this.context = context;
     }
 
@@ -134,11 +130,8 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        //  Realm realm = Realm.getDefaultInstance();
-
-        if (posts != null) {
-            // bind data from the posts list
-            PostCreating postCreating = posts.get(position);
+        if (postsCreatedByUser != null) {
+            com.example.zagrajmy.PostCreating postCreating = postsCreatedByUser.get(position);
             holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
             holder.sportNames.setText(postCreating.getSportType());
             holder.cityNames.setText(postCreating.getCityName());
@@ -147,32 +140,8 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
             holder.chosenDate.setText(postCreating.getDateTime());
             holder.chosenHour.setText(postCreating.getHourTime());
 
-            // ...
-        } else if (postsSavedByUsers != null) {
-            // bind data from the postsSavedByUsers list
-            PostsSavedByUser userPost = postsSavedByUsers.get(position);
-            String buttonColor = userPost.getButtonColor();
-            String buttonText = userPost.getButtonText();
-
-            if (buttonColor != null && !buttonColor.isEmpty()) {
-                holder.savePostButton.setBackgroundColor(Color.BLACK);
-                holder.savePostButton.setFocusable(false);
-            }
-
-            if (buttonText != null && !buttonText.isEmpty()) {
-                holder.savePostButton.setText(buttonText);
-                holder.savePostButton.setFocusable(false);
-            }
-
-            holder.uniquePostId.setText(String.valueOf(userPost.getPostId()));
-            holder.sportNames.setText(userPost.getSportType());
-            holder.cityNames.setText(userPost.getCityName());
-            holder.skillLevel.setText(userPost.getSkillLevel());
-            holder.addInfo.setText(userPost.getAdditionalInfo());
-            holder.chosenDate.setText(userPost.getDateTime());
-            holder.chosenHour.setText(userPost.getHourTime());
-
         }
+
         extraInfo(holder);
     }
 
@@ -210,7 +179,7 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
 
     @NonNull
     @Override
-    public PostDesignAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // Wczytaj swój plik XML jako nowy widok
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
         return new MyViewHolder(v);
@@ -218,10 +187,8 @@ public class PostDesignAdapter extends RecyclerView.Adapter<PostDesignAdapter.My
 
     @Override
     public int getItemCount() {
-        if (posts != null) {
-            return posts.size();
-        } else if (postsSavedByUsers != null) {
-            return postsSavedByUsers.size();
+        if (postsCreatedByUser != null) {
+            return postsCreatedByUser.size();
         } else {
             return 0;
         }

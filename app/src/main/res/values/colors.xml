@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources><color name="more_blue">#0000FF</color>
-    <color name="background">@color/material_dynamic_secondary30</color>
+    <color name="background">#7EABAE</color>
 
 </resources>

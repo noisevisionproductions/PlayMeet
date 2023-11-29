@@ -25,15 +25,11 @@
         <activity
             android:name=".PostsManagement.PostsOfTheGames"
             android:exported="true"
-            android:theme="@style/noBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".PostsManagement.PostCreatingLogic"
             android:exported="true"
             android:theme="@style/noBar" />
-        <activity
-            android:name=".MainMenu"
-            android:exported="true"
-            android:theme="@style/AppTheme" />
         <activity
             android:name=".LoginRegister.LoginAndRegisterActivity"
             android:exported="true"

@@ -11,8 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapter;
+import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapterForUserActivity;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,6 +35,7 @@ public class PostsCreatedByUserFragment extends Fragment {
 
         showUserPosts(currentView);
 
+        getAddPostButton();
         return currentView;
     }
 
@@ -53,12 +55,12 @@ public class PostsCreatedByUserFragment extends Fragment {
 
         List<PostCreating> newUserPosts = new ArrayList<>();
 
-       // RealmResults<PostCreating> userPostsFromRealm = realm.copyFromRealm("postsCreatedByUser");
+        // RealmResults<PostCreating> userPostsFromRealm = realm.copyFromRealm("postsCreatedByUser");
 
         RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class).equalTo("userId", userFirebase.getUid()).findAll();
 
         if (userPostsFromRealm != null) {
-            for (PostCreating listOfCreatedByUser : userPostsFromRealm.where().equalTo("isCreatedByUser", true).findAll()){
+            for (PostCreating listOfCreatedByUser : userPostsFromRealm.where().equalTo("isCreatedByUser", true).findAll()) {
                 newUserPosts.add(realm.copyFromRealm(listOfCreatedByUser));
             }
         }
@@ -69,10 +71,14 @@ public class PostsCreatedByUserFragment extends Fragment {
         } else {
             expandableListOfYourPosts.setVisibility(View.VISIBLE);
             noPosts.setVisibility(View.GONE);
-            PostDesignAdapter postDesignAdapter = new PostDesignAdapter(getContext(), newUserPosts,null);
-            expandableListOfYourPosts.setAdapter(postDesignAdapter);
+            PostDesignAdapterForUserActivity postDesignAdapterForUserActivity = new PostDesignAdapterForUserActivity(getContext(), newUserPosts);
+            expandableListOfYourPosts.setAdapter(postDesignAdapterForUserActivity);
             expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         }
     }
-}
 
+    public void getAddPostButton() {
+        ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
+        getParentFragmentManager().beginTransaction().add(R.id.layoutOfCreatedPosts, myFragment).commit();
+    }
+}

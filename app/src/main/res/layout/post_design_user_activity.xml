@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutOfPost"
+    android:layout_width="match_parent"
+    android:layout_height="240dp"
+    android:layout_margin="10dp"
+    app:cardBackgroundColor="#EADBC4"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="5dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="#EADBC4"
+        android:layout_margin="5dp">
+
+        <!--przycisk do otwierania dodatkowych opcji-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/arrowDownOpenMenu"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/arrowDownOpenMenuButton"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:background="@drawable/baseline_keyboard_arrow_down_24"
+                android:contentDescription="additionalMenu"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--menu do dotatkowych opcji - default: "gone"-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/extraInfoContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/expandmenu"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/arrowDownOpenMenu">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/deletePost"
+                android:layout_width="200dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="#1D802F"
+                android:text="@string/deletePost" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--avatar-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sample_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--nazwa sportu-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/sportNames"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                style="@style/MyTextInputLayoutDesign"
+                android:background="@null"
+                android:entries="@array/arrays_sport_names"
+                android:gravity="center"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--nazwa miasta-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintLeft_toRightOf="@+id/imageView">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/chosenCity"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="tesst"
+                style="@style/MyTextInputLayoutDesign"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--data-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenHourForLaoyutDesign"
+            app:layout_constraintEnd_toStartOf="@+id/chosenHourForLaoyutDesign">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/chosenDate"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                style="@style/MyTextInputLayoutDesign"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="test"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--data-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/chosenHourForLaoyutDesign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/chosenHour"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:background="@null"
+                android:gravity="center"
+                style="@style/MyTextInputLayoutDesign"
+
+                android:hint="tessst"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--wybor poziomu-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/skilLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="center"
+                android:hint="test"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                style="@style/MyTextInputLayoutDesign"
+
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--dodatkowe info-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addInfoPostForButtonDesign"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/addInfoPost"
+                android:layout_width="wrap_content"
+                android:layout_height="70dp"
+                android:background="@null"
+                android:hint="@string/nodescription"
+                style="@style/MyTextInputLayoutDesign"
+
+                android:inputType="textCapSentences"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--unikalne ID-->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/uniquePostIdForButtonDesign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/uniquePostId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                style="@style/MyTextInputLayoutDesign"
+
+                android:inputType="number"
+                android:textSize="8sp"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
