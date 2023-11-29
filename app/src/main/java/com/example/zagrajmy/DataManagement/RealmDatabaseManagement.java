@@ -1,7 +1,6 @@
 package com.example.zagrajmy.DataManagement;
 
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.UserPosts.PostsSavedByUser;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -49,10 +48,10 @@ public class RealmDatabaseManagement {
     }
 
     public boolean checkIfIdExists(int id) {
-        return realm.where(PostCreating.class).equalTo("postId", id).findFirst() != null;
+        return realm.where(com.example.zagrajmy.PostCreating.class).equalTo("postId", id).findFirst() != null;
     }
 
-    public void addPostToDatabase(PostCreating postCreating) {
+    public void addPostToDatabase(com.example.zagrajmy.PostCreating postCreating) {
 
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(postCreating);
@@ -74,9 +73,9 @@ public class RealmDatabaseManagement {
         realm.commitTransaction();
     }
 
-    public void savePostToDatabaseAsSignedIn(PostsSavedByUser postsSavedByUser){
+    public void savePostToDatabaseAsSignedIn(PostCreating postCreating){
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(postsSavedByUser);
+        realm.copyToRealmOrUpdate(postCreating);
         realm.commitTransaction();
     }
 
@@ -86,22 +85,22 @@ public class RealmDatabaseManagement {
     }
 
 
-    public void getPosts(PostCreating postCreating){
+    public void getPosts(com.example.zagrajmy.PostCreating postCreating){
        // Realm realm = Realm.getDefaultInstance();
 
-        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
+        RealmResults<com.example.zagrajmy.PostCreating> allPosts = realm.where(com.example.zagrajmy.PostCreating.class).findAll();
         if (allPosts != null) {
-            List<PostCreating> posts = new ArrayList<>(realm.copyFromRealm(allPosts));
+            List<com.example.zagrajmy.PostCreating> posts = new ArrayList<>(realm.copyFromRealm(allPosts));
         }
         realm.close();
     }
 
 
-    public void updatePost(PostCreating postCreating) {
+    public void updatePost(com.example.zagrajmy.PostCreating postCreating) {
 
     }
 
-    public void deletePost(PostCreating postCreating) {
+    public void deletePost(com.example.zagrajmy.PostCreating postCreating) {
 
     }
 

@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapter;
+import com.example.zagrajmy.Design.ButtonAddPostFragment;
+import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapterForUserActivity;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +35,7 @@ public class PostsFavoriteByUserFragment extends Fragment {
 
         showSavedPosts(currentView);
 
+        getAddPostButton();
         return currentView;
     }
 
@@ -47,11 +50,13 @@ public class PostsFavoriteByUserFragment extends Fragment {
         RecyclerView rexpandableListOfSavedPosts = view.findViewById(R.id.expandableListOfSavedPosts);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        List<PostsSavedByUser> newSavedPosts = new ArrayList<>();
+        List<PostCreating> newSavedPosts = new ArrayList<>();
 
         assert user != null;
-        RealmResults<PostsSavedByUser> userPostsFromRealm = realm.where(PostsSavedByUser.class)
-                .equalTo("userId", user.getUid()).findAll();
+        RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class)
+                .equalTo("userId", user.getUid())
+                .equalTo("isPostSavedByUser", true)
+                .findAll();
         if (userPostsFromRealm != null) {
             newSavedPosts.addAll(userPostsFromRealm);
         }
@@ -63,10 +68,13 @@ public class PostsFavoriteByUserFragment extends Fragment {
         } else {
             rexpandableListOfSavedPosts.setVisibility(View.VISIBLE);
             noPostInfo.setVisibility(View.GONE);
-            PostDesignAdapter postDesignAdapter = new PostDesignAdapter(getContext(),null, newSavedPosts);
-            rexpandableListOfSavedPosts.setAdapter(postDesignAdapter);
+            PostDesignAdapterForUserActivity postDesignAdapterForUserActivity = new PostDesignAdapterForUserActivity(getContext(), newSavedPosts);
+            rexpandableListOfSavedPosts.setAdapter(postDesignAdapterForUserActivity);
             rexpandableListOfSavedPosts.setLayoutManager(new LinearLayoutManager(getContext()));
         }
     }
-
+    public void getAddPostButton() {
+        ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
+        getParentFragmentManager().beginTransaction().add(R.id.layoutOfAddedPost, myFragment).commit();
+    }
 }
