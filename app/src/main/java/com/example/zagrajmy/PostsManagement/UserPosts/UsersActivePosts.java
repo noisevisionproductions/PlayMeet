@@ -2,14 +2,14 @@ package com.example.zagrajmy.PostsManagement.UserPosts;
 
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 
-public class UsersActivePosts extends AppCompatActivity {
+public class UsersActivePosts extends SidePanelBaseActivity {
     private AppCompatButton buttonYourPosts;
     private AppCompatButton buttonSavedPosts;
 
@@ -18,6 +18,9 @@ public class UsersActivePosts extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_active_posts);
+
+        setupDrawerLayout();
+        setupNavigationView();
 
         buttonYourPosts = findViewById(R.id.postsAddedByYou);
         buttonSavedPosts = findViewById(R.id.postsSavedByYou);
@@ -45,8 +48,8 @@ public class UsersActivePosts extends AppCompatActivity {
 
     public void switchToFavoritePosts() {
         buttonSavedPosts.setOnClickListener(view -> {
-            buttonYourPosts.setSelected(true);
-            buttonSavedPosts.setSelected(false);
+            buttonYourPosts.setSelected(false);
+            buttonSavedPosts.setSelected(true);
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainerActivePosts, PostsFavoriteByUserFragment.class, null)

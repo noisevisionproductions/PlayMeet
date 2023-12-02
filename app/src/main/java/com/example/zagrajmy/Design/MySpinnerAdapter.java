@@ -46,6 +46,7 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
         return view;
     }
 
+
     @Override
     public boolean isEnabled(int position) {
         // Wyłącza pierwszy element
