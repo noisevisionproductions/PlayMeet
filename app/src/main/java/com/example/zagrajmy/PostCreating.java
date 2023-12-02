@@ -22,14 +22,38 @@ public class PostCreating extends RealmObject {
 
 
     public PostCreating() {
+    }
 
+    public PostCreating(int postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
+        this.postId = postId;
+        this.sportType = sportType;
+        this.cityName = cityName;
+        this.additionalInfo = additionalInfo;
+        this.skillLevel = skillLevel;
+        this.dateTime = dateTime;
+        this.hourTime = hourTime;
+    }
+
+    public PostCreating copyOfAllPosts() {
+        PostCreating copyOfAllPosts = new PostCreating();
+        copyOfAllPosts.setPostId(postId);
+        copyOfAllPosts.setIsCreatedByUser(isCreatedByUser);
+        copyOfAllPosts.setPostSavedByUser(isPostSavedByUser);
+        copyOfAllPosts.setUserId(userId);
+        copyOfAllPosts.setSportType(sportType);
+        copyOfAllPosts.setCityName(cityName);
+        copyOfAllPosts.setDateTime(dateTime);
+        copyOfAllPosts.setHourTime(hourTime);
+        copyOfAllPosts.setSkillLevel(skillLevel);
+        copyOfAllPosts.setAdditionalInfo(additionalInfo);
+        return copyOfAllPosts;
     }
 
     public boolean isPostSavedByUser() {
         return isPostSavedByUser;
     }
 
-    public void setPostSavedByUser(boolean postSavedByUser) {
+    public void setPostSavedByUser(Boolean postSavedByUser) {
         isPostSavedByUser = postSavedByUser;
     }
 
@@ -55,16 +79,6 @@ public class PostCreating extends RealmObject {
 
     public void setPostId(Integer postId) {
         this.postId = postId;
-    }
-
-    public PostCreating(int postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
-        this.postId = postId;
-        this.sportType = sportType;
-        this.cityName = cityName;
-        this.additionalInfo = additionalInfo;
-        this.skillLevel = skillLevel;
-        this.dateTime = dateTime;
-        this.hourTime = hourTime;
     }
 
     public String getSportType() {

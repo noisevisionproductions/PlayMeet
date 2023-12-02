@@ -20,8 +20,8 @@ public class RealmDatabaseManagement {
         realm = Realm.getDefaultInstance();
     }
 
-    public static RealmDatabaseManagement getInstance(){
-        if (instance == null){
+    public static RealmDatabaseManagement getInstance() {
+        if (instance == null) {
             instance = new RealmDatabaseManagement();
         }
         return instance;
@@ -35,7 +35,7 @@ public class RealmDatabaseManagement {
     }
     //Usuwa wszystko z bazy danych realm - do testów
 
-    public void realmMigrationResetDatabaseOnlyForTesting(){
+    public void realmMigrationResetDatabaseOnlyForTesting() {
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(realmConfiguration);
     }
@@ -51,14 +51,21 @@ public class RealmDatabaseManagement {
         return realm.where(com.example.zagrajmy.PostCreating.class).equalTo("postId", id).findFirst() != null;
     }
 
-    public void addPostToDatabase(com.example.zagrajmy.PostCreating postCreating) {
+    public void findPostCreatedByUser() {
+        realm.where(PostCreating.class)
+                .equalTo("isCreatedByUser", true)
+                .findFirst();
+       // realm.close();
+    }
+
+    public void addPostToDatabase(PostCreating postCreating) {
 
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(postCreating);
         realm.commitTransaction();
     }
 
-    public void addUser(User user){
+    public void addUser(User user) {
 /*
             realm.executeTransactionAsync(new Realm.Transaction() {
                 @Override
@@ -73,20 +80,20 @@ public class RealmDatabaseManagement {
         realm.commitTransaction();
     }
 
-    public void savePostToDatabaseAsSignedIn(PostCreating postCreating){
+    public void savePostToDatabaseAsSignedIn(PostCreating postCreating) {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(postCreating);
         realm.commitTransaction();
     }
 
-    public void isUserAvailable(){
+    public void isUserAvailable() {
 
         //realm.copyToRealmOrUpdate();
     }
 
 
-    public void getPosts(com.example.zagrajmy.PostCreating postCreating){
-       // Realm realm = Realm.getDefaultInstance();
+    public void getPosts(PostCreating postCreating) {
+        // Realm realm = Realm.getDefaultInstance();
 
         RealmResults<com.example.zagrajmy.PostCreating> allPosts = realm.where(com.example.zagrajmy.PostCreating.class).findAll();
         if (allPosts != null) {
@@ -96,12 +103,19 @@ public class RealmDatabaseManagement {
     }
 
 
-    public void updatePost(com.example.zagrajmy.PostCreating postCreating) {
+    public void updatePost() {
 
     }
 
-    public void deletePost(com.example.zagrajmy.PostCreating postCreating) {
-
+    public void deletePost(int postId) {
+        realm.executeTransactionAsync(realm -> {
+            PostCreating post = realm.where(PostCreating.class)
+                    .equalTo("postId", postId)
+                    .findFirst();
+            if (post != null) {
+                post.deleteFromRealm();
+            }
+        });
     }
 
     public void createUser() {

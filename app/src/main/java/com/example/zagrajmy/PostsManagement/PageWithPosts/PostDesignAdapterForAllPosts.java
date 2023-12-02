@@ -15,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -22,8 +23,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
-
-import io.realm.Realm;
 
 public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> {
 
@@ -41,7 +40,7 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         private final AppCompatButton arrowDownOpenMenuButton;
         private final AppCompatButton savePostButton;
         private PostCreating postCreating;
-        private Realm realm;
+        private RealmDatabaseManagement realmDatabaseManagement;
         private FirebaseUser firebaseUser;
 
 
@@ -89,9 +88,8 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         public void savePostButtonLogic() {
             firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
             savePostButton.setOnClickListener(v1 -> {
-                realm = Realm.getDefaultInstance();
-                PostCreating postCreating = realm.where(PostCreating.class).equalTo("isCreatedByUser", true).findFirst();
-
+                realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+                realmDatabaseManagement.findPostCreatedByUser();
 
                 this.postCreating = new PostCreating();
                 assert firebaseUser != null;
@@ -104,11 +102,11 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
                 this.postCreating.setHourTime(postCreating.getHourTime());
                 this.postCreating.setSkillLevel(postCreating.getSkillLevel());
                 this.postCreating.setAdditionalInfo(postCreating.getAdditionalInfo());
+                this.postCreating.setPostSavedByUser(true);
           /*      this.postCreating.setButtonColorAndText(String.valueOf(Color.BLACK), "Zapisałeś się!");
                 this.postCreating.setIsPostSavedByUser(true);*/
-                setPostsSavedByUser(this.postCreating);
 
-                //RealmDatabaseManagement.getInstance().savePostToDatabaseAsSignedIn(this.postCreating);
+                realmDatabaseManagement.savePostToDatabaseAsSignedIn(this.postCreating);
 
                 savePostButton.setBackgroundColor(Color.BLACK);
                 savePostButton.setText("Zapisałeś się!");
@@ -117,30 +115,37 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
 
     }
 
-    private final List<com.example.zagrajmy.PostCreating> postsCreatedByUser;
+    private final List<PostCreating> listOfPostCreating;
     private final Context context;
 
 
-    public PostDesignAdapterForAllPosts(Context context, List<com.example.zagrajmy.PostCreating> postsCreatedByUser) {
-        this.postsCreatedByUser = postsCreatedByUser;
+    public PostDesignAdapterForAllPosts(Context context, List<com.example.zagrajmy.PostCreating> listOfPostCreating) {
+        this.listOfPostCreating = listOfPostCreating;
         this.context = context;
     }
 
+ /*   public void savePostButton(PostDesignAdapterForUserActivity.MyViewHolder holder, int position) {
+        holder..setOnClickListener(v -> {
+            PostCreating postCreating = listOfPostCreating.get(position);
+            int postId = postCreating.getPostId();
+            realmDatabaseManagement.deletePost(postId);
+            listOfPostCreating.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, listOfPostCreating.size());
+        });
+    }*/
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        if (postsCreatedByUser != null) {
-            com.example.zagrajmy.PostCreating postCreating = postsCreatedByUser.get(position);
-            holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
-            holder.sportNames.setText(postCreating.getSportType());
-            holder.cityNames.setText(postCreating.getCityName());
-            holder.skillLevel.setText(postCreating.getSkillLevel());
-            holder.addInfo.setText(postCreating.getAdditionalInfo());
-            holder.chosenDate.setText(postCreating.getDateTime());
-            holder.chosenHour.setText(postCreating.getHourTime());
-
-        }
+        com.example.zagrajmy.PostCreating postCreating = listOfPostCreating.get(position);
+        holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
+        holder.sportNames.setText(postCreating.getSportType());
+        holder.cityNames.setText(postCreating.getCityName());
+        holder.skillLevel.setText(postCreating.getSkillLevel());
+        holder.addInfo.setText(postCreating.getAdditionalInfo());
+        holder.chosenDate.setText(postCreating.getDateTime());
+        holder.chosenHour.setText(postCreating.getHourTime());
 
         extraInfo(holder);
     }
@@ -187,8 +192,8 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
 
     @Override
     public int getItemCount() {
-        if (postsCreatedByUser != null) {
-            return postsCreatedByUser.size();
+        if (listOfPostCreating != null) {
+            return listOfPostCreating.size();
         } else {
             return 0;
         }

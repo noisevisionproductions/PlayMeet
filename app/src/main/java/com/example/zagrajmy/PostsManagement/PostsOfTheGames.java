@@ -4,56 +4,31 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
+import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapterForAllPosts;
+import com.example.zagrajmy.PostsManagement.PostsFiltering.PostsFilter;
 import com.example.zagrajmy.R;
-import com.example.zagrajmy.SidePanelMenu;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
 
-public class PostsOfTheGames extends AppCompatActivity {
-    private final List<com.example.zagrajmy.PostCreating> posts = new ArrayList<>();
+public class PostsOfTheGames extends SidePanelBaseActivity {
+    private final List<PostCreating> posts = new ArrayList<>();
     private Realm realm;
+    private RealmResults<PostCreating> allPosts;
+    private PostDesignAdapterForAllPosts postDesignAdapterForAllPosts;
 
-
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
-    private NavigationView navigationView;
-    private FirebaseUser user;
-
-    public DrawerLayout getDrawerLayout() {
-        return drawerLayout;
-    }
-
-    public NavigationView getNavigationView() {
-        return navigationView;
-    }
-
-    private void setupDrawerLayout() {
-        drawerLayout = findViewById(R.id.drawer_layout);
-        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        navigationView = findViewById(R.id.navigationViewSidePanel);
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,21 +38,23 @@ public class PostsOfTheGames extends AppCompatActivity {
         setContentView(R.layout.activity_posts_list);
         RecyclerView recyclerView = findViewById(R.id.recycler_view_posts);
 
-
         postCreate();
 
-        PostDesignAdapterForAllPosts postDesignAdapterForAllPosts = new PostDesignAdapterForAllPosts(this, posts);
+        postDesignAdapterForAllPosts = new PostDesignAdapterForAllPosts(this, posts);
         recyclerView.setAdapter(postDesignAdapterForAllPosts);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        /*  *//*pozwala na przewijanie postow jeden po drugim*//*
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);*/
 
         setupDrawerLayout();
-
-        //postDesignAdapter.notifyDataSetChanged();
-        SidePanelMenu sidePanelMenu = new SidePanelMenu(this);
-        sidePanelMenu.manageDrawerButtonsNew();
+        setupNavigationView();
+        filterAllPosts();
 
         getAddPostButton();
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -86,18 +63,21 @@ public class PostsOfTheGames extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
     public void postCreate() {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         assert user != null;
-        RealmResults<PostCreating> postCreating = realm.where(PostCreating.class).equalTo("isPostSavedByUser", true).equalTo("userId", user.getUid()).findAll();
+        RealmResults<PostCreating> postCreating = realm.where(PostCreating.class)
+                .equalTo("isPostSavedByUser", true)
+                .equalTo("userId", user.getUid()).findAll();
         List<Integer> savedPostIds = new ArrayList<>();  // Zmieniamy typ listy na String
         for (PostCreating savedPost : postCreating) {
             savedPostIds.add(savedPost.getPostId());  // Dodajemy identyfikatory postów do listy
         }
 
-        RealmResults<com.example.zagrajmy.PostCreating> allPosts = realm.where(com.example.zagrajmy.PostCreating.class)
+        allPosts = realm.where(PostCreating.class)
                 .equalTo("isCreatedByUser", true)
                 .notEqualTo("userId", user.getUid())
                 .not().in("postId", savedPostIds.toArray(new Integer[0])).findAll();
@@ -108,12 +88,17 @@ public class PostsOfTheGames extends AppCompatActivity {
         realm.close();
     }
 
-    public void filterSavedPostsByUser(){
-
-    }
-
     public void getAddPostButton() {
         ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.layoutOfPostsList, myFragment).commit();
     }
+
+    public void filterAllPosts() {
+        AppCompatButton filterButton = findViewById(R.id.postsFilter);
+        AppCompatButton deleteFilters = findViewById(R.id.deleteFilters);
+        PostsFilter postsFilter = new PostsFilter(postDesignAdapterForAllPosts, posts, filterButton, deleteFilters);
+        postsFilter.filterPostsWindow(this);
+    }
+
+
 }
