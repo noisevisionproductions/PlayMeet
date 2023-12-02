@@ -18,8 +18,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="#EADBC4"
-        android:layout_margin="5dp">
+        android:layout_margin="5dp"
+        android:background="#EADBC4">
 
         <!--przycisk do otwierania dodatkowych opcji-->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +36,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:background="@drawable/baseline_keyboard_arrow_down_24"
-                android:contentDescription="additionalMenu"
+                android:contentDescription="@string/additionalmenu"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,9 +83,9 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/sportNames"
+                style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
-                style="@style/MyTextInputLayoutDesign"
                 android:background="@null"
                 android:entries="@array/arrays_sport_names"
                 android:gravity="center"
@@ -103,13 +103,13 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/chosenCity"
+                style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
                 android:background="@null"
                 android:gravity="center"
                 android:hint="tesst"
-                style="@style/MyTextInputLayoutDesign"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
@@ -125,10 +125,10 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/chosenDate"
+                style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
-                style="@style/MyTextInputLayoutDesign"
                 android:background="@null"
                 android:gravity="center"
                 android:hint="test"
@@ -148,12 +148,12 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/chosenHour"
+                style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
                 android:background="@null"
                 android:gravity="center"
-                style="@style/MyTextInputLayoutDesign"
 
                 android:hint="tessst"
                 android:textSize="12sp"
@@ -171,6 +171,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/skilLevel"
+                style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -178,7 +179,6 @@
                 android:hint="test"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                style="@style/MyTextInputLayoutDesign"
 
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -194,11 +194,11 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addInfoPost"
+                style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
                 android:background="@null"
                 android:hint="@string/nodescription"
-                style="@style/MyTextInputLayoutDesign"
 
                 android:inputType="textCapSentences"
                 android:textSize="15sp"
@@ -217,10 +217,10 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/uniquePostId"
+                style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                style="@style/MyTextInputLayoutDesign"
 
                 android:inputType="number"
                 android:textSize="8sp"

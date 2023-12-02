@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arrays_skill_level_for_filtering">
+        <item>Początkujący</item>
+        <item>Średnio zaawansowany</item>
+        <item>Zaawansowany</item>
+        <item>Ekspert</item>
+    </string-array>
+</resources>
