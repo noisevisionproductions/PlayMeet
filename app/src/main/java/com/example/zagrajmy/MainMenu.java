@@ -61,9 +61,9 @@ public class MainMenu extends AppCompatActivity {
 
         getAddPostButton();
 
-        SidePanelMenu sidePanelMenu = new SidePanelMenu(this);
+    /*    SidePanelMenu sidePanelMenu = new SidePanelMenu(this);
         sidePanelMenu.manageDrawerButtons();
-
+*/
         createNewPostButton();
         searchGamesButtonHandle();
         myActivityButton();

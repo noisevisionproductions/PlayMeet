@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
@@ -35,6 +36,7 @@ public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostD
         private final ConstraintLayout arrowDownOpenMenu;
         private final LinearLayoutCompat extraInfoContainer;
         private final AppCompatButton arrowDownOpenMenuButton;
+        private final AppCompatButton deletePost;
         private PostCreating postCreating;
         private Realm realm;
         private FirebaseUser firebaseUser;
@@ -71,20 +73,19 @@ public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostD
 
             arrowDownOpenMenuButton = v.findViewById(R.id.arrowDownOpenMenuButton);
 
-
-
+            deletePost = v.findViewById(R.id.deletePost);
         }
-
-
     }
 
-    private final List<PostCreating> postCreatings;
+
+    private final RealmDatabaseManagement realmDatabaseManagement;
+    private final List<PostCreating> listOfPostCreating;
     private final Context context;
 
-
-    public PostDesignAdapterForUserActivity(Context context, List<PostCreating> postCreatings) {
-        this.postCreatings = postCreatings;
+    public PostDesignAdapterForUserActivity(Context context, List<PostCreating> listOfPostCreating) {
+        this.listOfPostCreating = listOfPostCreating;
         this.context = context;
+        realmDatabaseManagement = RealmDatabaseManagement.getInstance();
     }
 
     public void extraInfo(PostDesignAdapterForUserActivity.MyViewHolder holder) {
@@ -118,6 +119,22 @@ public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostD
 
     }
 
+    public void deletePostButton(PostDesignAdapterForUserActivity.MyViewHolder holder, int position) {
+        PostCreating postCreating = listOfPostCreating.get(position);
+
+        if (postCreating.isPostSavedByUser()) {
+            holder.deletePost.setText("Wypisz się");
+        }
+
+        holder.deletePost.setOnClickListener(v -> {
+            int postId = postCreating.getPostId();
+            realmDatabaseManagement.deletePost(postId);
+            listOfPostCreating.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, listOfPostCreating.size());
+        });
+    }
+
     @NonNull
     @Override
     public PostDesignAdapterForUserActivity.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -127,32 +144,26 @@ public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostD
 
     @Override
     public void onBindViewHolder(@NonNull PostDesignAdapterForUserActivity.MyViewHolder holder, int position) {
-        if (postCreatings != null) {
-            // bind data from the posts list
-            PostCreating postCreating = postCreatings.get(position);
-            holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
-            holder.sportNames.setText(postCreating.getSportType());
-            holder.cityNames.setText(postCreating.getCityName());
-            holder.skillLevel.setText(postCreating.getSkillLevel());
-            holder.addInfo.setText(postCreating.getAdditionalInfo());
-            holder.chosenDate.setText(postCreating.getDateTime());
-            holder.chosenHour.setText(postCreating.getHourTime());
-        }
-      /*  holder.uniquePostId.setText(String.valueOf(userPost.getPostId()));
-        holder.sportNames.setText(userPost.getSportType());
-        holder.cityNames.setText(userPost.getCityName());
-        holder.skillLevel.setText(userPost.getSkillLevel());
-        holder.addInfo.setText(userPost.getAdditionalInfo());
-        holder.chosenDate.setText(userPost.getDateTime());
-        holder.chosenHour.setText(userPost.getHourTime());*/
-        extraInfo(holder);
 
+        PostCreating postCreating = listOfPostCreating.get(position);
+
+        // bind data from the posts list
+        holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
+        holder.sportNames.setText(postCreating.getSportType());
+        holder.cityNames.setText(postCreating.getCityName());
+        holder.skillLevel.setText(postCreating.getSkillLevel());
+        holder.addInfo.setText(postCreating.getAdditionalInfo());
+        holder.chosenDate.setText(postCreating.getDateTime());
+        holder.chosenHour.setText(postCreating.getHourTime());
+
+        extraInfo(holder);
+        deletePostButton(holder, position);
     }
 
     @Override
     public int getItemCount() {
-        if (postCreatings != null) {
-            return postCreatings.size();
+        if (listOfPostCreating != null) {
+            return listOfPostCreating.size();
         } else {
             return 0;
         }

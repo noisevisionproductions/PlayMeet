@@ -17,7 +17,7 @@
         <activity
             android:name=".PostsManagement.UserPosts.UsersActivePosts"
             android:exported="true"
-            android:theme="@style/noBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".UserManagement.UserAccountLogic"
             android:exported="true"

@@ -55,9 +55,9 @@ public class PostCreatingLogic extends AppCompatActivity {
     }
 
     public void createPost() {
-      //  User userId = UserUidManager.getInstance().getUser();
-      //  String userId = String.valueOf(UserUidManager.getInstance().getUser());
-       // User userId = realmDatabaseManagement.getUserId(user.getUserId());
+        //  User userId = UserUidManager.getInstance().getUser();
+        //  String userId = String.valueOf(UserUidManager.getInstance().getUser());
+        // User userId = realmDatabaseManagement.getUserId(user.getUserId());
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Button createPost = findViewById(R.id.submitPost);
 
@@ -105,11 +105,8 @@ public class PostCreatingLogic extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
-
-
     }
 
     public void setCityName() {

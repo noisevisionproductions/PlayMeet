@@ -43,5 +43,6 @@
     <string name="postsAddedByYou">Twoje posty</string>
     <string name="postsSavedByYou">Zapisane posty</string>
     <string name="deletePost">Usuń post</string>
+    <string name="additionalmenu">Menu Dodatkowe</string>
 
 </resources>
