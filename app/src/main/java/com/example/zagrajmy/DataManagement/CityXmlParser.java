@@ -43,7 +43,7 @@ public class CityXmlParser {
                         eventType = xmlResourceParser.next();
                     }
 
-                    if (cityType != null && cityName != null && (cityType.equals("1") || cityType.equals("3"))) {
+                    if (cityType != null && cityName != null && (cityType.equals("1"))) {
                         cityNameList.add(cityName);
                     }
                 }

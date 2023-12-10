@@ -65,7 +65,7 @@
 
         <!--avatar-->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageView"
+            android:id="@+id/userAvatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/sample_avatar"
@@ -78,7 +78,7 @@
             android:layout_height="wrap_content"
             app:hintEnabled="false"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -98,8 +98,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintLeft_toRightOf="@+id/imageView">
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+            app:layout_constraintLeft_toRightOf="@+id/userAvatar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/chosenCity"
@@ -143,7 +143,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
             app:layout_constraintRight_toRightOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -190,7 +190,7 @@
             android:layout_height="wrap_content"
             app:hintEnabled="false"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView">
+            app:layout_constraintTop_toBottomOf="@+id/userAvatar">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/addInfoPost"

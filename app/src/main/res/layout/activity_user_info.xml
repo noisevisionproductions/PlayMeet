@@ -5,6 +5,7 @@
     android:id="@+id/postCreatingLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".PostsManagement.PostCreatingLogic">
 
     <!--pasek informujacy o wersji-->
@@ -13,19 +14,48 @@
         layout="@layout/alpha_version_info" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutForDeisgn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/include">
+
+        <include layout="@layout/circle_image_view_avatar" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/uploadAvatar"
+            style="@style/MyButtonStyle"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_style"
+            android:text="Dodaj zdjęcie" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="15dp">
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:background="@color/background"
-        android:gravity="top"
+        android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include"
-        tools:layout_editor_absoluteY="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayoutForDeisgn"
+        app:layout_constraintVertical_bias="0.0"
         tools:openDrawer="end">
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -34,22 +64,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="50dp"
-            android:text="Witaj"
-            android:textSize="50sp"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:text="Zalogowano jako"
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/nickname"
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:hint="Twój nick"
-            android:paddingBottom="50dp"
-            android:textColor="@color/material_dynamic_primary95"
-            android:textSize="50sp"
-            app:layout_constraintTop_toBottomOf="@+id/greetUser" />
+            android:paddingBottom="20dp"
+            android:textColor="#0000FF"
+            android:textSize="25sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -149,6 +175,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <include layout="@layout/button_fragment"/>
+    <include layout="@layout/button_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

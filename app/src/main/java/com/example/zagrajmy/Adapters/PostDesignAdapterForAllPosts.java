@@ -1,7 +1,8 @@
-package com.example.zagrajmy.PostsManagement.PageWithPosts;
+package com.example.zagrajmy.Adapters;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.zagrajmy.Chat.ChatActivity;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
@@ -27,22 +29,14 @@ import java.util.List;
 public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        private final TextInputEditText uniquePostId;
-        private final TextInputEditText sportNames;
-        private final TextInputEditText cityNames;
-        private final TextInputEditText skillLevel;
-        private final TextInputEditText addInfo;
-        private final TextInputEditText chosenDate;
-        private final TextInputEditText chosenHour;
+        private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
         private final CardView cardView;
         private final ConstraintLayout arrowDownOpenMenu;
         private final LinearLayoutCompat extraInfoContainer;
-        private final AppCompatButton arrowDownOpenMenuButton;
-        private final AppCompatButton savePostButton;
+        private final AppCompatButton arrowDownOpenMenuButton, savePostButton, chatButton;
         private PostCreating postCreating;
         private RealmDatabaseManagement realmDatabaseManagement;
         private FirebaseUser firebaseUser;
-
 
         public MyViewHolder(View v) {
             super(v);
@@ -77,8 +71,17 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
 
             savePostButton = v.findViewById(R.id.savePostButton);
 
+            chatButton = v.findViewById(R.id.chatButton);
 
             savePostButtonLogic();
+            chatButtonLogic();
+        }
+
+        public void chatButtonLogic() {
+            chatButton.setOnClickListener(v -> {
+                Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                v.getContext().startActivity(intent);
+            });
         }
 
         public void setPostsSavedByUser(PostCreating postCreating) {
@@ -112,28 +115,15 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
                 savePostButton.setText("Zapisałeś się!");
             });
         }
-
     }
 
     private final List<PostCreating> listOfPostCreating;
     private final Context context;
 
-
     public PostDesignAdapterForAllPosts(Context context, List<com.example.zagrajmy.PostCreating> listOfPostCreating) {
         this.listOfPostCreating = listOfPostCreating;
         this.context = context;
     }
-
- /*   public void savePostButton(PostDesignAdapterForUserActivity.MyViewHolder holder, int position) {
-        holder..setOnClickListener(v -> {
-            PostCreating postCreating = listOfPostCreating.get(position);
-            int postId = postCreating.getPostId();
-            realmDatabaseManagement.deletePost(postId);
-            listOfPostCreating.remove(position);
-            notifyItemRemoved(position);
-            notifyItemRangeChanged(position, listOfPostCreating.size());
-        });
-    }*/
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
