@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
-import com.example.zagrajmy.Design.MySpinnerAdapterForFilterMenu;
+import com.example.zagrajmy.Adapters.MySpinnerAdapterForFilterMenu;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapterForAllPosts;
+import com.example.zagrajmy.Adapters.PostDesignAdapterForAllPosts;
 import com.example.zagrajmy.R;
 
 import java.util.ArrayList;

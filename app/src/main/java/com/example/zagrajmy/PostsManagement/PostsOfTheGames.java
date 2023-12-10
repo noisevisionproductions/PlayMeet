@@ -1,6 +1,7 @@
 package com.example.zagrajmy.PostsManagement;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -11,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapterForAllPosts;
+import com.example.zagrajmy.Adapters.PostDesignAdapterForAllPosts;
 import com.example.zagrajmy.PostsManagement.PostsFiltering.PostsFilter;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +27,6 @@ import io.realm.RealmResults;
 public class PostsOfTheGames extends SidePanelBaseActivity {
     private final List<PostCreating> posts = new ArrayList<>();
     private Realm realm;
-    private RealmResults<PostCreating> allPosts;
     private PostDesignAdapterForAllPosts postDesignAdapterForAllPosts;
 
     @Override
@@ -34,6 +34,9 @@ public class PostsOfTheGames extends SidePanelBaseActivity {
         super.onCreate(savedInstanceState);
 
         realm = Realm.getDefaultInstance();
+
+        Realm realm = Realm.getDefaultInstance();
+        Log.i("Realm", realm.getPath());
 
         setContentView(R.layout.activity_posts_list);
         RecyclerView recyclerView = findViewById(R.id.recycler_view_posts);
@@ -77,7 +80,7 @@ public class PostsOfTheGames extends SidePanelBaseActivity {
             savedPostIds.add(savedPost.getPostId());  // Dodajemy identyfikatory postów do listy
         }
 
-        allPosts = realm.where(PostCreating.class)
+        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class)
                 .equalTo("isCreatedByUser", true)
                 .notEqualTo("userId", user.getUid())
                 .not().in("postId", savedPostIds.toArray(new Integer[0])).findAll();

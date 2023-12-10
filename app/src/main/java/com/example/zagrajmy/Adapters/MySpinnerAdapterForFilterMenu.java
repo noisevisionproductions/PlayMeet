@@ -1,4 +1,4 @@
-package com.example.zagrajmy.Design;
+package com.example.zagrajmy.Adapters;
 
 import android.content.Context;
 import android.view.View;

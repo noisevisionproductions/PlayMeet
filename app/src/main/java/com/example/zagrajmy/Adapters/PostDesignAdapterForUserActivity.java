@@ -1,4 +1,4 @@
-package com.example.zagrajmy.PostsManagement.PageWithPosts;
+package com.example.zagrajmy.Adapters;
 
 import android.content.Context;
 import android.util.TypedValue;
