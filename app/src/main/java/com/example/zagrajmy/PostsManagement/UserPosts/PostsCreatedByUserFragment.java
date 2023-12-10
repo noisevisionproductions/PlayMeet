@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.PageWithPosts.PostDesignAdapterForUserActivity;
+import com.example.zagrajmy.Adapters.PostDesignAdapterForUserActivity;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

@@ -1,9 +1,11 @@
 package com.example.zagrajmy.UserManagement;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
@@ -11,6 +13,8 @@ import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserAccountLogic extends AppCompatActivity {
 
@@ -38,6 +42,17 @@ public class UserAccountLogic extends AppCompatActivity {
                 displayNickname.setText(nick);
             }
         }
+    }
+
+    public void setUserAvatar(){
+        CircleImageView userAvatar = findViewById(R.id.userAvatar);
+        AppCompatButton uploadAvatar = findViewById(R.id.uploadAvatar);
+        uploadAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
     public void getAddPostButton() {
         ButtonAddPostFragment myFragment = new ButtonAddPostFragment();

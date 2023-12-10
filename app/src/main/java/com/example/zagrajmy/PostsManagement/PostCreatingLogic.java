@@ -13,7 +13,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
-import com.example.zagrajmy.Design.MySpinnerAdapter;
+import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostsManagement.UserPosts.UsersActivePosts;
