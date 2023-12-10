@@ -2,19 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="110dp"
     android:background="@color/background"
-    android:orientation="vertical"
-    android:gravity="bottom">
+    android:gravity="bottom"
+    android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:background="@drawable/sample_avatar"
-        android:contentDescription="Zdjęcie profilowe">
-
-    </ImageView>
-
-
+    <include layout="@layout/circle_image_view_avatar" />
 </LinearLayout>
 

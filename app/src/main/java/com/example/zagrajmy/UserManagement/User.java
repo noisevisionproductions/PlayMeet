@@ -18,6 +18,15 @@ public class User extends RealmObject {
 
     public User() {
     }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public String getUserId() {
         return userId;
     }
