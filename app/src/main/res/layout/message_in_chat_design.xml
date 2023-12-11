@@ -19,14 +19,14 @@
         android:paddingLeft="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewUsername"
-            android:layout_width="wrap_content"
+            android:id="@+id/usernameTextView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Username"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewMessage"
+            android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Message" />
@@ -34,7 +34,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textViewTimestamp"
+        android:id="@+id/timestampTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Timestamp" />
