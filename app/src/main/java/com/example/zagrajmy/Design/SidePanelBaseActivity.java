@@ -11,7 +11,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
-import com.example.zagrajmy.PostsManagement.UserPosts.UsersActivePosts;
+import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.UserAccountLogic;
 import com.google.android.material.navigation.NavigationView;
@@ -62,7 +62,7 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
             }
 
             if (id == R.id.mojaAktywnosc) {
-                Intent intent = new Intent(getApplicationContext(), UsersActivePosts.class);
+                Intent intent = new Intent(getApplicationContext(), MainMenuPosts.class);
                 startActivity(intent);
                 finish();
             }

@@ -16,7 +16,6 @@ import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.UserPosts.UsersActivePosts;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
@@ -72,7 +71,7 @@ public class PostCreatingLogic extends AppCompatActivity {
             realmDatabaseManagement.addPostToDatabase(postCreating);
 
             Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(PostCreatingLogic.this, UsersActivePosts.class);
+            Intent intent = new Intent(PostCreatingLogic.this, MainMenuPosts.class);
             startActivity(intent);
         });
     }
