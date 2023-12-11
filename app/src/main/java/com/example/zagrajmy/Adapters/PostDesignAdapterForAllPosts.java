@@ -4,6 +4,7 @@ package com.example.zagrajmy.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Chat.ChatActivity;
+import com.example.zagrajmy.Chat.ChatMessageModel;
+import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
@@ -25,6 +28,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
+import java.util.Objects;
+
+import io.realm.Realm;
+import io.realm.RealmList;
+import io.realm.RealmResults;
 
 public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> {
 
@@ -74,15 +82,8 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
             chatButton = v.findViewById(R.id.chatButton);
 
             savePostButtonLogic();
-            chatButtonLogic();
         }
 
-        public void chatButtonLogic() {
-            chatButton.setOnClickListener(v -> {
-                Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                v.getContext().startActivity(intent);
-            });
-        }
 
         public void setPostsSavedByUser(PostCreating postCreating) {
             this.postCreating = postCreating;
@@ -120,7 +121,7 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
     private final List<PostCreating> listOfPostCreating;
     private final Context context;
 
-    public PostDesignAdapterForAllPosts(Context context, List<com.example.zagrajmy.PostCreating> listOfPostCreating) {
+    public PostDesignAdapterForAllPosts(Context context, List<PostCreating> listOfPostCreating) {
         this.listOfPostCreating = listOfPostCreating;
         this.context = context;
     }
@@ -128,7 +129,7 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
 
-        com.example.zagrajmy.PostCreating postCreating = listOfPostCreating.get(position);
+        PostCreating postCreating = listOfPostCreating.get(position);
         holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
         holder.sportNames.setText(postCreating.getSportType());
         holder.cityNames.setText(postCreating.getCityName());
@@ -138,6 +139,7 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         holder.chosenHour.setText(postCreating.getHourTime());
 
         extraInfo(holder);
+        chatButtonLogic(holder);
     }
 
     //logika rozwijanego menu, dodatkowych informacji
@@ -172,10 +174,46 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
 
     }
 
+    public void chatButtonLogic(MyViewHolder holder) {
+
+        holder.chatButton.setOnClickListener(v -> {
+            Realm realm = Realm.getDefaultInstance();
+            PostCreating postCreatingResults = realm.where(PostCreating.class).findFirst();
+            RealmResults<ChatMessageModel> chatMessageResults = realm.where(ChatMessageModel.class).findAll();
+            RealmList<ChatMessageModel> chatMessageList = new RealmList<>();
+            chatMessageList.addAll(chatMessageResults);
+
+            PrivateChatModel privateChatModel = new PrivateChatModel();
+            if (postCreatingResults != null) {
+                privateChatModel.setUserIdThatCreatedPost(postCreatingResults.getUserId());
+            }
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser != null) {
+                privateChatModel.setUser2(firebaseUser.getUid());
+            }
+            privateChatModel.setMessages(chatMessageList);
+            if (postCreatingResults != null) {
+                privateChatModel.setRoomId(postCreatingResults.getUserId());
+            }
+
+            final RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
+
+            realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
+
+            realm.executeTransactionAsync(realm1 -> {
+            }, () -> {
+                // Transakcja zakończona pomyślnie
+                Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                v.getContext().startActivity(intent);
+                realm.close();
+            }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
+        });
+
+    }
+
     @NonNull
     @Override
     public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        // Wczytaj swój plik XML jako nowy widok
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
         return new MyViewHolder(v);
     }

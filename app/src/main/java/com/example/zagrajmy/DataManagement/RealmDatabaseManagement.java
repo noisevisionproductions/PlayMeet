@@ -1,5 +1,6 @@
 package com.example.zagrajmy.DataManagement;
 
+import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -55,13 +56,18 @@ public class RealmDatabaseManagement {
         realm.where(PostCreating.class)
                 .equalTo("isCreatedByUser", true)
                 .findFirst();
-       // realm.close();
+        realm.close();
     }
 
     public void addPostToDatabase(PostCreating postCreating) {
-
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(postCreating);
+        realm.commitTransaction();
+    }
+
+    public void createChatroomInDatabase(PrivateChatModel privateChatModel) {
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(privateChatModel);
         realm.commitTransaction();
     }
 

@@ -13,7 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
-import com.example.zagrajmy.PostsManagement.PostsOfTheGames;
+import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.android.material.textfield.TextInputEditText;
@@ -45,7 +45,7 @@ public class LoginFragment extends Fragment {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
         if (currentUser != null) {
-            Intent intent = new Intent(getContext(), PostsOfTheGames.class);
+            Intent intent = new Intent(getContext(), MainMenuPosts.class);
             startActivity(intent);
         }
 
@@ -72,7 +72,7 @@ public class LoginFragment extends Fragment {
                     //   UserUidManager.getInstance().setUser(userClass);
 
                     Toast.makeText(getActivity(), "Zalogowano", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getContext(), PostsOfTheGames.class);
+                    Intent intent = new Intent(getContext(), MainMenuPosts.class);
                     startActivity(intent);
 
 
