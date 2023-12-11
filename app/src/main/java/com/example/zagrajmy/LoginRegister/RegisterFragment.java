@@ -17,7 +17,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
-import com.example.zagrajmy.PostsManagement.PostsOfTheGames;
+import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +47,7 @@ public class RegisterFragment extends Fragment {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent intent = new Intent(getContext(), PostsOfTheGames.class);
+            Intent intent = new Intent(getContext(), MainMenuPosts.class);
             startActivity(intent);
         }
 
@@ -75,7 +75,9 @@ public class RegisterFragment extends Fragment {
                 if (task.isSuccessful()) {
                     User userClass = new User();
                     String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
+                    String userNickName = nicknameText;
                     userClass.setUserId(userId);
+                    userClass.setNickName(userNickName);
                     realmDatabaseManagement.addUser(userClass);
 
                     /*dodawanie nicku do bazy danych realm*/

@@ -1,29 +1,39 @@
 package com.example.zagrajmy.Chat;
 
-import java.util.Date;
+import android.os.Build;
 
+import com.example.zagrajmy.UserManagement.User;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 public class ChatMessageModel extends RealmObject {
-    private String userId;
+    // private String userId;
+    private long timestamp;
+    private RealmList<User> users;
     private String message;
-    private Date timestamp;
 
     public ChatMessageModel() {
     }
 
-    public ChatMessageModel(String userId, String message, Date timestamp) {
-        this.userId = userId;
+    public ChatMessageModel(RealmList<User> users, String message, long timestamp) {
+        this.users = users;
         this.message = message;
         this.timestamp = timestamp;
     }
 
-    public String getUserId() {
-        return userId;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUsers(RealmList<User> users) {
+        this.users = users;
     }
 
     public String getMessage() {
@@ -34,11 +44,23 @@ public class ChatMessageModel extends RealmObject {
         this.message = message;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
+    public String getTimestamp() {
+        return formatDate();
     }
 
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
+    public String formatDate() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            LocalDateTime timestampAsDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+            return timestampAsDateTime.format(dateTimeFormatter);
+        } else {
+            return null;
+        }
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            this.timestamp = timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        }
     }
 }

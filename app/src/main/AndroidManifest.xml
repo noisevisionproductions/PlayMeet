@@ -15,13 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Chat.ChatRoomList"
+            android:exported="true"
+            android:theme="@style/noBar" />
         <activity
             android:name=".Chat.ChatActivity"
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".PostsManagement.UserPosts.UsersActivePosts"
+            android:name=".PostsManagement.MainMenuPosts"
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
@@ -29,7 +32,7 @@
             android:exported="true"
             android:theme="@style/noBar" />
         <activity
-            android:name=".PostsManagement.PostsOfTheGames"
+            android:name=".PostsManagement.PostsOfTheGamesFragment"
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
