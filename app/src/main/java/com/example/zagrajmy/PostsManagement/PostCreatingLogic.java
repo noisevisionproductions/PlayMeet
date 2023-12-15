@@ -161,8 +161,11 @@ public class PostCreatingLogic extends AppCompatActivity {
 
     public void setAdditionalInfo() {
         TextInputEditText addInfo = findViewById(R.id.addInfo);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
+        assert user != null;
+        addInfo.setText(user.getDisplayName());
         postCreating.setAdditionalInfo(typedInfo);
     }
 

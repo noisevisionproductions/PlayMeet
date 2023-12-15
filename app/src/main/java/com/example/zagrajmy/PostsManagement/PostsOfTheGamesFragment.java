@@ -37,14 +37,12 @@ public class PostsOfTheGamesFragment extends Fragment {
         View currentView = inflater.inflate(R.layout.activity_posts_list, container, false);
 
         showAllPosts(currentView);
-
         getAddPostButton();
+
         return currentView;
     }
 
     protected void showAllPosts(View view) {
-
-
         realm = Realm.getDefaultInstance();
 
 
