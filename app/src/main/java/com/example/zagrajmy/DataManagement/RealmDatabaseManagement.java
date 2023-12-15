@@ -1,5 +1,6 @@
 package com.example.zagrajmy.DataManagement;
 
+import com.example.zagrajmy.Chat.ChatMessageModel;
 import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.UserManagement.User;
@@ -26,6 +27,19 @@ public class RealmDatabaseManagement {
             instance = new RealmDatabaseManagement();
         }
         return instance;
+    }
+
+    public void deleteMessagesAndChatRooms() {
+        realm.executeTransactionAsync(realm1 -> {
+            RealmResults<PrivateChatModel> privateChatModels = realm1.where(PrivateChatModel.class)
+                    .findAll();
+            privateChatModels.deleteAllFromRealm();
+
+            RealmResults<ChatMessageModel> chatMessageModels = realm1.where(ChatMessageModel.class)
+                    .findAll();
+            chatMessageModels.deleteAllFromRealm();
+        });
+        realm.close();
     }
 
     //Usuwa wszystko z bazy danych realm - do testów
@@ -67,7 +81,7 @@ public class RealmDatabaseManagement {
 
     public void createChatroomInDatabase(PrivateChatModel privateChatModel) {
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(privateChatModel);
+        realm.insertOrUpdate(privateChatModel);
         realm.commitTransaction();
     }
 

@@ -6,6 +6,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
 import com.example.zagrajmy.R;
 import com.google.firebase.database.DatabaseReference;
@@ -17,11 +18,12 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        DatabaseReference databaseReference;
         Realm.init(this);
 
-       /* RealmDatabaseManagement realm = RealmDatabaseManagement.getInstance();
-        realm.deleteAllRealmDataUseForTestingOnly();
+        RealmDatabaseManagement realm = RealmDatabaseManagement.getInstance();
+        //realm.deleteMessagesAndChatRooms();
+
+     /*   realm.deleteAllRealmDataUseForTestingOnly();
         realm.realmMigrationResetDatabaseOnlyForTesting();
         realm.closeRealmDatabase();*/
 
