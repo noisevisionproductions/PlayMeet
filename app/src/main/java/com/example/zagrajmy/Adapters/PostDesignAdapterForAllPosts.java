@@ -29,12 +29,140 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 
 public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> {
+
+
+    private final List<PostCreating> listOfPostCreating;
+    private final Context context;
+    private PostCreating postCreating;
+
+    public PostDesignAdapterForAllPosts(Context context, List<PostCreating> listOfPostCreating) {
+        this.listOfPostCreating = listOfPostCreating;
+        this.context = context;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        postCreating = listOfPostCreating.get(position);
+        holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
+        holder.sportNames.setText(postCreating.getSportType());
+        holder.cityNames.setText(postCreating.getCityName());
+        holder.skillLevel.setText(postCreating.getSkillLevel());
+        holder.addInfo.setText(postCreating.getAdditionalInfo());
+        holder.chosenDate.setText(postCreating.getDateTime());
+        holder.chosenHour.setText(postCreating.getHourTime());
+
+        extraInfo(holder);
+        chatButtonLogic(holder);
+    }
+
+    public void chatButtonLogic(MyViewHolder holder) {
+
+        holder.chatButton.setOnClickListener(v -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            String userIdThatCreatedPost = postCreating.getUserId();
+            assert user != null;
+            String user2 = user.getUid();
+
+            try (Realm realm = Realm.getDefaultInstance()) {
+                postCreating = realm.where(PostCreating.class).findFirst();
+
+                // adding messages from certain users to new list
+                RealmList<ChatMessageModel> chatMessageList = new RealmList<>();
+                RealmResults<ChatMessageModel> chatMessageResults = realm.where(ChatMessageModel.class)
+                        .equalTo("users.userId", user2)
+                        .findAll();
+                chatMessageList.addAll(chatMessageResults);
+
+                PrivateChatModel existingChatRoom = realm.where(PrivateChatModel.class)
+                        .beginGroup()
+                        .equalTo("userIdThatCreatedPost", userIdThatCreatedPost)
+                        .equalTo("user2", user2)
+                        .endGroup()
+                        .findFirst();
+
+                PrivateChatModel privateChatModel;
+
+                // checking if room already exist
+                if (existingChatRoom != null) {
+                    privateChatModel = existingChatRoom;
+                } else {
+                    privateChatModel = new PrivateChatModel();
+                    privateChatModel.setUserIdThatCreatedPost(userIdThatCreatedPost);
+
+                    privateChatModel.setUser2(user.getUid());
+                    privateChatModel.setNickNameOfUser2(user.getDisplayName());
+                    privateChatModel.setMessages(chatMessageList);
+                }
+
+                RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+                realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
+
+                realm.executeTransactionAsync(realm1 -> {
+                }, () -> {
+                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                    v.getContext().startActivity(intent);
+                }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
+            }
+        });
+    }
+
+    //logika rozwijanego menu, dodatkowych informacji
+    public void extraInfo(MyViewHolder holder) {
+        ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
+        holder.arrowDownOpenMenu.setOnClickListener(v -> {
+            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
+                holder.extraInfoContainer.setVisibility(View.VISIBLE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
+            } else {
+                holder.extraInfoContainer.setVisibility(View.GONE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
+            }
+        });
+        holder.arrowDownOpenMenuButton.setOnClickListener(v -> {
+            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
+                holder.extraInfoContainer.setVisibility(View.VISIBLE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
+            } else {
+                holder.extraInfoContainer.setVisibility(View.GONE);
+                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
+                holder.cardView.requestLayout();
+                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
+            }
+        });
+
+    }
+
+
+    @NonNull
+    @Override
+    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
+        return new MyViewHolder(v);
+    }
+
+    @Override
+    public int getItemCount() {
+        if (listOfPostCreating != null) {
+            return listOfPostCreating.size();
+        } else {
+            return 0;
+        }
+    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
@@ -118,112 +246,4 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         }
     }
 
-    private final List<PostCreating> listOfPostCreating;
-    private final Context context;
-
-    public PostDesignAdapterForAllPosts(Context context, List<PostCreating> listOfPostCreating) {
-        this.listOfPostCreating = listOfPostCreating;
-        this.context = context;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
-        PostCreating postCreating = listOfPostCreating.get(position);
-        holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
-        holder.sportNames.setText(postCreating.getSportType());
-        holder.cityNames.setText(postCreating.getCityName());
-        holder.skillLevel.setText(postCreating.getSkillLevel());
-        holder.addInfo.setText(postCreating.getAdditionalInfo());
-        holder.chosenDate.setText(postCreating.getDateTime());
-        holder.chosenHour.setText(postCreating.getHourTime());
-
-        extraInfo(holder);
-        chatButtonLogic(holder);
-    }
-
-    //logika rozwijanego menu, dodatkowych informacji
-    public void extraInfo(MyViewHolder holder) {
-        ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
-        holder.arrowDownOpenMenu.setOnClickListener(v -> {
-            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
-                holder.extraInfoContainer.setVisibility(View.VISIBLE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
-            } else {
-                holder.extraInfoContainer.setVisibility(View.GONE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-            }
-        });
-        holder.arrowDownOpenMenuButton.setOnClickListener(v -> {
-            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
-                holder.extraInfoContainer.setVisibility(View.VISIBLE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
-            } else {
-                holder.extraInfoContainer.setVisibility(View.GONE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-            }
-        });
-
-    }
-
-    public void chatButtonLogic(MyViewHolder holder) {
-
-        holder.chatButton.setOnClickListener(v -> {
-            Realm realm = Realm.getDefaultInstance();
-            PostCreating postCreatingResults = realm.where(PostCreating.class).findFirst();
-            RealmResults<ChatMessageModel> chatMessageResults = realm.where(ChatMessageModel.class).findAll();
-            RealmList<ChatMessageModel> chatMessageList = new RealmList<>();
-            chatMessageList.addAll(chatMessageResults);
-
-            PrivateChatModel privateChatModel = new PrivateChatModel();
-            if (postCreatingResults != null) {
-                privateChatModel.setUserIdThatCreatedPost(postCreatingResults.getUserId());
-            }
-            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (firebaseUser != null) {
-                privateChatModel.setUser2(firebaseUser.getUid());
-            }
-            privateChatModel.setMessages(chatMessageList);
-            if (postCreatingResults != null) {
-                privateChatModel.setRoomId(postCreatingResults.getUserId());
-            }
-
-            final RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
-
-            realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
-
-            realm.executeTransactionAsync(realm1 -> {
-            }, () -> {
-                // Transakcja zakończona pomyślnie
-                Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                v.getContext().startActivity(intent);
-                realm.close();
-            }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
-        });
-
-    }
-
-    @NonNull
-    @Override
-    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
-        return new MyViewHolder(v);
-    }
-
-    @Override
-    public int getItemCount() {
-        if (listOfPostCreating != null) {
-            return listOfPostCreating.size();
-        } else {
-            return 0;
-        }
-    }
 }

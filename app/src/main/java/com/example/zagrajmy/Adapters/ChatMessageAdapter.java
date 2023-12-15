@@ -1,16 +1,21 @@
 package com.example.zagrajmy.Adapters;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Chat.ChatMessageModel;
+import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
@@ -29,31 +34,48 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
+        setMessagesLookBasedOnLoggedUser(holder, position);
         ChatMessageModel chatMessageModel = this.chatMessageModel.get(position);
         holder.bind(chatMessageModel);
     }
-
 
     @Override
     public int getItemCount() {
         return chatMessageModel.size();
     }
 
+    public void setMessagesLookBasedOnLoggedUser(ChatViewHolder holder, int position) {
+        ChatMessageModel chatMessageModel = this.chatMessageModel.get(position);
+        holder.bind(chatMessageModel);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null && chatMessageModel.getUsers().get(0).getUserId().equals(user.getUid())) {
+            holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
+        } else {
+            holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
+        }
+
+    }
+
+
     static class ChatViewHolder extends RecyclerView.ViewHolder {
         AppCompatTextView usernameTextView, messageTextView, timestampTextView;
+        LinearLayoutCompat layoutOfMessage;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
+            layoutOfMessage = itemView.findViewById(R.id.layoutOfMessage);
         }
 
         public void bind(ChatMessageModel chatMessageModel) {
             User user = chatMessageModel.getUsers().get(0);
             usernameTextView.setText(user.getNickName());
             messageTextView.setText(chatMessageModel.getMessage());
-            timestampTextView.setText(chatMessageModel.getTimestamp().toString());
+            timestampTextView.setText(chatMessageModel.getTimestamp());
         }
     }
 }

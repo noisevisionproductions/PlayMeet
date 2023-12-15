@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,26 +8,31 @@
     tools:context=".Chat.ChatActivity"
     tools:openDrawer="end">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_chat"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutOfPostsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top">
+        tools:context=".Chat.ChatRoomList">
 
         <include
             android:id="@+id/include"
             layout="@layout/alpha_version_info" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="40dp"
+            android:id="@+id/recyclerViewChatRoomList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/randomChatButton"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:text="random chat" />
-    </RelativeLayout>
+            android:text="random chat"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
     <include layout="@layout/navigation_view_side_panel" />
