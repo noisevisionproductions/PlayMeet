@@ -41,6 +41,7 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
     private final List<PostCreating> listOfPostCreating;
     private final Context context;
     private PostCreating postCreating;
+    private String currentRoomId;
 
     public PostDesignAdapterForAllPosts(Context context, List<PostCreating> listOfPostCreating) {
         this.listOfPostCreating = listOfPostCreating;
@@ -68,19 +69,14 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         holder.chatButton.setOnClickListener(v -> {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-            String userIdThatCreatedPost = postCreating.getUserId();
             assert user != null;
             String user2 = user.getUid();
 
             try (Realm realm = Realm.getDefaultInstance()) {
-                postCreating = realm.where(PostCreating.class).findFirst();
 
-                // adding messages from certain users to new list
-                RealmList<ChatMessageModel> chatMessageList = new RealmList<>();
-                RealmResults<ChatMessageModel> chatMessageResults = realm.where(ChatMessageModel.class)
-                        .equalTo("users.userId", user2)
-                        .findAll();
-                chatMessageList.addAll(chatMessageResults);
+                String userIdThatCreatedPost = postCreating.getUserId();
+
+                postCreating = realm.where(PostCreating.class).findFirst();
 
                 PrivateChatModel existingChatRoom = realm.where(PrivateChatModel.class)
                         .beginGroup()
@@ -89,26 +85,27 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
                         .endGroup()
                         .findFirst();
 
-                PrivateChatModel privateChatModel;
-
                 // checking if room already exist
-                if (existingChatRoom != null) {
-                    privateChatModel = existingChatRoom;
-                } else {
-                    privateChatModel = new PrivateChatModel();
+                RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+
+                if (existingChatRoom == null) {
+                    PrivateChatModel privateChatModel = new PrivateChatModel();
                     privateChatModel.setUserIdThatCreatedPost(userIdThatCreatedPost);
 
-                    privateChatModel.setUser2(user.getUid());
+                    privateChatModel.setUser2(user2);
                     privateChatModel.setNickNameOfUser2(user.getDisplayName());
-                    privateChatModel.setMessages(chatMessageList);
+
+                    currentRoomId = privateChatModel.getRoomId();
+
+                    realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
+                } else {
+                    currentRoomId = existingChatRoom.getRoomId();
+                    realmDatabaseManagement.createChatroomInDatabase(existingChatRoom);
                 }
-
-                RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
-                realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
-
                 realm.executeTransactionAsync(realm1 -> {
                 }, () -> {
                     Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                    intent.putExtra("roomId", currentRoomId);
                     v.getContext().startActivity(intent);
                 }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
             }
@@ -150,7 +147,8 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
 
     @NonNull
     @Override
-    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent,
+                                                                        int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
         return new MyViewHolder(v);
     }

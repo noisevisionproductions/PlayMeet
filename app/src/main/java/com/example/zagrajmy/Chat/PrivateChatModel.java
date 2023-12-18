@@ -21,7 +21,7 @@ public class PrivateChatModel extends RealmObject {
     }
 
     public PrivateChatModel(String roomId, String userIdThatCreatedPost, String user2, RealmList<ChatMessageModel> messages) {
-        this.roomId = UUID.randomUUID().toString();
+        this.roomId = roomId;
         this.userIdThatCreatedPost = userIdThatCreatedPost;
         this.user2 = user2;
         this.messages = messages;

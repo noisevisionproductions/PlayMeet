@@ -72,7 +72,7 @@ public class PostsOfTheGamesFragment extends Fragment {
         RealmResults<PostCreating> postCreating = realm.where(PostCreating.class)
                 .equalTo("isPostSavedByUser", true)
                 .equalTo("userId", user.getUid())
-                .findAll();
+                .findAllAsync();
         List<Integer> savedPostIds = new ArrayList<>();  // Zmieniamy typ listy na String
         for (PostCreating savedPost : postCreating) {
             savedPostIds.add(savedPost.getPostId());  // Dodajemy identyfikatory postów do listy
@@ -81,7 +81,7 @@ public class PostsOfTheGamesFragment extends Fragment {
         RealmResults<PostCreating> allPosts = realm.where(PostCreating.class)
                 .equalTo("isCreatedByUser", true)
                 .notEqualTo("userId", user.getUid())
-                .not().in("postId", savedPostIds.toArray(new Integer[0])).findAll();
+                .not().in("postId", savedPostIds.toArray(new Integer[0])).findAllAsync();
 
         if (allPosts != null) {
             posts.addAll(realm.copyFromRealm(allPosts));

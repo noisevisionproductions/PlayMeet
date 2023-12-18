@@ -11,13 +11,13 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Chat.ChatMessageModel;
-import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ChatViewHolder> {
     private final List<ChatMessageModel> chatMessageModel;
@@ -46,18 +46,15 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
     public void setMessagesLookBasedOnLoggedUser(ChatViewHolder holder, int position) {
         ChatMessageModel chatMessageModel = this.chatMessageModel.get(position);
-        holder.bind(chatMessageModel);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (user != null && chatMessageModel.getUsers().get(0).getUserId().equals(user.getUid())) {
+        if (user != null && Objects.requireNonNull(chatMessageModel.getUsers().get(0)).getUserId().equals(user.getUid())) {
             holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
         } else {
             holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
         }
-
     }
-
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
         AppCompatTextView usernameTextView, messageTextView, timestampTextView;
@@ -73,6 +70,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
         public void bind(ChatMessageModel chatMessageModel) {
             User user = chatMessageModel.getUsers().get(0);
+            assert user != null;
             usernameTextView.setText(user.getNickName());
             messageTextView.setText(chatMessageModel.getMessage());
             timestampTextView.setText(chatMessageModel.getTimestamp());

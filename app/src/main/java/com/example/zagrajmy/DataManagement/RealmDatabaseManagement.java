@@ -79,6 +79,12 @@ public class RealmDatabaseManagement {
         realm.commitTransaction();
     }
 
+    public void createMessageInDatabase(ChatMessageModel chatMessageModel) {
+        realm.beginTransaction();
+        realm.insertOrUpdate(chatMessageModel);
+        realm.commitTransaction();
+    }
+
     public void createChatroomInDatabase(PrivateChatModel privateChatModel) {
         realm.beginTransaction();
         realm.insertOrUpdate(privateChatModel);
@@ -86,17 +92,8 @@ public class RealmDatabaseManagement {
     }
 
     public void addUser(User user) {
-/*
-            realm.executeTransactionAsync(new Realm.Transaction() {
-                @Override
-                public void execute(Realm bgRealm) {
-                    bgRealm.copyToRealmOrUpdate(user);
-                }
-            });
-        */
-
         realm.beginTransaction();
-        realm.copyToRealmOrUpdate(user);
+        realm.insertOrUpdate(user);
         realm.commitTransaction();
     }
 

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Adapters.ChatMessageAdapter;
+import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.User;
@@ -22,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import io.realm.Realm;
 import io.realm.RealmList;
@@ -34,17 +36,26 @@ public class ChatActivity extends AppCompatActivity {
     private AppCompatEditText messageInputFromUser;
     private AppCompatImageButton sendMessageButton;
     private ChatMessageAdapter chatMessageAdapter;
-    private String roomIdNew;
+    private RecyclerView recyclerView;
+    private String currentRoomId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         realm = Realm.getDefaultInstance();
 
+        String roomId = getIntent().getStringExtra("roomId");
+        setCurrentRoomId(roomId);
+
         setContentView(R.layout.activity_chat_and_history);
 
         openChat();
     }
+
+    public void setCurrentRoomId(String roomId) {
+        this.currentRoomId = roomId;
+    }
+
 
     @Override
     public void onDestroy() {
@@ -54,19 +65,19 @@ public class ChatActivity extends AppCompatActivity {
 
     public void openChat() {
 
-        realm = Realm.getDefaultInstance();
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         messageInputFromUser = findViewById(R.id.messageInputFromUser);
         sendMessageButton = findViewById(R.id.sendMessageButton);
 
         //createChat();
+        sendMessageToTheUser();
         setRecyclerView();
         showMessages();
     }
 
     public void setRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recycler_view_chat);
+        recyclerView = findViewById(R.id.recycler_view_chat);
         chatMessageAdapter = new ChatMessageAdapter(messagesList);
         recyclerView.setAdapter(chatMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -74,103 +85,73 @@ public class ChatActivity extends AppCompatActivity {
 
     public void sendMessageToTheUser() {
         sendMessageButton.setOnClickListener(v -> realm.executeTransactionAsync(realm -> {
-
-        }));
-    }
-
-
-    public void createChat() {
-
-        sendMessageButton.setOnClickListener(v -> realm.executeTransactionAsync(realm -> {
-            String roomId = getIntent().getStringExtra("roomId");
-            PostCreating postCreating = realm.where(PostCreating.class).findFirst();
             User userFromRealm = realm.where(User.class)
                     .equalTo("userId", user.getUid())
                     .equalTo("nickName", user.getDisplayName())
                     .findFirst();
-            assert postCreating != null;
+
+            String uuid = UUID.randomUUID().toString();
+
+            ChatMessageModel chatMessageModel = realm.createObject(ChatMessageModel.class, uuid);
+
+            chatMessageModel.getUsers().add(userFromRealm);
+            chatMessageModel.setMessage(String.valueOf(messageInputFromUser.getText()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                chatMessageModel.setTimestamp(LocalDateTime.now());
+            }
 
             PrivateChatModel privateChatModel = realm.where(PrivateChatModel.class)
-                    .equalTo("roomId", roomId)
+                    .equalTo("roomId", currentRoomId)
                     .findFirst();
-
-            assert userFromRealm != null;
-            PrivateChatModel privateChatModelUserWhoCreatedPost = realm.where(PrivateChatModel.class)
-                    .equalTo("userIdThatCreatedPost", userFromRealm.getUserId())
-                    .findFirst();
-
-            if (privateChatModel == null) {
-                privateChatModel = realm.createObject(PrivateChatModel.class, roomId);
-                privateChatModel.setUserIdThatCreatedPost(postCreating.getUserId());
-                privateChatModel.setUser2(userFromRealm.getUserId());
-                privateChatModel.setNickNameOfUser2(userFromRealm.getNickName());
-
-                PrivateChatModel previousChat = realm.where(PrivateChatModel.class)
-                        .equalTo("userIdThatCreatedPost", postCreating.getUserId())
-                        .equalTo("user2", userFromRealm.getUserId())
-                        .findFirst();
-
-                if (previousChat != null) {
-                    privateChatModel.getMessages().addAll(previousChat.getMessages());
-                }
-                if (privateChatModelUserWhoCreatedPost == null) {
-                    privateChatModelUserWhoCreatedPost = realm.createObject(PrivateChatModel.class, roomIdNew);
-                    privateChatModelUserWhoCreatedPost.setUserIdThatCreatedPost(postCreating.getUserId());
-                    privateChatModelUserWhoCreatedPost.setUser2(userFromRealm.getUserId());
-                    privateChatModelUserWhoCreatedPost.setNickNameOfUser2(userFromRealm.getNickName());
-                }
+            if (privateChatModel != null) {
+                privateChatModel.getMessages().add(chatMessageModel);
+                realm.insertOrUpdate(chatMessageModel);
             }
 
-
-            ChatMessageModel message = realm.createObject(ChatMessageModel.class);
-
-            message.getUsers().add(userFromRealm);
-            message.setMessage(String.valueOf(messageInputFromUser.getText()));
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                message.setTimestamp(LocalDateTime.now());
-            }
-
-            PrivateChatModel privateChatModelUser2 = realm.where(PrivateChatModel.class)
-                    .equalTo("user2", userFromRealm.getUserId())
-                    .findFirst();
-            assert privateChatModelUser2 != null;
-            realm.insertOrUpdate(privateChatModelUser2);
-            privateChatModelUser2.getMessages().add(message);
-            privateChatModelUser2.setLastMessage(message);
-
-
-            if (privateChatModelUserWhoCreatedPost != null) {
-                realm.insertOrUpdate(privateChatModelUserWhoCreatedPost);
-                privateChatModelUserWhoCreatedPost.getMessages().add(message);
-                privateChatModelUserWhoCreatedPost.setLastMessage(message);
-
-            }
+            recyclerView.post(() -> recyclerView.scrollToPosition(messagesList.size() - 1));
             hideKeyboardAfterSendingMsg();
         }));
     }
+
 
     public void showMessages() {
         PostCreating postCreating = realm.where(PostCreating.class).findFirst();
 
         assert postCreating != null;
-        RealmResults<PrivateChatModel> privateChatModelListOfMessages = realm.where(PrivateChatModel.class)
-                .equalTo("userIdThatCreatedPost", postCreating.getUserId())
-                .or()
-                .equalTo("user2", user.getUid())
-                .findAll();
+        String userId = postCreating.getUserId();
 
-        for (PrivateChatModel privateChatModel : privateChatModelListOfMessages) {
-            RealmList<ChatMessageModel> chatMessages = privateChatModel.getMessages();
-            messagesList.addAll(realm.copyFromRealm(chatMessages));
+        RealmResults<PrivateChatModel> privateChatModels = realm.where(PrivateChatModel.class).findAllAsync();
+        for (PrivateChatModel privateChatModel : privateChatModels) {
+            String user2Id = privateChatModel.getUser2();
+
+            RealmResults<PrivateChatModel> privateChatModelListOfMessages = realm.where(PrivateChatModel.class)
+                    .beginGroup()
+                    .equalTo("userIdThatCreatedPost", userId)
+                    .equalTo("roomId", currentRoomId)
+                    .endGroup()
+                    .or()
+                    .beginGroup()
+                    .equalTo("user2", user2Id)
+                    .equalTo("roomId", currentRoomId)
+                    .endGroup()
+                    .findAll();
+
+            for (PrivateChatModel privateChatModelMessage : privateChatModelListOfMessages) {
+                RealmList<ChatMessageModel> chatMessages = privateChatModelMessage.getMessages();
+                messagesList.addAll(realm.copyFromRealm(chatMessages));
+            }
         }
-        chatMessageAdapter.notifyDataSetChanged();
 
+        chatMessageAdapter.notifyDataSetChanged();
+        recyclerView.scrollToPosition(messagesList.size() - 1);
     }
+
 
     public void hideKeyboardAfterSendingMsg() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(messageInputFromUser.getWindowToken(), 0);
         messageInputFromUser.setText("");
     }
+
+
 }
