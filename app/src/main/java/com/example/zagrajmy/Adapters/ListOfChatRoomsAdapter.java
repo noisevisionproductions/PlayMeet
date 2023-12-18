@@ -79,6 +79,7 @@ public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRooms
 
         public void bind(final PrivateChatModel chat, final OnItemClickListener listener) {
             username.setText(chat.getNickNameOfUser2());
+            //lastMessage.setText(chat.getLastMessage().getMessage());
 
             if (chat.getLastMessage() != null) {
                 lastMessage.setText(chat.getLastMessage().getMessage());

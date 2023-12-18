@@ -22,8 +22,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         RealmDatabaseManagement realm = RealmDatabaseManagement.getInstance();
         //realm.deleteMessagesAndChatRooms();
-
-     /*   realm.deleteAllRealmDataUseForTestingOnly();
+        /*realm.deleteAllRealmDataUseForTestingOnly();
         realm.realmMigrationResetDatabaseOnlyForTesting();
         realm.closeRealmDatabase();*/
 
