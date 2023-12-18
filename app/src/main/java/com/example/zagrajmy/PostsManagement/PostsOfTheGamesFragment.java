@@ -65,29 +65,29 @@ public class PostsOfTheGamesFragment extends Fragment {
 
 
     public void postCreate() {
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
         assert user != null;
-        RealmResults<PostCreating> postCreating = realm.where(PostCreating.class)
-                .equalTo("isPostSavedByUser", true)
-                .equalTo("userId", user.getUid())
-                .findAllAsync();
-        List<Integer> savedPostIds = new ArrayList<>();  // Zmieniamy typ listy na String
-        for (PostCreating savedPost : postCreating) {
-            savedPostIds.add(savedPost.getPostId());  // Dodajemy identyfikatory postów do listy
+
+        // pobieranie wszystkich postów
+        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAllAsync();
+
+        List<Integer> savedPostIds = new ArrayList<>();
+        for (PostCreating post : allPosts) {
+            if (post.isPostSavedByUser() && post.getUserId().equals(user.getUid())) {
+                savedPostIds.add(post.getPostId());
+            }
         }
 
-        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class)
-                .equalTo("isCreatedByUser", true)
-                .notEqualTo("userId", user.getUid())
-                .not().in("postId", savedPostIds.toArray(new Integer[0])).findAllAsync();
-
-        if (allPosts != null) {
-            posts.addAll(realm.copyFromRealm(allPosts));
+        // filtrowanie wszystkich postów
+        for (PostCreating post : allPosts) {
+            if (post.isCreatedByUser() && !post.getUserId().equals(user.getUid()) && !savedPostIds.contains(post.getPostId())) {
+                posts.add(post);
+            }
         }
+
         realm.close();
     }
+
 
     public void getAddPostButton() {
         ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
