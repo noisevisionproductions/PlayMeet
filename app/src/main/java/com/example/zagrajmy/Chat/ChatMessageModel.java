@@ -9,26 +9,33 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 public class ChatMessageModel extends RealmObject {
     // private String userId;
+    @PrimaryKey
+    private String uuid;
     private long timestamp;
     private RealmList<User> users;
     private String message;
 
     public ChatMessageModel() {
+        this.uuid = UUID.randomUUID().toString();
     }
 
-    public ChatMessageModel(RealmList<User> users, String message, long timestamp) {
+    public ChatMessageModel(String uuid, RealmList<User> users, String message, long timestamp) {
+        this.uuid = uuid;
         this.users = users;
         this.message = message;
         this.timestamp = timestamp;
     }
 
-    public List<User> getUsers() {
+    public RealmList<User> getUsers() {
         return users;
     }
 
