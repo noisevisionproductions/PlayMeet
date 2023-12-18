@@ -35,6 +35,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
         setMessagesLookBasedOnLoggedUser(holder, position);
+        holder.itemView.setAlpha(0.0f);
+        holder.itemView.animate().alpha(1.0f).setDuration(200).start();
         ChatMessageModel chatMessageModel = this.chatMessageModel.get(position);
         holder.bind(chatMessageModel);
     }
