@@ -47,6 +47,7 @@ public class ChatRoomList extends Fragment {
 
     public void onChatClicked(PrivateChatModel chat) {
         Intent intent = new Intent(requireView().getContext(), ChatActivity.class);
+        intent.putExtra("roomId", chat.getRoomId());
         startActivity(intent);
     }
 

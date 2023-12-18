@@ -66,7 +66,9 @@ public class LoginFragment extends Fragment {
                 if (task.isSuccessful()) {
                     User userClass = new User();
                     String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
+                    String userNickName = mAuth.getCurrentUser().getDisplayName();
                     userClass.setUserId(userId);
+                    userClass.setNickName(userNickName);
                     realmDatabaseManagement.addUser(userClass);
 
                     //   UserUidManager.getInstance().setUser(userClass);

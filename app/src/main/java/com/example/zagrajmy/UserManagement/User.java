@@ -6,8 +6,8 @@ import io.realm.annotations.PrimaryKey;
 public class User extends RealmObject {
 
     @PrimaryKey
-    private String nickName;
     private String userId;
+    private String nickName;
     private String birthDay;
     private String gender;
     private String location;
