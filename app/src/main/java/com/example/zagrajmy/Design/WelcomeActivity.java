@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
+import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.google.firebase.database.DatabaseReference;
 
@@ -28,7 +29,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_welcome_screen);
         new Handler().postDelayed(() -> {
-            Intent intent = new Intent(WelcomeActivity.this, LoginAndRegisterActivity.class);
+            Intent intent = new Intent(WelcomeActivity.this, MainMenuPosts.class);
 
             startActivity(intent);
             finish();

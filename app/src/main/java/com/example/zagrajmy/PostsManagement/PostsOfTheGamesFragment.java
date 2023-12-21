@@ -2,18 +2,25 @@ package com.example.zagrajmy.PostsManagement;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Adapters.PostDesignAdapterForAllPosts;
+import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
+import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostsManagement.PostsFiltering.PostsFilter;
 import com.example.zagrajmy.R;
@@ -30,11 +37,13 @@ public class PostsOfTheGamesFragment extends Fragment {
     private final List<PostCreating> posts = new ArrayList<>();
     private Realm realm;
     private PostDesignAdapterForAllPosts postDesignAdapterForAllPosts;
+    private ProgressBar progressBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         realm = Realm.getDefaultInstance();
 
         View currentView = inflater.inflate(R.layout.activity_posts_list, container, false);
+        progressBar = currentView.findViewById(R.id.progressBarLayout);
 
         showAllPosts(currentView);
         getAddPostButton();
@@ -43,19 +52,21 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     protected void showAllPosts(View view) {
-        realm = Realm.getDefaultInstance();
-
-
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_posts);
-
-        postCreate();
 
         postDesignAdapterForAllPosts = new PostDesignAdapterForAllPosts(getContext(), posts);
         recyclerView.setAdapter(postDesignAdapterForAllPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        //recyclerView.setHasFixedSize(true);
 
-        /*  *//*pozwala na przewijanie postow jeden po drugim*//*
-        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        if (AuthenticationManager.isUserLoggedIn()) {
+            postCreateForLoggedInUser();
+        } else {
+            postCreateForUnregisteredUser();
+        }
+
+        //*pozwala na przewijanie postow jeden po drugim*//*
+        /*PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);*/
 
         filterAllPosts(view);
@@ -63,31 +74,70 @@ public class PostsOfTheGamesFragment extends Fragment {
         getAddPostButton();
     }
 
+    public void postCreateForUnregisteredUser() {
+        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAllAsync();
 
-    public void postCreate() {
+        // Filtrowanie wszystkich postów dla wszystkich użytkowników
+        posts.addAll(allPosts);
+
+        //realm.close();
+    }
+
+
+    public void postCreateForLoggedInUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        assert user != null;
 
         // pobieranie wszystkich postów
         RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAllAsync();
+        List<PostCreating> newPostCreatingList = new ArrayList<>();
+        //List<PostCreating> newFilteredList = new ArrayList<>();
 
         List<Integer> savedPostIds = new ArrayList<>();
         for (PostCreating post : allPosts) {
-            if (post.isPostSavedByUser() && post.getUserId().equals(user.getUid())) {
-                savedPostIds.add(post.getPostId());
+            if (post.isPostSavedByUser()) {
+                assert user != null;
+                if (post.getUserId().equals(user.getUid())) {
+                    savedPostIds.add(post.getPostId());
+                }
             }
         }
+       // updatePostsUsingDiffUtil(savedPostIds);
 
         // filtrowanie wszystkich postów
         for (PostCreating post : allPosts) {
-            if (post.isCreatedByUser() && !post.getUserId().equals(user.getUid()) && !savedPostIds.contains(post.getPostId())) {
-                posts.add(post);
+            if (post.isCreatedByUser()) {
+                assert user != null;
+                if (!post.getUserId().equals(user.getUid()) && !savedPostIds.contains(post.getPostId())) {
+                    newPostCreatingList.add(post);
+                }
             }
         }
+        updatePostsUsingDiffUtil(newPostCreatingList);
 
         realm.close();
     }
 
+    // obliczanie roznicy miedzy postami w celu szybszego ladowania, pozwala na dzialanie na watku w tle
+    public void updatePostsUsingDiffUtil(List<PostCreating> newPosts) {
+        final List<PostCreating> oldPosts = new ArrayList<>(this.posts);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldPosts, newPosts));
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        posts.clear();
+                        posts.addAll(newPosts);
+                        progressBar.setVisibility(View.GONE);
+                        diffResult.dispatchUpdatesTo(postDesignAdapterForAllPosts);
+                    }
+                });
+            }
+        }).start();
+    }
 
     public void getAddPostButton() {
         ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
@@ -100,6 +150,4 @@ public class PostsOfTheGamesFragment extends Fragment {
         PostsFilter postsFilter = new PostsFilter(postDesignAdapterForAllPosts, posts, filterButton, deleteFilters);
         postsFilter.filterPostsWindow((Activity) getContext());
     }
-
-
 }
