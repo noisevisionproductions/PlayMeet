@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
+import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.Adapters.PostDesignAdapterForUserActivity;
 import com.example.zagrajmy.R;
@@ -25,11 +26,9 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 
 public class PostsCreatedByUserFragment extends Fragment {
-    private Realm realm;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        realm = Realm.getDefaultInstance();
 
         View currentView = inflater.inflate(R.layout.posts_created_by_user_fragment, container, false);
 
@@ -39,41 +38,33 @@ public class PostsCreatedByUserFragment extends Fragment {
         return currentView;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
-    }
-
     public void showUserPosts(View view) {
         AppCompatTextView noPosts = view.findViewById(R.id.noPostInfo);
         RecyclerView expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
         FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
 
+        if (AuthenticationManager.isUserLoggedIn() && userFirebase != null) {
+            List<PostCreating> newUserPosts = new ArrayList<>();
 
-        assert userFirebase != null;
+            try (Realm realm = Realm.getDefaultInstance()) {
+                RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class).equalTo("userId", userFirebase.getUid()).findAll();
 
-        List<PostCreating> newUserPosts = new ArrayList<>();
-
-        // RealmResults<PostCreating> userPostsFromRealm = realm.copyFromRealm("postsCreatedByUser");
-
-        RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class).equalTo("userId", userFirebase.getUid()).findAll();
-
-        if (userPostsFromRealm != null) {
-            for (PostCreating listOfCreatedByUser : userPostsFromRealm.where().equalTo("isCreatedByUser", true).findAll()) {
-                newUserPosts.add(realm.copyFromRealm(listOfCreatedByUser));
+                if (userPostsFromRealm != null) {
+                    for (PostCreating listOfCreatedByUser : userPostsFromRealm.where().equalTo("isCreatedByUser", true).findAll()) {
+                        newUserPosts.add(realm.copyFromRealm(listOfCreatedByUser));
+                    }
+                }
             }
-        }
-
-        if (newUserPosts.isEmpty()) {
-            noPosts.setVisibility(View.VISIBLE);
-            expandableListOfYourPosts.setVisibility(View.GONE);
-        } else {
-            expandableListOfYourPosts.setVisibility(View.VISIBLE);
-            noPosts.setVisibility(View.GONE);
-            PostDesignAdapterForUserActivity postDesignAdapterForUserActivity = new PostDesignAdapterForUserActivity(getContext(), newUserPosts);
-            expandableListOfYourPosts.setAdapter(postDesignAdapterForUserActivity);
-            expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+            if (newUserPosts.isEmpty()) {
+                noPosts.setVisibility(View.VISIBLE);
+                expandableListOfYourPosts.setVisibility(View.GONE);
+            } else {
+                expandableListOfYourPosts.setVisibility(View.VISIBLE);
+                noPosts.setVisibility(View.GONE);
+                PostDesignAdapterForUserActivity postDesignAdapterForUserActivity = new PostDesignAdapterForUserActivity(getContext(), newUserPosts);
+                expandableListOfYourPosts.setAdapter(postDesignAdapterForUserActivity);
+                expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext()));
+            }
         }
     }
 
