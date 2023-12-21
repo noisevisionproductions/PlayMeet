@@ -1,12 +1,14 @@
 package com.example.zagrajmy.PostsManagement;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.zagrajmy.Chat.ChatRoomList;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
+import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.PostsManagement.UserPosts.PostsCreatedByUserFragment;
 import com.example.zagrajmy.PostsManagement.UserPosts.PostsFavoriteByUserFragment;
 import com.example.zagrajmy.R;
@@ -28,11 +30,11 @@ public class MainMenuPosts extends SidePanelBaseActivity {
         showAllPostsMenu = findViewById(R.id.showAllPostsMenu);
         chatRoomMenu = findViewById(R.id.chatRoomMenu);
 
-        yourPostsMenu.setSelected(true);
+        showAllPostsMenu.setSelected(true);
 
         switchToUserPosts();
-        switchToFavoritePosts();
         switchToMainMenu();
+        switchToFavoritePosts();
         switchToChatRoom();
     }
 
@@ -49,21 +51,28 @@ public class MainMenuPosts extends SidePanelBaseActivity {
                     .replace(R.id.fragmentContainerActivePosts, PostsCreatedByUserFragment.class, null)
                     .setReorderingAllowed(true)
                     .commit();
+
         });
     }
 
     public void switchToFavoritePosts() {
-        savedPostsMenu.setOnClickListener(view -> {
-            yourPostsMenu.setSelected(false);
-            savedPostsMenu.setSelected(true);
-            showAllPostsMenu.setSelected(false);
-            chatRoomMenu.setSelected(false);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerActivePosts, PostsFavoriteByUserFragment.class, null)
-                    .setReorderingAllowed(true)
-                    .commit();
+        savedPostsMenu.setOnClickListener(view -> {
+            if (AuthenticationManager.isUserLoggedIn()) {
+
+                yourPostsMenu.setSelected(false);
+                savedPostsMenu.setSelected(true);
+                showAllPostsMenu.setSelected(false);
+                chatRoomMenu.setSelected(false);
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerActivePosts, PostsFavoriteByUserFragment.class, null)
+                        .setReorderingAllowed(true)
+                        .commit();
+            } else {
+                Toast.makeText(getApplicationContext().getApplicationContext(), "Dostępne jedynie dla zalogowanych użytkowników!", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -84,16 +93,21 @@ public class MainMenuPosts extends SidePanelBaseActivity {
 
     public void switchToChatRoom() {
         chatRoomMenu.setOnClickListener(view -> {
-            yourPostsMenu.setSelected(false);
-            savedPostsMenu.setSelected(false);
-            showAllPostsMenu.setSelected(false);
-            chatRoomMenu.setSelected(true);
+            if (AuthenticationManager.isUserLoggedIn()) {
+                yourPostsMenu.setSelected(false);
+                savedPostsMenu.setSelected(false);
+                showAllPostsMenu.setSelected(false);
+                chatRoomMenu.setSelected(true);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainerActivePosts, ChatRoomList.class, null)
-                    .setReorderingAllowed(true)
-                    .commit();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainerActivePosts, ChatRoomList.class, null)
+                        .setReorderingAllowed(true)
+                        .commit();
+            } else {
+                Toast.makeText(getApplicationContext().getApplicationContext(), "Dostępne jedynie dla zalogowanych użytkowników!", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
  /*   public void mainMenuButton() {

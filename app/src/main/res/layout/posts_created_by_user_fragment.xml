@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutOfCreatedPosts"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".PostsManagement.PostsOfTheGamesFragment">
+    android:background="@color/background">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/alpha_version_info" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expandableListOfUserPosts"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/layoutOfPostsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/noPostInfo"
-        style="@style/MyAppCompatTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:text="Nie stworzyłeś żadnych postów"
-        android:textSize="28sp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-    <include layout="@layout/button_fragment"/>
+        <include
+            android:id="@+id/include"
+            layout="@layout/alpha_version_info" />
+
+        <include layout="@layout/progress_bar_layout" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/noPostInfo"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="Nie stworzyłeś żadnych postów"
+            android:textSize="28sp"
+            android:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/expandableListOfUserPosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <include layout="@layout/button_fragment" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

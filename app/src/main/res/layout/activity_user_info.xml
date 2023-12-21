@@ -1,180 +1,191 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/postCreatingLayout"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".PostsManagement.PostCreatingLogic">
+    android:background="@color/background">
 
-    <!--pasek informujacy o wersji-->
-    <include
-        android:id="@+id/include"
-        layout="@layout/alpha_version_info" />
+    <androidx.constraintlayout.widget.ConstraintLayout
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutForDeisgn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/include">
-
-        <include layout="@layout/circle_image_view_avatar" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/uploadAvatar"
-            style="@style/MyButtonStyle"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style"
-            android:text="Dodaj zdjęcie" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:padding="15dp">
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayout"
+        android:id="@+id/postCreatingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutForDeisgn"
-        app:layout_constraintVertical_bias="0.0"
-        tools:openDrawer="end">
+        android:background="@color/background"
+        tools:context=".PostsManagement.PostCreatingLogic">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/greetUser"
-            style="@style/MyAppCompatTextViewStyle"
+        <!--pasek informujacy o wersji-->
+        <include
+            android:id="@+id/include"
+            layout="@layout/alpha_version_info" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayoutForDeisgn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/include">
+
+            <include layout="@layout/circle_image_view_avatar" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/uploadAvatar"
+                style="@style/MyButtonStyle"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_style"
+                android:text="Dodaj zdjęcie" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="15dp">
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:text="Zalogowano jako"
-            android:textSize="15sp" />
+            android:orientation="vertical"
+            android:padding="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutForDeisgn"
+            app:layout_constraintVertical_bias="0.0"
+            tools:openDrawer="end">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/nickname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:hint="Twój nick"
-            android:paddingBottom="20dp"
-            android:textColor="#0000FF"
-            android:textSize="25sp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false">
-
-            <com.google.android.material.textfield.TextInputEditText
-                style="@style/MySpinnerStyle"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/greetUser"
+                style="@style/MyAppCompatTextViewStyle"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Twoje imię"
-                android:inputType="text"
-                android:maxLength="100"
-                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Zalogowano jako"
                 android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false">
-
-            <com.google.android.material.textfield.TextInputEditText
-                style="@style/MySpinnerStyle"
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/nickname"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Skąd pochodzisz"
-                android:inputType="text"
-                android:maxLength="100"
-                android:padding="10dp"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="Twój nick"
+                android:paddingBottom="20dp"
+                android:textColor="#0000FF"
+                android:textSize="25sp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false">
-
-            <com.google.android.material.textfield.TextInputEditText
-                style="@style/MySpinnerStyle"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Wprowadź dodatkowe informacje"
-                android:inputType="text"
-                android:maxLength="100"
-                android:padding="10dp"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                app:hintEnabled="false">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false">
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/MySpinnerStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Twoje imię"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:padding="10dp"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                style="@style/MySpinnerStyle"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Wprowadź dodatkowe informacje"
-                android:inputType="text"
-                android:maxLength="100"
-                android:padding="10dp"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                app:hintEnabled="false">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false">
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/MySpinnerStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Skąd pochodzisz"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:padding="10dp"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
-                style="@style/MySpinnerStyle"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Wprowadź dodatkowe informacje"
-                android:inputType="text"
-                android:maxLength="100"
-                android:padding="10dp"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_height="wrap_content"
+                app:hintEnabled="false">
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/MySpinnerStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Wprowadź dodatkowe informacje"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:padding="10dp"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/backToMainMenu"
-        style="@style/MyButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_style"
-        android:text="@string/backToMainMenu"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintEnabled="false">
 
-    <include layout="@layout/button_fragment" />
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/MySpinnerStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Wprowadź dodatkowe informacje"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:padding="10dp"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    style="@style/MySpinnerStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Wprowadź dodatkowe informacje"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:padding="10dp"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/backToMainMenu"
+            style="@style/MyButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style"
+            android:text="@string/backToMainMenu"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <include layout="@layout/button_fragment" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <include layout="@layout/navigation_view_side_panel" />
+
+</androidx.drawerlayout.widget.DrawerLayout>
