@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
@@ -39,6 +40,7 @@ public class LoginFragment extends Fragment {
 
         View currentView = inflater.inflate(R.layout.login_fragment, container, false);
 
+        guestButton(currentView);
 
         authManager = new AuthenticationManager();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -102,5 +104,13 @@ public class LoginFragment extends Fragment {
             return true;
         }
         return false;
+    }
+
+    public void guestButton(View view) {
+        AppCompatTextView guestButton = view.findViewById(R.id.continueAsGuest);
+        guestButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), MainMenuPosts.class);
+            startActivity(intent);
+        });
     }
 }

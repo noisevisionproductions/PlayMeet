@@ -35,13 +35,10 @@ import io.realm.RealmResults;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private final List<PostCreating> posts = new ArrayList<>();
-    private Realm realm;
     private PostDesignAdapterForAllPosts postDesignAdapterForAllPosts;
     private ProgressBar progressBar;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        realm = Realm.getDefaultInstance();
-
         View currentView = inflater.inflate(R.layout.activity_posts_list, container, false);
         progressBar = currentView.findViewById(R.id.progressBarLayout);
 
@@ -57,7 +54,6 @@ public class PostsOfTheGamesFragment extends Fragment {
         postDesignAdapterForAllPosts = new PostDesignAdapterForAllPosts(getContext(), posts);
         recyclerView.setAdapter(postDesignAdapterForAllPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        //recyclerView.setHasFixedSize(true);
 
         if (AuthenticationManager.isUserLoggedIn()) {
             postCreateForLoggedInUser();
@@ -75,67 +71,63 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     public void postCreateForUnregisteredUser() {
-        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAllAsync();
+        try (Realm realm = Realm.getDefaultInstance()) {
 
-        // Filtrowanie wszystkich postów dla wszystkich użytkowników
-        posts.addAll(allPosts);
+            RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
 
-        //realm.close();
+            List<PostCreating> newPostCreatingList = new ArrayList<>(allPosts);
+
+            updatePostsUsingDiffUtil(newPostCreatingList);
+        }
     }
 
 
     public void postCreateForLoggedInUser() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        // pobieranie wszystkich postów
-        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAllAsync();
-        List<PostCreating> newPostCreatingList = new ArrayList<>();
-        //List<PostCreating> newFilteredList = new ArrayList<>();
+        try (Realm realm = Realm.getDefaultInstance()) {
 
-        List<Integer> savedPostIds = new ArrayList<>();
-        for (PostCreating post : allPosts) {
-            if (post.isPostSavedByUser()) {
-                assert user != null;
-                if (post.getUserId().equals(user.getUid())) {
-                    savedPostIds.add(post.getPostId());
+            RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
+            List<PostCreating> newPostCreatingList = new ArrayList<>();
+
+            // filtrowanie ze wszystkich postow czy sa stworzone przez zalogowanego uzytkownika,
+            // jezeli tak, to nie bedzie on wyswietlany w menu glownym
+            List<Integer> savedPostIds = new ArrayList<>();
+            for (PostCreating post : allPosts) {
+                if (post.isPostSavedByUser()) {
+                    assert user != null;
+                    if (post.getUserId().equals(user.getUid())) {
+                        savedPostIds.add(post.getPostId());
+                    }
                 }
             }
-        }
-       // updatePostsUsingDiffUtil(savedPostIds);
 
-        // filtrowanie wszystkich postów
-        for (PostCreating post : allPosts) {
-            if (post.isCreatedByUser()) {
-                assert user != null;
-                if (!post.getUserId().equals(user.getUid()) && !savedPostIds.contains(post.getPostId())) {
-                    newPostCreatingList.add(post);
+            // filtrowanie wszystkich postów
+            for (PostCreating post : allPosts) {
+                if (post.isCreatedByUser()) {
+                    assert user != null;
+                    if (!post.getUserId().equals(user.getUid()) && !savedPostIds.contains(post.getPostId())) {
+                        newPostCreatingList.add(post);
+                    }
                 }
             }
+            updatePostsUsingDiffUtil(newPostCreatingList);
         }
-        updatePostsUsingDiffUtil(newPostCreatingList);
-
-        realm.close();
     }
 
     // obliczanie roznicy miedzy postami w celu szybszego ladowania, pozwala na dzialanie na watku w tle
     public void updatePostsUsingDiffUtil(List<PostCreating> newPosts) {
         final List<PostCreating> oldPosts = new ArrayList<>(this.posts);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setVisibility(View.VISIBLE);
-                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldPosts, newPosts));
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        posts.clear();
-                        posts.addAll(newPosts);
-                        progressBar.setVisibility(View.GONE);
-                        diffResult.dispatchUpdatesTo(postDesignAdapterForAllPosts);
-                    }
-                });
-            }
+        new Thread(() -> {
+            progressBar.setVisibility(View.VISIBLE);
+            final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldPosts, newPosts));
+            new Handler(Looper.getMainLooper()).post(() -> {
+                posts.clear();
+                posts.addAll(newPosts);
+                progressBar.setVisibility(View.GONE);
+                diffResult.dispatchUpdatesTo(postDesignAdapterForAllPosts);
+            });
         }).start();
     }
 
