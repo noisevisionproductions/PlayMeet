@@ -5,38 +5,40 @@
     android:id="@+id/layoutOfAddedPost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".PostsManagement.PostsOfTheGamesFragment">
+    android:background="@color/background">
 
-    <include
-        android:id="@+id/include"
-        layout="@layout/alpha_version_info" />
-
-    <!--wyswietlanie postow stworzonych przez uzytkownika-->
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expandableListOfSavedPosts"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/layoutOfPostsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/noPostInfo"
-        style="@style/MyAppCompatTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:text="Nie zapisałeś żadnych postów"
-        android:textSize="28sp"
-        android:visibility="visible"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <include
+            android:id="@+id/include"
+            layout="@layout/alpha_version_info" />
+
+        <include layout="@layout/progress_bar_layout" />
+
+        <!--wyswietlanie postow stworzonych przez uzytkownika-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/expandableListOfSavedPosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/noPostInfo"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:gravity="center"
+            android:text="Nie zapisałeś żadnych postów"
+            android:textSize="28sp"
+            android:visibility="visible" />
+
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
     <include layout="@layout/button_fragment" />
 

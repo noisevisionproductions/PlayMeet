@@ -10,6 +10,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
@@ -43,29 +44,48 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void onResume() {
+        super.onResume();
+        MenuItem loginItem = navigationView.getMenu().findItem(R.id.wylogujKonto);
+
+        if (AuthenticationManager.isUserLoggedIn()) {
+            loginItem.setTitle("Wyloguj konto");
+        } else {
+            loginItem.setTitle("Zaloguj się");
+        }
+    }
+
     protected void setupNavigationView() {
         this.navigationView.setNavigationItemSelectedListener(menuItem -> {
             int id = menuItem.getItemId();
 
-            if (id == R.id.wylogujKonto) {
-                FirebaseAuth.getInstance().signOut();
-                RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
-                realmDatabaseManagement.closeRealmDatabase();
-                Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
-                startActivity(intent);
-                finish();
-            }
             if (id == R.id.userProfile) {
-                Intent intent = new Intent(getApplicationContext(), UserAccountLogic.class);
-                startActivity(intent);
-                finish();
+                if (!this.getClass().getName().equals(UserAccountLogic.class.getName())) {
+                    Intent intent = new Intent(getApplicationContext(), UserAccountLogic.class);
+                    startActivity(intent);
+                }
             }
 
             if (id == R.id.mojaAktywnosc) {
-                Intent intent = new Intent(getApplicationContext(), MainMenuPosts.class);
-                startActivity(intent);
-                finish();
+                if (!this.getClass().getName().equals(MainMenuPosts.class.getName())) {
+                    Intent intent = new Intent(getApplicationContext(), MainMenuPosts.class);
+                    startActivity(intent);
+                }
             }
+
+            if (AuthenticationManager.isUserLoggedIn()) {
+                if (id == R.id.wylogujKonto) {
+                    FirebaseAuth.getInstance().signOut();
+                    RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
+                    realmDatabaseManagement.closeRealmDatabase();
+                    Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
+                    startActivity(intent);
+                }
+            } else {
+                Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
+                startActivity(intent);
+            }
+
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         });
