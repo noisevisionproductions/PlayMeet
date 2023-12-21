@@ -37,7 +37,6 @@ import io.realm.RealmResults;
 
 public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> {
 
-
     private final List<PostCreating> listOfPostCreating;
     private final Context context;
     private PostCreating postCreating;
@@ -60,7 +59,7 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         holder.chosenDate.setText(postCreating.getDateTime());
         holder.chosenHour.setText(postCreating.getHourTime());
 
-        extraInfo(holder);
+        ExtraInfoContainerForAllPosts.handleExtraInfo(holder, context);
         chatButtonLogic(holder);
     }
 
@@ -112,43 +111,9 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         });
     }
 
-    //logika rozwijanego menu, dodatkowych informacji
-    public void extraInfo(MyViewHolder holder) {
-        ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
-        holder.arrowDownOpenMenu.setOnClickListener(v -> {
-            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
-                holder.extraInfoContainer.setVisibility(View.VISIBLE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
-            } else {
-                holder.extraInfoContainer.setVisibility(View.GONE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-            }
-        });
-        holder.arrowDownOpenMenuButton.setOnClickListener(v -> {
-            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
-                holder.extraInfoContainer.setVisibility(View.VISIBLE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
-            } else {
-                holder.extraInfoContainer.setVisibility(View.GONE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-            }
-        });
-
-    }
-
-
     @NonNull
     @Override
-    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent,
-                                                                        int viewType) {
+    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
         return new MyViewHolder(v);
     }
@@ -164,10 +129,10 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
-        private final CardView cardView;
-        private final ConstraintLayout arrowDownOpenMenu;
-        private final LinearLayoutCompat extraInfoContainer;
-        private final AppCompatButton arrowDownOpenMenuButton, savePostButton, chatButton;
+        protected final CardView cardView;
+        protected final ConstraintLayout arrowDownOpenMenu;
+        protected final LinearLayoutCompat extraInfoContainer;
+        protected final AppCompatButton arrowDownOpenMenuButton, savePostButton, chatButton;
         private PostCreating postCreating;
         private RealmDatabaseManagement realmDatabaseManagement;
         private FirebaseUser firebaseUser;
@@ -209,7 +174,6 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
 
             savePostButtonLogic();
         }
-
 
         public void setPostsSavedByUser(PostCreating postCreating) {
             this.postCreating = postCreating;

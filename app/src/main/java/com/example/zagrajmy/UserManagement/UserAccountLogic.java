@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
+import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,16 +17,18 @@ import com.google.firebase.auth.FirebaseUser;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class UserAccountLogic extends AppCompatActivity {
+public class UserAccountLogic extends SidePanelBaseActivity {
 
     public UserAccountLogic() {
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
+
+        setupDrawerLayout();
+        setupNavigationView();
 
         greetNickname();
         getAddPostButton();
@@ -44,7 +47,7 @@ public class UserAccountLogic extends AppCompatActivity {
         }
     }
 
-    public void setUserAvatar(){
+    public void setUserAvatar() {
         CircleImageView userAvatar = findViewById(R.id.userAvatar);
         AppCompatButton uploadAvatar = findViewById(R.id.uploadAvatar);
         uploadAvatar.setOnClickListener(new View.OnClickListener() {
@@ -54,6 +57,7 @@ public class UserAccountLogic extends AppCompatActivity {
             }
         });
     }
+
     public void getAddPostButton() {
         ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
         getSupportFragmentManager().beginTransaction().add(R.id.postCreatingLayout, myFragment).commit();

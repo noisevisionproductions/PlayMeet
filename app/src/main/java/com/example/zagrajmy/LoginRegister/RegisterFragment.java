@@ -82,7 +82,7 @@ public class RegisterFragment extends Fragment {
 
                     /*dodawanie nicku do bazy danych realm*/
                     RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
-                    realmDatabaseManagement.createUser();
+                    realmDatabaseManagement.createUser();/**/
                     realmDatabaseManagement.closeRealmDatabase();
 
                     /*dodawanie nicku do bazy danych firebase*/
