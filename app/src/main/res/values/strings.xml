@@ -44,5 +44,7 @@
     <string name="postsSavedByYou">Zapisane posty</string>
     <string name="deletePost">Usuń post</string>
     <string name="additionalmenu">Menu Dodatkowe</string>
+    <string name="createPostButtonLogo">+</string>
+    <string name="postSavedInfo">Zapisałeś się!</string>
 
 </resources>

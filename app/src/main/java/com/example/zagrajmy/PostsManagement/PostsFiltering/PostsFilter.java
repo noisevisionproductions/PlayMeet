@@ -17,7 +17,7 @@ import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Adapters.MySpinnerAdapterForFilterMenu;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.Adapters.PostDesignAdapterForAllPosts;
+import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
 import com.example.zagrajmy.R;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.List;
 public class PostsFilter {
     private final List<PostCreating> originalPosts = new ArrayList<>();
     private final List<PostCreating> posts;
-    private final RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> adapter;
+    private final RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> adapter;
     private final AppCompatButton filterButton;
     private final AppCompatButton deleteFilters;
     private Spinner spinnerSport;
@@ -37,7 +37,7 @@ public class PostsFilter {
     private EditText postIdText;
     private final boolean[] checkedItems;
 
-    public PostsFilter(RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> adapter, List<PostCreating> posts, AppCompatButton filterButton, AppCompatButton deleteFilters) {
+    public PostsFilter(RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> adapter, List<PostCreating> posts, AppCompatButton filterButton, AppCompatButton deleteFilters) {
 
         this.adapter = adapter;
         this.posts = posts;
@@ -212,7 +212,7 @@ public class PostsFilter {
         });
     }
 
-    public static void filterPostsLogic(RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> adapter, List<PostCreating> posts, PostFilter filter) {
+    public static void filterPostsLogic(RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> adapter, List<PostCreating> posts, PostFilter filter) {
         List<PostCreating> filteredPosts = new ArrayList<>();
 
         for (PostCreating post : posts) {

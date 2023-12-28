@@ -3,6 +3,7 @@ package com.example.zagrajmy.DataManagement;
 import com.example.zagrajmy.Chat.ChatMessageModel;
 import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.UserManagement.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -70,12 +71,18 @@ public class RealmDatabaseManagement {
         realm.where(PostCreating.class)
                 .equalTo("isCreatedByUser", true)
                 .findFirst();
-        realm.close();
+        // realm.close();
     }
 
     public void addPostToDatabase(PostCreating postCreating) {
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(postCreating);
+        realm.commitTransaction();
+    }
+
+    public void addCopyOfPostToDatabase(PostCreatingCopy postCreatingCopy) {
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(postCreatingCopy);
         realm.commitTransaction();
     }
 
@@ -124,7 +131,7 @@ public class RealmDatabaseManagement {
 
     }
 
-    public void deletePost(int postId) {
+    public void deletePost(Integer postId) {
         realm.executeTransactionAsync(realm -> {
             PostCreating post = realm.where(PostCreating.class)
                     .equalTo("postId", postId)
@@ -134,7 +141,16 @@ public class RealmDatabaseManagement {
             }
         });
     }
-
+    public void removeUserFromPost(String uuid) {
+        realm.executeTransactionAsync(realm -> {
+            PostCreatingCopy post = realm.where(PostCreatingCopy.class)
+                    .equalTo("postUuid", uuid)
+                    .findFirst();
+            if (post != null) {
+                post.deleteFromRealm();
+            }
+        });
+    }
     public void createUser() {
         realm.executeTransactionAsync(realm1 -> {
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

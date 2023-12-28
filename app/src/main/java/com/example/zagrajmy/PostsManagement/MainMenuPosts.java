@@ -10,7 +10,7 @@ import com.example.zagrajmy.Chat.ChatRoomList;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.PostsManagement.UserPosts.PostsCreatedByUserFragment;
-import com.example.zagrajmy.PostsManagement.UserPosts.PostsFavoriteByUserFragment;
+import com.example.zagrajmy.PostsManagement.UserPosts.PostsSavedByUserFragment;
 import com.example.zagrajmy.R;
 
 public class MainMenuPosts extends SidePanelBaseActivity {
@@ -67,7 +67,7 @@ public class MainMenuPosts extends SidePanelBaseActivity {
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainerActivePosts, PostsFavoriteByUserFragment.class, null)
+                        .replace(R.id.fragmentContainerActivePosts, PostsSavedByUserFragment.class, null)
                         .setReorderingAllowed(true)
                         .commit();
             } else {

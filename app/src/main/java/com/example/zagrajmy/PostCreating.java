@@ -12,6 +12,7 @@ public class PostCreating extends RealmObject {
     private int postId;
     private boolean isCreatedByUser = false;
     private boolean isPostSavedByUser = false;
+    private boolean isExtraInfoOpen = false;
     private String userId;
     private String sportType;
     private String cityName;
@@ -63,6 +64,14 @@ public class PostCreating extends RealmObject {
 
     public boolean isCreatedByUser() {
         return isCreatedByUser;
+    }
+
+    public boolean isExtraInfoOpen() {
+        return isExtraInfoOpen;
+    }
+
+    public void setExtraInfoOpen(boolean extraInfoOpen) {
+        isExtraInfoOpen = extraInfoOpen;
     }
 
     public String getUserId() {

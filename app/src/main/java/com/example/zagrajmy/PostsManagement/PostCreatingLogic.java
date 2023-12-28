@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.Adapters.MySpinnerAdapter;
+import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
@@ -27,7 +28,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class PostCreatingLogic extends AppCompatActivity {
+public class PostCreatingLogic extends SidePanelBaseActivity {
     private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
     private final PostCreating postCreating = new PostCreating();
 
@@ -35,6 +36,9 @@ public class PostCreatingLogic extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post_creating);
+
+        setupDrawerLayout();
+        setupNavigationView();
 
         AppCompatButton button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
@@ -54,9 +58,6 @@ public class PostCreatingLogic extends AppCompatActivity {
     }
 
     public void createPost() {
-        //  User userId = UserUidManager.getInstance().getUser();
-        //  String userId = String.valueOf(UserUidManager.getInstance().getUser());
-        // User userId = realmDatabaseManagement.getUserId(user.getUserId());
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         Button createPost = findViewById(R.id.submitPost);
 
