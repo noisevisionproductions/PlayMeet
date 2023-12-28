@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,39 +17,41 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Chat.ChatActivity;
-import com.example.zagrajmy.Chat.ChatMessageModel;
 import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
+import java.util.Set;
 
 import io.realm.Realm;
-import io.realm.RealmList;
 import io.realm.RealmResults;
 
-public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesignAdapterForAllPosts.MyViewHolder> {
+public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> {
 
     private final List<PostCreating> listOfPostCreating;
     private final Context context;
     private PostCreating postCreating;
     private String currentRoomId;
+    private Set<Integer> openExtraInfoPostIds = new HashSet<>();
 
-    public PostDesignAdapterForAllPosts(Context context, List<PostCreating> listOfPostCreating) {
+
+    public PostsAdapterAllPosts(Context context, List<PostCreating> listOfPostCreating) {
         this.listOfPostCreating = listOfPostCreating;
         this.context = context;
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
         postCreating = listOfPostCreating.get(position);
+
         holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
         holder.sportNames.setText(postCreating.getSportType());
         holder.cityNames.setText(postCreating.getCityName());
@@ -59,8 +60,26 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         holder.chosenDate.setText(postCreating.getDateTime());
         holder.chosenHour.setText(postCreating.getHourTime());
 
+        holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
+
         ExtraInfoContainerForAllPosts.handleExtraInfo(holder, context);
         chatButtonLogic(holder);
+    }
+
+    @NonNull
+    @Override
+    public PostsAdapterAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
+        return new MyViewHolder(v);
+    }
+
+    @Override
+    public int getItemCount() {
+        if (listOfPostCreating != null) {
+            return listOfPostCreating.size();
+        } else {
+            return 0;
+        }
     }
 
     public void chatButtonLogic(MyViewHolder holder) {
@@ -111,21 +130,6 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         });
     }
 
-    @NonNull
-    @Override
-    public PostDesignAdapterForAllPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
-        return new MyViewHolder(v);
-    }
-
-    @Override
-    public int getItemCount() {
-        if (listOfPostCreating != null) {
-            return listOfPostCreating.size();
-        } else {
-            return 0;
-        }
-    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
@@ -133,12 +137,13 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
         protected final ConstraintLayout arrowDownOpenMenu;
         protected final LinearLayoutCompat extraInfoContainer;
         protected final AppCompatButton arrowDownOpenMenuButton, savePostButton, chatButton;
-        private PostCreating postCreating;
-        private RealmDatabaseManagement realmDatabaseManagement;
-        private FirebaseUser firebaseUser;
+        public int postId;
+        protected boolean isExtraInfoOpen = false;
+
 
         public MyViewHolder(View v) {
             super(v);
+
             uniquePostId = v.findViewById(R.id.uniquePostId);
             uniquePostId.setFocusable(false);
 
@@ -175,35 +180,45 @@ public class PostDesignAdapterForAllPosts extends RecyclerView.Adapter<PostDesig
             savePostButtonLogic();
         }
 
-        public void setPostsSavedByUser(PostCreating postCreating) {
-            this.postCreating = postCreating;
-        }
-
         public void savePostButtonLogic() {
-            firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
             savePostButton.setOnClickListener(v1 -> {
-                realmDatabaseManagement = RealmDatabaseManagement.getInstance();
-                realmDatabaseManagement.findPostCreatedByUser();
+                try (Realm realm = Realm.getDefaultInstance()) {
+                    realm.executeTransactionAsync(realm1 -> {
 
-                this.postCreating = new PostCreating();
-                assert firebaseUser != null;
-                this.postCreating.setUserId(firebaseUser.getUid());
-                assert postCreating != null;
-                this.postCreating.setPostId(postCreating.getPostId());
-                this.postCreating.setSportType(postCreating.getSportType());
-                this.postCreating.setCityName(postCreating.getCityName());
-                this.postCreating.setDateTime(postCreating.getDateTime());
-                this.postCreating.setHourTime(postCreating.getHourTime());
-                this.postCreating.setSkillLevel(postCreating.getSkillLevel());
-                this.postCreating.setAdditionalInfo(postCreating.getAdditionalInfo());
-                this.postCreating.setPostSavedByUser(true);
-          /*      this.postCreating.setButtonColorAndText(String.valueOf(Color.BLACK), "Zapisałeś się!");
-                this.postCreating.setIsPostSavedByUser(true);*/
+                        PostCreating clickedPost = realm1.where(PostCreating.class)
+                                .equalTo("postId", postId)
+                                .findFirst();
+                        if (clickedPost != null && user != null) {
+                            PostCreatingCopy existingPost = realm1.where(PostCreatingCopy.class)
+                                    .equalTo("postId", postId)
+                                    .findFirst();
 
-                realmDatabaseManagement.savePostToDatabaseAsSignedIn(this.postCreating);
+                            if (existingPost == null) {
+                                PostCreatingCopy newPost = new PostCreatingCopy();
+                                newPost.setUserId(user.getUid());
+                                newPost.setPostId(clickedPost.getPostId());
+                                newPost.setSportType(clickedPost.getSportType());
+                                newPost.setCityName(clickedPost.getCityName());
+                                newPost.setDateTime(clickedPost.getDateTime());
+                                newPost.setHourTime(clickedPost.getHourTime());
+                                newPost.setSkillLevel(clickedPost.getSkillLevel());
+                                newPost.setAdditionalInfo(clickedPost.getAdditionalInfo());
+                                newPost.setSavedByUser(true);
 
-                savePostButton.setBackgroundColor(Color.BLACK);
-                savePostButton.setText("Zapisałeś się!");
+                                realm1.insertOrUpdate(newPost);
+                            }
+                        }
+
+                        savePostButton.setBackgroundColor(Color.BLACK);
+                        savePostButton.setText(R.string.postSavedInfo);
+
+
+                    }, () -> {
+
+                    }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
+                }
             });
         }
     }

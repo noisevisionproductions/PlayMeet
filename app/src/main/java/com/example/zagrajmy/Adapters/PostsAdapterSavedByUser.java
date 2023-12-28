@@ -15,15 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
-public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostDesignAdapterForUserActivity.MyViewHolder> {
+public class PostsAdapterSavedByUser extends RecyclerView.Adapter<PostsAdapterSavedByUser.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextInputEditText uniquePostId;
         private final TextInputEditText sportNames;
@@ -77,18 +80,18 @@ public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostD
         }
     }
 
-
     private final RealmDatabaseManagement realmDatabaseManagement;
-    private final List<PostCreating> listOfPostCreating;
+    private final List<PostCreatingCopy> listOfPostCreatingCopy;
     private final Context context;
 
-    public PostDesignAdapterForUserActivity(Context context, List<PostCreating> listOfPostCreating) {
-        this.listOfPostCreating = listOfPostCreating;
+
+    public PostsAdapterSavedByUser(Context context, List<PostCreatingCopy> listOfPostCreatingCopy) {
+        this.listOfPostCreatingCopy = listOfPostCreatingCopy;
         this.context = context;
         realmDatabaseManagement = RealmDatabaseManagement.getInstance();
     }
 
-    public void extraInfo(PostDesignAdapterForUserActivity.MyViewHolder holder) {
+    public void extraInfo(PostsAdapterSavedByUser.MyViewHolder holder) {
         ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
         holder.arrowDownOpenMenu.setOnClickListener(v -> {
             if (holder.extraInfoContainer.getVisibility() == View.GONE) {
@@ -119,42 +122,40 @@ public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostD
 
     }
 
-    public void deletePostButton(PostDesignAdapterForUserActivity.MyViewHolder holder, int position) {
-        PostCreating postCreating = listOfPostCreating.get(position);
+    public void deletePostButton(PostsAdapterSavedByUser.MyViewHolder holder, int position) {
 
-        if (postCreating.isPostSavedByUser()) {
-            holder.deletePost.setText("Wypisz się");
-        }
+        PostCreatingCopy postCreatingCopy = listOfPostCreatingCopy.get(position);
+
+        holder.deletePost.setText("Wypisz się");
+
 
         holder.deletePost.setOnClickListener(v -> {
-            int postId = postCreating.getPostId();
-            realmDatabaseManagement.deletePost(postId);
-            listOfPostCreating.remove(position);
+            String postId = postCreatingCopy.getPostUuid();
+            realmDatabaseManagement.removeUserFromPost(postId);
+            listOfPostCreatingCopy.remove(position);
             notifyItemRemoved(position);
-            notifyItemRangeChanged(position, listOfPostCreating.size());
+            notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
         });
     }
 
     @NonNull
     @Override
-    public PostDesignAdapterForUserActivity.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PostsAdapterSavedByUser.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_user_activity, parent, false);
-        return new MyViewHolder(v);
+        return new PostsAdapterSavedByUser.MyViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostDesignAdapterForUserActivity.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PostsAdapterSavedByUser.MyViewHolder holder, int position) {
+        PostCreatingCopy posts = listOfPostCreatingCopy.get(position);
 
-        PostCreating postCreating = listOfPostCreating.get(position);
-
-        // bind data from the posts list
-        holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
-        holder.sportNames.setText(postCreating.getSportType());
-        holder.cityNames.setText(postCreating.getCityName());
-        holder.skillLevel.setText(postCreating.getSkillLevel());
-        holder.addInfo.setText(postCreating.getAdditionalInfo());
-        holder.chosenDate.setText(postCreating.getDateTime());
-        holder.chosenHour.setText(postCreating.getHourTime());
+        holder.uniquePostId.setText(String.valueOf(posts.getPostId()));
+        holder.sportNames.setText(posts.getSportType());
+        holder.cityNames.setText(posts.getCityName());
+        holder.skillLevel.setText(posts.getSkillLevel());
+        holder.addInfo.setText(posts.getAdditionalInfo());
+        holder.chosenDate.setText(posts.getDateTime());
+        holder.chosenHour.setText(posts.getHourTime());
 
         extraInfo(holder);
         deletePostButton(holder, position);
@@ -162,8 +163,8 @@ public class PostDesignAdapterForUserActivity extends RecyclerView.Adapter<PostD
 
     @Override
     public int getItemCount() {
-        if (listOfPostCreating != null) {
-            return listOfPostCreating.size();
+        if (listOfPostCreatingCopy != null) {
+            return listOfPostCreatingCopy.size();
         } else {
             return 0;
         }

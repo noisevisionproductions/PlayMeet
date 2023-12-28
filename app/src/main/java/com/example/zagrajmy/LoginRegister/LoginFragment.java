@@ -1,6 +1,7 @@
 package com.example.zagrajmy.LoginRegister;
 
 import android.content.Intent;
+import android.credentials.Credential;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.Objects;
 
 public class LoginFragment extends Fragment {
+    private Credential credential;
     private AuthenticationManager authManager;
     private String email, password;
     private TextInputEditText edytujPoleEmail, edytujPoleHaslo;
