@@ -105,7 +105,9 @@ public class ChatActivity extends AppCompatActivity {
                 realm.insertOrUpdate(chatMessageModel);
             }
 
-            recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
+            if (!messagesList.isEmpty()) {
+                recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
+            }
 
             hideKeyboardAfterSendingMsg();
         }, this::showMessages));
@@ -131,7 +133,9 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         updateMessagesUtilDiff(newMessagesList);
-        recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
+        if (!messagesList.isEmpty()) {
+            recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
+        }
     }
 
     public void updateMessagesUtilDiff(List<ChatMessageModel> newMessagesList) {
@@ -140,7 +144,9 @@ public class ChatActivity extends AppCompatActivity {
         messagesList.clear();
         messagesList.addAll(newMessagesList);
         diffResult.dispatchUpdatesTo(chatMessageAdapter);
-        recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
+        if (!messagesList.isEmpty()) {
+            recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
+        }
     }
 
     public void hideKeyboardAfterSendingMsg() {
