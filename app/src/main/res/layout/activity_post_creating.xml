@@ -1,149 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/postCreatingLayout"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostsManagement.PostCreatingLogic">
+    android:background="@color/background">
 
-    <!--pasek informujacy o wersji-->
-    <include
-        android:id="@+id/include"
-        layout="@layout/alpha_version_info" />
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayout"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/postCreatingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
-        android:background="#7EABAE"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="15dp"
-        tools:context=".PostsManagement.PostCreatingLogic"
-        tools:openDrawer="end">
+        tools:context=".PostsManagement.PostCreatingLogic">
 
-        <!--nazwa sportu-->
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/arrays_sport_names"
-            style="@style/MySpinnerStyle"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp"
-            android:entries="@array/arrays_sport_names"
-            android:textSize="30sp" />
+        <!--pasek informujacy o wersji-->
+        <include
+            android:id="@+id/include"
+            layout="@layout/alpha_version_info" />
 
-        <!--nazwa miasta-->
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/cities_in_poland"
-            style="@style/MySpinnerStyle"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="30sp" />
-
-        <!--poziom gry-->
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/arrays_skill_level"
-            style="@style/MySpinnerStyle"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_marginBottom="10dp"
-            android:entries="@array/arrays_skill_level"
-            android:textSize="30sp" />
-
-        <!--wybor daty i godziny-->
         <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_marginTop="40dp"
+            android:background="#7EABAE"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="15dp"
+            tools:context=".PostsManagement.PostCreatingLogic"
+            tools:openDrawer="end">
 
+            <!--nazwa sportu-->
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/arrays_sport_names"
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="10dp"
+                android:entries="@array/arrays_sport_names"
+                android:textSize="30sp" />
+
+            <!--nazwa miasta-->
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/cities_in_poland"
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="10dp"
+                android:textSize="30sp" />
+
+            <!--poziom gry-->
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/arrays_skill_level"
+                style="@style/MySpinnerStyle"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginBottom="10dp"
+                android:entries="@array/arrays_skill_level"
+                android:textSize="30sp" />
+
+            <!--wybor daty i godziny-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:baselineAligned="false"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/chooseDate"
+                        style="@style/MySpinnerStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:hint="Wybierz datę"
+                        android:inputType="date"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_weight="1"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/chooseHour"
+                        style="@style/MySpinnerStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:hint="Wybierz godzinę"
+                        android:inputType="date"
+                        android:textSize="15sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!--Dodatkowe informacje-->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/chooseDate"
+                    android:id="@+id/addInfo"
                     style="@style/MySpinnerStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="Wybierz datę"
-                    android:inputType="date"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/chooseHour"
-                    style="@style/MySpinnerStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:hint="Wybierz godzinę"
-                    android:inputType="date"
+                    android:layout_height="100dp"
+                    android:layout_marginBottom="10dp"
+                    android:hint="Wprowadź dodatkowe informacje"
+                    android:inputType="text"
+                    android:maxLength="100"
+                    android:padding="10dp"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <!--Dodatkowe informacje-->
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:hintEnabled="false">
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addInfo"
-                style="@style/MySpinnerStyle"
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_marginBottom="10dp"
-                android:hint="Wprowadź dodatkowe informacje"
-                android:inputType="text"
-                android:maxLength="100"
-                android:padding="10dp"
-                android:textSize="15sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/backToMainMenu"
+                style="@style/MyButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_style"
+                android:text="@string/backToMainMenu" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/submitPost"
+                style="@style/MyButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_style"
+                android:text="@string/submitPost" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/backToMainMenu"
-            style="@style/MyButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/button_style"
-            android:text="@string/backToMainMenu" />
+    <include layout="@layout/navigation_view_side_panel" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/submitPost"
-            style="@style/MyButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/button_style"
-            android:text="@string/submitPost" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

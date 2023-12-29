@@ -19,7 +19,7 @@ import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.Adapters.PostDesignAdapterForUserActivity;
+import com.example.zagrajmy.Adapters.PostsAdapterCreatedByUser;
 import com.example.zagrajmy.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +33,7 @@ import io.realm.RealmResults;
 public class PostsCreatedByUserFragment extends Fragment {
     private final List<PostCreating> postsCreatedByUser = new ArrayList<>();
     private ProgressBar progressBar;
-    private PostDesignAdapterForUserActivity postDesignAdapterForUserActivity;
+    private PostsAdapterCreatedByUser postsAdapterCreatedByUser;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,8 +50,8 @@ public class PostsCreatedByUserFragment extends Fragment {
         AppCompatTextView noPosts = view.findViewById(R.id.noPostInfo);
         RecyclerView expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
         FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
-        postDesignAdapterForUserActivity = new PostDesignAdapterForUserActivity(getContext(), postsCreatedByUser);
-        expandableListOfYourPosts.setAdapter(postDesignAdapterForUserActivity);
+        postsAdapterCreatedByUser = new PostsAdapterCreatedByUser(getContext(), postsCreatedByUser);
+        expandableListOfYourPosts.setAdapter(postsAdapterCreatedByUser);
         expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         if (AuthenticationManager.isUserLoggedIn() && userFirebase != null) {
@@ -60,7 +60,6 @@ public class PostsCreatedByUserFragment extends Fragment {
             try (Realm realm = Realm.getDefaultInstance()) {
                 RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class)
                         .equalTo("userId", userFirebase.getUid())
-                        .equalTo("isCreatedByUser", true)
                         .findAll();
 
                 if (userPostsFromRealm != null) {
@@ -89,7 +88,7 @@ public class PostsCreatedByUserFragment extends Fragment {
             new Handler(Looper.getMainLooper()).post(() -> {
                 postsCreatedByUser.clear();
                 postsCreatedByUser.addAll(newPosts);
-                diffResult.dispatchUpdatesTo(postDesignAdapterForUserActivity);
+                diffResult.dispatchUpdatesTo(postsAdapterCreatedByUser);
                 progressBar.setVisibility(View.GONE);
             });
         }).start();
