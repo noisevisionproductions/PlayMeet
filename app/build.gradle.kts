@@ -35,10 +35,10 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField("String", "RealmAppId", "\"zagrajmyapp-ztzys\"")
+            buildConfigField("String", "RealmAppId", "\"${System.getenv("REALM_APP_ID")}\"")
         }
         release {
-            buildConfigField("String", "RealmAppId", "\"zagrajmyapp-ztzys\"")
+            buildConfigField("String", "RealmAppId", "\"${System.getenv("REALM_APP_ID")}\"")
 
             isMinifyEnabled = false
             proguardFiles(
