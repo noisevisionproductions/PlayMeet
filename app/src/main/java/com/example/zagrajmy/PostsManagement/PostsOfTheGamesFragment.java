@@ -18,30 +18,29 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.zagrajmy.Adapters.ExtraInfoContainerForAllPosts;
 import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
-import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.PostsManagement.PostsFiltering.PostsFilter;
 import com.example.zagrajmy.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class PostsOfTheGamesFragment extends Fragment {
+    private RealmAuthenticationManager authenticationManager;
     private final List<PostCreating> posts = new ArrayList<>();
     private PostsAdapterAllPosts postsAdapterAllPosts;
     private ProgressBar progressBar, loadingMorePostsIndicator;
@@ -56,6 +55,8 @@ public class PostsOfTheGamesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View currentView = inflater.inflate(R.layout.activity_posts_list, container, false);
 
+        authenticationManager = new RealmAuthenticationManager();
+
         progressBar = currentView.findViewById(R.id.progressBarLayout);
         loadingMorePostsIndicator = currentView.findViewById(R.id.loadMorePostsIndicator);
         loadingMorePostsText = currentView.findViewById(R.id.loadingPostsText);
@@ -68,9 +69,7 @@ public class PostsOfTheGamesFragment extends Fragment {
 
         showAllPosts(currentView);
 
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            new Handler().postDelayed(this::refreshData, 100);
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
 
         getAddPostButton();
         loadPartOfThePosts();
@@ -178,7 +177,7 @@ public class PostsOfTheGamesFragment extends Fragment {
 
             posts.clear();
 
-            if (AuthenticationManager.isUserLoggedIn()) {
+            if (authenticationManager.isUserLoggedIn()) {
                 postCreateForLoggedInUser();
             } else {
                 postCreateForUnregisteredUser();
@@ -204,7 +203,7 @@ public class PostsOfTheGamesFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
 
-        if (AuthenticationManager.isUserLoggedIn()) {
+        if (authenticationManager.isUserLoggedIn()) {
             postCreateForLoggedInUser();
         } else {
             postCreateForUnregisteredUser();
@@ -231,7 +230,9 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     public void postCreateForLoggedInUser() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        App realmApp = RealmAppConfig.getApp();
+        User user = realmApp.currentUser();
+
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
             RealmResults<PostCreatingCopy> copiedPosts = realm.where(PostCreatingCopy.class).findAll();
@@ -240,13 +241,13 @@ public class PostsOfTheGamesFragment extends Fragment {
 
             List<Integer> savedPostIds = new ArrayList<>();
             for (PostCreatingCopy post : copiedPosts) {
-                if (post.getSavedByUser() && user != null && post.getUserId().equals(user.getUid())) {
+                if (post.getSavedByUser() && user != null && post.getUserId().equals(user.getId())) {
                     savedPostIds.add(post.getPostId());
                 }
             }
 
             for (PostCreating post : allPosts) {
-                if (post.isCreatedByUser() && user != null && !post.getUserId().equals(user.getUid()) && !savedPostIds.contains(post.getPostId())) {
+                if (post.isCreatedByUser() && user != null && !post.getUserId().equals(user.getId()) && !savedPostIds.contains(post.getPostId())) {
                     newPostCreatingList.add(post);
                 }
             }

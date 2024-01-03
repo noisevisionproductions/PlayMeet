@@ -15,20 +15,21 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.zagrajmy.Adapters.PostsAdapterCreatedByUser;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
-import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.Adapters.PostsAdapterCreatedByUser;
 import com.example.zagrajmy.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class PostsCreatedByUserFragment extends Fragment {
     private final List<PostCreating> postsCreatedByUser = new ArrayList<>();
@@ -49,17 +50,21 @@ public class PostsCreatedByUserFragment extends Fragment {
     public void showUserPosts(View view) {
         AppCompatTextView noPosts = view.findViewById(R.id.noPostInfo);
         RecyclerView expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
-        FirebaseUser userFirebase = FirebaseAuth.getInstance().getCurrentUser();
+        App realmApp = RealmAppConfig.getApp();
+        User user = realmApp.currentUser();
+
         postsAdapterCreatedByUser = new PostsAdapterCreatedByUser(getContext(), postsCreatedByUser);
         expandableListOfYourPosts.setAdapter(postsAdapterCreatedByUser);
         expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        if (AuthenticationManager.isUserLoggedIn() && userFirebase != null) {
+        RealmAuthenticationManager authenticationManager = new RealmAuthenticationManager();
+
+        if (authenticationManager.isUserLoggedIn() && user != null) {
             List<PostCreating> newUserPosts = new ArrayList<>();
 
             try (Realm realm = Realm.getDefaultInstance()) {
                 RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class)
-                        .equalTo("userId", userFirebase.getUid())
+                        .equalTo("userId", user.getId())
                         .findAll();
 
                 if (userPostsFromRealm != null) {

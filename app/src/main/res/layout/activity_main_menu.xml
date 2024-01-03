@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,14 +8,37 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/updateUserInfoBar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/gradient_background_button"
+            android:gravity="center"
+            android:inputType="none"
+            android:text="Ustaw profil w 3 krokach"
+            android:textColor="#FFFFFF"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:visibility="visible" />
+
+        <include
+            android:id="@+id/appVersionInfo"
+            layout="@layout/alpha_version_info"
+            android:visibility="gone" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerActivePosts"
             android:name="com.example.zagrajmy.PostsManagement.PostsOfTheGamesFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/button_container" />
+            android:layout_above="@+id/button_container"
+            android:layout_marginTop="50dp"
+            app:defaultNavHost="true" />
 
 
         <androidx.appcompat.widget.LinearLayoutCompat

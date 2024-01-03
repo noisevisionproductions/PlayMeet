@@ -2,14 +2,12 @@ package com.example.zagrajmy.Chat;
 
 import android.os.Build;
 
-import com.example.zagrajmy.UserManagement.User;
+import com.example.zagrajmy.UserManagement.UserModel;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import io.realm.RealmList;
@@ -21,16 +19,16 @@ public class ChatMessageModel extends RealmObject {
     @PrimaryKey
     private String uuid;
     private long timestamp;
-    private RealmList<User> users;
+    private RealmList<UserModel> userModels;
     private String message;
 
     public ChatMessageModel() {
         this.uuid = UUID.randomUUID().toString();
     }
 
-    public ChatMessageModel(String uuid, RealmList<User> users, String message, long timestamp) {
+    public ChatMessageModel(String uuid, RealmList<UserModel> userModels, String message, long timestamp) {
         this.uuid = uuid;
-        this.users = users;
+        this.userModels = userModels;
         this.message = message;
         this.timestamp = timestamp;
     }
@@ -43,12 +41,12 @@ public class ChatMessageModel extends RealmObject {
         this.uuid = uuid;
     }
 
-    public RealmList<User> getUsers() {
-        return users;
+    public RealmList<UserModel> getUsers() {
+        return userModels;
     }
 
-    public void setUsers(RealmList<User> users) {
-        this.users = users;
+    public void setUsers(RealmList<UserModel> userModels) {
+        this.userModels = userModels;
     }
 
     public String getMessage() {

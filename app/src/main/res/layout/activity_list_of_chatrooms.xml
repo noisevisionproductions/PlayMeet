@@ -8,19 +8,14 @@
     tools:context=".Chat.ChatActivity"
     tools:openDrawer="end">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layoutOfPostsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".Chat.ChatRoomList">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/alpha_version_info" />
-
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="50dp"
             android:id="@+id/recyclerViewChatRoomList"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

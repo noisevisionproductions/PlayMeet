@@ -11,10 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/alpha_version_info" />
-
         <include layout="@layout/progress_bar_layout" />
 
         <!--wyswietlanie postow stworzonych przez uzytkownika-->

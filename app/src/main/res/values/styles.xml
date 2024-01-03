@@ -5,16 +5,27 @@
         <item name="boxStrokeWidth">0dp</item>
     </style>
 
-    <style name="noBar" parent="Theme.AppCompat.NoActionBar"/>
+    <style name="noBar" parent="Theme.AppCompat.NoActionBar" />
 
     <style name="TestStyle" parent="Widget.AppCompat.Spinner">
         <item name="android:background">#333333</item>
         <item name="android:textColor">#443434</item>
     </style>
+
     <style name="MySpinnerStyle" parent="Widget.AppCompat.Spinner">
         <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:popupBackground">@drawable/rounded_menu_background_for_spinner</item>
         <item name="android:padding">10dp</item>
-        <item name="android:popupBackground">#EADBC4</item>
+        <item name="android:dropDownVerticalOffset">40dp</item>
+        <item name="android:textColor">#443434</item>
+        <item name="android:textColorHint">#443434</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MySpinnerStyleForDefaultInput" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/no_arrow_spinner_background</item>
+        <item name="android:popupBackground">@drawable/rounded_menu_background_for_spinner</item>
+        <item name="android:dropDownVerticalOffset">50dp</item>
         <item name="android:textColor">#443434</item>
         <item name="android:textColorHint">#443434</item>
         <item name="android:gravity">center</item>
@@ -25,6 +36,9 @@
         <item name="android:textColor">#443434</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_margin">2dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="MyAppCompatTextViewStyle" parent="Widget.AppCompat.TextView">
@@ -37,5 +51,21 @@
         <item name="android:textColorHint">#443434</item>
     </style>
 
+    <style name="DialogSlideAnim" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowMinWidthMajor">90%</item> <!-- width on landscape -->
+        <item name="android:windowMinWidthMinor">90%</item> <!-- width on portrait -->
+    </style>
+
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
 </resources>
 

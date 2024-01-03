@@ -12,12 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Chat.ChatMessageModel;
 import com.example.zagrajmy.R;
-import com.example.zagrajmy.UserManagement.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.UserManagement.UserModel;
 
 import java.util.List;
 import java.util.Objects;
+
+import io.realm.mongodb.App;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ChatViewHolder> {
     private final List<ChatMessageModel> chatMessageModel;
@@ -49,9 +50,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     public void setMessagesLookBasedOnLoggedUser(ChatViewHolder holder, int position) {
         ChatMessageModel chatMessageModel = this.chatMessageModel.get(position);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        App realmApp = RealmAppConfig.getApp();
+        io.realm.mongodb.User user = realmApp.currentUser();
 
-        if (user != null && Objects.requireNonNull(chatMessageModel.getUsers().get(0)).getUserId().equals(user.getUid())) {
+        if (user != null && Objects.requireNonNull(chatMessageModel.getUsers().get(0)).getUserId().equals(user.getId())) {
             holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
         } else {
             holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
@@ -71,9 +73,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         }
 
         public void bind(ChatMessageModel chatMessageModel) {
-            User user = chatMessageModel.getUsers().get(0);
-            assert user != null;
-            usernameTextView.setText(user.getNickName());
+            UserModel userModel = chatMessageModel.getUsers().get(0);
+            assert userModel != null;
+            usernameTextView.setText(userModel.getNickName());
             messageTextView.setText(chatMessageModel.getMessage());
             timestampTextView.setText(chatMessageModel.getTimestamp());
         }
