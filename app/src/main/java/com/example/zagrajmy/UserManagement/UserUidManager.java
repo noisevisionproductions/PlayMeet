@@ -2,7 +2,7 @@ package com.example.zagrajmy.UserManagement;
 
 public class UserUidManager {
     private static UserUidManager instance;
-    private User user;
+    private UserModel userModel;
 
     private UserUidManager() {
 
@@ -14,11 +14,11 @@ public class UserUidManager {
         return instance;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(UserModel userModel) {
+        this.userModel = userModel;
     }
 
-    public User getUser() {
-        return user;
+    public UserModel getUser() {
+        return userModel;
     }
 }

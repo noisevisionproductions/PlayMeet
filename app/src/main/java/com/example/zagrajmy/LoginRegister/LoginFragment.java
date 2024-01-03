@@ -1,64 +1,66 @@
 package com.example.zagrajmy.LoginRegister;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
-import android.credentials.Credential;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
-import com.example.zagrajmy.UserManagement.User;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
+import com.example.zagrajmy.UserManagement.UserModel;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
 
+import io.realm.Realm;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
+
 public class LoginFragment extends Fragment {
-    private Credential credential;
-    private AuthenticationManager authManager;
+    private RealmAuthenticationManager authManager;
     private String email, password;
     private TextInputEditText edytujPoleEmail, edytujPoleHaslo;
     private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
 
- /*   @Override
-    public void onDestroy() {
-        realmDatabaseManagement.closeRealmDatabase();
-        super.onDestroy();
-    }*/
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View currentView = inflater.inflate(R.layout.login_fragment, container, false);
 
-        guestButton(currentView);
+        authManager = new RealmAuthenticationManager();
 
-        authManager = new AuthenticationManager();
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        if (currentUser != null) {
+        if (authManager.isUserLoggedIn()) {
             Intent intent = new Intent(getContext(), MainMenuPosts.class);
             startActivity(intent);
         }
 
+        guestButton(currentView);
+
         edytujPoleEmail = currentView.findViewById(R.id.email);
         edytujPoleHaslo = currentView.findViewById(R.id.password);
 
-        Button loginButton = currentView.findViewById(R.id.loginButton);
+        loginUserLogic(currentView);
 
-        loginButton.setOnClickListener(view -> {
+        return currentView;
+    }
+
+    public void loginUserLogic(View view) {
+        AppCompatButton loginButton = view.findViewById(R.id.loginButton);
+
+        loginButton.setOnClickListener(v -> {
             email = String.valueOf(edytujPoleEmail.getText());
             password = String.valueOf(edytujPoleHaslo.getText());
 
@@ -67,29 +69,40 @@ public class LoginFragment extends Fragment {
             }
 
             authManager.userLogin(email, password, task -> {
-                if (task.isSuccessful()) {
-                    User userClass = new User();
-                    String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
-                    String userNickName = mAuth.getCurrentUser().getDisplayName();
-                    userClass.setUserId(userId);
-                    userClass.setNickName(userNickName);
-                    realmDatabaseManagement.addUser(userClass);
+                if (task.isSuccess()) {
+                    App app = RealmAppConfig.getApp();
+                    User currentUser = app.currentUser();
 
-                    //   UserUidManager.getInstance().setUser(userClass);
+                    if (currentUser != null) {
+                        String userId = currentUser.getId();
+                        try (Realm realm = Realm.getDefaultInstance()) {
+                            UserModel userModel = realm.where(UserModel.class)
+                                    .equalTo("userId", userId)
+                                    .findFirst();
 
-                    Toast.makeText(getActivity(), "Zalogowano", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getContext(), MainMenuPosts.class);
-                    startActivity(intent);
+                            if (userModel == null) {
+                                userModel = new UserModel();
+                                userModel.setUserId(userId);
+                                realmDatabaseManagement.addUser(userModel);
+                            }
+                        }
 
-
+                        Toast.makeText(getActivity(), "Pomyślnie zalogowano", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getContext(), MainMenuPosts.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getActivity(), "User is null",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
+                    String errorMessage = Objects.requireNonNull(task.getError()).getMessage();
                     Toast.makeText(getActivity(), "Authentication failed: " + errorMessage,
                             Toast.LENGTH_SHORT).show();
+                    assert errorMessage != null;
+                    Log.d(TAG, errorMessage);
                 }
             });
         });
-        return currentView;
     }
 
     public boolean emptyLoginFieldsErrorHandle() {

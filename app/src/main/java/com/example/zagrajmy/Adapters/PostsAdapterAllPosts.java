@@ -22,9 +22,8 @@ import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.R;
+import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.HashSet;
 import java.util.List;
@@ -32,7 +31,8 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> {
 
@@ -52,15 +52,18 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         postCreating = listOfPostCreating.get(position);
 
-        holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
-        holder.sportNames.setText(postCreating.getSportType());
-        holder.cityNames.setText(postCreating.getCityName());
-        holder.skillLevel.setText(postCreating.getSkillLevel());
-        holder.addInfo.setText(postCreating.getAdditionalInfo());
-        holder.chosenDate.setText(postCreating.getDateTime());
-        holder.chosenHour.setText(postCreating.getHourTime());
+        try (Realm realm = Realm.getDefaultInstance()) {
+            holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
+            holder.sportNames.setText(postCreating.getSportType());
+            holder.cityNames.setText(postCreating.getCityName());
+            holder.skillLevel.setText(postCreating.getSkillLevel());
+            holder.addInfo.setText(postCreating.getAdditionalInfo());
+            holder.chosenDate.setText(postCreating.getDateTime());
+            holder.chosenHour.setText(postCreating.getHourTime());
 
-        holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
+            holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
+
+        }
 
         ExtraInfoContainerForAllPosts.handleExtraInfo(holder, context);
         chatButtonLogic(holder);
@@ -85,47 +88,53 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
     public void chatButtonLogic(MyViewHolder holder) {
 
         holder.chatButton.setOnClickListener(v -> {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            App realmApp = RealmAppConfig.getApp();
+            User user = realmApp.currentUser();
 
-            assert user != null;
-            String user2 = user.getUid();
+            if (user != null) {
+                String user2 = user.getId();
 
-            try (Realm realm = Realm.getDefaultInstance()) {
 
-                String userIdThatCreatedPost = postCreating.getUserId();
+                try (Realm realm = Realm.getDefaultInstance()) {
 
-                postCreating = realm.where(PostCreating.class).findFirst();
+                    String userIdThatCreatedPost = postCreating.getUserId();
 
-                PrivateChatModel existingChatRoom = realm.where(PrivateChatModel.class)
-                        .beginGroup()
-                        .equalTo("userIdThatCreatedPost", userIdThatCreatedPost)
-                        .equalTo("user2", user2)
-                        .endGroup()
-                        .findFirst();
+                    postCreating = realm.where(PostCreating.class).findFirst();
 
-                // checking if room already exist
-                RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+                    PrivateChatModel existingChatRoom = realm.where(PrivateChatModel.class)
+                            .beginGroup()
+                            .equalTo("userIdThatCreatedPost", userIdThatCreatedPost)
+                            .equalTo("user2", user2)
+                            .endGroup()
+                            .findFirst();
 
-                if (existingChatRoom == null) {
-                    PrivateChatModel privateChatModel = new PrivateChatModel();
-                    privateChatModel.setUserIdThatCreatedPost(userIdThatCreatedPost);
+                    // checking if room already exist
+                    RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
 
-                    privateChatModel.setUser2(user2);
-                    privateChatModel.setNickNameOfUser2(user.getDisplayName());
+                    if (existingChatRoom == null) {
+                        PrivateChatModel privateChatModel = new PrivateChatModel();
+                        privateChatModel.setUserIdThatCreatedPost(userIdThatCreatedPost);
 
-                    currentRoomId = privateChatModel.getRoomId();
+                        privateChatModel.setUser2(user2);
 
-                    realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
-                } else {
-                    currentRoomId = existingChatRoom.getRoomId();
-                    realmDatabaseManagement.createChatroomInDatabase(existingChatRoom);
+                        //TODO alternatywa do ustawiania nickname
+                        // privateChatModel.setNickNameOfUser2(user.getDisplayName());
+
+                        currentRoomId = privateChatModel.getRoomId();
+
+                        realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
+                    } else {
+                        currentRoomId = existingChatRoom.getRoomId();
+                        realmDatabaseManagement.createChatroomInDatabase(existingChatRoom);
+                    }
+
+                    realm.executeTransactionAsync(realm1 -> {
+                    }, () -> {
+                        Intent intent = new Intent(v.getContext(), ChatActivity.class);
+                        intent.putExtra("roomId", currentRoomId);
+                        v.getContext().startActivity(intent);
+                    }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
                 }
-                realm.executeTransactionAsync(realm1 -> {
-                }, () -> {
-                    Intent intent = new Intent(v.getContext(), ChatActivity.class);
-                    intent.putExtra("roomId", currentRoomId);
-                    v.getContext().startActivity(intent);
-                }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
             }
         });
     }
@@ -181,7 +190,8 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
         }
 
         public void savePostButtonLogic() {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            App realmApp = RealmAppConfig.getApp();
+            User user = realmApp.currentUser();
 
             savePostButton.setOnClickListener(v1 -> {
                 try (Realm realm = Realm.getDefaultInstance()) {
@@ -197,7 +207,7 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
 
                             if (existingPost == null) {
                                 PostCreatingCopy newPost = new PostCreatingCopy();
-                                newPost.setUserId(user.getUid());
+                                newPost.setUserId(user.getId());
                                 newPost.setPostId(clickedPost.getPostId());
                                 newPost.setSportType(clickedPost.getSportType());
                                 newPost.setCityName(clickedPost.getCityName());

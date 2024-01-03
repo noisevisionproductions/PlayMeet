@@ -16,14 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.zagrajmy.Adapters.ListOfChatRoomsAdapter;
 import com.example.zagrajmy.DataManagement.ChatRoomDiffUtil;
 import com.example.zagrajmy.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class ChatRoomList extends Fragment {
     private Realm realm;
@@ -57,18 +58,21 @@ public class ChatRoomList extends Fragment {
         recyclerView.setAdapter(listOfChatRoomsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        assert user != null;
-        RealmResults<PrivateChatModel> chatsListFromRealm = realm.where(PrivateChatModel.class)
-                .beginGroup()
-                .equalTo("userIdThatCreatedPost", user.getUid())
-                .or()
-                .equalTo("user2", user.getUid())
-                .endGroup()
-                .findAll();
+        App realmApp = RealmAppConfig.getApp();
+        User user = realmApp.currentUser();
 
-        List<PrivateChatModel> newChatRoomList = new ArrayList<>(realm.copyFromRealm(chatsListFromRealm));
-        updateChatRoomListWithDiffUtil(newChatRoomList, listOfChatRoomsAdapter);
+        if (user != null) {
+            RealmResults<PrivateChatModel> chatsListFromRealm = realm.where(PrivateChatModel.class)
+                    .beginGroup()
+                    .equalTo("userIdThatCreatedPost", user.getId())
+                    .or()
+                    .equalTo("user2", user.getId())
+                    .endGroup()
+                    .findAll();
+
+            List<PrivateChatModel> newChatRoomList = new ArrayList<>(realm.copyFromRealm(chatsListFromRealm));
+            updateChatRoomListWithDiffUtil(newChatRoomList, listOfChatRoomsAdapter);
+        }
     }
 
     public void updateChatRoomListWithDiffUtil(List<PrivateChatModel> newChatRoomList, ListOfChatRoomsAdapter listOfChatRoomsAdapter) {

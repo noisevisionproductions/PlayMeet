@@ -3,7 +3,7 @@ package com.example.zagrajmy.UserManagement;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
-public class User extends RealmObject {
+public class UserModel extends RealmObject {
 
     @PrimaryKey
     private String userId;
@@ -16,7 +16,7 @@ public class User extends RealmObject {
     private String favoriteSport;
     private String avatar;
 
-    public User() {
+    public UserModel() {
     }
 
     public String getAvatar() {

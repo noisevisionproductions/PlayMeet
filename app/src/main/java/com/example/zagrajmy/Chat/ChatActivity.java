@@ -16,9 +16,8 @@ import com.example.zagrajmy.Adapters.ChatMessageAdapter;
 import com.example.zagrajmy.DataManagement.ChatMessageDiffUtilCallback;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
-import com.example.zagrajmy.UserManagement.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.UserManagement.UserModel;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,11 +27,12 @@ import java.util.UUID;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import io.realm.mongodb.App;
 
 public class ChatActivity extends AppCompatActivity {
     private final List<ChatMessageModel> messagesList = new ArrayList<>();
     private Realm realm;
-    private FirebaseUser user;
+    private io.realm.mongodb.User user;
     private AppCompatEditText messageInputFromUser;
     private AppCompatImageButton sendMessageButton;
     private ChatMessageAdapter chatMessageAdapter;
@@ -63,7 +63,8 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     public void openChat() {
-        user = FirebaseAuth.getInstance().getCurrentUser();
+        App realmApp = RealmAppConfig.getApp();
+        user = realmApp.currentUser();
 
         messageInputFromUser = findViewById(R.id.messageInputFromUser);
         sendMessageButton = findViewById(R.id.sendMessageButton);
@@ -82,16 +83,17 @@ public class ChatActivity extends AppCompatActivity {
 
     public void sendMessageToTheUser() {
         sendMessageButton.setOnClickListener(v -> realm.executeTransactionAsync(realm -> {
-            User userFromRealm = realm.where(User.class)
-                    .equalTo("userId", user.getUid())
-                    .equalTo("nickName", user.getDisplayName())
+            UserModel userModelFromRealm = realm.where(UserModel.class)
+                    .equalTo("userId", user.getId())
+                    //TODO nickname znowu
+                    // .equalTo("nickName", user.getDisplayName())
                     .findFirst();
 
             String uuid = UUID.randomUUID().toString();
 
             ChatMessageModel chatMessageModel = realm.createObject(ChatMessageModel.class, uuid);
 
-            chatMessageModel.getUsers().add(userFromRealm);
+            chatMessageModel.getUsers().add(userModelFromRealm);
             chatMessageModel.setMessage(String.valueOf(messageInputFromUser.getText()));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 chatMessageModel.setTimestamp(LocalDateTime.now());

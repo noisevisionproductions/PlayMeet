@@ -7,25 +7,19 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#443434"
+        android:background="#934B31"
         android:elevation="1dp">
 
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            app:hintEnabled="false">
+            android:gravity="center"
+            android:inputType="none"
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@null"
-                android:gravity="center"
-                android:enabled="false"
-                android:text="Obecnie korzystasz z wersji alpha aplikacji."
-                android:textColor="@color/background"
-                android:textSize="18sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:text="Kliknij, aby zaktualizować swój profil"
+            android:textColor="@color/background"
+            android:textSize="18sp" />
     </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

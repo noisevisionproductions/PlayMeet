@@ -18,17 +18,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.zagrajmy.Adapters.PostsAdapterSavedByUser;
 import com.example.zagrajmy.DataManagement.PostsDiffCallbackForCopyOfPost;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
-import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class PostsSavedByUserFragment extends Fragment {
     private final List<PostCreatingCopy> savedPosts = new ArrayList<>();
@@ -47,22 +47,21 @@ public class PostsSavedByUserFragment extends Fragment {
 
     public void showSavedPosts(View view) {
         AppCompatTextView noPostInfo = view.findViewById(R.id.noPostInfo);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        App realmApp = RealmAppConfig.getApp();
+        User user = realmApp.currentUser();
 
         RecyclerView expandableListOfSavedPosts = view.findViewById(R.id.expandableListOfSavedPosts);
-
 
         postsAdapterSavedByUser = new PostsAdapterSavedByUser(getContext(), savedPosts);
         expandableListOfSavedPosts.setAdapter(postsAdapterSavedByUser);
         expandableListOfSavedPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
 
         List<PostCreatingCopy> newList = new ArrayList<>();
 
         try (Realm realm = Realm.getDefaultInstance()) {
             if (user != null) {
                 RealmResults<PostCreatingCopy> userPostsFromRealm = realm.where(PostCreatingCopy.class)
-                        .equalTo("userId", user.getUid())
+                        .equalTo("userId", user.getId())
                         .findAll();
                 if (userPostsFromRealm != null) {
                     for (PostCreatingCopy posts : userPostsFromRealm) {

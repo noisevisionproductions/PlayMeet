@@ -1,7 +1,9 @@
 package com.example.zagrajmy.Design;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -10,17 +12,20 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
-import com.example.zagrajmy.LoginRegister.AuthenticationManager;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
 import com.example.zagrajmy.UserManagement.UserAccountLogic;
 import com.google.android.material.navigation.NavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Objects;
 
+import io.realm.mongodb.App;
+
 public abstract class SidePanelBaseActivity extends AppCompatActivity {
+    private RealmAuthenticationManager authenticationManager;
     protected DrawerLayout drawerLayout;
     protected ActionBarDrawerToggle actionBarDrawerToggle;
     protected NavigationView navigationView;
@@ -31,6 +36,7 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
 
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
+        authenticationManager = new RealmAuthenticationManager();
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.navigationViewSidePanel);
@@ -46,9 +52,12 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
 
     public void onResume() {
         super.onResume();
-        MenuItem loginItem = navigationView.getMenu().findItem(R.id.wylogujKonto);
+        updateLoginMenuItemTitle();
+    }
 
-        if (AuthenticationManager.isUserLoggedIn()) {
+    private void updateLoginMenuItemTitle() {
+        MenuItem loginItem = navigationView.getMenu().findItem(R.id.wylogujKonto);
+        if (authenticationManager.isUserLoggedIn()) {
             loginItem.setTitle("Wyloguj konto");
         } else {
             loginItem.setTitle("Zaloguj się");
@@ -73,13 +82,23 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
                 }
             }
 
-            if (AuthenticationManager.isUserLoggedIn()) {
+            if (authenticationManager.isUserLoggedIn()) {
                 if (id == R.id.wylogujKonto) {
-                    FirebaseAuth.getInstance().signOut();
-                    RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
-                    realmDatabaseManagement.closeRealmDatabase();
-                    Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
-                    startActivity(intent);
+                    App app = RealmAppConfig.getApp();
+                    io.realm.mongodb.User currentUser = app.currentUser();
+                    if (currentUser != null) {
+                        currentUser.logOutAsync(result -> {
+                            if (result.isSuccess()) {
+                                Toast.makeText(getApplicationContext(), "Pomyślnie wylogowano", Toast.LENGTH_SHORT).show();
+                                RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
+                                realmDatabaseManagement.closeRealmDatabase();
+                                Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
+                                startActivity(intent);
+                            } else {
+                                Log.e("AUTH", result.getError().toString());
+                            }
+                        });
+                    }
                 }
             } else {
                 Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);

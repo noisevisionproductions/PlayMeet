@@ -39,16 +39,18 @@ public class DateChoosingLogic {
         datePickerDialog.show();
     }
 
-    public void pickHour(final TextInputEditText textInputEditText){
+    public void pickHour(final TextInputEditText textInputEditText) {
         int hour = 12;
         int minute = 30;
         boolean is24HourFormat = true;
-        TimePickerDialog timePickerDialog = new TimePickerDialog(context, (view, hourOfDay, minuteOfHour) -> {
-            String hour1 = context.getString(R.string.hour_format, hourOfDay, minuteOfHour);
-            textInputEditText.setText(hour1);
-            postCreating.setHourTime(hour1);
-        }, hour, minute, is24HourFormat);
-        timePickerDialog.show();
 
+        TimePickerDialog timePickerDialog = new TimePickerDialog(context, (view, hourOfDay, minuteOfHour) -> {
+            String formattedHour = context.getString(R.string.hour_format, hourOfDay, minuteOfHour);
+            textInputEditText.setText(formattedHour);
+            postCreating.setHourTime(formattedHour);
+        }, hour, minute, is24HourFormat);
+
+        timePickerDialog.show();
     }
+
 }

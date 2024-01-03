@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp">
@@ -29,20 +29,20 @@
             android:textStyle="bold" />
 
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/nicknameFromRegister"
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-            android:hint="@string/nickname"
-            android:inputType="text"
-            android:maxEms="30"
+        <!-- <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+             android:id="@+id/nicknameFromRegister"
+             style="@style/MyAppCompatTextViewStyle"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_marginBottom="10dp"
+             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
+             android:hint="@string/nickname"
+             android:inputType="text"
+             android:maxEms="30"
 
-            android:minEms="6"
-            android:textSize="20sp"
-            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+             android:minEms="6"
+             android:textSize="20sp"
+             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />-->
 
 
         <androidx.appcompat.widget.AppCompatTextView
