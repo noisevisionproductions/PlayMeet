@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,22 +20,22 @@ import androidx.fragment.app.Fragment;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
-import com.example.zagrajmy.UserManagement.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
+import com.example.zagrajmy.UserManagement.UserModel;
 
-import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import io.realm.Realm;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class RegisterFragment extends Fragment {
     private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
-    private User userClass;
     private String emailText, hasloPierwszeText, hasloDrugieText, nicknameText;
-    private AppCompatAutoCompleteTextView email, nicknameFromRegister, hasloPierwsze, hasloDrugie;
+    private AppCompatAutoCompleteTextView email, hasloPierwsze, hasloDrugie;
+    private RealmAuthenticationManager realmAuthenticationManager;
 
     public RegisterFragment() {
     }
@@ -42,63 +43,64 @@ public class RegisterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.register_fragment, container, false);
-        userClass = new User();
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if (currentUser != null) {
+        realmAuthenticationManager = new RealmAuthenticationManager();
+
+        if (realmAuthenticationManager.isUserLoggedIn()) {
             Intent intent = new Intent(getContext(), MainMenuPosts.class);
             startActivity(intent);
         }
 
         email = view.findViewById(R.id.email);
-        nicknameFromRegister = view.findViewById(R.id.nicknameFromRegister);
+        //nicknameFromRegister = view.findViewById(R.id.nicknameFromRegister);
         hasloPierwsze = view.findViewById(R.id.hasloPierwsze);
         hasloDrugie = view.findViewById(R.id.hasloDrugie);
 
-        AppCompatButton przyciskRejestracji = view.findViewById(R.id.registerButton);
+        registerUserLogic(view);
 
-        przyciskRejestracji.setOnClickListener(view1 -> {
+        return view;
+    }
 
-            nicknameText = nicknameFromRegister.getText().toString();
+    public void registerUserLogic(View view) {
+        AppCompatButton registerUserButton = view.findViewById(R.id.registerButton);
+
+        registerUserButton.setOnClickListener(view1 -> {
+
+            checkValidation();
+
             emailText = email.getText().toString();
             hasloPierwszeText = hasloPierwsze.getText().toString();
             hasloDrugieText = hasloDrugie.getText().toString();
 
-            userClass.setNickName(nicknameText);
-
-            checkValidation();
-
-            AuthenticationManager authManager = new AuthenticationManager();
-
-            authManager.userRegister(emailText, hasloPierwszeText, task -> {
-                if (task.isSuccessful()) {
-                    User userClass = new User();
-                    String userId = Objects.requireNonNull(mAuth.getCurrentUser().getUid());
-                    String userNickName = nicknameText;
-                    userClass.setUserId(userId);
-                    userClass.setNickName(userNickName);
-                    realmDatabaseManagement.addUser(userClass);
-
-                    /*dodawanie nicku do bazy danych realm*/
-                    RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
-                    realmDatabaseManagement.createUser();/**/
-                    realmDatabaseManagement.closeRealmDatabase();
-
-                    /*dodawanie nicku do bazy danych firebase*/
-                    saveNicknameToFirebase();
-
-                    Toast.makeText(getActivity(), "Konto założone", Toast.LENGTH_SHORT).show();
+            realmAuthenticationManager.userRegister(emailText, hasloPierwszeText, task -> {
+                if (task.isSuccess()) {
+                    Toast.makeText(getActivity(), "Konto założone, możesz się zalogować", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getContext(), LoginAndRegisterActivity.class);
                     startActivity(intent);
                 } else {
-                    String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
-                    Toast.makeText(getActivity(), "Authentication failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Registration failed: " + task.getError().getErrorMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-
         });
-        return view;
+    }
+
+    public void saveNicknameToRealm() {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            App app = RealmAppConfig.getApp();
+            io.realm.mongodb.User user = app.currentUser();
+            if (user != null) {
+                String userId = user.getId();
+
+                realm.executeTransactionAsync(realm1 -> {
+                    UserModel userModelClassForNickname = realm1.where(UserModel.class)
+                            .equalTo("userId", userId)
+                            .findFirst();
+                    if (userModelClassForNickname != null) {
+                        userModelClassForNickname.setNickName(nicknameText);
+                    }
+                });
+            }
+        }
     }
 
     public boolean validateAndSetError(EditText field, String errorMessage, Predicate<String> validationFunction) {
@@ -113,20 +115,10 @@ public class RegisterFragment extends Fragment {
     }
 
     public void checkValidation() {
-       /* if (validateAndSetError(nicknameFromRegister, "Użytkownik o tej nazwie już istnieje", this::isUserNameAvailable))
-            return;*/
         if (validateAndSetError(email, "Pole nie może być puste", this::isFieldNotEmpty)) return;
-        if (validateAndSetError(nicknameFromRegister, "Pole nie może być puste", this::isFieldNotEmpty))
-            return;
         if (validateAndSetError(hasloPierwsze, "Pole nie może być puste", this::isFieldNotEmpty))
             return;
         if (validateAndSetError(hasloDrugie, "Pole nie może być puste", this::isFieldNotEmpty))
-            return;
-        if (validateAndSetError(nicknameFromRegister, "Nieprawidłowa nazwa użytkownika", this::isUsernameAlphanumeric))
-            return;
-        if (validateAndSetError(nicknameFromRegister, "Nazwa użytkownika jest za długa", this::isUsernameNotTooLong))
-            return;
-        if (validateAndSetError(nicknameFromRegister, "Nazwa użytkownika jest za krótka", this::isUsernameLongEnough))
             return;
         if (validateAndSetError(email, "Niepoprawny adres e-mail", this::isValidEmail)) return;
        /* if (validateAndSetError(hasloPierwsze, "Hasła nie pasują do siebie", this::arePasswordsTheSame))
@@ -167,9 +159,9 @@ public class RegisterFragment extends Fragment {
 
     public boolean isUserNameAvailable(String username) {
         Realm realm = Realm.getDefaultInstance();
-        User user = realm.where(User.class).equalTo("nickName", username).findFirst();
-       // realm.close();
-        return user != null;
+        UserModel userModel = realm.where(UserModel.class).equalTo("nickName", username).findFirst();
+        // realm.close();
+        return userModel != null;
     }
 
     public boolean isUsernameLongEnough(String username) {
@@ -187,9 +179,10 @@ public class RegisterFragment extends Fragment {
 
     //Todo: set user nickname from UserProfileManager class
     public void saveNicknameToFirebase() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        App realmApp = RealmAppConfig.getApp();
+        User user = realmApp.currentUser();
 
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+        /*UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(String.valueOf(nicknameFromRegister.getText()))
                 .build();
 
@@ -201,6 +194,6 @@ public class RegisterFragment extends Fragment {
                     } else {
                         Log.w(TAG, "User profile update failed.", taskk.getException());
                     }
-                });
+                });*/
     }
 }

@@ -15,15 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapterCreatedByUser.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -39,10 +36,6 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
         private final LinearLayoutCompat extraInfoContainer;
         private final AppCompatButton arrowDownOpenMenuButton;
         private final AppCompatButton deletePost;
-        private PostCreating postCreating;
-        private Realm realm;
-        private FirebaseUser firebaseUser;
-
 
         public MyViewHolder(View v) {
             super(v);

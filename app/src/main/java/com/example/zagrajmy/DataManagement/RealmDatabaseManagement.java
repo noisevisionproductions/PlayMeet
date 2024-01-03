@@ -4,9 +4,8 @@ import com.example.zagrajmy.Chat.ChatMessageModel;
 import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostCreatingCopy;
-import com.example.zagrajmy.UserManagement.User;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.UserManagement.UserModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,8 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class RealmDatabaseManagement {
     private static RealmDatabaseManagement instance;
@@ -64,7 +65,10 @@ public class RealmDatabaseManagement {
     }
 
     public boolean checkIfIdExists(int id) {
-        return realm.where(com.example.zagrajmy.PostCreating.class).equalTo("postId", id).findFirst() != null;
+        try (Realm realm = Realm.getDefaultInstance()) {
+            return realm.where(com.example.zagrajmy.PostCreating.class).equalTo("postId", id).findFirst() != null;
+
+        }
     }
 
     public void findPostCreatedByUser() {
@@ -75,9 +79,12 @@ public class RealmDatabaseManagement {
     }
 
     public void addPostToDatabase(PostCreating postCreating) {
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(postCreating);
-        realm.commitTransaction();
+        try (Realm realm = Realm.getDefaultInstance()) {
+
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(postCreating);
+            realm.commitTransaction();
+        }
     }
 
     public void addCopyOfPostToDatabase(PostCreatingCopy postCreatingCopy) {
@@ -98,10 +105,16 @@ public class RealmDatabaseManagement {
         realm.commitTransaction();
     }
 
-    public void addUser(User user) {
-        realm.beginTransaction();
-        realm.insertOrUpdate(user);
-        realm.commitTransaction();
+    public void addUser(UserModel userModel) {
+        try (Realm realm = Realm.getDefaultInstance()) {
+            realm.beginTransaction();
+            realm.insertOrUpdate(userModel);
+            realm.commitTransaction();
+        }
+    }
+
+    public void updateUser(UserModel userModel) {
+
     }
 
     public void savePostToDatabaseAsSignedIn(PostCreating postCreating) {
@@ -132,15 +145,18 @@ public class RealmDatabaseManagement {
     }
 
     public void deletePost(Integer postId) {
-        realm.executeTransactionAsync(realm -> {
-            PostCreating post = realm.where(PostCreating.class)
-                    .equalTo("postId", postId)
-                    .findFirst();
-            if (post != null) {
-                post.deleteFromRealm();
-            }
-        });
+        try (Realm realm = Realm.getDefaultInstance()) {
+            realm.executeTransactionAsync(r -> {
+                PostCreating post = r.where(PostCreating.class)
+                        .equalTo("postId", postId)
+                        .findFirst();
+                if (post != null) {
+                    post.deleteFromRealm();
+                }
+            });
+        }
     }
+
     public void removeUserFromPost(String uuid) {
         realm.executeTransactionAsync(realm -> {
             PostCreatingCopy post = realm.where(PostCreatingCopy.class)
@@ -151,23 +167,24 @@ public class RealmDatabaseManagement {
             }
         });
     }
+
     public void createUser() {
         realm.executeTransactionAsync(realm1 -> {
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            App realmApp = RealmAppConfig.getApp();
+            User user = realmApp.currentUser();
             if (user != null) {
-                String nicknameText = user.getDisplayName();
-                User userClass1 = realm1.where(User.class).equalTo("nickName", nicknameText).findFirst();
-                if (userClass1 == null) {
-                    realm1.createObject(User.class, nicknameText);
-                }
+                // TODO znowu nickname
+                /*String nicknameText = user.getDisplayName();
+                UserModel userModelClass1 = realm1.where(UserModel.class).equalTo("nickName", nicknameText).findFirst();
+                if (userModelClass1 == null) {
+                    realm1.createObject(UserModel.class, nicknameText);
+                }*/
             }
         });
     }
 
-    public void updateUser(User user) {
-    }
 
-    public void deleteUser(User user) {
+    public void deleteUser(UserModel userModel) {
     }
 
     public void findPostsByUser() {

@@ -14,7 +14,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="15dp"
@@ -34,7 +34,6 @@
             style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:text="@string/e_mail"
             android:textSize="20sp"
             android:textStyle="bold" />
