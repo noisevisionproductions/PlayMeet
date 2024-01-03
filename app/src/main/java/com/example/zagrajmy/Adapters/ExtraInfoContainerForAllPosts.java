@@ -1,20 +1,15 @@
 package com.example.zagrajmy.Adapters;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.zagrajmy.LoginRegister.AuthenticationManager;
-import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
 import com.example.zagrajmy.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.realm.Realm;
 
 public class ExtraInfoContainerForAllPosts {
     private static final List<PostsAdapterAllPosts.MyViewHolder> openMenus = new ArrayList<>();
@@ -23,8 +18,10 @@ public class ExtraInfoContainerForAllPosts {
 
 
     public static void handleExtraInfo(PostsAdapterAllPosts.MyViewHolder holder, Context context) {
+        RealmAuthenticationManager authenticationManager = new RealmAuthenticationManager();
+
         holder.arrowDownOpenMenu.setOnClickListener(v -> {
-            if (AuthenticationManager.isUserLoggedIn()) {
+            if (authenticationManager.isUserLoggedIn()) {
                 toggleExtraInfo(holder, context);
             } else {
                 showToast(context);
@@ -32,7 +29,7 @@ public class ExtraInfoContainerForAllPosts {
         });
 
         holder.arrowDownOpenMenuButton.setOnClickListener(v -> {
-            if (AuthenticationManager.isUserLoggedIn()) {
+            if (authenticationManager.isUserLoggedIn()) {
                 toggleExtraInfo(holder, context);
             } else {
                 showToast(context);

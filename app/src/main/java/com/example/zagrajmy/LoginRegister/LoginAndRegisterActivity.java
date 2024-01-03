@@ -1,17 +1,18 @@
 package com.example.zagrajmy.LoginRegister;
 
 import android.os.Bundle;
+import android.view.MotionEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 
 
 public class LoginAndRegisterActivity extends AppCompatActivity {
-    private AppCompatButton buttonLogin;
-    private AppCompatButton buttonRegister;
+    private AppCompatButton buttonLogin, buttonRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
         switchToLogin();
         switchToRegister();
     }
+
 
     public void switchToLogin() {
         buttonLogin.setOnClickListener(view -> {

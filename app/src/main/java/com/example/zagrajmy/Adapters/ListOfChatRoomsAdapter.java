@@ -1,27 +1,24 @@
 package com.example.zagrajmy.Adapters;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Chat.PrivateChatModel;
 import com.example.zagrajmy.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
 
 import java.util.List;
 
 import io.realm.Realm;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRoomsAdapter.ViewHolder> {
-
     private final List<PrivateChatModel> chats;
     private final OnItemClickListener listener;
     private final Realm realm;
@@ -66,15 +63,16 @@ public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRooms
         TextView username;
         TextView lastMessage;
         Realm realm;
-        FirebaseUser user;
-
+        User user;
+        App realmApp;
 
         public ViewHolder(View itemView, Realm realm) {
             super(itemView);
             this.realm = realm;
             username = itemView.findViewById(R.id.tv_username);
             lastMessage = itemView.findViewById(R.id.tv_last_message);
-            user = FirebaseAuth.getInstance().getCurrentUser();
+            realmApp = RealmAppConfig.getApp();
+            user = realmApp.currentUser();
         }
 
         public void bind(final PrivateChatModel chat, final OnItemClickListener listener) {
@@ -84,7 +82,7 @@ public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRooms
             if (chat.getLastMessage() != null) {
                 lastMessage.setText(chat.getLastMessage().getMessage());
             } else {
-                lastMessage.setText("Brak wiadomości");
+                lastMessage.setText(R.string.noPrivateMessagInfo);
             }
 
             itemView.setOnClickListener(v -> listener.onItemClick(chat));

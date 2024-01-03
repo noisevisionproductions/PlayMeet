@@ -14,10 +14,6 @@
         android:orientation="vertical"
         tools:context=".PostsManagement.PostsOfTheGamesFragment">
 
-        <include
-            android:id="@+id/include"
-            layout="@layout/alpha_version_info" />
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="55dp"

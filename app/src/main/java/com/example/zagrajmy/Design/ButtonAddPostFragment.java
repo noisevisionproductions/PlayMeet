@@ -3,11 +3,9 @@ package com.example.zagrajmy.Design;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.example.zagrajmy.LoginRegister.AuthenticationManager;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
 import com.example.zagrajmy.PostsManagement.PostCreatingLogic;
 import com.example.zagrajmy.R;
-
-import java.util.Objects;
 
 public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
     private Toast toast;
@@ -19,7 +17,9 @@ public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
 
     @Override
     protected void onButtonClicked() {
-        if (AuthenticationManager.isUserLoggedIn()) {
+        RealmAuthenticationManager authenticationManager = new RealmAuthenticationManager();
+
+        if (authenticationManager.isUserLoggedIn()) {
             Intent intent = new Intent(getActivity(), PostCreatingLogic.class);
             startActivity(intent);
         } else {

@@ -13,11 +13,11 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.zagrajmy.Adapters.MySpinnerAdapterForFilterMenu;
+import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
-import com.example.zagrajmy.Adapters.MySpinnerAdapterForFilterMenu;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
 import com.example.zagrajmy.R;
 
 import java.util.ArrayList;
@@ -155,9 +155,7 @@ public class PostsFilter {
                 filterPostsByQuery(newFilters);
             }
         });
-        builder.setNegativeButton("Anuluj", (dialog, which) -> {
-            dialog.cancel();
-        });
+        builder.setNegativeButton("Anuluj", (dialog, which) -> dialog.cancel());
     }
 
     private EditText createTextFieldForPostID(Activity activity) {

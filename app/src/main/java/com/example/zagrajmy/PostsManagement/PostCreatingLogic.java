@@ -7,26 +7,35 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
+import androidx.navigation.NavHostController;
+import androidx.navigation.Navigation;
 
+import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
-import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostsManagement.UserPosts.PostsCreatedByUserFragment;
 import com.example.zagrajmy.R;
+import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class PostCreatingLogic extends SidePanelBaseActivity {
     private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
@@ -58,20 +67,23 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     public void createPost() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Button createPost = findViewById(R.id.submitPost);
+        App realmApp = RealmAppConfig.getApp();
+        User user = realmApp.currentUser();
+
+        AppCompatButton createPost = findViewById(R.id.submitPost);
 
         createPost.setOnClickListener(view -> {
             setUniqueId();
             setAdditionalInfo();
 
-            assert user != null;
-
-            postCreating.setIsCreatedByUser(true);
-            postCreating.setUserId(user.getUid());
-            realmDatabaseManagement.addPostToDatabase(postCreating);
+            if (user != null) {
+                postCreating.setIsCreatedByUser(true);
+                postCreating.setUserId(user.getId());
+                realmDatabaseManagement.addPostToDatabase(postCreating);
+            }
 
             Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();
+
             Intent intent = new Intent(PostCreatingLogic.this, MainMenuPosts.class);
             startActivity(intent);
         });
@@ -111,6 +123,9 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
 
     public void setCityName() {
         List<String> cityNames = CityXmlParser.parseCityNames(this);
+        // tworzenie osobnej listy dla pierwszego elementu.
+        // Element, który jest pierwszy na liście cityNames to "Wybierz miasto".
+        // Dlatego musi być pomijane w sortowaniu listy
         if (cityNames.size() > 1) {
             List<String> sortedList = new ArrayList<>(cityNames.subList(1, cityNames.size()));
             Collections.sort(sortedList);
@@ -162,11 +177,8 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
 
     public void setAdditionalInfo() {
         TextInputEditText addInfo = findViewById(R.id.addInfo);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
-        assert user != null;
-        addInfo.setText(user.getDisplayName());
         postCreating.setAdditionalInfo(typedInfo);
     }
 

@@ -1,10 +1,13 @@
 package com.example.zagrajmy.UserManagement;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
@@ -12,10 +15,12 @@ import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.zagrajmy.Realm.RealmAppConfig;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
+import io.realm.mongodb.App;
+import io.realm.mongodb.User;
 
 public class UserAccountLogic extends SidePanelBaseActivity {
 
@@ -34,18 +39,47 @@ public class UserAccountLogic extends SidePanelBaseActivity {
         getAddPostButton();
         Button button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
+        hideKeyboardAfterSendingMsg();
+        View mainView = findViewById(android.R.id.content);
+    }
+
+    public void hideKeyboardAfterSendingMsg() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            inputMethodManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), 0);
+        }
+        return super.onTouchEvent(event);
     }
 
     public void greetNickname() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String nick = user.getDisplayName();
-            if (nick != null) {
-                AppCompatTextView displayNickname = findViewById(R.id.nickname);
-                displayNickname.setText(nick);
+        App realmApp = RealmAppConfig.getApp();
+        User user = realmApp.currentUser();
+
+        try (Realm realm = Realm.getDefaultInstance()) {
+            if (user != null) {
+                UserModel userModel = realm.where(UserModel.class)
+                        .equalTo("userId", user.getId())
+                        .findFirst();
+                if (userModel != null) {
+                    String nick = userModel.getNickName();
+                    AppCompatTextView displayNickname = findViewById(R.id.nickname);
+                    displayNickname.setText(nick);
+                }
             }
+
         }
     }
+
 
     public void setUserAvatar() {
         CircleImageView userAvatar = findViewById(R.id.userAvatar);
