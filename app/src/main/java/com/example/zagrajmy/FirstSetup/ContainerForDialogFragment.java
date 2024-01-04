@@ -1,16 +1,15 @@
 package com.example.zagrajmy.FirstSetup;
 
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -24,17 +23,15 @@ public class ContainerForDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.container_dialog_fragment, container, false);
-
-        return view;
+        return inflater.inflate(R.layout.container_dialog_fragment, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        // tworzenie pierwszego fragmentu po wywolaniu DialogFragment
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         ChildFragmentNickname childFragmentNickname = new ChildFragmentNickname();
-        fragmentTransaction.replace(R.id.fragment_container, childFragmentNickname);
+        fragmentTransaction.replace(R.id.fragment_container, childFragmentNickname, "tag_child_fragment_nickname");
         fragmentTransaction.commit();
     }
 
@@ -50,6 +47,11 @@ public class ContainerForDialogFragment extends DialogFragment {
         // Dodanie mojego DialogFragment
         dialog.setContentView(R.layout.container_dialog_fragment);
 
+        // Ustawiam na przezroczystość, aby nie było białego tła na fragmentach
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        // Zapobieganie zniknięciu DialogFragment po kliknięciu poza niego
+        dialog.setCanceledOnTouchOutside(false);
         return dialog;
     }
 }

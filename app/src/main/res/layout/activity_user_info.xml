@@ -8,26 +8,35 @@
     android:background="@color/background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
-        android:id="@+id/postCreatingLayout"
+        android:id="@+id/layoutOfUserData"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         android:background="@color/background"
         tools:context=".PostsManagement.PostCreatingLogic">
 
-        <!--pasek informujacy o wersji-->
-        <include
-            android:id="@+id/include"
-            layout="@layout/alpha_version_info" />
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/linearLayoutForDeisgn"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/informationAboutProvidedData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="center"
+            android:hint="@string/informationAboutProvidedData"
+            android:padding="10dp"
+            android:textColorHint="#81302C"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:typeface="serif"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayoutForAvatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:gravity="center"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/include">
+            app:layout_constraintTop_toBottomOf="@+id/informationAboutProvidedData">
 
             <include layout="@layout/circle_image_view_avatar" />
 
@@ -38,33 +47,18 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/button_style"
-                android:text="Dodaj zdjęcie" />
+                android:text="@string/addPhoto" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical"
-                android:padding="15dp">
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutForDeisgn"
-            app:layout_constraintVertical_bias="0.0"
-            tools:openDrawer="end">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayoutForAvatar">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/greetUser"
@@ -72,103 +66,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Zalogowano jako"
-                android:textSize="15sp" />
+                android:text="@string/loggedAsNickname"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/nickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="Twój nick"
+                android:hint="@string/nicknameIsEmpty"
                 android:paddingBottom="20dp"
                 android:textColor="#0000FF"
-                android:textSize="25sp" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/MySpinnerStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="10dp"
-                    android:hint="Twoje imię"
-                    android:inputType="text"
-                    android:maxLength="100"
-                    android:padding="10dp"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/MySpinnerStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="10dp"
-                    android:hint="Skąd pochodzisz"
-                    android:inputType="text"
-                    android:maxLength="100"
-                    android:padding="10dp"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/MySpinnerStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="10dp"
-                    android:hint="Wprowadź dodatkowe informacje"
-                    android:inputType="text"
-                    android:maxLength="100"
-                    android:padding="10dp"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/MySpinnerStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="10dp"
-                    android:hint="Wprowadź dodatkowe informacje"
-                    android:inputType="text"
-                    android:maxLength="100"
-                    android:padding="10dp"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    style="@style/MySpinnerStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="10dp"
-                    android:hint="Wprowadź dodatkowe informacje"
-                    android:inputType="text"
-                    android:maxLength="100"
-                    android:padding="10dp"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

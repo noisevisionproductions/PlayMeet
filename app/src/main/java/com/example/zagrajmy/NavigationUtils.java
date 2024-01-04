@@ -8,10 +8,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
+import com.example.zagrajmy.FirstSetup.ContainerForDialogFragment;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
-
-import java.util.Objects;
 
 public class NavigationUtils extends AppCompatActivity {
     public static void backToMainMenuButton(Button button, final Context context) {
@@ -26,12 +26,13 @@ public class NavigationUtils extends AppCompatActivity {
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
-    public static void hideKeyboardAfterSendingMsg(Context context) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        View focusedView = ((Activity) context).getCurrentFocus();
-        if (focusedView != null) {
-            inputMethodManager.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-        }
+    public static void handleCancelButtonForFragments(Button button, Fragment fragment) {
+        button.setOnClickListener(v -> {
+            if (fragment instanceof ContainerForDialogFragment) {
+                ((ContainerForDialogFragment) fragment).dismiss();
+            }
+        });
     }
+
 
 }
