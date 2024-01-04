@@ -15,6 +15,7 @@ import java.util.List;
 /*
  * Ustawiam wlasciwosci AppSpinnerAdapter przy tworzeniu postów */
 public class MySpinnerAdapter extends ArrayAdapter<String> {
+
     public MySpinnerAdapter(@NonNull Context context, int resource, List<String> items) {
         super(context, resource, items);
     }
@@ -26,7 +27,7 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
         TextView textView = view.findViewById(android.R.id.text1);
         textView.setGravity(Gravity.CENTER);
 
-        textView.setTextColor(Color.BLACK);
+        textView.setTextColor(Color.WHITE);
 
         return view;
     }
@@ -45,7 +46,6 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
         }
         return view;
     }
-
 
     @Override
     public boolean isEnabled(int position) {
