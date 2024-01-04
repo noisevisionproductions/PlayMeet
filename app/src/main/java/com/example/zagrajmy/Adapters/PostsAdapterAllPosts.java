@@ -1,13 +1,17 @@
 package com.example.zagrajmy.Adapters;
 
 
+import android.animation.AnimatorSet;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -25,10 +29,9 @@ import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.HashSet;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 import io.realm.Realm;
 import io.realm.mongodb.App;
@@ -40,7 +43,6 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
     private final Context context;
     private PostCreating postCreating;
     private String currentRoomId;
-    private Set<Integer> openExtraInfoPostIds = new HashSet<>();
 
 
     public PostsAdapterAllPosts(Context context, List<PostCreating> listOfPostCreating) {
@@ -52,7 +54,7 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         postCreating = listOfPostCreating.get(position);
 
-        try (Realm realm = Realm.getDefaultInstance()) {
+        try (Realm ignored = Realm.getDefaultInstance()) {
             holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
             holder.sportNames.setText(postCreating.getSportType());
             holder.cityNames.setText(postCreating.getCityName());
@@ -62,10 +64,10 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
             holder.chosenHour.setText(postCreating.getHourTime());
 
             holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
-
         }
 
-        ExtraInfoContainerForAllPosts.handleExtraInfo(holder, context);
+        //  extraInfoContainerForAllPosts.handleExtraInfo(holder, context);
+
         chatButtonLogic(holder);
     }
 
@@ -93,7 +95,6 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
 
             if (user != null) {
                 String user2 = user.getId();
-
 
                 try (Realm realm = Realm.getDefaultInstance()) {
 
@@ -139,15 +140,16 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
         });
     }
 
-
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
-        protected final CardView cardView;
         protected final ConstraintLayout arrowDownOpenMenu;
         protected final LinearLayoutCompat extraInfoContainer;
+        private final CardView layoutOfPost;
         protected final AppCompatButton arrowDownOpenMenuButton, savePostButton, chatButton;
         public int postId;
         protected boolean isExtraInfoOpen = false;
+        private static final int ANIMATION_DURATION = 300;
+        private static final int EXPANDED_HEIGHT_DP = 300;
 
 
         public MyViewHolder(View v) {
@@ -174,11 +176,11 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
             chosenHour = v.findViewById(R.id.chosenHour);
             chosenHour.setFocusable(false);
 
+            layoutOfPost = v.findViewById(R.id.layoutOfPost);
+
             arrowDownOpenMenu = v.findViewById(R.id.arrowDownOpenMenu);
 
             extraInfoContainer = v.findViewById(R.id.extraInfoContainer);
-
-            cardView = v.findViewById(R.id.layoutOfPost);
 
             arrowDownOpenMenuButton = v.findViewById(R.id.arrowDownOpenMenuButton);
 
@@ -186,7 +188,57 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
 
             chatButton = v.findViewById(R.id.chatButton);
 
+            extendForMoreInformation();
             savePostButtonLogic();
+        }
+
+        public void extendForMoreInformation() {
+            arrowDownOpenMenu.setOnClickListener(v -> {
+                if (isExtraInfoOpen) {
+                    animateLayoutAndExtraInfo(240, 0);
+                    extraInfoContainer.setVisibility(View.GONE);
+                    arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
+
+                    isExtraInfoOpen = false;
+                } else {
+                    animateLayoutAndExtraInfo(300, dpToPx(v.getContext(), EXPANDED_HEIGHT_DP));
+                    arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
+
+                    extraInfoContainer.setVisibility(View.VISIBLE);
+                    isExtraInfoOpen = true;
+                }
+            });
+        }
+
+        private void animateLayoutAndExtraInfo(int targetHeightDP, int extraInfoHeight) {
+
+            ValueAnimator layoutAnimator = ValueAnimator.ofInt(layoutOfPost.getHeight(), dpToPx(layoutOfPost.getContext(), targetHeightDP));
+            layoutAnimator.addUpdateListener(animator -> {
+                int val = (Integer) animator.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = layoutOfPost.getLayoutParams();
+                layoutParams.height = val;
+                layoutOfPost.setLayoutParams(layoutParams);
+            });
+
+            ValueAnimator extraInfoAnimator = ValueAnimator.ofInt(extraInfoContainer.getHeight(), extraInfoHeight);
+            extraInfoAnimator.addUpdateListener(animation -> {
+                int val = (Integer) animation.getAnimatedValue();
+                ViewGroup.LayoutParams layoutParams = extraInfoContainer.getLayoutParams();
+                layoutParams.height = val;
+                extraInfoContainer.setLayoutParams(layoutParams);
+            });
+
+            AnimatorSet animatorSet = new AnimatorSet();
+            animatorSet.playTogether(layoutAnimator, extraInfoAnimator);
+            animatorSet.setInterpolator(new DecelerateInterpolator());
+            animatorSet.setDuration(ANIMATION_DURATION);
+            animatorSet.start();
+
+        }
+
+        public static int dpToPx(Context context, float dp) {
+            float density = context.getResources().getDisplayMetrics().density;
+            return Math.round(dp * density);
         }
 
         public void savePostButtonLogic() {

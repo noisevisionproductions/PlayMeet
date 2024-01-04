@@ -1,31 +1,43 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/nicknameLayoutFragment"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
-    android:background="@color/background">
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background"
-        android:orientation="vertical">
+        android:background="@drawable/rounded_corners"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/stepNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/step1of3"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/input_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingBottom="5dp">
+            android:padding="5dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/getNicknameInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:hint="Nazwa użytkownika">
+                android:hint="@string/nickname">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/getNicknameInput"
+                    style="@style/MyAutoCompleteTextViewStyle"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:gravity="center"
@@ -36,24 +48,29 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/checkIfNickAvailable"
-                android:layout_width="0dp"
+                style="@style/MyAppCompatButtonStyle"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/button_style"
-                android:text="Dostępny?"
-                android:textColor="#443434"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:typeface="serif" />
+                android:text="@string/isAvailable" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/setUserInfoButtonFirstTime"
-            style="@style/MyButtonStyle"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/button_style"
-            android:text="Zrobione" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <include layout="@layout/cancel_button" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/setUserInfoButtonFirstTime"
+                style="@style/MyAppCompatButtonStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:background="@drawable/button_style"
+                android:text="@string/nextStep" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </FrameLayout>

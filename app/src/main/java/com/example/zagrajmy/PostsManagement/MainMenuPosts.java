@@ -1,5 +1,6 @@
 package com.example.zagrajmy.PostsManagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -31,13 +32,26 @@ public class MainMenuPosts extends SidePanelBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        authenticationManager = new RealmAuthenticationManager();
-
         setContentView(R.layout.activity_main_menu);
 
+        setUpUIElements();
+
+        // zaladowanie panelu bocznego
         setupDrawerLayout();
         setupNavigationView();
+
+        // poruszanie sie miedzy fragmentami
+        switchToUserPosts();
+        switchToMainMenu();
+        switchToFavoritePosts();
+        switchToChatRoom();
+
+        switchToUserInfoInputOnClick();
+        checkUsers();
+    }
+
+    public void setUpUIElements() {
+        authenticationManager = new RealmAuthenticationManager();
 
         yourPostsMenu = findViewById(R.id.yourPostsMenu);
         savedPostsMenu = findViewById(R.id.savedPostsMenu);
@@ -48,20 +62,6 @@ public class MainMenuPosts extends SidePanelBaseActivity {
         appVersionInfo = findViewById(R.id.appVersionInfo);
 
         showAllPostsMenu.setSelected(true);
-
-        switchToUserPosts();
-        switchToMainMenu();
-        switchToFavoritePosts();
-        switchToChatRoom();
-
-        RealmAuthenticationManager realmAuthenticationManager = new RealmAuthenticationManager();
-        if (realmAuthenticationManager.isUserLoggedIn()) {
-            switchToUserInfoInputOnClick();
-            checkUsers();
-        } else {
-            updateUserInfoBar.setVisibility(View.GONE);
-            appVersionInfo.setVisibility(View.VISIBLE);
-        }
     }
 
     public void checkUsers() {
@@ -69,41 +69,47 @@ public class MainMenuPosts extends SidePanelBaseActivity {
         User currentUser = app.currentUser();
         RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
 
-        try (Realm realm = Realm.getDefaultInstance()) {
-            if (currentUser != null) {
-                UserModel user = realm.where(UserModel.class)
-                        .equalTo("userId", currentUser.getId())
-                        .findFirst();
-                if (user == null) {
-                    UserModel userModelClass = new UserModel();
-                    userModelClass.setUserId(currentUser.getId());
-                    realmDatabaseManagement.addUser(userModelClass);
+        if (authenticationManager.isUserLoggedIn()) {
+            try (Realm realm = Realm.getDefaultInstance()) {
+                if (currentUser != null) {
+                    UserModel user = realm.where(UserModel.class)
+                            .equalTo("userId", currentUser.getId())
+                            .findFirst();
+                    if (user != null) {
+                        if (user.getNickName() == null) {
+                            updateUserInfoBar.setVisibility(View.VISIBLE);
+                            appVersionInfo.setVisibility(View.GONE);
 
-                    user = userModelClass;
-
-                    if (user.getNickName() == null) {
-                        switchToUserInfoInput();
+                            switchToUserInfoInput();
+                        } else {
+                            updateUserInfoBar.setVisibility(View.GONE);
+                            appVersionInfo.setVisibility(View.VISIBLE);
+                        }
                     } else {
-                        updateUserInfoBar.setVisibility(View.GONE);
-                        appVersionInfo.setVisibility(View.VISIBLE);
+                        UserModel userModelClass = new UserModel();
+                        userModelClass.setUserId(currentUser.getId());
+                        realmDatabaseManagement.addUser(userModelClass);
                     }
                 }
             }
+        } else {
+            updateUserInfoBar.setVisibility(View.GONE);
+            appVersionInfo.setVisibility(View.VISIBLE);
         }
     }
-
 
     public void switchToUserInfoInput() {
         DialogFragment dialogFragment = new ContainerForDialogFragment();
         dialogFragment.show(getSupportFragmentManager(), "my_dialog");
-
     }
 
     public void switchToUserInfoInputOnClick() {
-        updateUserInfoBar.setOnClickListener(v -> {
-            DialogFragment dialogFragment = new ContainerForDialogFragment();
-            dialogFragment.show(getSupportFragmentManager(), "my_dialog");
-        });
+        updateUserInfoBar.setOnClickListener(v -> switchToUserInfoInput());
+    }
+
+    public void onUserInfoUpdated() {
+        updateUserInfoBar.setVisibility(View.GONE);
+        appVersionInfo.setVisibility(View.VISIBLE);
     }
 
     public void switchToUserPosts() {
@@ -119,7 +125,6 @@ public class MainMenuPosts extends SidePanelBaseActivity {
                     .replace(R.id.fragmentContainerActivePosts, PostsCreatedByUserFragment.class, null)
                     .setReorderingAllowed(true)
                     .commit();
-
         });
     }
 
@@ -177,6 +182,4 @@ public class MainMenuPosts extends SidePanelBaseActivity {
 
         });
     }
-
-
 }

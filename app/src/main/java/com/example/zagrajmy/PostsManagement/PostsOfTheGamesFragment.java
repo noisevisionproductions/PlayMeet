@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.zagrajmy.Adapters.ExtraInfoContainerForAllPosts;
 import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
@@ -41,8 +42,9 @@ import io.realm.mongodb.User;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private RealmAuthenticationManager authenticationManager;
-    private final List<PostCreating> posts = new ArrayList<>();
     private PostsAdapterAllPosts postsAdapterAllPosts;
+    private ExtraInfoContainerForAllPosts extraInfoContainerForAllPosts;
+    private final List<PostCreating> posts = new ArrayList<>();
     private ProgressBar progressBar, loadingMorePostsIndicator;
     private AppCompatTextView loadingMorePostsText;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -55,6 +57,8 @@ public class PostsOfTheGamesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View currentView = inflater.inflate(R.layout.activity_posts_list, container, false);
 
+        postsAdapterAllPosts = new PostsAdapterAllPosts(getContext(), posts);
+        extraInfoContainerForAllPosts = new ExtraInfoContainerForAllPosts();
         authenticationManager = new RealmAuthenticationManager();
 
         progressBar = currentView.findViewById(R.id.progressBarLayout);
@@ -72,7 +76,6 @@ public class PostsOfTheGamesFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
 
         getAddPostButton();
-        loadPartOfThePosts();
 
         return currentView;
     }
@@ -148,6 +151,7 @@ public class PostsOfTheGamesFragment extends Fragment {
         int startIndex = currentPage * postsPerPage;
         int endIndex = startIndex + postsPerPage;
 
+
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmResults<PostCreating> allPosts = realm.where(PostCreating.class)
                     .findAll();
@@ -197,8 +201,6 @@ public class PostsOfTheGamesFragment extends Fragment {
 
 
     protected void showAllPosts(View view) {
-
-        postsAdapterAllPosts = new PostsAdapterAllPosts(getContext(), posts);
         recyclerView.setAdapter(postsAdapterAllPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
@@ -212,6 +214,10 @@ public class PostsOfTheGamesFragment extends Fragment {
         //*pozwala na przewijanie postow jeden po drugim*//*
         /*PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);*/
+
+        if (postsAdapterAllPosts != null) {
+            loadPartOfThePosts();
+        }
 
         filterAllPosts(view);
 

@@ -20,11 +20,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@null"
-                android:gravity="center"
                 android:enabled="false"
+                android:gravity="center"
                 android:text="Obecnie korzystasz z wersji alpha aplikacji."
                 android:textColor="@color/background"
-                android:textSize="18sp" />
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
         </com.google.android.material.textfield.TextInputLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
