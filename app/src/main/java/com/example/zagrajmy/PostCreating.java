@@ -40,6 +40,7 @@ public class PostCreating extends RealmObject {
         copyOfAllPosts.setPostId(postId);
         copyOfAllPosts.setIsCreatedByUser(isCreatedByUser);
         copyOfAllPosts.setPostSavedByUser(isPostSavedByUser);
+        copyOfAllPosts.setExtraInfoOpen(isExtraInfoOpen);
         copyOfAllPosts.setUserId(userId);
         copyOfAllPosts.setSportType(sportType);
         copyOfAllPosts.setCityName(cityName);

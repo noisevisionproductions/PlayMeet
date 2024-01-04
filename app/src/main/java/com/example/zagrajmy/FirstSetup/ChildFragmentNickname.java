@@ -1,15 +1,17 @@
 package com.example.zagrajmy.FirstSetup;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,10 +19,7 @@ import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.example.zagrajmy.UserManagement.UserModel;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -30,22 +29,30 @@ import io.realm.mongodb.User;
 public class ChildFragmentNickname extends Fragment {
     private AppCompatAutoCompleteTextView getNicknameInput;
     private TextInputLayout getNicknameInputLayout;
-    private AppCompatButton setUserInfoButton, checkIfNickAvailable;
+    private AppCompatButton setUserInfoButton, checkIfNickAvailable, cancelButton;
+    private AppCompatTextView stepNumber;
     private String nickname;
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_fragment_nickname, container, false);
 
+        setUpUIElements(view);
+        hideKeyboard(view);
+        handleSetNicknameButton(view);
+        checkValidationsForNicknameField();
+        NavigationUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
+
+        return view;
+    }
+
+    public void setUpUIElements(View view) {
         getNicknameInput = view.findViewById(R.id.getNicknameInput);
         setUserInfoButton = view.findViewById(R.id.setUserInfoButtonFirstTime);
         checkIfNickAvailable = view.findViewById(R.id.checkIfNickAvailable);
         getNicknameInputLayout = view.findViewById(R.id.getNicknameInputLayout);
-
-        hideKeyboard(view);
-        setNickname(view);
-        checkValidationsForNicknameField();
-        return view;
+        stepNumber = view.findViewById(R.id.stepNumber);
+        cancelButton = view.findViewById(R.id.cancelButton);
     }
 
     public void hideKeyboard(View view) {
@@ -58,34 +65,19 @@ public class ChildFragmentNickname extends Fragment {
         view.setOnTouchListener(onTouchListener);
     }
 
+    public void handleSetNicknameButton(View view) {
+        setUserInfoButton.setOnClickListener(v -> setNickname(view));
+    }
+
     public void setNickname(View view) {
-        setUserInfoButton.setOnClickListener(v -> {
-            if (validateNickname(v)) {
-                App app = RealmAppConfig.getApp();
-                User currentUser = app.currentUser();
-
-                if (currentUser != null) {
-                /*    try (Realm realm = Realm.getDefaultInstance()) {
-                        realm.executeTransactionAsync(realm1 -> {
-                            UserModel userModel = realm1.where(UserModel.class)
-                                    .equalTo("userId", currentUser.getId())
-                                    .findFirst();
-                            if (userModel != null && userModel.getNickName() == null) {*/
-                    //userModel.setNickName(nickname);
-
-                    onNicknameEntered(nickname, view);
-
-                          /*  }
-                        });
-                    }*/
-                }
-            }
-        });
+        if (validateNickname()) {
+            onNicknameEntered(nickname, view);
+        }
     }
 
     public void checkValidationsForNicknameField() {
         checkIfNickAvailable.setOnClickListener(v -> {
-            if (validateNickname(v)) {
+            if (validateNickname()) {
                 try (Realm realm = Realm.getDefaultInstance()) {
                     RealmResults<UserModel> users = realm.where(UserModel.class)
                             .findAll();
@@ -93,28 +85,28 @@ public class ChildFragmentNickname extends Fragment {
                         String existingNickname = userModel.getNickName();
                         if (existingNickname != null && existingNickname.equals(nickname)) {
                             setAutoCompleteTextViewError("Nazwa użytkownika jest zajęta");
-                            getNicknameInput.setTextColor(Color.RED);
+                            getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
                             return;
                         }
                     }
                 }
-                getNicknameInput.setTextColor(Color.GREEN);
+                getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.successColor));
             }
         });
     }
 
-    private boolean validateNickname(View v) {
+    private boolean validateNickname() {
         int minLength = 3;
         int maxLength = 30;
-        nickname = Objects.requireNonNull(getNicknameInput.getText()).toString();
+        nickname = (getNicknameInput.getText()).toString();
 
         if (nickname.isEmpty()) {
             setAutoCompleteTextViewError("Pole nie może być puste");
-            getNicknameInput.setTextColor(Color.RED);
+            getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
             return false;
         } else if (nickname.length() < minLength || nickname.length() > maxLength) {
             setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");
-            getNicknameInput.setTextColor(Color.RED);
+            getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
             return false;
         } else {
             setAutoCompleteTextViewError(null);
@@ -130,6 +122,7 @@ public class ChildFragmentNickname extends Fragment {
     public void onNicknameEntered(String nickname, View view) {
         this.nickname = nickname;
 
+        FrameLayout nicknameLayoutFragment = view.findViewById(R.id.nicknameLayoutFragment);
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_left);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -139,17 +132,24 @@ public class ChildFragmentNickname extends Fragment {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                getNicknameInput.setVisibility(View.GONE);
-                setUserInfoButton.setVisibility(View.GONE);
-                checkIfNickAvailable.setVisibility(View.GONE);
-                getNicknameInputLayout.setVisibility(View.GONE);
+                // chowa wszystkie obiekty z aktualnego layoutu, aby nie pojawiały się na kolejnym fragmencie
+                hideLayout();
 
                 ChildFragmentCity childFragmentCity = new ChildFragmentCity();
+                Bundle args = new Bundle();
+                args.putString("nickname", nickname);
+                childFragmentCity.setArguments(args);
 
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
+                fragmentTransaction.replace(R.id.fragment_container, childFragmentCity, "tag_child_fragment_city");
 
-                fragmentTransaction.replace(R.id.nicknameLayoutFragment, childFragmentCity);
+                Fragment previousFragment = getParentFragmentManager().findFragmentByTag("tag_child_fragment_nickname");
+                if (previousFragment != null) {
+                    fragmentTransaction.remove(previousFragment);
+                }
+                nicknameLayoutFragment.setVisibility(View.INVISIBLE);
+
                 fragmentTransaction.commit();
             }
 
@@ -159,5 +159,13 @@ public class ChildFragmentNickname extends Fragment {
             }
         });
         view.startAnimation(animation);
+    }
+
+    public void hideLayout() {
+        getNicknameInput.setVisibility(View.GONE);
+        setUserInfoButton.setVisibility(View.GONE);
+        checkIfNickAvailable.setVisibility(View.GONE);
+        getNicknameInputLayout.setVisibility(View.GONE);
+        stepNumber.setVisibility(View.GONE);
     }
 }

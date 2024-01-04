@@ -47,5 +47,21 @@
     <string name="createPostButtonLogo">+</string>
     <string name="postSavedInfo">Zapisałeś się!</string>
     <string name="noPrivateMessagInfo">Brak wiadomości</string>
+    <string name="choose_city_string_from_spinner">Wybierz miasto</string>
+    <string name="chooseGenderForSpinner">Wybierz płeć</string>
+    <string name="cancelButtonString">Anuluj</string>
+    <string name="isAvailable">Dostępny?</string>
+    <string name="nextStep">Dalej</string>
+    <string name="step1of3">Krok 1 z 3</string>
+    <string name="step2of3">Krok 2 z 3</string>
+    <string name="step3of3">Krok 3 z 3</string>
+    <string name="saveProvidedValues">Zapisz dane</string>
+    <string name="noGenderChosenError">Proszę wybrać płeć</string>
+    <string name="setUpProfileFirstTime">Ustaw profil w 3 krokach</string>
+    <string name="chat">Chat</string>
+    <string name="informationAboutProvidedData">Podane informacje są widoczne dla wszystkich!</string>
+    <string name="addPhoto">Dodaj zdjęcie</string>
+    <string name="loggedAsNickname">Zalogowano jako</string>
+    <string name="nicknameIsEmpty">Nie ustawiono nicku</string>
 
 </resources>
