@@ -20,6 +20,7 @@ import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.example.zagrajmy.UserManagement.UserModel;
+import com.example.zagrajmy.Utilities.SpinnerManager;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Arrays;
@@ -120,16 +121,9 @@ public class ChildFragmentGender extends Fragment {
     }
 
     public void chooseGender() {
-        // tworzenie adaptera Spinner w celu wyświetlenia listy płci z pliku res/values/list_of_genders
-        String[] genders = getResources().getStringArray(R.array.list_of_genders);
-        MySpinnerAdapter mySpinnerAdapter = new MySpinnerAdapter(requireContext(), android.R.layout.simple_spinner_item, Arrays.asList(genders));
-        mySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        genderSpinner.setAdapter(mySpinnerAdapter);
-        genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        SpinnerManager.setupGenderSpinner(requireContext(), genderSpinner, R.array.list_of_genders, new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // pierwsza pozycja w pliku z listą płci, to "Wybierz płeć", upewniam się, że jest pomijana
                 String selectedGender = (String) parent.getItemAtPosition(position);
                 if (position > 0) {
                     setSelectedGender(selectedGender);

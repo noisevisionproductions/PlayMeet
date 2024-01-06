@@ -13,14 +13,12 @@ import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.List;
-
-import io.realm.Realm;
 
 public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapterCreatedByUser.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -72,14 +70,14 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
         }
     }
 
-    private final RealmDatabaseManagement realmDatabaseManagement;
+    private final RealmDataManager realmDataManager;
     private final List<PostCreating> listOfPostCreating;
     private final Context context;
 
     public PostsAdapterCreatedByUser(Context context, List<PostCreating> listOfPostCreating) {
         this.listOfPostCreating = listOfPostCreating;
         this.context = context;
-        realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+        realmDataManager = RealmDataManager.getInstance();
     }
 
 
@@ -124,7 +122,7 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
 
         holder.deletePost.setOnClickListener(v -> {
             int postId = postCreating.getPostId();
-            realmDatabaseManagement.deletePost(postId);
+            realmDataManager.deletePost(postId);
             listOfPostCreating.remove(position);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, listOfPostCreating.size());
