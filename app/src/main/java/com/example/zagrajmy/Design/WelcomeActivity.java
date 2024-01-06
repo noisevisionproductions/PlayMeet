@@ -6,7 +6,7 @@ import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
 import com.example.zagrajmy.R;
 
@@ -15,9 +15,9 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RealmDatabaseManagement realm = RealmDatabaseManagement.getInstance();
+        RealmDataManager realm = RealmDataManager.getInstance();
         //realm.deleteMessagesAndChatRooms();
-        /*realm.deleteAllRealmDataUseForTestingOnly();
+       /* realm.deleteAllRealmDataUseForTestingOnly();
         realm.realmMigrationResetDatabaseOnlyForTesting();
         realm.closeRealmDatabase();*/
 

@@ -1,6 +1,5 @@
 package com.example.zagrajmy.PostsManagement;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -10,7 +9,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.zagrajmy.Chat.ChatRoomList;
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.FirstSetup.ContainerForDialogFragment;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.Realm.RealmAppConfig;
@@ -67,7 +66,7 @@ public class MainMenuPosts extends SidePanelBaseActivity {
     public void checkUsers() {
         App app = RealmAppConfig.getApp();
         User currentUser = app.currentUser();
-        RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+        RealmDataManager realmDataManager = RealmDataManager.getInstance();
 
         if (authenticationManager.isUserLoggedIn()) {
             try (Realm realm = Realm.getDefaultInstance()) {
@@ -88,7 +87,7 @@ public class MainMenuPosts extends SidePanelBaseActivity {
                     } else {
                         UserModel userModelClass = new UserModel();
                         userModelClass.setUserId(currentUser.getId());
-                        realmDatabaseManagement.addUser(userModelClass);
+                        realmDataManager.addUser(userModelClass);
                     }
                 }
             }

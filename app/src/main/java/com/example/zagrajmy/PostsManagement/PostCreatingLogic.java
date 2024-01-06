@@ -4,26 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.navigation.NavController;
-import androidx.navigation.NavHostController;
-import androidx.navigation.Navigation;
 
 import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
-import com.example.zagrajmy.PostsManagement.UserPosts.PostsCreatedByUserFragment;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Utilities.SpinnerManager;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
@@ -31,14 +25,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.realm.mongodb.App;
 import io.realm.mongodb.User;
 
 public class PostCreatingLogic extends SidePanelBaseActivity {
-    private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+    private final RealmDataManager realmDataManager = RealmDataManager.getInstance();
     private final PostCreating postCreating = new PostCreating();
 
     @Override
@@ -63,7 +55,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realmDatabaseManagement.closeRealmDatabase();
+        realmDataManager.closeRealmDatabase();
     }
 
     public void createPost() {
@@ -79,7 +71,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
             if (user != null) {
                 postCreating.setIsCreatedByUser(true);
                 postCreating.setUserId(user.getId());
-                realmDatabaseManagement.addPostToDatabase(postCreating);
+                realmDataManager.addPostToDatabase(postCreating);
             }
 
             Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();
@@ -95,7 +87,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         int postId;
         do {
             postId = uniqueIdGenerator.generateUniqueId();
-        } while (realmDatabaseManagement.checkIfIdExists(postId));
+        } while (realmDataManager.checkIfIdExists(postId));
 
         postCreating.setPostId(postId);
     }
@@ -122,33 +114,17 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     public void setCityName() {
-        List<String> cityNames = CityXmlParser.parseCityNames(this);
-        // tworzenie osobnej listy dla pierwszego elementu.
-        // Element, który jest pierwszy na liście cityNames to "Wybierz miasto".
-        // Dlatego musi być pomijane w sortowaniu listy
-        if (cityNames.size() > 1) {
-            List<String> sortedList = new ArrayList<>(cityNames.subList(1, cityNames.size()));
-            Collections.sort(sortedList);
-            cityNames = new ArrayList<>(cityNames.subList(0, 1));
-            cityNames.addAll(sortedList);
-        }
-        MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, cityNames);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         AppCompatSpinner chooseCity = findViewById(R.id.cities_in_poland);
-        chooseCity.setAdapter(adapter);
 
-        chooseCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        SpinnerManager.setupCitySpinner(this, chooseCity, CityXmlParser.parseCityNames(this), new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedCity = (String) adapterView.getItemAtPosition(i);
-
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedCity = (String) parent.getItemAtPosition(position);
                 postCreating.setCityName(selectedCity);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });

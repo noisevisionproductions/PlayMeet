@@ -28,7 +28,8 @@
         <activity
             android:name=".UserManagement.UserAccountLogic"
             android:exported="true"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".PostsManagement.PostCreatingLogic"
             android:exported="true"

@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.zagrajmy.Adapters.ExtraInfoContainerForAllPosts;
 import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
@@ -43,7 +42,6 @@ import io.realm.mongodb.User;
 public class PostsOfTheGamesFragment extends Fragment {
     private RealmAuthenticationManager authenticationManager;
     private PostsAdapterAllPosts postsAdapterAllPosts;
-    private ExtraInfoContainerForAllPosts extraInfoContainerForAllPosts;
     private final List<PostCreating> posts = new ArrayList<>();
     private ProgressBar progressBar, loadingMorePostsIndicator;
     private AppCompatTextView loadingMorePostsText;
@@ -58,7 +56,6 @@ public class PostsOfTheGamesFragment extends Fragment {
         View currentView = inflater.inflate(R.layout.activity_posts_list, container, false);
 
         postsAdapterAllPosts = new PostsAdapterAllPosts(getContext(), posts);
-        extraInfoContainerForAllPosts = new ExtraInfoContainerForAllPosts();
         authenticationManager = new RealmAuthenticationManager();
 
         progressBar = currentView.findViewById(R.id.progressBarLayout);
@@ -98,7 +95,6 @@ public class PostsOfTheGamesFragment extends Fragment {
                         loadMoreData();
                     }
                 }
-
             }
         });
     }

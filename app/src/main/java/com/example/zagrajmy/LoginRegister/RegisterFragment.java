@@ -1,12 +1,8 @@
 package com.example.zagrajmy.LoginRegister;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +13,7 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
@@ -32,7 +28,7 @@ import io.realm.mongodb.App;
 import io.realm.mongodb.User;
 
 public class RegisterFragment extends Fragment {
-    private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+    private final RealmDataManager realmDataManager = RealmDataManager.getInstance();
     private String emailText, hasloPierwszeText, hasloDrugieText, nicknameText;
     private AppCompatAutoCompleteTextView email, hasloPierwsze, hasloDrugie;
     private RealmAuthenticationManager realmAuthenticationManager;
