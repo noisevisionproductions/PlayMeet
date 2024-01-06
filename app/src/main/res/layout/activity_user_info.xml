@@ -25,15 +25,14 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:typeface="serif"
+            app:layout_constraintBottom_toTopOf="@id/linearLayoutForAvatar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/include" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linearLayoutForAvatar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="20dp"
             android:gravity="center"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/informationAboutProvidedData">
@@ -54,10 +53,10 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="0dp"
             android:orientation="vertical"
-            android:padding="15dp"
+            android:padding="10dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_fragment"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutForAvatar">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -83,6 +82,13 @@
                 android:textStyle="bold"
                 android:typeface="serif" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewUserInfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingTop="20dp" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.AppCompatButton
@@ -96,7 +102,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <include layout="@layout/button_fragment" />
+        <include
+            android:id="@+id/button_fragment"
+            layout="@layout/button_fragment" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

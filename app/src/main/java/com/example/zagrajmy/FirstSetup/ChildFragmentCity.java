@@ -21,6 +21,7 @@ import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
+import com.example.zagrajmy.Utilities.SpinnerManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,22 +64,7 @@ public class ChildFragmentCity extends Fragment {
     }
 
     public void chooseCity() {
-        List<String> cityNames = CityXmlParser.parseCityNames(requireContext());
-        // tworzenie osobnej listy dla pierwszego elementu.
-        // Element, który jest pierwszy na liście cityNames to "Wybierz miasto".
-        // Dlatego musi być pomijane w sortowaniu listy
-        if (cityNames.size() > 1) {
-            List<String> sortedList = new ArrayList<>(cityNames.subList(1, cityNames.size()));
-            Collections.sort(sortedList);
-            cityNames = new ArrayList<>(cityNames.subList(0, 1));
-            cityNames.addAll(sortedList);
-        }
-
-        MySpinnerAdapter mySpinnerAdapter = new MySpinnerAdapter(requireContext(), android.R.layout.simple_spinner_item, cityNames);
-        mySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        citySpinner.setAdapter(mySpinnerAdapter);
-
-        citySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.parseCityNames(requireContext()), new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCity = (String) parent.getItemAtPosition(position);
@@ -87,7 +73,7 @@ public class ChildFragmentCity extends Fragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                citySelected = false;
+
             }
         });
     }

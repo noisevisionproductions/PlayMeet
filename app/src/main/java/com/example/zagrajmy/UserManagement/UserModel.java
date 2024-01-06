@@ -8,6 +8,7 @@ public class UserModel extends RealmObject {
     @PrimaryKey
     private String userId;
     private String nickName;
+    private String name;
     private String birthDay;
     private String gender;
     private String location;
@@ -41,6 +42,38 @@ public class UserModel extends RealmObject {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAboutMe() {
+        return aboutMe;
+    }
+
+    public void setAboutMe(String aboutMe) {
+        this.aboutMe = aboutMe;
+    }
+
+    public String getWhenAvailable() {
+        return whenAvailable;
+    }
+
+    public void setWhenAvailable(String whenAvailable) {
+        this.whenAvailable = whenAvailable;
+    }
+
+    public String getFavoriteSport() {
+        return favoriteSport;
+    }
+
+    public void setFavoriteSport(String favoriteSport) {
+        this.favoriteSport = favoriteSport;
     }
 
     public String getBirthDay() {

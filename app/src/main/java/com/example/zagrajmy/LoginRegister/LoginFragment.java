@@ -16,7 +16,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
@@ -34,7 +34,7 @@ public class LoginFragment extends Fragment {
     private RealmAuthenticationManager authManager;
     private String email, password;
     private TextInputEditText edytujPoleEmail, edytujPoleHaslo;
-    private final RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+    private final RealmDataManager realmDataManager = RealmDataManager.getInstance();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class LoginFragment extends Fragment {
                             if (userModel == null) {
                                 userModel = new UserModel();
                                 userModel.setUserId(userId);
-                                realmDatabaseManagement.addUser(userModel);
+                                realmDataManager.addUser(userModel);
                             }
                         }
 

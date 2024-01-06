@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.LoginRegister.LoginAndRegisterActivity;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
@@ -90,8 +90,8 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
                         currentUser.logOutAsync(result -> {
                             if (result.isSuccess()) {
                                 Toast.makeText(getApplicationContext(), "Pomyślnie wylogowano", Toast.LENGTH_SHORT).show();
-                                RealmDatabaseManagement realmDatabaseManagement = new RealmDatabaseManagement();
-                                realmDatabaseManagement.closeRealmDatabase();
+                                RealmDataManager realmDataManager = new RealmDataManager();
+                                realmDataManager.closeRealmDatabase();
                                 Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
                                 startActivity(intent);
                             } else {
