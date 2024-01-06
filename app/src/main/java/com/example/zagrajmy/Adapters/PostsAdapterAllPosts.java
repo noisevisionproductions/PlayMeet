@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +21,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Chat.ChatActivity;
 import com.example.zagrajmy.Chat.PrivateChatModel;
-import com.example.zagrajmy.DataManagement.RealmDatabaseManagement;
+import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,14 +38,12 @@ import io.realm.mongodb.User;
 public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> {
 
     private final List<PostCreating> listOfPostCreating;
-    private final Context context;
     private PostCreating postCreating;
     private String currentRoomId;
 
 
     public PostsAdapterAllPosts(Context context, List<PostCreating> listOfPostCreating) {
         this.listOfPostCreating = listOfPostCreating;
-        this.context = context;
     }
 
     @Override
@@ -65,8 +61,6 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
 
             holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
         }
-
-        //  extraInfoContainerForAllPosts.handleExtraInfo(holder, context);
 
         chatButtonLogic(holder);
     }
@@ -110,7 +104,7 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
                             .findFirst();
 
                     // checking if room already exist
-                    RealmDatabaseManagement realmDatabaseManagement = RealmDatabaseManagement.getInstance();
+                    RealmDataManager realmDataManager = RealmDataManager.getInstance();
 
                     if (existingChatRoom == null) {
                         PrivateChatModel privateChatModel = new PrivateChatModel();
@@ -123,10 +117,10 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
 
                         currentRoomId = privateChatModel.getRoomId();
 
-                        realmDatabaseManagement.createChatroomInDatabase(privateChatModel);
+                        realmDataManager.createChatroomInDatabase(privateChatModel);
                     } else {
                         currentRoomId = existingChatRoom.getRoomId();
-                        realmDatabaseManagement.createChatroomInDatabase(existingChatRoom);
+                        realmDataManager.createChatroomInDatabase(existingChatRoom);
                     }
 
                     realm.executeTransactionAsync(realm1 -> {

@@ -63,5 +63,13 @@
     <string name="addPhoto">Dodaj zdjęcie</string>
     <string name="loggedAsNickname">Zalogowano jako</string>
     <string name="nicknameIsEmpty">Nie ustawiono nicku</string>
+    <string name="provideName">Imię:</string>
+    <string name="provideGender">Płeć:</string>
+    <string name="provideCity">Miasto:</string>
+    <string name="provideSports">Sporty:</string>
+    <string name="provideAboutYou">O sobie:</string>
+    <string name="provideAge">Wiek:</string>
+    <string name="Save">Zapisz</string>
+    <string name="Edit">Edytuj</string>
 
 </resources>
