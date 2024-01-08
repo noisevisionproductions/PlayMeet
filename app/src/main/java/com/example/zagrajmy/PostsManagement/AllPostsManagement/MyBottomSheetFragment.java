@@ -28,9 +28,9 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private UserModel userModel;
     private EditableField[] editableFieldsUserInfo, editableFieldsPostInfo;
 
-    public static MyBottomSheetFragment newInstance(PostCreating postCreating, String userId) {
+    public static MyBottomSheetFragment newInstance(PostCreating postCreating) {
         MyBottomSheetFragment fragment = new MyBottomSheetFragment();
-        fragment.setPostCreating(postCreating, userId);
+        fragment.setPostCreating(postCreating);
         return fragment;
     }
 
@@ -80,8 +80,8 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
     private void setupEditableFieldsPostInfo() {
         editableFieldsPostInfo = new EditableField[]{
-                new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-
+                new EditableField("Data:", postCreating.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                new EditableField("Godzina:", postCreating.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
         };
     }
 
@@ -98,7 +98,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         chatButton.setOnClickListener(v -> ButtonHelperAllPosts.handleChatButtonClick(view, postCreating.getUserId()));
     }
 
-    public void setPostCreating(PostCreating postCreating, String userId) {
+    public void setPostCreating(PostCreating postCreating) {
         this.postCreating = postCreating;
     }
 
@@ -111,10 +111,6 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         dataPass = (OnDataPass) context;
-    }
-
-    public void passData(String data) {
-        dataPass.onDataPass(data);
     }
 
     public void setDataPass(OnDataPass dataPass) {

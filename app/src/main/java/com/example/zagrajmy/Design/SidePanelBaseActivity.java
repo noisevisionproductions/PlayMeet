@@ -69,6 +69,7 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
             int id = menuItem.getItemId();
 
             if (id == R.id.userProfile) {
+                Toast.makeText(getApplicationContext(), "Dostępne jedynie dla zalogowanych użytkowników!", Toast.LENGTH_SHORT).show();
                 if (!this.getClass().getName().equals(UserAccountLogic.class.getName())) {
                     Intent intent = new Intent(getApplicationContext(), UserAccountLogic.class);
                     startActivity(intent);

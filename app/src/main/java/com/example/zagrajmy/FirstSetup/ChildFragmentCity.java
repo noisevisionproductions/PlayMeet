@@ -17,15 +17,10 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
-import com.example.zagrajmy.NavigationUtils;
+import com.example.zagrajmy.Utilities.NavigationUtils;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Utilities.SpinnerManager;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class ChildFragmentCity extends Fragment {
     private AppCompatButton setCity, cancelButton;

@@ -72,8 +72,8 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowMinWidthMajor">90%</item> <!-- width on landscape -->
-        <item name="android:windowMinWidthMinor">90%</item> <!-- width on portrait -->
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
     <style name="DialogStyle" parent="Theme.AppCompat.Light.Dialog">

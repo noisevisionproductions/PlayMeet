@@ -7,7 +7,6 @@ import io.realm.annotations.RealmClass;
 
 @RealmClass
 public class PostCreating extends RealmObject {
-
     @PrimaryKey
     private int postId;
     private boolean isCreatedByUser = false;

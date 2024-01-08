@@ -42,7 +42,6 @@ public class RegisterFragment extends Fragment {
         }
 
         email = view.findViewById(R.id.email);
-        //nicknameFromRegister = view.findViewById(R.id.nicknameFromRegister);
         hasloPierwsze = view.findViewById(R.id.hasloPierwsze);
         hasloDrugie = view.findViewById(R.id.hasloDrugie);
 

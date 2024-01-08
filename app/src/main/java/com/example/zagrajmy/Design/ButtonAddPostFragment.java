@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.example.zagrajmy.Realm.RealmAuthenticationManager;
 import com.example.zagrajmy.PostsManagement.PostCreatingLogic;
 import com.example.zagrajmy.R;
+import com.example.zagrajmy.Utilities.NavigationUtils;
 
 public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
     private Toast toast;
@@ -23,7 +24,9 @@ public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
             Intent intent = new Intent(getActivity(), PostCreatingLogic.class);
             startActivity(intent);
         } else {
-            Toast.makeText(requireContext().getApplicationContext(), "Dostępne jedynie dla zalogowanych użytkowników!", Toast.LENGTH_SHORT).show();
+            if (getView() != null) {
+                NavigationUtils.showOnlyForLoggedUserMessage(getView());
+            }
         }
     }
 
