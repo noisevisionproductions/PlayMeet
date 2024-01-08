@@ -36,7 +36,7 @@ public class PostsSavedByUserFragment extends Fragment {
     private PostsAdapterSavedByUser postsAdapterSavedByUser;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View currentView = inflater.inflate(R.layout.posts_added_as_favorite_fragment, container, false);
+        View currentView = inflater.inflate(R.layout.fragment_saved_by_user, container, false);
         progressBar = currentView.findViewById(R.id.progressBarLayout);
 
         showSavedPosts(currentView);

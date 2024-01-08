@@ -16,7 +16,7 @@
         <!--pasek informujacy o wersji-->
         <include
             android:id="@+id/include"
-            layout="@layout/alpha_version_info" />
+            layout="@layout/version_info" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linearLayout"

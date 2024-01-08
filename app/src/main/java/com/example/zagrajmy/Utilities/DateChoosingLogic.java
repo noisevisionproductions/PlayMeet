@@ -1,4 +1,4 @@
-package com.example.zagrajmy.PostsManagement;
+package com.example.zagrajmy.Utilities;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;

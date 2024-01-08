@@ -17,13 +17,11 @@ import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Utilities.DateChoosingLogic;
 import com.example.zagrajmy.Utilities.SpinnerManager;
 import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 
 import io.realm.mongodb.App;
@@ -36,7 +34,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_post_creating);
+        setContentView(R.layout.fragment_post_creating);
 
         setupDrawerLayout();
         setupNavigationView();

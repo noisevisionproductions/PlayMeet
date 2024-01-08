@@ -4,7 +4,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PostsManagement.PostsOfTheGamesFragment"
+    tools:context=".PostsManagement.AllPostsManagement.PostsOfTheGamesFragment"
     tools:openDrawer="end">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".PostsManagement.PostsOfTheGamesFragment">
+        tools:context=".PostsManagement.AllPostsManagement.PostsOfTheGamesFragment">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -101,7 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/button_fragment" />
+        <include layout="@layout/button_create_post" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
