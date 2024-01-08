@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
-import com.example.zagrajmy.NavigationUtils;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
+import com.example.zagrajmy.Utilities.NavigationUtils;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.example.zagrajmy.UserManagement.UserFieldsManagement.EditableUserFieldsAdapter;
@@ -33,6 +34,7 @@ public class UserAccountLogic extends SidePanelBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_user_info);
 
         setupDrawerLayout();

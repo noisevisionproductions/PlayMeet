@@ -13,6 +13,7 @@ import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.PostCreatingCopy;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.Realm.RealmAppConfig;
+import com.example.zagrajmy.Realm.RealmAuthenticationManager;
 import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.UserManagement.UserModel;
 
@@ -116,10 +117,15 @@ public class ButtonHelperAllPosts {
     }
 
     public static void handleMoreInfoButton(FragmentManager fragmentManager, PostCreating postCreating, String userId, MyBottomSheetFragment.OnDataPass dataPass) {
-        MyBottomSheetFragment bottomSheetFragment = MyBottomSheetFragment.newInstance(postCreating, userId);
+        RealmAuthenticationManager realmAuthenticationManager = new RealmAuthenticationManager();
+        if (realmAuthenticationManager.isUserLoggedIn()){
+            MyBottomSheetFragment bottomSheetFragment = MyBottomSheetFragment.newInstance(postCreating);
 
-        bottomSheetFragment.setDataPass(dataPass);
+            bottomSheetFragment.setDataPass(dataPass);
 
-        bottomSheetFragment.show(fragmentManager, bottomSheetFragment.getTag());
+            bottomSheetFragment.show(fragmentManager, bottomSheetFragment.getTag());
+        } else {
+
+        }
     }
 }

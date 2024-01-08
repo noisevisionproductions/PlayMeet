@@ -28,7 +28,9 @@ import java.util.Objects;
 
 import io.realm.Realm;
 import io.realm.mongodb.App;
+import io.realm.mongodb.Credentials;
 import io.realm.mongodb.User;
+import io.realm.mongodb.sync.SyncConfiguration;
 
 public class LoginFragment extends Fragment {
     private RealmAuthenticationManager authManager;
@@ -87,6 +89,7 @@ public class LoginFragment extends Fragment {
                             }
                         }
 
+
                         Toast.makeText(getActivity(), "Pomyślnie zalogowano", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getContext(), MainMenuPosts.class);
                         startActivity(intent);
@@ -104,6 +107,7 @@ public class LoginFragment extends Fragment {
             });
         });
     }
+
 
     public boolean emptyLoginFieldsErrorHandle() {
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {

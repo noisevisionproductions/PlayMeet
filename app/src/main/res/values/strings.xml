@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Zagrajmy</string>
+    <string name="app_name">PlayMeet</string>
     <!-- Strings used for fragments for navigation -->
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -73,5 +73,13 @@
     <string name="Edit">Edytuj</string>
     <string name="openChat">Napisz do mnie!</string>
     <string name="userDidNotProvided">Nie podano</string>
+    <string name="moreInfoAboutGame">Więcej o grze</string>
+    <string name="moreInfoAboutUser">O użytkowniku</string>
+    <string name="noPostFound">Nie znaleziono żadnych postów</string>
+    <string name="loadingMorePosts">Ładowanie postów</string>
+    <string name="resetFilters">Wyczyść filtry</string>
+    <string name="filters">Filtry</string>
+    <string name="noPostCreated">Nie stworzyłeś żadnych postów</string>
+    <string name="noPostSaved">Nie zapisałeś żadnych postów</string>
 
 </resources>

@@ -1,7 +1,9 @@
 package com.example.zagrajmy.PostsManagement;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -22,6 +24,8 @@ import com.example.zagrajmy.PostsManagement.UserPosts.PostsCreatedByUserFragment
 import com.example.zagrajmy.PostsManagement.UserPosts.PostsSavedByUserFragment;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.UserManagement.UserModel;
+import com.example.zagrajmy.Utilities.NavigationUtils;
+import com.google.android.material.snackbar.Snackbar;
 
 import io.realm.Realm;
 import io.realm.mongodb.App;
@@ -55,12 +59,10 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
 
     @Override
     public void onDataPass(String data) {
-
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentBottomSheet);
         if (fragment instanceof PostsOfTheGamesFragment.OnDataReceived) {
             ((PostsOfTheGamesFragment.OnDataReceived) fragment).onDataReceived(data);
         }
-
     }
 
     public void setUpUIElements() {
@@ -156,7 +158,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
                         .setReorderingAllowed(true)
                         .commit();
             } else {
-                Toast.makeText(getApplicationContext().getApplicationContext(), "Dostępne jedynie dla zalogowanych użytkowników!", Toast.LENGTH_SHORT).show();
+                NavigationUtils.showOnlyForLoggedUserMessage(findViewById(android.R.id.content));
             }
         });
     }
@@ -190,9 +192,8 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
                         .setReorderingAllowed(true)
                         .commit();
             } else {
-                Toast.makeText(getApplicationContext().getApplicationContext(), "Dostępne jedynie dla zalogowanych użytkowników!", Toast.LENGTH_SHORT).show();
+                NavigationUtils.showOnlyForLoggedUserMessage(findViewById(android.R.id.content));
             }
-
         });
     }
 

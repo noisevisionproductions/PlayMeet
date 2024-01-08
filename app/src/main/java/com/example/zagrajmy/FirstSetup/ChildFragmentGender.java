@@ -14,16 +14,12 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.example.zagrajmy.Adapters.MySpinnerAdapter;
-import com.example.zagrajmy.NavigationUtils;
+import com.example.zagrajmy.Utilities.NavigationUtils;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.example.zagrajmy.UserManagement.UserModel;
 import com.example.zagrajmy.Utilities.SpinnerManager;
-import com.google.android.material.snackbar.Snackbar;
-
-import java.util.Arrays;
 
 import io.realm.Realm;
 import io.realm.mongodb.App;

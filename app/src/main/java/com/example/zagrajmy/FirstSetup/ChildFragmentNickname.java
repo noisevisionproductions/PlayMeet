@@ -15,16 +15,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.zagrajmy.NavigationUtils;
+import com.example.zagrajmy.Utilities.NavigationUtils;
 import com.example.zagrajmy.R;
-import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.example.zagrajmy.UserManagement.UserModel;
 import com.google.android.material.textfield.TextInputLayout;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
 
 public class ChildFragmentNickname extends Fragment {
     private AppCompatAutoCompleteTextView getNicknameInput;
