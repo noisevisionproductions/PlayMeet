@@ -17,7 +17,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:background="#EADBC4">
 
@@ -44,34 +44,6 @@
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--menu do dotatkowych opcji - default: "gone"-->
-    <!--    <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/extraInfoContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/expandmenu"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@+id/arrowDownOpenMenu">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/savePostButton"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
-                android:layout_weight="1"
-                android:background="#1D802F"
-                android:text="@string/signMeIn" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/chatButton"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:background="#1D802F"
-                android:text="Chat" />
-        </androidx.appcompat.widget.LinearLayoutCompat>-->
 
         <!--avatar-->
         <include layout="@layout/image_view_avatar" />
@@ -93,6 +65,8 @@
                 android:background="@null"
                 android:entries="@array/arrays_sport_names"
                 android:gravity="center"
+                android:hint="@string/userDidNotProvided"
+                android:textColorHint="#808080"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -113,13 +87,14 @@
                 android:layout_marginStart="10dp"
                 android:background="@null"
                 android:gravity="center"
-                android:hint="tesst"
+                android:hint="@string/userDidNotProvided"
+                android:textColorHint="#808080"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--data-->
+      <!--  &lt;!&ndash;data&ndash;&gt;
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -135,13 +110,14 @@
                 android:layout_marginStart="10dp"
                 android:background="@null"
                 android:gravity="center"
-                android:hint="test"
+                android:hint="@string/userDidNotProvided"
+                android:textColorHint="#808080"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--data-->
+        &lt;!&ndash;data&ndash;&gt;
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/chosenHourForLaoyutDesign"
             android:layout_width="wrap_content"
@@ -158,12 +134,12 @@
                 android:layout_marginStart="10dp"
                 android:background="@null"
                 android:gravity="center"
-
-                android:hint="tessst"
+                android:hint="@string/userDidNotProvided"
+                android:textColorHint="#808080"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>-->
 
         <!--wybor poziomu-->
         <com.google.android.material.textfield.TextInputLayout
@@ -180,10 +156,10 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:gravity="center"
-                android:hint="test"
+                android:hint="@string/userDidNotProvided"
+                android:textColorHint="#808080"
                 android:textSize="12sp"
                 android:textStyle="bold"
-
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -202,9 +178,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
                 android:background="@null"
-                android:hint="@string/nodescription"
-
+                android:hint="@string/userDidNotProvided"
                 android:inputType="textCapSentences"
+                android:textColorHint="#808080"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
@@ -227,7 +203,7 @@
                 android:background="@null"
                 android:inputType="number"
                 android:textSize="8sp"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+                tools:ignore="SmallSp,TextSizeCheck,TouchTargetSizeCheck" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

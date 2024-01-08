@@ -22,11 +22,12 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/noPostInfo"
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="Nie zapisałeś żadnych postów"
+            android:text="@string/noPostSaved"
             android:textSize="28sp"
             android:visibility="visible" />
 

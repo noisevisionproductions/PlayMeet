@@ -13,7 +13,7 @@ import com.example.zagrajmy.Adapters.MySpinnerAdapter;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
-import com.example.zagrajmy.NavigationUtils;
+import com.example.zagrajmy.Utilities.NavigationUtils;
 import com.example.zagrajmy.PostCreating;
 import com.example.zagrajmy.R;
 import com.example.zagrajmy.Realm.RealmAppConfig;

@@ -30,7 +30,7 @@
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Więcej o grze"
+                    android:text="@string/moreInfoAboutGame"
                     android:textSize="20sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -52,7 +52,7 @@
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="O użytkowniku"
+                    android:text="@string/moreInfoAboutUser"
                     android:textSize="20sp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>

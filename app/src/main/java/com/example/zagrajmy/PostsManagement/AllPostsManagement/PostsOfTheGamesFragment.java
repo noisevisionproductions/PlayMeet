@@ -43,7 +43,8 @@ public class PostsOfTheGamesFragment extends Fragment {
     private PostsAdapterAllPosts postsAdapterAllPosts;
     private final List<PostCreating> posts = new ArrayList<>();
     private ProgressBar progressBar, loadingMorePostsIndicator;
-    private AppCompatTextView loadingMorePostsText;
+    private AppCompatTextView loadingMorePostsText, noPostFound;
+    private AppCompatButton filterButton;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private boolean isLoading = false;
@@ -59,6 +60,7 @@ public class PostsOfTheGamesFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
         getAddPostButton();
 
+        filterAllPosts(view);
         return view;
     }
 
@@ -69,6 +71,8 @@ public class PostsOfTheGamesFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBarLayout);
         loadingMorePostsIndicator = view.findViewById(R.id.loadMorePostsIndicator);
         loadingMorePostsText = view.findViewById(R.id.loadingPostsText);
+        noPostFound = view.findViewById(R.id.noPostFound);
+        filterButton = view.findViewById(R.id.postsFilter);
 
         recyclerView = view.findViewById(R.id.recycler_view_posts);
 
@@ -192,6 +196,7 @@ public class PostsOfTheGamesFragment extends Fragment {
             postsAdapterAllPosts.notifyItemRangeRemoved(0, oldSize);
             postsAdapterAllPosts.notifyItemRangeInserted(0, newSize);
 
+            filterButton.setSelected(false);
             // Set refreshing to false after data has been refreshed
             swipeRefreshLayout.setRefreshing(false);
         }, delayLoading);
@@ -217,8 +222,6 @@ public class PostsOfTheGamesFragment extends Fragment {
             loadPartOfThePosts();
         }
 
-        filterAllPosts(view);
-
         getAddPostButton();
     }
 
@@ -229,7 +232,14 @@ public class PostsOfTheGamesFragment extends Fragment {
 
             List<PostCreating> newPostCreatingList = new ArrayList<>(allPosts.subList(0, Math.min(initialPostsToLoad, allPosts.size())));
 
-            updatePostsUsingDiffUtil(newPostCreatingList);
+            if (newPostCreatingList.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                noPostFound.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                noPostFound.setVisibility(View.GONE);
+                updatePostsUsingDiffUtil(newPostCreatingList);
+            }
         }
     }
 
@@ -259,7 +269,14 @@ public class PostsOfTheGamesFragment extends Fragment {
             // Limit the initial load to the specified number of posts
             newPostCreatingList = newPostCreatingList.subList(0, Math.min(initialPostsToLoad, newPostCreatingList.size()));
 
-            updatePostsUsingDiffUtil(newPostCreatingList);
+            if (newPostCreatingList.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                noPostFound.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView.setVisibility(View.VISIBLE);
+                noPostFound.setVisibility(View.GONE);
+                updatePostsUsingDiffUtil(newPostCreatingList);
+            }
         }
     }
 
@@ -290,10 +307,12 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     public void filterAllPosts(View view) {
-        AppCompatButton filterButton = view.findViewById(R.id.postsFilter);
         AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
-        PostsFilter postsFilter = new PostsFilter(postsAdapterAllPosts, posts, filterButton, deleteFilters);
-        postsFilter.filterPostsWindow((Activity) getContext());
+        filterButton.setOnClickListener(v -> {
+            PostsFilter postsFilter = new PostsFilter(postsAdapterAllPosts, posts, filterButton, deleteFilters, noPostFound);
+            postsFilter.filterPostsWindow((Activity) getContext());
+        });
+
     }
 
     public interface OnDataReceived {

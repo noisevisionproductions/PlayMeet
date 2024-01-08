@@ -41,8 +41,8 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
             holder.cityNames.setText(postCreating.getCityName());
             holder.skillLevel.setText(postCreating.getSkillLevel());
             holder.addInfo.setText(postCreating.getAdditionalInfo());
-            holder.chosenDate.setText(postCreating.getDateTime());
-            holder.chosenHour.setText(postCreating.getHourTime());
+           /* holder.chosenDate.setText(postCreating.getDateTime());
+            holder.chosenHour.setText(postCreating.getHourTime());*/
             holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
         }
 
@@ -69,7 +69,7 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
+        private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo/*, chosenDate, chosenHour*/;
         protected final ConstraintLayout arrowDownOpenMenu;
         protected final LinearLayoutCompat extraInfoContainer;
         final CardView layoutOfPost;
@@ -94,11 +94,11 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
             addInfo = v.findViewById(R.id.addInfoPost);
             addInfo.setFocusable(false);
 
-            chosenDate = v.findViewById(R.id.chosenDate);
+            /*chosenDate = v.findViewById(R.id.chosenDate);
             chosenDate.setFocusable(false);
 
             chosenHour = v.findViewById(R.id.chosenHour);
-            chosenHour.setFocusable(false);
+            chosenHour.setFocusable(false);*/
 
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
 

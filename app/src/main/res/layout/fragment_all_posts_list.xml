@@ -27,7 +27,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/button_style"
-                android:text="Filtry" />
+                android:text="@string/filters" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/deleteFilters"
@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@drawable/button_style"
-                android:text="Wyczyść filtry" />
+                android:text="@string/resetFilters" />
 
 
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -52,6 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_posts"
                     android:layout_width="match_parent"
@@ -59,7 +60,19 @@
                     android:layout_marginTop="0dp"
                     android:background="@color/background" />
 
-                <!-- Loading indicator and text for more posts -->
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/noPostFound"
+                    style="@style/MyAppCompatTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center"
+                    android:text="@string/noPostFound"
+                    android:textColor="@color/primary_text_color"
+                    android:textSize="30sp"
+                    android:visibility="gone" />
+
+                <!-- tekst oraz ikonka ładowania podczas pobierania postów z bazy -->
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/loadingMorePostsLayout"
                     android:layout_width="wrap_content"
@@ -82,7 +95,7 @@
                         android:id="@+id/loadingPostsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Ładowanie postów"
+                        android:text="@string/loadingMorePosts"
                         android:textColor="#0000FF"
                         android:textSize="20sp"
                         android:textStyle="bold"
