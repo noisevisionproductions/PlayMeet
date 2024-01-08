@@ -13,23 +13,17 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.PostsManagement.MainMenuPosts;
 import com.example.zagrajmy.R;
-import com.example.zagrajmy.Realm.RealmAppConfig;
 import com.example.zagrajmy.Realm.RealmAuthenticationManager;
-import com.example.zagrajmy.UserManagement.UserModel;
+import com.example.zagrajmy.Realm.RealmDataManager;
 
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import io.realm.Realm;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
-
 public class RegisterFragment extends Fragment {
     private final RealmDataManager realmDataManager = RealmDataManager.getInstance();
-    private String emailText, hasloPierwszeText, hasloDrugieText, nicknameText;
+    private String emailText, hasloPierwszeText, hasloDrugieText;
     private AppCompatAutoCompleteTextView email, hasloPierwsze, hasloDrugie;
     private RealmAuthenticationManager realmAuthenticationManager;
 
@@ -78,25 +72,6 @@ public class RegisterFragment extends Fragment {
                 }
             });
         });
-    }
-
-    public void saveNicknameToRealm() {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            App app = RealmAppConfig.getApp();
-            io.realm.mongodb.User user = app.currentUser();
-            if (user != null) {
-                String userId = user.getId();
-
-                realm.executeTransactionAsync(realm1 -> {
-                    UserModel userModelClassForNickname = realm1.where(UserModel.class)
-                            .equalTo("userId", userId)
-                            .findFirst();
-                    if (userModelClassForNickname != null) {
-                        userModelClassForNickname.setNickName(nicknameText);
-                    }
-                });
-            }
-        }
     }
 
     public boolean validateAndSetError(EditText field, String errorMessage, Predicate<String> validationFunction) {
@@ -151,45 +126,5 @@ public class RegisterFragment extends Fragment {
 
     public boolean isFieldNotEmpty(String username) {
         return !username.isEmpty();
-    }
-
-    public boolean isUserNameAvailable(String username) {
-        Realm realm = Realm.getDefaultInstance();
-        UserModel userModel = realm.where(UserModel.class).equalTo("nickName", username).findFirst();
-        // realm.close();
-        return userModel != null;
-    }
-
-    public boolean isUsernameLongEnough(String username) {
-        return username.length() >= 3;
-    }
-
-    public boolean isUsernameNotTooLong(String username) {
-        return username.length() <= 30;
-    }
-
-    public boolean isUsernameAlphanumeric(String username) {
-        return username.matches("[a-zA-Z0-9]*");
-    }
-
-
-    //Todo: set user nickname from UserProfileManager class
-    public void saveNicknameToFirebase() {
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
-
-        /*UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(String.valueOf(nicknameFromRegister.getText()))
-                .build();
-
-        assert user != null;
-        user.updateProfile(profileUpdates)
-                .addOnCompleteListener(taskk -> {
-                    if (taskk.isSuccessful()) {
-                        Log.d(TAG, "User profile updated.");
-                    } else {
-                        Log.w(TAG, "User profile update failed.", taskk.getException());
-                    }
-                });*/
     }
 }

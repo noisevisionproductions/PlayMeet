@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.zagrajmy.Adapters.MySpinnerAdapterForFilterMenu;
-import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
+import com.example.zagrajmy.PostsManagement.AllPostsManagement.PostsAdapterAllPosts;
 import com.example.zagrajmy.DataManagement.CityXmlParser;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.PostCreating;

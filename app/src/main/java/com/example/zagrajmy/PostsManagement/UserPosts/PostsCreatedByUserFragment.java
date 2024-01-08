@@ -38,7 +38,7 @@ public class PostsCreatedByUserFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View currentView = inflater.inflate(R.layout.posts_created_by_user_fragment, container, false);
+        View currentView = inflater.inflate(R.layout.fragment_created_by_user, container, false);
 
         progressBar = currentView.findViewById(R.id.progressBarLayout);
         showUserPosts(currentView);
