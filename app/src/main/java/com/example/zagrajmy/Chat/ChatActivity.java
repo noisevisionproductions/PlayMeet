@@ -21,7 +21,9 @@ import com.example.zagrajmy.UserManagement.UserModel;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import io.realm.Realm;
@@ -88,11 +90,7 @@ public class ChatActivity extends AppCompatActivity {
                     .findFirst();
 
             if (userModel != null) {
-                UserModel userModelFromRealm = realm.where(UserModel.class)
-                        .equalTo("userId", user.getId())
-                        .equalTo("nickName", userModel.getNickName())
-                        .findFirst();
-
+                UserModel userModelFromRealm = realm.copyFromRealm(userModel);
                 String uuid = UUID.randomUUID().toString();
 
                 ChatMessageModel chatMessageModel = realm.createObject(ChatMessageModel.class, uuid);
@@ -124,9 +122,9 @@ public class ChatActivity extends AppCompatActivity {
         RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
 
         if (!allPosts.isEmpty()) {
-            List<String> userIds = new ArrayList<>();
+            Set<String> userIds = new HashSet<>();
 
-            // przeszukiwanie wszystkich postow i dodawanie Id uzytkowników do listy
+            // przeszukiwanie wszystkich postow i dodawanie Id uzytkowników do setu
             for (PostCreating postCreating : allPosts) {
                 userIds.add(postCreating.getUserId());
             }

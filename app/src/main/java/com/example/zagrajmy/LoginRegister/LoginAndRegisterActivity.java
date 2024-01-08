@@ -1,13 +1,11 @@
 package com.example.zagrajmy.LoginRegister;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.zagrajmy.NavigationUtils;
 import com.example.zagrajmy.R;
 
 
