@@ -6,9 +6,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.zagrajmy.Chat.ChatRoomList;
+import com.example.zagrajmy.PostCreating;
+import com.example.zagrajmy.PostsManagement.AllPostsManagement.MyBottomSheetFragment;
+import com.example.zagrajmy.PostsManagement.AllPostsManagement.PostsOfTheGamesFragment;
 import com.example.zagrajmy.Realm.RealmDataManager;
 import com.example.zagrajmy.FirstSetup.ContainerForDialogFragment;
 import com.example.zagrajmy.Design.SidePanelBaseActivity;
@@ -23,7 +27,7 @@ import io.realm.Realm;
 import io.realm.mongodb.App;
 import io.realm.mongodb.User;
 
-public class MainMenuPosts extends SidePanelBaseActivity {
+public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomSheetFragment.OnDataPass {
     private AppCompatButton yourPostsMenu, savedPostsMenu, showAllPostsMenu, chatRoomMenu, updateUserInfoBar;
     private RealmAuthenticationManager authenticationManager;
     private View appVersionInfo;
@@ -47,6 +51,16 @@ public class MainMenuPosts extends SidePanelBaseActivity {
 
         switchToUserInfoInputOnClick();
         checkUsers();
+    }
+
+    @Override
+    public void onDataPass(String data) {
+
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentBottomSheet);
+        if (fragment instanceof PostsOfTheGamesFragment.OnDataReceived) {
+            ((PostsOfTheGamesFragment.OnDataReceived) fragment).onDataReceived(data);
+        }
+
     }
 
     public void setUpUIElements() {
@@ -181,4 +195,6 @@ public class MainMenuPosts extends SidePanelBaseActivity {
 
         });
     }
+
+
 }

@@ -3,7 +3,7 @@ package com.example.zagrajmy.UserManagement;
 public class EditableField {
 
     public enum FieldType {
-        FIELD_TYPE_EDITTEXT, FIELD_TYPE_CITY_SPINNER, FIELD_TYPE_AGE_SPINNER
+        FIELD_TYPE_EDITTEXT, FIELD_TYPE_CITY_SPINNER, FIELD_TYPE_AGE_SPINNER, FIELD_TYPE_TEXT_VIEW
     }
 
     public String label;

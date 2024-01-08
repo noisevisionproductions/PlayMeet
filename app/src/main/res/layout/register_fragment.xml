@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/activity_background_color">
 
     <include
         android:id="@+id/include"
-        layout="@layout/alpha_version_info" />
+        layout="@layout/version_info" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,44 +19,22 @@
         android:padding="15dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
             android:gravity="center"
             android:text="@string/rejestracja"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-
-        <!-- <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-             android:id="@+id/nicknameFromRegister"
-             style="@style/MyAppCompatTextViewStyle"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:layout_marginBottom="10dp"
-             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890"
-             android:hint="@string/nickname"
-             android:inputType="text"
-             android:maxEms="30"
-
-             android:minEms="6"
-             android:textSize="20sp"
-             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />-->
-
+            android:textSize="30sp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/e_mail"
             android:textSize="20sp"
             android:textStyle="bold" />
 
-
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/email"
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -66,18 +44,13 @@
             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/haslo"
-
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
+            android:textSize="20sp" />
 
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/hasloPierwsze"
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -85,29 +58,22 @@
             android:inputType="textPassword"
             android:maxEms="32"
             android:minEms="6"
-
             android:textSize="20sp"
             app:passwordToggleEnabled="true"
             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
 
-
         <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/potwierdzhaslo"
-
             android:textSize="20sp"
             android:textStyle="bold" />
 
-
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/hasloDrugie"
-            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-
             android:hint="@string/hasloponownie"
             android:inputType="textPassword"
             android:maxEms="32"
@@ -117,13 +83,11 @@
             app:passwordToggleEnabled="true"
             tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
 
-
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/registerButton"
             style="@style/MyButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_style"
             android:text="@string/registerButton" />
     </LinearLayout>
 </FrameLayout>

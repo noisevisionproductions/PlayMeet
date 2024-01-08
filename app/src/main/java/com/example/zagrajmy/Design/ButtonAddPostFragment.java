@@ -12,7 +12,7 @@ public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
 
     @Override
     protected int getLayoutId() {
-        return R.layout.button_fragment;
+        return R.layout.button_create_post;
     }
 
     @Override

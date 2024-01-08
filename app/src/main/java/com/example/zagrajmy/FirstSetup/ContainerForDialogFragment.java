@@ -19,11 +19,12 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
+//klasa, która przechowuje DialogFragment w kontekście tworzenia profilu dla nowo zalogowanych użytkowników
 public class ContainerForDialogFragment extends DialogFragment {
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.container_dialog_fragment, container, false);
+        return inflater.inflate(R.layout.dialog_fragment_container_first_login, container, false);
     }
 
     @Override
@@ -45,7 +46,7 @@ public class ContainerForDialogFragment extends DialogFragment {
         Objects.requireNonNull(dialog.getWindow()).getAttributes().windowAnimations = R.style.DialogSlideAnim;
 
         // Dodanie mojego DialogFragment
-        dialog.setContentView(R.layout.container_dialog_fragment);
+        dialog.setContentView(R.layout.dialog_fragment_container_first_login);
 
         // Ustawiam na przezroczystość, aby nie było białego tła na fragmentach
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
