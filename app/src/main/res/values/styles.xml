@@ -44,7 +44,7 @@
     </style>
 
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
-        <item name="android:background">#EADBC4</item>
+        <item name="android:background">@drawable/button_style</item>
         <item name="android:textColor">#443434</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_margin">2dp</item>
@@ -56,6 +56,8 @@
     <style name="MyAppCompatTextViewStyle" parent="Widget.AppCompat.TextView">
         <item name="android:textColor">#443434</item>
         <item name="android:textColorHint">#EADBC4</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="MyTextInputLayoutDesign" parent="ThemeOverlay.Material3.TextInputEditText">

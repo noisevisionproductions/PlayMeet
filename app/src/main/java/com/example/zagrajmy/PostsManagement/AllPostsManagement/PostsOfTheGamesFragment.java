@@ -1,4 +1,4 @@
-package com.example.zagrajmy.PostsManagement;
+package com.example.zagrajmy.PostsManagement.AllPostsManagement;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.zagrajmy.Adapters.PostsAdapterAllPosts;
 import com.example.zagrajmy.DataManagement.PostDiffCallback;
 import com.example.zagrajmy.Design.ButtonAddPostFragment;
 import com.example.zagrajmy.PostCreating;
@@ -53,28 +52,29 @@ public class PostsOfTheGamesFragment extends Fragment {
     private final ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View currentView = inflater.inflate(R.layout.activity_posts_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_all_posts_list, container, false);
 
-        postsAdapterAllPosts = new PostsAdapterAllPosts(getContext(), posts);
+        setupView(view);
+        showAllPosts(view);
+        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
+        getAddPostButton();
+
+        return view;
+    }
+
+    public void setupView(View view) {
+        postsAdapterAllPosts = new PostsAdapterAllPosts(posts, getChildFragmentManager());
         authenticationManager = new RealmAuthenticationManager();
 
-        progressBar = currentView.findViewById(R.id.progressBarLayout);
-        loadingMorePostsIndicator = currentView.findViewById(R.id.loadMorePostsIndicator);
-        loadingMorePostsText = currentView.findViewById(R.id.loadingPostsText);
+        progressBar = view.findViewById(R.id.progressBarLayout);
+        loadingMorePostsIndicator = view.findViewById(R.id.loadMorePostsIndicator);
+        loadingMorePostsText = view.findViewById(R.id.loadingPostsText);
 
-        recyclerView = currentView.findViewById(R.id.recycler_view_posts);
+        recyclerView = view.findViewById(R.id.recycler_view_posts);
 
         initialPostsToLoad = 10;
 
-        swipeRefreshLayout = currentView.findViewById(R.id.swipeRefreshLayout);
-
-        showAllPosts(currentView);
-
-        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
-
-        getAddPostButton();
-
-        return currentView;
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
     }
 
     public void loadPartOfThePosts() {
@@ -118,15 +118,17 @@ public class PostsOfTheGamesFragment extends Fragment {
             new Handler().postDelayed(() -> {
                 threadPool.execute(() -> {
                     List<PostCreating> moreData = loadNextPager();
-                    requireActivity().runOnUiThread(() -> {
-                        handleLoadedData(moreData);
-                        loadingMorePostsIndicator.setVisibility(View.GONE);
-                        loadingMorePostsText.setVisibility(View.GONE);
+                    if (isAdded()) { // sprawdza, czy fragment jest aktywny, bez tego crashuje aktywnosc, bo ladowanie na poziomie ui nie jest dokocznone
+                        requireActivity().runOnUiThread(() -> {
+                            handleLoadedData(moreData);
+                            loadingMorePostsIndicator.setVisibility(View.GONE);
+                            loadingMorePostsText.setVisibility(View.GONE);
 
-                        if (moreData.isEmpty()) {
-                            currentPage = 0;
-                        }
-                    });
+                            if (moreData.isEmpty()) {
+                                currentPage = 0;
+                            }
+                        });
+                    }
                 });
                 isLoading = false;
             }, delayLoading);
@@ -293,4 +295,19 @@ public class PostsOfTheGamesFragment extends Fragment {
         PostsFilter postsFilter = new PostsFilter(postsAdapterAllPosts, posts, filterButton, deleteFilters);
         postsFilter.filterPostsWindow((Activity) getContext());
     }
+
+    public interface OnDataReceived {
+        void onDataReceived(String data);
+    }
+
+    private OnDataReceived onDataReceived;
+
+    public void setOnDataReceived(OnDataReceived onDataReceived) {
+        this.onDataReceived = onDataReceived;
+    }
+
+    public void updateRecyclerView(String data) {
+
+    }
+
 }

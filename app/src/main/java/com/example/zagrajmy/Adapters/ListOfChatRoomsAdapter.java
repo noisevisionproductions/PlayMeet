@@ -36,7 +36,7 @@ public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRooms
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.design_for_chatroom_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatroom_design, parent, false);
         return new ViewHolder(view, realm);
     }
 

@@ -27,18 +27,18 @@
 
         <include
             android:id="@+id/appVersionInfo"
-            layout="@layout/alpha_version_info"
+            layout="@layout/version_info"
             android:visibility="gone" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerActivePosts"
-            android:name="com.example.zagrajmy.PostsManagement.PostsOfTheGamesFragment"
+            android:name="com.example.zagrajmy.PostsManagement.AllPostsManagement.PostsOfTheGamesFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/button_container"
             android:layout_marginTop="50dp"
             app:defaultNavHost="true"
-            tools:layout="@layout/activity_posts_list" />
+            tools:layout="@layout/fragment_all_posts_list" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/button_container"
