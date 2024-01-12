@@ -15,7 +15,7 @@ import com.noisevisionproductions.playmeet.Adapters.ChatMessageAdapter;
 import com.noisevisionproductions.playmeet.DataManagement.ChatMessageDiffUtilCallback;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
+import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
 import java.time.LocalDateTime;

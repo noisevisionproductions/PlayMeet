@@ -18,15 +18,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
+import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
+import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.PostsManagement.PostsFiltering.PostsFilter;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
-import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
-import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,8 +36,6 @@ import java.util.concurrent.Executors;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private FirebaseAuthManager authenticationManager;
@@ -243,8 +241,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     public void postCreateForLoggedInUser() {
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         try (Realm realm = Realm.getDefaultInstance()) {
             RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
@@ -254,13 +251,13 @@ public class PostsOfTheGamesFragment extends Fragment {
 
             List<Integer> savedPostIds = new ArrayList<>();
             for (PostCreatingCopy post : copiedPosts) {
-                if (post.getSavedByUser() && user != null && post.getUserId().equals(user.getId())) {
+                if (post.getSavedByUser() && currentUser != null && post.getUserId().equals(currentUser.getUid())) {
                     savedPostIds.add(post.getPostId());
                 }
             }
 
             for (PostCreating post : allPosts) {
-                if (post.isCreatedByUser() && user != null && !post.getUserId().equals(user.getId()) && !savedPostIds.contains(post.getPostId())) {
+                if (post.isCreatedByUser() && currentUser != null && !post.getUserId().equals(currentUser.getUid()) && !savedPostIds.contains(post.getPostId())) {
                     newPostCreatingList.add(post);
                 }
             }

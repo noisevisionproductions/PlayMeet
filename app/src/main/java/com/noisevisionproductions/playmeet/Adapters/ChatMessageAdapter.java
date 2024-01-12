@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
+import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
 import java.util.List;
@@ -75,7 +75,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         public void bind(ChatMessageModel chatMessageModel) {
             UserModel userModel = chatMessageModel.getUsers().get(0);
             assert userModel != null;
-            usernameTextView.setText(userModel.getNickName());
+            usernameTextView.setText(userModel.getNickname());
             messageTextView.setText(chatMessageModel.getMessage());
             timestampTextView.setText(chatMessageModel.getTimestamp());
         }
