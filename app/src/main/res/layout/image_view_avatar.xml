@@ -5,6 +5,8 @@
     android:layout_width="100dp"
     android:layout_height="100dp"
     android:layout_margin="5dp"
+    android:background="@drawable/border_gray"
+    android:padding="2dp"
     android:src="@drawable/sample_avatar"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent" />

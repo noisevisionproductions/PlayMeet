@@ -8,7 +8,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="8dp"
     android:layout_margin="10dp"
-    android:background="@drawable/border_for_chatroom_list">
+    android:background="@drawable/border_gray">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageViewProfile"

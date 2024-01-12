@@ -2,8 +2,27 @@
 <resources>
     <string-array name="arrays_sport_names">
         <item>Wybierz sport</item>
-        <item>Tenis</item>
+        <item>Badminton</item>
+        <item>Baseball</item>
+        <item>Golf</item>
+        <item>Hokej na lodzie</item>
+        <item>Hokej na trawie</item>
+        <item>Jazda konna</item>
+        <item>Kajakarstwo</item>
+        <item>Koszykówka</item>
+        <item>Lekkoatletyka</item>
+        <item>Narciarstwo</item>
         <item>Piłka Nożna</item>
+        <item>Pływanie</item>
+        <item>Rower</item>
+        <item>Skoki narciarskie</item>
+        <item>Siatkówka</item>
+        <item>Siłownia</item>
+        <item>Strzelectwo</item>
         <item>Squash</item>
+        <item>Surfing</item>
+        <item>Sztuki walki</item>
+        <item>Tenis</item>
+        <item>Wspinaczka</item>
     </string-array>
 </resources>
