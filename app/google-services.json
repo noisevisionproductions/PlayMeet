@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "496412790112",
+    "firebase_url": "https://zagrajmy-b418d-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "zagrajmy-b418d",
     "storage_bucket": "zagrajmy-b418d.appspot.com"
   },
@@ -10,6 +11,35 @@
         "mobilesdk_app_id": "1:496412790112:android:3529a1aad7ea51ec146205",
         "android_client_info": {
           "package_name": "com.example.zagrajmy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "496412790112-5n8crgbqv2dkk06ppbpa276uahji9i0g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt4PIK5MfN5jXNPyriLRfbRwfOZpSiHLo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "496412790112-5n8crgbqv2dkk06ppbpa276uahji9i0g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:496412790112:android:5750d5bd2a53f1b3146205",
+        "android_client_info": {
+          "package_name": "com.noisevisionproductions.playmeet"
         }
       },
       "oauth_client": [

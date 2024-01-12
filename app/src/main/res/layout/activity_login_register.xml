@@ -6,7 +6,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerLogin"
-        android:name="com.example.zagrajmy.LoginRegister.LoginFragment"
+        android:name="com.example.playmeet.LoginRegister.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/button_container" />

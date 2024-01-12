@@ -8,8 +8,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.zagrajmy" />
-                  <option name="mobileSdkAppId" value="1:496412790112:android:3529a1aad7ea51ec146205" />
+                  <option name="appId" value="com.noisevisionproductions.playmeet" />
+                  <option name="mobileSdkAppId" value="1:496412790112:android:5750d5bd2a53f1b3146205" />
                   <option name="projectId" value="zagrajmy-b418d" />
                   <option name="projectNumber" value="496412790112" />
                 </ConnectionSetting>

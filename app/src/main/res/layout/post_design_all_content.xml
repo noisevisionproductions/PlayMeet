@@ -7,9 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:layout_margin="10dp"
-    app:cardBackgroundColor="#EADBC4"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="5dp"
+    android:background="@drawable/border_gray"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -19,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="#EADBC4">
+        android:background="#fff">
 
         <!--przycisk do otwierania dodatkowych opcji-->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,7 +44,8 @@
 
 
         <!--avatar-->
-        <include layout="@layout/image_view_avatar" />
+        <include layout="@layout/image_view_avatar"
+            />
 
         <!--nazwa sportu-->
         <com.google.android.material.textfield.TextInputLayout
@@ -85,6 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
+
                 android:background="@null"
                 android:gravity="center"
                 android:hint="@string/userDidNotProvided"
@@ -155,6 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
+                android:layout_margin="5dp"
                 android:gravity="center"
                 android:hint="@string/userDidNotProvided"
                 android:textColorHint="#808080"
@@ -178,6 +179,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
                 android:background="@null"
+                android:layout_margin="5dp"
                 android:hint="@string/userDidNotProvided"
                 android:inputType="textCapSentences"
                 android:textColorHint="#808080"
