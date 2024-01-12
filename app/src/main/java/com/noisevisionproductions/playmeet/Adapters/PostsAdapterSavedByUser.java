@@ -14,7 +14,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmDataManager;
+import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.google.android.material.textfield.TextInputEditText;
 

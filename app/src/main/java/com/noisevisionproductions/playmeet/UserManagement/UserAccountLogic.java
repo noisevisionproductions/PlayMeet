@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -14,31 +16,28 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
 import com.noisevisionproductions.playmeet.UserManagement.UserFieldsManagement.EditableUserFieldsAdapter;
+import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import io.realm.Realm;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
 
 public class UserAccountLogic extends SidePanelBaseActivity {
 
-    private List<EditableField> editableFields;
+    private FirebaseHelper firebaseHelper;
     private CircleImageView avatarImageView;
     private AppCompatButton uploadAvatarButton;
+    private RecyclerView recyclerView;
+    private ProgressBar progressBarLayout;
 
     public UserAccountLogic() {
     }
@@ -51,63 +50,68 @@ public class UserAccountLogic extends SidePanelBaseActivity {
 
         setupDrawerLayout();
         setupNavigationView();
+        setupRecyclerView();
 
         greetNickname();
         getAddPostButton();
-        initEditableFields();
-        setupRecyclerView();
         setUserAvatar();
     }
 
     private void setupRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewUserInfo);
+        recyclerView = findViewById(R.id.recyclerViewUserInfo);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        firebaseHelper = new FirebaseHelper();
 
-        EditableUserFieldsAdapter adapter = new EditableUserFieldsAdapter(getApplicationContext(), editableFields);
-        recyclerView.setAdapter(adapter);
-
+        progressBarLayout = findViewById(R.id.progressBarLayout);
         uploadAvatarButton = findViewById(R.id.uploadAvatar);
         avatarImageView = findViewById(R.id.userAvatar);
         AppCompatButton button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
+
+        getUserDataFromRealm();
     }
 
-    private void initEditableFields() {
-        editableFields = getUserDataFromRealm();
-    }
-
-    private List<EditableField> getUserDataFromRealm() {
-        List<EditableField> userData = new ArrayList<>();
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
-
-        try (Realm realm = Realm.getDefaultInstance()) {
-            if (user != null) {
-                UserModel userModel = realm.where(UserModel.class)
-                        .equalTo("userId", user.getId())
-                        .findFirst();
-                if (userModel != null) {
-                    userData.add(new EditableField(getString(R.string.provideName), userModel.getName(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
-                    userData.add(new EditableField(getString(R.string.provideCity), userModel.getLocation(), true, true, true, EditableField.FieldType.FIELD_TYPE_CITY_SPINNER));
-                    userData.add(new EditableField(getString(R.string.provideAge), userModel.getBirthDay(), true, true, true, EditableField.FieldType.FIELD_TYPE_AGE_SPINNER));
-                    userData.add(new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
-                }
-            }
-        }
-        return userData;
-    }
-
-    public void greetNickname() {
-        AppCompatTextView displayNickname = findViewById(R.id.nickname);
-
-        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("UserModel").child("userId");
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void getUserDataFromRealm() {
+        // zanim pola EditableField się załadują wraz z nickiem z bazy danych, wyświetlam ikonkę ładowania
+        progressBarLayout.setVisibility(View.VISIBLE);
+        firebaseHelper.getUserData(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     UserModel userModel = snapshot.getValue(UserModel.class);
                     if (userModel != null) {
-                        String userNickname = userModel.getUserId();
+                        // pobieram dane użytkownika z UserModel z bazy firebase, a następnie pokazuje je już wybrane w wyświetlanych w polach
+                        // z tego względu, że używam RecyclerView do wyświetlania pól EditableField, muszę dodawać je do listy
+                        // a następnie ustawić ją w adapterze
+                        List<EditableField> userData = new ArrayList<>();
+
+                        userData.add(new EditableField(getString(R.string.provideName), userModel.getName(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
+                        userData.add(new EditableField(getString(R.string.provideCity), userModel.getLocation(), true, true, true, EditableField.FieldType.FIELD_TYPE_CITY_SPINNER));
+                        userData.add(new EditableField(getString(R.string.provideAge), userModel.getAge(), true, true, true, EditableField.FieldType.FIELD_TYPE_AGE_SPINNER));
+                        userData.add(new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
+                        EditableUserFieldsAdapter adapter = new EditableUserFieldsAdapter(getApplicationContext(), userData);
+                        recyclerView.setAdapter(adapter);
+                    }
+                    progressBarLayout.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
+    }
+
+    public void greetNickname() {
+        AppCompatTextView displayNickname = findViewById(R.id.nickname);
+
+        firebaseHelper.getUserData(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    UserModel userModel = snapshot.getValue(UserModel.class);
+                    if (userModel != null) {
+                        String userNickname = userModel.getNickname();
                         displayNickname.setText(userNickname);
                     }
                 }

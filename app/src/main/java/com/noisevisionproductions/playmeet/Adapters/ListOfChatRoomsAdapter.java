@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.Chat.PrivateChatModel;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
+import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
 
 import java.util.List;
 

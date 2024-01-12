@@ -7,9 +7,9 @@ public class UserModel extends RealmObject {
 
     @PrimaryKey
     private String userId;
-    private String nickName;
+    private String nickname;
     private String name;
-    private String birthDay;
+    private String age;
     private String gender;
     private String location;
     private String aboutMe;
@@ -36,12 +36,12 @@ public class UserModel extends RealmObject {
         this.userId = userId;
     }
 
-    public String getNickName() {
-        return nickName;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getName() {
@@ -76,12 +76,12 @@ public class UserModel extends RealmObject {
         this.favoriteSport = favoriteSport;
     }
 
-    public String getBirthDay() {
-        return birthDay;
+    public String getAge() {
+        return age;
     }
 
-    public void setBirthDay(String birthDay) {
-        this.birthDay = birthDay;
+    public void setAge(String age) {
+        this.age = age;
     }
 
     public String getGender() {

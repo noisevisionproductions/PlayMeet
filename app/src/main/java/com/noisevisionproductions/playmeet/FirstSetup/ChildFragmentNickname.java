@@ -10,6 +10,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -17,18 +18,20 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.UserManagement.UserModel;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
+import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 
 public class ChildFragmentNickname extends Fragment {
     private AppCompatAutoCompleteTextView getNicknameInput;
     private TextInputLayout getNicknameInputLayout;
-    private AppCompatButton setUserInfoButton, checkIfNickAvailable, cancelButton;
+    private AppCompatButton setUserInfoButton, cancelButton;
     private AppCompatTextView stepNumber;
     private String nickname;
 
@@ -38,8 +41,8 @@ public class ChildFragmentNickname extends Fragment {
 
         setUpUIElements(view);
         hideKeyboard(view);
-        handleSetNicknameButton(view);
-        checkValidationsForNicknameField();
+        handleSetNicknameButton();
+
         NavigationUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
 
         return view;
@@ -48,7 +51,6 @@ public class ChildFragmentNickname extends Fragment {
     public void setUpUIElements(View view) {
         getNicknameInput = view.findViewById(R.id.getNicknameInput);
         setUserInfoButton = view.findViewById(R.id.setUserInfoButtonFirstTime);
-        checkIfNickAvailable = view.findViewById(R.id.checkIfNickAvailable);
         getNicknameInputLayout = view.findViewById(R.id.getNicknameInputLayout);
         stepNumber = view.findViewById(R.id.stepNumber);
         cancelButton = view.findViewById(R.id.cancelButton);
@@ -64,42 +66,43 @@ public class ChildFragmentNickname extends Fragment {
         view.setOnTouchListener(onTouchListener);
     }
 
-    public void handleSetNicknameButton(View view) {
+    public void handleSetNicknameButton() {
         deleteSpaces();
-        setUserInfoButton.setOnClickListener(v -> setNickname(view));
+        setUserInfoButton.setOnClickListener(v -> isNicknameAvailable());
     }
 
     public void setNickname(View view) {
-        if (validateNickname()) {
-            onNicknameEntered(nickname, view);
-        }
+        onNicknameEntered(nickname, view);
     }
 
-    public void checkValidationsForNicknameField() {
-        checkIfNickAvailable.setOnClickListener(v -> {
-            if (validateNickname()) {
-                try (Realm realm = Realm.getDefaultInstance()) {
-                    RealmResults<UserModel> users = realm.where(UserModel.class)
-                            .findAll();
-                    for (UserModel userModel : users) {
-                        String existingNickname = userModel.getNickName();
-                        if (existingNickname != null && existingNickname.equals(nickname)) {
-                            setAutoCompleteTextViewError("Nazwa użytkownika jest zajęta");
-                            getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
-                            return;
-                        }
+    public void isNicknameAvailable() {
+        if (validateNickname()) {
+            DatabaseReference nicknameReference = FirebaseDatabase.getInstance().getReference().child("UserModel");
+            Query query = nicknameReference.orderByChild("nickname").equalTo(nickname);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        setAutoCompleteTextViewError("Nazwa użytkownika jest zajęta");
+                        getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
+                    } else {
+                        getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.successColor));
+                        setNickname(requireView());
                     }
                 }
-                getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.successColor));
-            }
-        });
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
     }
 
     private boolean validateNickname() {
         int minLength = 3;
         int maxLength = 30;
         nickname = getNicknameInput.getText().toString();
-
 
         if (nickname.isEmpty()) {
             setAutoCompleteTextViewError("Pole nie może być puste");
@@ -111,6 +114,7 @@ public class ChildFragmentNickname extends Fragment {
             return false;
         } else {
             setAutoCompleteTextViewError(null);
+
             return true;
         }
     }
@@ -188,7 +192,6 @@ public class ChildFragmentNickname extends Fragment {
     public void hideLayout() {
         getNicknameInput.setVisibility(View.GONE);
         setUserInfoButton.setVisibility(View.GONE);
-        checkIfNickAvailable.setVisibility(View.GONE);
         getNicknameInputLayout.setVisibility(View.GONE);
         stepNumber.setVisibility(View.GONE);
     }

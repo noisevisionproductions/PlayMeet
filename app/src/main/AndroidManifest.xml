@@ -6,9 +6,10 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
-        android:name=".Realm.RealmAppConfig"
+        android:name=".Firebase.RealmAppConfig"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/playmeetlogo"
@@ -16,7 +17,7 @@
         android:roundIcon="@mipmap/playmeetlogo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:targetApi="31">
+        tools:targetApi="tiramisu">
         <activity
             android:name=".Chat.ChatActivity"
             android:exported="true"
