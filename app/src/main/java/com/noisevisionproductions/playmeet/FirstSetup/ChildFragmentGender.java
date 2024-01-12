@@ -2,7 +2,6 @@ package com.noisevisionproductions.playmeet.FirstSetup;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,17 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseError;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
-import com.noisevisionproductions.playmeet.UserManagement.UserModel;
+import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 import com.noisevisionproductions.playmeet.Utilities.SpinnerManager;
 
-import io.realm.Realm;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
+import java.util.HashMap;
 
 public class ChildFragmentGender extends Fragment {
     public static final String DEFAULT_GENDER = String.valueOf(R.string.chooseGenderForSpinner);
@@ -64,38 +64,29 @@ public class ChildFragmentGender extends Fragment {
     }
 
     public void saveUserData() {
-        App app = RealmAppConfig.getApp();
-        User currentUser = app.currentUser();
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (currentUser != null) {
-            try (Realm realm = Realm.getDefaultInstance()) {
-                // transakcja udana
-                realm.executeTransactionAsync(realm1 -> {
-                    UserModel userModel = realm1.where(UserModel.class)
-                            .equalTo("userId", currentUser.getId())
-                            .findFirst();
+        HashMap<String, Object> userUpdate = new HashMap<>();
+        userUpdate.put("nickname", getArgument(ARG_NICKNAME));
+        userUpdate.put("location", getArgument(ARG_CITY));
+        userUpdate.put("gender", gender);
 
-                    if (userModel != null) {
-                        if (userModel.getNickName() == null) {
-                            userModel.setNickName(getArgument(ARG_NICKNAME));
-                        }
+        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
+                .setDisplayName(getArgument(ARG_NICKNAME))
+                .build();
 
-                        if (getArgument(ARG_CITY) != null) {
-                            userModel.setLocation(getArgument(ARG_CITY));
-                        }
-
-                        if (gender != null) {
-                            userModel.setGender(gender);
-                        }
-
-                        Log.d("daneee", getArgument(ARG_NICKNAME) + " " + getArgument(ARG_CITY) + " " + gender);
-                    }
-                }, this::handleTransactionSuccess, error -> Log.e("Realm Transaction", "Error: " + error.getMessage()));
-            }
+        if (firebaseUser != null) {
+            firebaseUser.updateProfile(profileUpdate);
         }
+
+        firebaseHelper.updateUserDataUsingHashMap(userUpdate,
+                aVoid -> handleTransactionSuccess(),
+                e -> handleTransactionError(DatabaseError.fromException(e)));
     }
 
     private void handleTransactionSuccess() {
+
         // gdy transakcja zakonczy się sukcesem, DialogFragment zostaje usuwany
         Fragment parentFragment = getParentFragment();
         if (parentFragment instanceof DialogFragment) {
@@ -106,6 +97,10 @@ public class ChildFragmentGender extends Fragment {
             ((MainMenuPosts) getActivity()).onUserInfoUpdated();
         }
         Toast.makeText(requireContext(), "Dane zostały zapisane", Toast.LENGTH_SHORT).show();
+    }
+
+    private void handleTransactionError(DatabaseError error) {
+        Toast.makeText(requireContext(), "Błąd: " + error.getMessage(), Toast.LENGTH_SHORT).show();
     }
 
     private String getArgument(String data) {

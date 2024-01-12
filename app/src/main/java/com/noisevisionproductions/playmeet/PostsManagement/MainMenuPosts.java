@@ -8,23 +8,18 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.noisevisionproductions.playmeet.Chat.ChatRoomList;
+import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
+import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
+import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.MyBottomSheetFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.PostsOfTheGamesFragment;
-import com.noisevisionproductions.playmeet.Realm.RealmDataManager;
-import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
-import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsCreatedByUserFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsSavedByUserFragment;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
-
-import io.realm.Realm;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
 
 public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomSheetFragment.OnDataPass {
     private AppCompatButton yourPostsMenu, savedPostsMenu, showAllPostsMenu, chatRoomMenu, updateUserInfoBar;
@@ -52,6 +47,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         checkUsers();
     }
 
+
     @Override
     public void onDataPass(String data) {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentBottomSheet);
@@ -75,31 +71,18 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
     }
 
     public void checkUsers() {
-        App app = RealmAppConfig.getApp();
-        User currentUser = app.currentUser();
-        RealmDataManager realmDataManager = RealmDataManager.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (authenticationManager.isUserLoggedIn()) {
-            try (Realm realm = Realm.getDefaultInstance()) {
-                if (currentUser != null) {
-                    UserModel user = realm.where(UserModel.class)
-                            .equalTo("userId", currentUser.getId())
-                            .findFirst();
-                    if (user != null) {
-                        if (user.getNickName() == null) {
-                            updateUserInfoBar.setVisibility(View.VISIBLE);
-                            appVersionInfo.setVisibility(View.GONE);
+            if (currentUser != null) {
+                if (currentUser.getDisplayName() == null) {
+                    updateUserInfoBar.setVisibility(View.VISIBLE);
+                    appVersionInfo.setVisibility(View.GONE);
 
-                            switchToUserInfoInput();
-                        } else {
-                            updateUserInfoBar.setVisibility(View.GONE);
-                            appVersionInfo.setVisibility(View.VISIBLE);
-                        }
-                    } else {
-                        UserModel userModelClass = new UserModel();
-                        userModelClass.setUserId(currentUser.getId());
-                        realmDataManager.addUser(userModelClass);
-                    }
+                    switchToUserInfoInput();
+                } else {
+                    updateUserInfoBar.setVisibility(View.GONE);
+                    appVersionInfo.setVisibility(View.VISIBLE);
                 }
             }
         } else {

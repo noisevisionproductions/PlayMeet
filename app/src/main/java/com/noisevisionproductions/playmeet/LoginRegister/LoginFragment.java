@@ -17,13 +17,10 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
-import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
-import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
+import com.noisevisionproductions.playmeet.R;
 
 import java.util.Objects;
 
@@ -67,13 +64,6 @@ public class LoginFragment extends Fragment {
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     if (firebaseUser != null) {
-                        String userId = firebaseUser.getUid();
-
-                        UserModel userModel = new UserModel();
-                        userModel.setUserId(userId);
-                        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("UserModel");
-                        usersRef.child(userModel.getUserId()).setValue(userModel);
-
                         Toast.makeText(getActivity(), "Pomyślnie zalogowano", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getContext(), MainMenuPosts.class);
                         startActivity(intent);

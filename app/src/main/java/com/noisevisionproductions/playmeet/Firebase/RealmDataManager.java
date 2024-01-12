@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.Realm;
+package com.noisevisionproductions.playmeet.Firebase;
 
 import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.Chat.PrivateChatModel;

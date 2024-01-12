@@ -7,9 +7,11 @@ import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmDataManager;
+import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
 import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
 import com.google.firebase.FirebaseApp;
+
+import io.realm.Realm;
 
 public class WelcomeActivity extends AppCompatActivity {
     @Override
@@ -17,8 +19,9 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         RealmDataManager realm = RealmDataManager.getInstance();
+       /* Realm.init(this);
         //realm.deleteMessagesAndChatRooms();
-     /*   realm.deleteAllRealmDataUseForTestingOnly();
+        realm.deleteAllRealmDataUseForTestingOnly();
         realm.realmMigrationResetDatabaseOnlyForTesting();
         realm.closeRealmDatabase();*/
 
