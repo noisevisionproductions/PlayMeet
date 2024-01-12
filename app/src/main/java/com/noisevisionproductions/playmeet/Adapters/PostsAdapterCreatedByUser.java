@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmDataManager;
+import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
 
 import java.util.List;
 

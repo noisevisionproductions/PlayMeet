@@ -71,7 +71,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         getRealmUserData();
         editableFieldsUserInfo = new EditableField[]{
                 new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                new EditableField(getString(R.string.provideAge), userModel.getBirthDay(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                 new EditableField(getString(R.string.provideCity), userModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                 new EditableField(getString(R.string.provideGender), userModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                 new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),

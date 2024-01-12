@@ -11,8 +11,8 @@ import com.noisevisionproductions.playmeet.Chat.PrivateChatModel;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
-import com.noisevisionproductions.playmeet.Realm.RealmDataManager;
+import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
+import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 import com.noisevisionproductions.playmeet.Chat.ChatActivity;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
@@ -56,7 +56,7 @@ public class ButtonHelperAllPosts {
                             .findFirst();
 
                     if (userModel != null) {
-                        privateChatModel.setNickNameOfUser2(userModel.getNickName());
+                        privateChatModel.setNickNameOfUser2(userModel.getNickname());
                     }
                     currentRoomId = privateChatModel.getRoomId();
 

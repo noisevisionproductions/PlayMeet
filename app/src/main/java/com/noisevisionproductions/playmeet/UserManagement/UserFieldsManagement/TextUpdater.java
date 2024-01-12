@@ -11,22 +11,21 @@ import android.widget.EditText;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.google.firebase.auth.FirebaseUser;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
 import com.noisevisionproductions.playmeet.UserManagement.EditableField;
-
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
 
 public class TextUpdater {
     public static void updateTextValue(EditableField field, EditText editText, AppCompatSpinner citySpinner, AppCompatSpinner ageSpinner, AppCompatButton editButton, View view, Context context) {
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
-        // jeżeli pole jest spinnerem, to pobiera wyznaczoną wartość i zapisuje ją w realm
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        FirebaseUser user = firebaseHelper.getCurrentUser();
+        // jeżeli pole jest spinnerem, to pobiera wyznaczoną wartość i zapisuje ją w bazie,
+        // tak samo dotyczy sprawdzenie czy jest to pole możliwe do edycji, a jeżeli tak, to czy już jest w trybie edytowania
         if (field.isSpinner) {
             if (field.isEditMode) {
-
                 if (citySpinner.getSelectedItem() != null) {
+                    // przekazuje do UserDataManager wybraną pozycję ze spinnera w celu jej zapisania do bazy
                     String newValueCity = (String) citySpinner.getSelectedItem();
                     field.value = newValueCity;
                     UserDataManager.saveUserData(user, field.label, newValueCity, view, context);
@@ -38,6 +37,7 @@ public class TextUpdater {
                 }
             }
         } else {
+            // dodaje wymogi takie jak filtry jeśli pole jest edytowalne
             setupTextFieldWithUserInformation(editText, context);
             field.isEditMode = !field.isEditMode;
 
@@ -58,7 +58,6 @@ public class TextUpdater {
                 }
             }
         }
-
     }
 
     private static void setupTextFieldWithUserInformation(EditText editText, Context context) {

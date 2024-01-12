@@ -12,8 +12,13 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -64,11 +69,22 @@ public class RegisterFragment extends Fragment {
                 // użycie operatora trójargumentowego - rezultat = (warunek) ? wartoscGdyPrawda : wartoscGdyFalsz
                 String errorMessage = task.getException() != null ? task.getException().getMessage() : "Błąd rejestracji";
                 if (task.isSuccessful()) {
-                    Toast.makeText(getActivity(), "Konto założone", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getContext(), LoginAndRegisterActivity.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(getActivity(), "Błąd rejestracji: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (firebaseUser != null) {
+
+                        String userId = firebaseUser.getUid();
+
+                        UserModel userModel = new UserModel();
+                        userModel.setUserId(userId);
+                        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("UserModel");
+                        usersRef.child(userModel.getUserId()).setValue(userModel);
+
+                        Toast.makeText(getActivity(), "Konto założone", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getContext(), LoginAndRegisterActivity.class);
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(getActivity(), "Błąd rejestracji: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 

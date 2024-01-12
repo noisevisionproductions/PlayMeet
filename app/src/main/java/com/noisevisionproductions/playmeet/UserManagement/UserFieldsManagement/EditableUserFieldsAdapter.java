@@ -30,7 +30,6 @@ public class EditableUserFieldsAdapter extends RecyclerView.Adapter<EditableUser
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_editable_field, parent, false);
-
         return new ViewHolder(view);
     }
 
@@ -75,16 +74,17 @@ public class EditableUserFieldsAdapter extends RecyclerView.Adapter<EditableUser
     }
 
     private void handleEditButtonClick(EditableField field, EditText editText, AppCompatSpinner citySpinner, AppCompatSpinner ageSpinner, AppCompatButton editButton, View view) {
+        // przekazuje wszystkie pola do klasy TextUpdater, w celu weryfikacji co jest czym i zależnie od rodzaju pola, dodać odpowiednie wymogi oraz logikę
         TextUpdater.updateTextValue(field, editText, citySpinner, ageSpinner, editButton, view, context);
-
+        // zmieniam napisz na przycisku zależnie od jego stanu
         editButton.setText(field.isEditMode ? context.getString(R.string.Save) : context.getString(R.string.Edit));
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView labelTextView;
-        AppCompatSpinner citySpinner, ageSpinner;
-        EditText editText;
-        AppCompatButton editButton;
+        private final TextView labelTextView;
+        private final AppCompatSpinner citySpinner, ageSpinner;
+        private final EditText editText;
+        private final AppCompatButton editButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

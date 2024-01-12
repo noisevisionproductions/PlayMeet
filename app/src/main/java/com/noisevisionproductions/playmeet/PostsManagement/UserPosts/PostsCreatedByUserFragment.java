@@ -20,7 +20,7 @@ import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
+import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 
 import java.util.ArrayList;

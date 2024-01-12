@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.DataManagement.ChatRoomDiffUtil;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Realm.RealmAppConfig;
+import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
 import com.noisevisionproductions.playmeet.Adapters.ListOfChatRoomsAdapter;
 
 import java.util.ArrayList;

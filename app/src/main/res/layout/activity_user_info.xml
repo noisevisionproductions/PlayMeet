@@ -81,6 +81,8 @@
                 android:textStyle="bold"
                 android:typeface="serif" />
 
+            <include layout="@layout/progress_bar_layout" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewUserInfo"
                 android:layout_width="match_parent"
