@@ -81,5 +81,7 @@
     <string name="filters">Filtry</string>
     <string name="noPostCreated">Nie stworzyłeś żadnych postów</string>
     <string name="noPostSaved">Nie zapisałeś żadnych postów</string>
+    <string name="continueAsGuest">Kontynuuj jako gość</string>
+    <string name="signOutFromThePost">Wypisz się</string>
 
 </resources>

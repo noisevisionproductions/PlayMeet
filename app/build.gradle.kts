@@ -11,22 +11,25 @@ realm {
 plugins {
     id("com.android.application")
     id("realm-android")
+    id("com.google.gms.google-services")
 }
 
 android {
-    namespace = "com.example.zagrajmy"
+    namespace = "com.noisevisionproductions.playmeet"
     compileSdk = 34
 
 
     packaging {
         resources {
+            pickFirsts.add("META-INF/AL2.0")
+            pickFirsts.add("META-INF/LGPL2.1")
             pickFirsts.add("META-INF/native-image/org.mongodb/bson/native-image.properties")
         }
     }
 
     defaultConfig {
-        applicationId = "com.example.zagrajmy"
-        minSdk = 21
+        applicationId = "com.noisevisionproductions.playmeet"
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -58,11 +61,16 @@ android {
         viewBinding = true
         dataBinding = true
         buildConfig = true
-
     }
 }
 
 dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-database")
+    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.gms:google-services:4.4.0")
+    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.material:material:1.11.0")

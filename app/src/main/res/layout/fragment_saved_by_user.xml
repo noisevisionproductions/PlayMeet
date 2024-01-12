@@ -28,6 +28,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center"
             android:text="@string/noPostSaved"
+            android:textColor="@color/primary_text_color"
             android:textSize="28sp"
             android:visibility="visible" />
 
