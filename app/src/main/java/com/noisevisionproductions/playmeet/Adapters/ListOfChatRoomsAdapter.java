@@ -45,13 +45,6 @@ public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRooms
         holder.bind(chats.get(position), listener);
     }
 
-    @Override
-    public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
-        super.onDetachedFromRecyclerView(recyclerView);
-        if (realm != null && !realm.isClosed()) {
-            realm.close();
-        }
-    }
 
     @Override
     public int getItemCount() {
@@ -76,7 +69,10 @@ public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRooms
         }
 
         public void bind(final PrivateChatModel chat, final OnItemClickListener listener) {
-            username.setText(chat.getNickNameOfUser2());
+           
+// ustawianie ostatniej wiadomości z czatu wraz z nickiem użytkownika, który stworzył czat
+
+ username.setText(chat.getNickNameOfUser2());
             //lastMessage.setText(chat.getLastMessage().getMessage());
 
             if (chat.getLastMessage() != null) {
