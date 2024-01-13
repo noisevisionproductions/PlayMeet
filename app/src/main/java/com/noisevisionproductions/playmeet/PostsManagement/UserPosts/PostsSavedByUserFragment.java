@@ -3,6 +3,7 @@ package com.noisevisionproductions.playmeet.PostsManagement.UserPosts;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,70 +16,81 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.noisevisionproductions.playmeet.Adapters.PostsAdapterSavedByUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostsDiffCallbackForCopyOfPost;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 public class PostsSavedByUserFragment extends Fragment {
     private final List<PostCreatingCopy> savedPosts = new ArrayList<>();
     private ProgressBar progressBar;
     private PostsAdapterSavedByUser postsAdapterSavedByUser;
+    private RecyclerView expandableListOfSavedPosts;
+    private AppCompatTextView noPostInfo;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View currentView = inflater.inflate(R.layout.fragment_saved_by_user, container, false);
-        progressBar = currentView.findViewById(R.id.progressBarLayout);
+        View view = inflater.inflate(R.layout.fragment_saved_by_user, container, false);
 
-        showSavedPosts(currentView);
-
+        setupView(view);
+        showSavedPosts();
         getAddPostButton();
-        return currentView;
+
+        return view;
     }
 
-    public void showSavedPosts(View view) {
-        AppCompatTextView noPostInfo = view.findViewById(R.id.noPostInfo);
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+    public void setupView(View view) {
+        noPostInfo = view.findViewById(R.id.noPostInfo);
+        progressBar = view.findViewById(R.id.progressBarLayout);
 
-        RecyclerView expandableListOfSavedPosts = view.findViewById(R.id.expandableListOfSavedPosts);
-
-        postsAdapterSavedByUser = new PostsAdapterSavedByUser(getContext(), savedPosts);
+        expandableListOfSavedPosts = view.findViewById(R.id.expandableListOfSavedPosts);
+        postsAdapterSavedByUser = new PostsAdapterSavedByUser(getContext(), savedPosts, noPostInfo);
         expandableListOfSavedPosts.setAdapter(postsAdapterSavedByUser);
         expandableListOfSavedPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    }
 
-        List<PostCreatingCopy> newList = new ArrayList<>();
+    public void showSavedPosts() {
+        FirebaseAuthManager authenticationManager = new FirebaseAuthManager();
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        String currentUserId = firebaseHelper.getCurrentUser().getUid();
 
-        try (Realm realm = Realm.getDefaultInstance()) {
-            if (currentUser != null) {
-                RealmResults<PostCreatingCopy> userPostsFromRealm = realm.where(PostCreatingCopy.class)
-                        .equalTo("userId", currentUser.getUid())
-                        .findAll();
-                if (userPostsFromRealm != null) {
-                    for (PostCreatingCopy posts : userPostsFromRealm) {
+        if (authenticationManager.isUserLoggedIn()) {
+            DatabaseReference savedPostsReference = FirebaseDatabase.getInstance().getReference().child("SavedPostCreating").child(currentUserId);
 
-                        newList.add(realm.copyFromRealm(posts));
+            savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<PostCreatingCopy> userSavedPosts = new ArrayList<>();
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        PostCreatingCopy postCreatingCopy = postSnapshot.getValue(PostCreatingCopy.class);
+                        if (postCreatingCopy != null && postCreatingCopy.getSavedByUser()) {
+                            userSavedPosts.add(postCreatingCopy);
+                        }
+                    }
+                    if (userSavedPosts.isEmpty()) {
+                        noPostInfo.setVisibility(View.VISIBLE);
+                        expandableListOfSavedPosts.setVisibility(View.GONE);
+                    } else {
+                        noPostInfo.setVisibility(View.GONE);
+                        expandableListOfSavedPosts.setVisibility(View.VISIBLE);
+                        updatePostsUsingDiffUtil(userSavedPosts);
                     }
                 }
 
-                if (newList.isEmpty()) {
-                    noPostInfo.setVisibility(View.VISIBLE);
-                    expandableListOfSavedPosts.setVisibility(View.GONE);
-                } else {
-
-                    expandableListOfSavedPosts.setVisibility(View.VISIBLE);
-                    noPostInfo.setVisibility(View.GONE);
-
-                    updatePostsUsingDiffUtil(newList);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("PostsSavedByUserFragment", "Błąd podczas odczytu danych z Firebase", error.toException());
                 }
-            }
+            });
         }
     }
 

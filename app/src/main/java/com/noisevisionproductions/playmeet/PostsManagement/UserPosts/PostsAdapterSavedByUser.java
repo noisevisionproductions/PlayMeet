@@ -20,32 +20,32 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.R;
 
 import java.util.List;
 
-public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapterCreatedByUser.MyViewHolder> {
-    private final List<PostCreating> listOfPostCreating;
+public class PostsAdapterSavedByUser extends RecyclerView.Adapter<PostsAdapterSavedByUser.MyViewHolder> {
+    private final List<PostCreatingCopy> listOfPostCreatingCopy;
     private final Context context;
     private final AppCompatTextView noPostInfo;
 
-    public PostsAdapterCreatedByUser(Context context, List<PostCreating> listOfPostCreating, AppCompatTextView noPostInfo) {
-        this.listOfPostCreating = listOfPostCreating;
+    public PostsAdapterSavedByUser(Context context, List<PostCreatingCopy> listOfPostCreatingCopy, AppCompatTextView noPostInfo) {
+        this.listOfPostCreatingCopy = listOfPostCreatingCopy;
         this.context = context;
         this.noPostInfo = noPostInfo;
     }
 
     @NonNull
     @Override
-    public PostsAdapterCreatedByUser.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public PostsAdapterSavedByUser.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_user_activity, parent, false);
-        return new MyViewHolder(v);
+        return new PostsAdapterSavedByUser.MyViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostsAdapterCreatedByUser.MyViewHolder holder, int position) {
-        PostCreating posts = listOfPostCreating.get(position);
+    public void onBindViewHolder(@NonNull PostsAdapterSavedByUser.MyViewHolder holder, int position) {
+        PostCreatingCopy posts = listOfPostCreatingCopy.get(position);
 
         holder.uniquePostId.setText(String.valueOf(posts.getPostId()));
         holder.sportNames.setText(posts.getSportType());
@@ -61,10 +61,10 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
 
     @Override
     public int getItemCount() {
-        return listOfPostCreating.size();
+        return listOfPostCreatingCopy.size();
     }
 
-    public void extraInfo(PostsAdapterCreatedByUser.MyViewHolder holder) {
+    public void extraInfo(PostsAdapterSavedByUser.MyViewHolder holder) {
         ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
         holder.arrowDownOpenMenu.setOnClickListener(v -> {
             if (holder.extraInfoContainer.getVisibility() == View.GONE) {
@@ -94,34 +94,33 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
         });
     }
 
-    public void deletePostButton(PostsAdapterCreatedByUser.MyViewHolder holder, int position) {
-        PostCreating postCreating = listOfPostCreating.get(position);
+    public void deletePostButton(PostsAdapterSavedByUser.MyViewHolder holder, int position) {
+        PostCreatingCopy postCreatingCopy = listOfPostCreatingCopy.get(position);
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         String currentUserId = firebaseHelper.getCurrentUser().getUid();
-        String postId = postCreating.getPostId();
-        DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("PostCreating").child(postId);
+        String postId = postCreatingCopy.getPostId();
+        DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("SavedPostCreating").child(currentUserId).child(postId);
 
-        if (postCreating.getUserId().equals(currentUserId)) {
+        if (postCreatingCopy.getUserId().equals(currentUserId)) {
             // jeżeli post jest stworzony przez zalogowanego użytkownika,
             // to zmieniam napis na przycisku na "Usuń post"
-            holder.deletePost.setText(R.string.deletePost);
-            holder.chatButton.setVisibility(View.GONE);
+            holder.deletePost.setText(R.string.signOutFromThePost);
             // usuwam post z listy oraz z bazy danych
             holder.deletePost.setOnClickListener(v -> postReference.removeValue().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    listOfPostCreating.remove(position);
+                    listOfPostCreatingCopy.remove(position);
                     notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, listOfPostCreating.size());
-                    if (listOfPostCreating.isEmpty()) {
+                    notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
+                    if (listOfPostCreatingCopy.isEmpty()) {
                         // jeżeli zostaną usunięte wszystkie posty z listy,
                         // to dzięki przesłaniu noPostInfo w konstruktorze,
                         // wyświetlam informację o braku stworzonych postów
                         // postanowiłem do tego stworzyć Handler, aby napis
                         // pojawiał się z lekkim opóźnieniem, bo bez tego layout dziwnie się zachowuje
                         new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
+                    } else {
+                        Log.e("PostsAdapterSavedByUser", "Błąd podczas usuwania z bazy danych", task.getException());
                     }
-                } else {
-                    Log.e("PostsAdapterCreatedByUser", "Błąd podczas usuwania z bazy danych", task.getException());
                 }
             }));
         }
@@ -132,7 +131,7 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
         private final CardView cardView;
         private final ConstraintLayout arrowDownOpenMenu;
         private final LinearLayoutCompat extraInfoContainer;
-        private final AppCompatButton arrowDownOpenMenuButton, deletePost, chatButton;
+        private final AppCompatButton arrowDownOpenMenuButton, deletePost;
 
         public MyViewHolder(View v) {
             super(v);
@@ -166,8 +165,6 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
             arrowDownOpenMenuButton = v.findViewById(R.id.arrowDownOpenMenuButton);
 
             deletePost = v.findViewById(R.id.deletePost);
-
-            chatButton = v.findViewById(R.id.chatButton);
         }
     }
 }

@@ -18,17 +18,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
-import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.PostsManagement.PostsFiltering.PostsFilter;
 import com.noisevisionproductions.playmeet.R;
 
@@ -37,9 +36,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private FirebaseAuthManager authenticationManager;
@@ -155,25 +151,32 @@ public class PostsOfTheGamesFragment extends Fragment {
 
     private List<PostCreating> loadNextPager() {
         int postsPerPage = 10;
-        int startIndex = currentPage * postsPerPage;
+        int startIndex = (currentPage - 1) * postsPerPage;
         int endIndex = startIndex + postsPerPage;
+        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
+        postsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    List<PostCreating> nextPagerPosts = new ArrayList<>();
+                    int index = 0;
 
-
-        try (Realm realm = Realm.getDefaultInstance()) {
-            RealmResults<PostCreating> allPosts = realm.where(PostCreating.class)
-                    .findAll();
-
-            if (startIndex < allPosts.size()) {
-                // Limit the range to the available size of allPosts
-                endIndex = Math.min(endIndex, allPosts.size());
-
-                List<PostCreating> nextPagerPosts = new ArrayList<>(realm.copyFromRealm(allPosts.subList(startIndex, endIndex)));
-
-                currentPage++;
-
-                return nextPagerPosts;
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        if (index >= startIndex && index < endIndex) {
+                            PostCreating posts = postSnapshot.getValue(PostCreating.class);
+                        }
+                        index++;
+                    }
+                    currentPage++;
+                    handleLoadedData(nextPagerPosts);
+                }
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
         return Collections.emptyList();
     }
 
@@ -229,56 +232,100 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     public void postCreateForUnregisteredUser() {
-        try (Realm realm = Realm.getDefaultInstance()) {
+        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
+        postsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    List<PostCreating> newPostCreatingList = new ArrayList<>();
 
-            RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        PostCreating posts = postSnapshot.getValue(PostCreating.class);
+                        newPostCreatingList.add(posts);
+                    }
 
-            List<PostCreating> newPostCreatingList = new ArrayList<>(allPosts.subList(0, Math.min(initialPostsToLoad, allPosts.size())));
+                    int size = Math.min(initialPostsToLoad, newPostCreatingList.size());
 
-            if (newPostCreatingList.isEmpty()) {
+                    if (size > 0) {
+                        recyclerView.setVisibility(View.VISIBLE);
+                        noPostFound.setVisibility(View.GONE);
+                        updatePostsUsingDiffUtil(newPostCreatingList.subList(0, size));
+                    } else {
+                        recyclerView.setVisibility(View.GONE);
+                        noPostFound.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    noPostFound.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
                 recyclerView.setVisibility(View.GONE);
                 noPostFound.setVisibility(View.VISIBLE);
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                noPostFound.setVisibility(View.GONE);
-                updatePostsUsingDiffUtil(newPostCreatingList);
             }
-        }
+        });
     }
 
     public void postCreateForLoggedInUser() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseHelper.getCurrentUser() != null) {
+            DatabaseReference savedPostsReference = FirebaseDatabase.getInstance().getReference().child("SavedPostCreating").child(firebaseHelper.getCurrentUser().getUid());
+            DatabaseReference allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
+            savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot savedPostsSnapshot) {
+                    List<String> savedPostIds = new ArrayList<>();
 
-        try (Realm realm = Realm.getDefaultInstance()) {
-            RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
-            RealmResults<PostCreatingCopy> copiedPosts = realm.where(PostCreatingCopy.class).findAll();
+                    if (savedPostsSnapshot.exists()) {
+                        for (DataSnapshot postSnapshot : savedPostsSnapshot.getChildren()) {
+                            savedPostIds.add(postSnapshot.getKey());
+                        }
+                    }
 
-            List<PostCreating> newPostCreatingList = new ArrayList<>();
+                    allPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot allPostsSnapshot) {
+                            List<PostCreating> newPostCreatingList = new ArrayList<>();
 
-            List<Integer> savedPostIds = new ArrayList<>();
-            for (PostCreatingCopy post : copiedPosts) {
-                if (post.getSavedByUser() && currentUser != null && post.getUserId().equals(currentUser.getUid())) {
-                    savedPostIds.add(post.getPostId());
+                            for (DataSnapshot postSnapshot : allPostsSnapshot.getChildren()) {
+                                PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
+
+                                if (postCreating != null && !postCreating.isCreatedByUser() && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(postCreating.getPostId())) {
+                                    newPostCreatingList.add(postCreating);
+                                }
+                            }
+
+                            int size = Math.min(initialPostsToLoad, newPostCreatingList.size());
+                            newPostCreatingList = newPostCreatingList.subList(0, size);
+
+                            if (newPostCreatingList.isEmpty()) {
+                                recyclerView.setVisibility(View.GONE);
+                                noPostFound.setVisibility(View.VISIBLE);
+                            } else {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                noPostFound.setVisibility(View.GONE);
+                                updatePostsUsingDiffUtil(newPostCreatingList);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            recyclerView.setVisibility(View.GONE);
+                            noPostFound.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
-            }
 
-            for (PostCreating post : allPosts) {
-                if (post.isCreatedByUser() && currentUser != null && !post.getUserId().equals(currentUser.getUid()) && !savedPostIds.contains(post.getPostId())) {
-                    newPostCreatingList.add(post);
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    recyclerView.setVisibility(View.GONE);
+                    noPostFound.setVisibility(View.VISIBLE);
                 }
-            }
-
-            // Limit the initial load to the specified number of posts
-            newPostCreatingList = newPostCreatingList.subList(0, Math.min(initialPostsToLoad, newPostCreatingList.size()));
-
-            if (newPostCreatingList.isEmpty()) {
-                recyclerView.setVisibility(View.GONE);
-                noPostFound.setVisibility(View.VISIBLE);
-            } else {
-                recyclerView.setVisibility(View.VISIBLE);
-                noPostFound.setVisibility(View.GONE);
-                updatePostsUsingDiffUtil(newPostCreatingList);
-            }
+            });
+        } else {
+            recyclerView.setVisibility(View.GONE);
+            noPostFound.setVisibility(View.VISIBLE);
         }
     }
 

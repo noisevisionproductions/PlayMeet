@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
+    android:layout_height="245dp"
     android:layout_margin="10dp"
     android:background="@drawable/border_gray"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -42,10 +42,8 @@
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <!--avatar-->
-        <include layout="@layout/image_view_avatar"
-            />
+        <include layout="@layout/image_view_avatar" />
 
         <!--nazwa sportu-->
         <com.google.android.material.textfield.TextInputLayout
@@ -84,7 +82,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_marginStart="10dp"
-
                 android:background="@null"
                 android:gravity="center"
                 android:hint="@string/userDidNotProvided"
@@ -93,53 +90,6 @@
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
-
-      <!--  &lt;!&ndash;data&ndash;&gt;
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenHourForLaoyutDesign"
-            app:layout_constraintEnd_toStartOf="@+id/chosenHourForLaoyutDesign">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/chosenDate"
-                style="@style/MyTextInputLayoutDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="@string/userDidNotProvided"
-                android:textColorHint="#808080"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        &lt;!&ndash;data&ndash;&gt;
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/chosenHourForLaoyutDesign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-            app:layout_constraintRight_toRightOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/chosenHour"
-                style="@style/MyTextInputLayoutDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="@string/userDidNotProvided"
-                android:textColorHint="#808080"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>-->
 
         <!--wybor poziomu-->
         <com.google.android.material.textfield.TextInputLayout
@@ -154,8 +104,8 @@
                 style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
                 android:layout_margin="5dp"
+                android:background="@null"
                 android:gravity="center"
                 android:hint="@string/userDidNotProvided"
                 android:textColorHint="#808080"
@@ -178,8 +128,8 @@
                 style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="70dp"
-                android:background="@null"
                 android:layout_margin="5dp"
+                android:background="@null"
                 android:hint="@string/userDidNotProvided"
                 android:inputType="textCapSentences"
                 android:textColorHint="#808080"
@@ -188,26 +138,26 @@
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!--unikalne ID-->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/uniquePostIdForButtonDesign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
+        <!--  &lt;!&ndash;unikalne ID&ndash;&gt;
+          <com.google.android.material.textfield.TextInputLayout
+              android:id="@+id/uniquePostIdForButtonDesign"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              app:hintEnabled="false"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/uniquePostId"
-                style="@style/MyTextInputLayoutDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:inputType="number"
-                android:textSize="8sp"
-                tools:ignore="SmallSp,TextSizeCheck,TouchTargetSizeCheck" />
+              <com.google.android.material.textfield.TextInputEditText
+                  android:id="@+id/uniquePostId"
+                  style="@style/MyTextInputLayoutDesign"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:background="@null"
+                  android:inputType="number"
+                  android:textSize="8sp"
+                  tools:ignore="SmallSp,TextSizeCheck,TouchTargetSizeCheck" />
 
-        </com.google.android.material.textfield.TextInputLayout>
+          </com.google.android.material.textfield.TextInputLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

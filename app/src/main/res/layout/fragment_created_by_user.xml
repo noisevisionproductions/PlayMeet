@@ -11,10 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--   <include
-               android:id="@+id/include"
-               layout="@layout/alpha_version_info" />-->
-
         <include layout="@layout/progress_bar_layout" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -24,8 +20,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:textColor="@color/primary_text_color"
             android:text="@string/noPostCreated"
+            android:textColor="@color/primary_text_color"
             android:textSize="28sp"
             android:visibility="gone" />
 
@@ -34,7 +30,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone" />
-
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

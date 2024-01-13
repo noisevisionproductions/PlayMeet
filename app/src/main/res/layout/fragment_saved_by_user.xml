@@ -13,13 +13,6 @@
 
         <include layout="@layout/progress_bar_layout" />
 
-        <!--wyswietlanie postow stworzonych przez uzytkownika-->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/expandableListOfSavedPosts"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone" />
-
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/noPostInfo"
             style="@style/MyAppCompatTextViewStyle"
@@ -30,8 +23,14 @@
             android:text="@string/noPostSaved"
             android:textColor="@color/primary_text_color"
             android:textSize="28sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
+        <!--wyswietlanie postow stworzonych przez uzytkownika-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/expandableListOfSavedPosts"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
