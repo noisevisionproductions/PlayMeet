@@ -23,6 +23,7 @@ public class ChatMessageModel extends RealmObject {
     private String message;
 
     public ChatMessageModel() {
+// za każdym razem, gdy jest tworzona nowa wiadomość, zostaje generowane unikalne id dla wiadomości
         this.uuid = UUID.randomUUID().toString();
     }
 
@@ -62,6 +63,7 @@ public class ChatMessageModel extends RealmObject {
     }
 
     public String formatDate() {
+// formatuje date oraz godzine, aby była bardziej czytelna w każdej wiadomości
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         LocalDateTime timestampAsDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
         return timestampAsDateTime.format(dateTimeFormatter);
