@@ -20,8 +20,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
@@ -39,6 +43,7 @@ import io.realm.RealmResults;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private FirebaseAuthManager authenticationManager;
+    private FirebaseHelper firebaseHelper;
     private PostsAdapterAllPosts postsAdapterAllPosts;
     private final List<PostCreating> posts = new ArrayList<>();
     private ProgressBar progressBar, loadingMorePostsIndicator;
@@ -66,6 +71,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     public void setupView(View view) {
         postsAdapterAllPosts = new PostsAdapterAllPosts(posts, getChildFragmentManager());
         authenticationManager = new FirebaseAuthManager();
+        firebaseHelper = new FirebaseHelper();
 
         progressBar = view.findViewById(R.id.progressBarLayout);
         loadingMorePostsIndicator = view.findViewById(R.id.loadMorePostsIndicator);

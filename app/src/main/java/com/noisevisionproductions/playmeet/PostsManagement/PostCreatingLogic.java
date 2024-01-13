@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.PostsManagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Toast;
@@ -10,32 +11,30 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.Adapters.MySpinnerAdapter;
 import com.noisevisionproductions.playmeet.DataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
-import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
 import com.noisevisionproductions.playmeet.Utilities.DateChoosingLogic;
 import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 import com.noisevisionproductions.playmeet.Utilities.SpinnerManager;
 
-
 import java.util.Arrays;
 import java.util.Objects;
 
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
-
 public class PostCreatingLogic extends SidePanelBaseActivity {
-    private final RealmDataManager realmDataManager = RealmDataManager.getInstance();
     private final PostCreating postCreating = new PostCreating();
+    private FirebaseHelper firebaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_post_creating);
+        firebaseHelper = new FirebaseHelper();
 
         setupDrawerLayout();
         setupNavigationView();
@@ -51,44 +50,37 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         createPost();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realmDataManager.closeRealmDatabase();
-    }
-
     public void createPost() {
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
-
         AppCompatButton createPost = findViewById(R.id.submitPost);
 
         createPost.setOnClickListener(view -> {
-            setUniqueId();
-            setAdditionalInfo();
-
-            if (user != null) {
+            if (firebaseHelper.getCurrentUser() != null) {
                 postCreating.setIsCreatedByUser(true);
-                postCreating.setUserId(user.getId());
-                realmDataManager.addPostToDatabase(postCreating);
+                postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
             }
-
-            Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();
-
-            Intent intent = new Intent(PostCreatingLogic.this, MainMenuPosts.class);
-            startActivity(intent);
+            setAdditionalInfo();
+            setUniqueId();
         });
     }
 
     public void setUniqueId() {
-        UniqueIdGenerator uniqueIdGenerator = new UniqueIdGenerator();
-
-        int postId;
-        do {
-            postId = uniqueIdGenerator.generateUniqueId();
-        } while (realmDataManager.checkIfIdExists(postId));
-
+        DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("PostCreating");
+        String postId = postReference.push().getKey();
         postCreating.setPostId(postId);
+
+        if (postId != null) {
+            postReference.child(postId).setValue(postCreating)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();
+
+                            Intent intent = new Intent(PostCreatingLogic.this, MainMenuPosts.class);
+                            startActivity(intent);
+                        } else {
+                            Log.e("FirebaseHelper", "Błąd podczas dodawania posta do bazy danych", task.getException());
+                        }
+                    });
+        }
     }
 
     public void setSportType() {

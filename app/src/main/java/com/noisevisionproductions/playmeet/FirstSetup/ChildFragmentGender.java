@@ -29,9 +29,9 @@ public class ChildFragmentGender extends Fragment {
     public static final String DEFAULT_GENDER = String.valueOf(R.string.chooseGenderForSpinner);
     public static final String ARG_NICKNAME = "nickname";
     public static final String ARG_CITY = "city";
+    private String gender;
     private AppCompatButton setInfoButton, cancelButton;
     private AppCompatSpinner genderSpinner;
-    private String gender;
     private boolean genderSelected = false;
 
     @Override
@@ -80,13 +80,12 @@ public class ChildFragmentGender extends Fragment {
             firebaseUser.updateProfile(profileUpdate);
         }
 
-        firebaseHelper.updateUserDataUsingHashMap(userUpdate,
+        firebaseHelper.updateDataUsingHashMap(userUpdate,
                 aVoid -> handleTransactionSuccess(),
-                e -> handleTransactionError(DatabaseError.fromException(e)));
+                e -> handleTransactionError(DatabaseError.fromException(e)), "UserModel");
     }
 
     private void handleTransactionSuccess() {
-
         // gdy transakcja zakonczy się sukcesem, DialogFragment zostaje usuwany
         Fragment parentFragment = getParentFragment();
         if (parentFragment instanceof DialogFragment) {

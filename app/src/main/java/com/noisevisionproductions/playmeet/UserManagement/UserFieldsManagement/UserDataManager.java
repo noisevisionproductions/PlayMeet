@@ -23,7 +23,7 @@ public class UserDataManager {
         String newLabel = label.substring(0, label.length() - 1).toLowerCase();
         if (firebaseUser != null) {
             FirebaseHelper firebaseHelper = new FirebaseHelper();
-            firebaseHelper.getUserData(new ValueEventListener() {
+            firebaseHelper.getData(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
@@ -34,8 +34,8 @@ public class UserDataManager {
                             // metody updateUser z FirebaseHelper, która automatycznie zapisuje podane jej dane
                             // oraz wyświetla komunikaty o sukcesie oraz błędach
                             HashMap<String, Object> update = handleFieldUpdate(userModel, label, newValue, context);
-                            firebaseHelper.updateUserDataUsingHashMap(update, aVoid -> Snackbar.make(view, "Zapisano " + newLabel, Snackbar.LENGTH_SHORT).show(),
-                                    error -> Log.e("Firebase Update", "Wystąpił błąd podczas aktualizacji danych.", error));
+                            firebaseHelper.updateDataUsingHashMap(update, aVoid -> Snackbar.make(view, "Zapisano " + newLabel, Snackbar.LENGTH_SHORT).show(),
+                                    error -> Log.e("Firebase Update", "Wystąpił błąd podczas aktualizacji danych.", error), "UserModel");
                         }
                     }
                 }
@@ -44,7 +44,7 @@ public class UserDataManager {
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            });
+            }, "UserModel");
         }
     }
 
