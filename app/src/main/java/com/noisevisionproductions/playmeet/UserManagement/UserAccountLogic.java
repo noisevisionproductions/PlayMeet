@@ -74,7 +74,7 @@ public class UserAccountLogic extends SidePanelBaseActivity {
     private void getUserDataFromRealm() {
         // zanim pola EditableField się załadują wraz z nickiem z bazy danych, wyświetlam ikonkę ładowania
         progressBarLayout.setVisibility(View.VISIBLE);
-        firebaseHelper.getUserData(new ValueEventListener() {
+        firebaseHelper.getData(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -99,13 +99,13 @@ public class UserAccountLogic extends SidePanelBaseActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
-        });
+        }, "UserModel");
     }
 
     public void greetNickname() {
         AppCompatTextView displayNickname = findViewById(R.id.nickname);
 
-        firebaseHelper.getUserData(new ValueEventListener() {
+        firebaseHelper.getData(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -121,7 +121,7 @@ public class UserAccountLogic extends SidePanelBaseActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        }, "UserModel");
     }
 
     public void setUserAvatar() {

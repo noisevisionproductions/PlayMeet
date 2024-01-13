@@ -94,7 +94,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private void handleButtons(View view) {
-        savePostButton.setOnClickListener(v -> ButtonHelperAllPosts.handleSavePostButton(view, postCreating.getPostId()));
+       // savePostButton.setOnClickListener(v -> ButtonHelperAllPosts.handleSavePostButton(view, postCreating.getPostId()));
         chatButton.setOnClickListener(v -> ButtonHelperAllPosts.handleChatButtonClick(view, postCreating.getUserId()));
     }
 

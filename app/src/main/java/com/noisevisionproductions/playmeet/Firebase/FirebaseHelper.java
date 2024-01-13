@@ -23,16 +23,16 @@ public class FirebaseHelper {
         return firebaseUser;
     }
 
-    public void getUserData(ValueEventListener listener) {
+    public void getData(ValueEventListener listener, String reference) {
         if (firebaseUser != null) {
-            DatabaseReference userReference = databaseReference.child("UserModel").child(firebaseUser.getUid());
+            DatabaseReference userReference = databaseReference.child(reference).child(firebaseUser.getUid());
             userReference.addListenerForSingleValueEvent(listener);
         }
     }
 
-    public void updateUserDataUsingHashMap(HashMap<String, Object> userModel, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public void updateDataUsingHashMap(HashMap<String, Object> userModel, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure, String reference) {
         if (firebaseUser != null) {
-            DatabaseReference userReference = databaseReference.child("UserModel").child(firebaseUser.getUid());
+            DatabaseReference userReference = databaseReference.child(reference).child(firebaseUser.getUid());
             userReference.updateChildren(userModel)
                     .addOnSuccessListener(onSuccess)
                     .addOnFailureListener(onFailure);

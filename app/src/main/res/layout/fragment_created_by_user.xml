@@ -27,7 +27,7 @@
             android:textColor="@color/primary_text_color"
             android:text="@string/noPostCreated"
             android:textSize="28sp"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/expandableListOfUserPosts"

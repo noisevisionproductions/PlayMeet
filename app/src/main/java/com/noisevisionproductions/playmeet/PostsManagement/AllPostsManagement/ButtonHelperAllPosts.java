@@ -95,7 +95,7 @@ public class ButtonHelperAllPosts {
                     if (existingPost == null) {
                         PostCreatingCopy newPost = new PostCreatingCopy();
                         newPost.setUserId(user.getId());
-                        newPost.setPostId(clickedPost.getPostId());
+                       // newPost.setPostId(clickedPost.getPostId());
                         newPost.setSportType(clickedPost.getSportType());
                         newPost.setCityName(clickedPost.getCityName());
                         newPost.setDateTime(clickedPost.getDateTime());

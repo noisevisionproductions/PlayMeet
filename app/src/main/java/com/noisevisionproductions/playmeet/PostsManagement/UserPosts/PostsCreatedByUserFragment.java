@@ -3,6 +3,7 @@ package com.noisevisionproductions.playmeet.PostsManagement.UserPosts;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,80 +16,94 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noisevisionproductions.playmeet.Adapters.PostsAdapterCreatedByUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
 
 public class PostsCreatedByUserFragment extends Fragment {
     private final List<PostCreating> postsCreatedByUser = new ArrayList<>();
     private ProgressBar progressBar;
     private PostsAdapterCreatedByUser postsAdapterCreatedByUser;
+    private RecyclerView expandableListOfYourPosts;
+    private AppCompatTextView noPostsInfo;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View currentView = inflater.inflate(R.layout.fragment_created_by_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_created_by_user, container, false);
 
-        progressBar = currentView.findViewById(R.id.progressBarLayout);
-        showUserPosts(currentView);
-
+        setupView(view);
+        showUserPosts();
         getAddPostButton();
-        return currentView;
+
+        return view;
     }
 
-    public void showUserPosts(View view) {
-        AppCompatTextView noPosts = view.findViewById(R.id.noPostInfo);
-        RecyclerView expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
+    public void setupView(View view) {
+        noPostsInfo = view.findViewById(R.id.noPostInfo);
+        progressBar = view.findViewById(R.id.progressBarLayout);
 
-        postsAdapterCreatedByUser = new PostsAdapterCreatedByUser(getContext(), postsCreatedByUser);
+        expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
+        postsAdapterCreatedByUser = new PostsAdapterCreatedByUser(getContext(), postsCreatedByUser, noPostsInfo);
         expandableListOfYourPosts.setAdapter(postsAdapterCreatedByUser);
         expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    public void showUserPosts() {
+        progressBar.setVisibility(View.VISIBLE);
 
         FirebaseAuthManager authenticationManager = new FirebaseAuthManager();
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        String currentUserId = firebaseHelper.getCurrentUser().getUid();
 
-        if (authenticationManager.isUserLoggedIn() && user != null) {
-            List<PostCreating> newUserPosts = new ArrayList<>();
-
-            try (Realm realm = Realm.getDefaultInstance()) {
-                RealmResults<PostCreating> userPostsFromRealm = realm.where(PostCreating.class)
-                        .equalTo("userId", user.getId())
-                        .findAll();
-
-                if (userPostsFromRealm != null) {
-                    for (PostCreating posts : userPostsFromRealm) {
-                        newUserPosts.add(realm.copyFromRealm(posts));
+        if (authenticationManager.isUserLoggedIn()) {
+            // uzyskuje referencję do danych PostCreating stworzonego w Firebase
+            DatabaseReference userPostsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
+            // nastepnie pobieram posty z bazy, które mają takie samo userId, co aktualnie zalogowany użytkownik
+            userPostsReference.orderByChild("userId").equalTo(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    List<PostCreating> newUserPosts = new ArrayList<>();
+                    // wszystkie posty przypisane do użytkownika dodaję do listy newUserPosts, aby później je wyświetlić zaktualizowane za pomocą  DiffUtil
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
+                        if (postCreating != null) {
+                            newUserPosts.add(postCreating);
+                        }
+                    }
+                    if (newUserPosts.isEmpty()) {
+                        // jeżeli nie ma żadnych postów, to wyświetlam informację na temat pustej listy
+                        expandableListOfYourPosts.setVisibility(View.GONE);
+                        noPostsInfo.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        expandableListOfYourPosts.setVisibility(View.VISIBLE);
+                        noPostsInfo.setVisibility(View.GONE);
+                        updatePostsUsingDiffUtil(newUserPosts);
                     }
                 }
-            }
-            if (newUserPosts.isEmpty()) {
-                expandableListOfYourPosts.setVisibility(View.GONE);
-                noPosts.setVisibility(View.VISIBLE);
-            } else {
-                expandableListOfYourPosts.setVisibility(View.VISIBLE);
-                noPosts.setVisibility(View.GONE);
-                updatePostsUsingDiffUtil(newUserPosts);
-            }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("PostsCreatedByUserFragment", "Błąd podczas odczytu danych z Firebase", error.toException());
+                }
+            });
         }
     }
 
     public void updatePostsUsingDiffUtil(List<PostCreating> newPosts) {
         final List<PostCreating> oldPosts = new ArrayList<>(this.postsCreatedByUser);
-
         new Thread(() -> {
-            progressBar.setVisibility(View.VISIBLE);
             final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldPosts, newPosts));
             new Handler(Looper.getMainLooper()).post(() -> {
                 postsCreatedByUser.clear();

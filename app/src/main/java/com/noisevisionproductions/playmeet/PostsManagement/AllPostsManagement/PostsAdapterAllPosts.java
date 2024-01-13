@@ -35,15 +35,14 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         PostCreating postCreating = listOfPostCreating.get(position);
 
-        try (Realm ignored = Realm.getDefaultInstance()) {
-            holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
-            holder.sportNames.setText(postCreating.getSportType());
-            holder.cityNames.setText(postCreating.getCityName());
-            holder.skillLevel.setText(postCreating.getSkillLevel());
-            holder.addInfo.setText(postCreating.getAdditionalInfo());
-            holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
-        }
+        holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
+        holder.sportNames.setText(postCreating.getSportType());
+        holder.cityNames.setText(postCreating.getCityName());
+        holder.skillLevel.setText(postCreating.getSkillLevel());
+        holder.addInfo.setText(postCreating.getAdditionalInfo());
+        holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
 
+        // oba obiekty z layoutu reagują na kliknięcie, bo 1 to strzałka, a 2 to pasek na długości postu, który jest odpowiedzialny za pozycję strzałki
         holder.arrowDownOpenMenuButton.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, postCreating.getUserId(), data -> {
         }));
         holder.arrowDownOpenMenu.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, postCreating.getUserId(), data -> {
@@ -103,8 +102,6 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
             savePostButton = v.findViewById(R.id.savePostButton);
 
             chatButton = v.findViewById(R.id.chatButton);
-
         }
     }
-
 }
