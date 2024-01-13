@@ -25,9 +25,10 @@ public class WelcomeActivity extends AppCompatActivity {
         realm.realmMigrationResetDatabaseOnlyForTesting();
         realm.closeRealmDatabase();*/
 
+// inicjalizuje Firebase zaraz na starcie aplikacji
         FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_welcome_screen);
-
+// gdy aplikacja się uruchamia, to ustawiam czas jak długo ma trwać ekran powitalny oraz wyświetlam layout powitalny
         new Handler().postDelayed(() -> {
             Intent intent = new Intent(WelcomeActivity.this, LoginAndRegisterActivity.class);
 
