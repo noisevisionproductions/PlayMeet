@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import com.noisevisionproductions.playmeet.R;
 
-
+// klasa abstrakcyjna w celu uniwersalnego tworzenia przycisku w wybranych fragmentach, który umożliwia stworzenie nowego posta
 public abstract class BaseFragmentForAddPostButton extends Fragment {
 
     protected abstract int getLayoutId();
