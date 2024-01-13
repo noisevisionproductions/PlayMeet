@@ -7,7 +7,7 @@ import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
 
 import java.util.List;
 
-// klasa potrzebna tak jak inne klasy typu DiffUtill w celu optymalizacji wyświetlania listy obiektów/danych w RecyclerView
+// klasa potrzebna tak jak inne klasy typu DiffUtill w celu optymalizacji wyświetlania listy obiektów/danych w RecyclerView oraz do odświeżania danych, kiedy zostały zmienione
 public class ChatMessageDiffUtilCallback extends DiffUtil.Callback {
     private final List<ChatMessageModel> oldList;
     private final List<ChatMessageModel> newList;
