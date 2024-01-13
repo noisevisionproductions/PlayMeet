@@ -62,6 +62,7 @@ public class PrivateChatModel extends RealmObject {
 
     public ChatMessageModel getLastMessage() {
         if (messages.isEmpty()) {
+// jeżeli lista z wiadomościami nie jest pusta, to zostaje ustawiana ostatnia wiadomość z listy
             return null;
         } else {
             return messages.last();
