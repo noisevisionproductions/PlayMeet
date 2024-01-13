@@ -29,13 +29,14 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
 
     protected void setupDrawerLayout() {
         drawerLayout = findViewById(R.id.drawer_layout);
+// ułatwienie otwierania i zamykania poprzez stworzenie ikony do tego na górnym pasku akcji
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+// bierze pod uwagę stan DrawerLayout czy otwarty czy zamknięty, a następnie synchronizuje ten stan z ikoną na pasku akcji      drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
         authenticationManager = new FirebaseAuthManager();
 
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+// ustawia, że ikonka na pasku akcji służy właśnie do kontrolowania stanu DrawerLayout Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.navigationViewSidePanel);
     }
 
@@ -48,6 +49,7 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
     }
 
     public void onResume() {
+// gdy użytkownik wraca do aktywności, to wywołuje metodę, która ustawia tekst ostatniej pozycji w pasku zadań zależnie od tego, czy użytkownik jest zalogowany czy nie
         super.onResume();
         updateLoginMenuItemTitle();
     }
