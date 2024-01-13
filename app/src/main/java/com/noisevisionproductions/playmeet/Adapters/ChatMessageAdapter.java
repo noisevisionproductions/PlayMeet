@@ -35,6 +35,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
+// zależy czy użytkownik wysłał czy odebrał wiadomość, to na tej podstawie jest odpowiedni wygląd wiadomości
         setMessagesLookBasedOnLoggedUser(holder, position);
         holder.itemView.setAlpha(0.0f);
         holder.itemView.animate().alpha(1.0f).setDuration(200).start();
@@ -54,6 +55,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         io.realm.mongodb.User user = realmApp.currentUser();
 
         if (user != null && Objects.requireNonNull(chatMessageModel.getUsers().get(0)).getUserId().equals(user.getId())) {
+// ustawienie wyglądu wiadomości zależnie od tego czy wysłana czy odebrana
             holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
         } else {
             holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
@@ -74,10 +76,14 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
         public void bind(ChatMessageModel chatMessageModel) {
             UserModel userModel = chatMessageModel.getUsers().get(0);
-            assert userModel != null;
+            
+if (userModel != null) {
+
+// ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
             usernameTextView.setText(userModel.getNickname());
             messageTextView.setText(chatMessageModel.getMessage());
             timestampTextView.setText(chatMessageModel.getTimestamp());
         }
+}
     }
 }
