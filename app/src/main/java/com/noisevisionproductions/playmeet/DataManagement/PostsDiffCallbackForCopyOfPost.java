@@ -28,13 +28,11 @@ public class PostsDiffCallbackForCopyOfPost extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        // Zastąp to swoją logiką porównywania identyfikatorów
         return oldList.get(oldItemPosition).getPostUuid().equals(newList.get(newItemPosition).getPostUuid());
     }
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        // Zastąp to swoją logiką porównywania zawartości
         return oldList.get(oldItemPosition).equals(newList.get(newItemPosition));
     }
 
