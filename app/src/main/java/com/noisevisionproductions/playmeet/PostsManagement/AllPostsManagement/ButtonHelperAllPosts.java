@@ -5,17 +5,24 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.Chat.ChatActivity;
 import com.noisevisionproductions.playmeet.Chat.PrivateChatModel;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
+import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
+import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
-import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
-import com.noisevisionproductions.playmeet.Chat.ChatActivity;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 
 import java.util.Objects;
 
@@ -76,47 +83,69 @@ public class ButtonHelperAllPosts {
         }
     }
 
+    public static void handleSavePostButton(View view, String postId) {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
 
-    public static void handleSavePostButton(View view, int postId) {
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
+        if (firebaseHelper.getCurrentUser() != null) {
+            DatabaseReference allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId);
+            allPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot originalPostSnapshot) {
+                    if (originalPostSnapshot.exists()) {
+                        DatabaseReference savedPostsReference = FirebaseDatabase.getInstance().getReference().child("SavedPostCreating").child(firebaseHelper.getCurrentUser().getUid()).child(postId);
+                        savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot postSnapshot) {
+                                if (!postSnapshot.exists()) {
+                                    // pobieram dane postu, do którego użytkownik chce się zapisać
+                                    PostCreating originalPost = originalPostSnapshot.getValue(PostCreating.class);
 
-        try (Realm realm = Realm.getDefaultInstance()) {
-            realm.executeTransactionAsync(realm1 -> {
+                                    if (originalPost != null) {
+                                        // tworzę kopię postu z bazy danych, aby móc go potem wyświetlić jako zapisany z innym layoutuem
+                                        PostCreatingCopy newSavedPost = new PostCreatingCopy();
+                                        newSavedPost.setUserId(firebaseHelper.getCurrentUser().getUid());
+                                        newSavedPost.setPostId(originalPost.getPostId());
+                                        newSavedPost.setSportType(originalPost.getSportType());
+                                        newSavedPost.setCityName(originalPost.getCityName());
+                                        newSavedPost.setDateTime(originalPost.getDateTime());
+                                        newSavedPost.setHourTime(originalPost.getHourTime());
+                                        newSavedPost.setSkillLevel(originalPost.getSkillLevel());
+                                        newSavedPost.setAdditionalInfo(originalPost.getAdditionalInfo());
+                                        newSavedPost.setSavedByUser(true);
 
-                PostCreating clickedPost = realm1.where(PostCreating.class)
-                        .equalTo("postId", postId)
-                        .findFirst();
-                if (clickedPost != null && user != null) {
-                    PostCreatingCopy existingPost = realm1.where(PostCreatingCopy.class)
-                            .equalTo("postId", postId)
-                            .findFirst();
+                                        // zapisuję wybrany post w bazie danych pod "SavedPostCreating"
+                                        savedPostsReference.setValue(newSavedPost, (databaseError, databaseReference) -> {
+                                            if (databaseError == null) {
+                                                Intent intent = new Intent(view.getContext(), MainMenuPosts.class);
+                                                view.getContext().startActivity(intent);
+                                                Toast.makeText(view.getContext(), "Zapisano!", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Log.e("Firebase Save Error", Objects.requireNonNull(databaseError.getMessage()));
+                                            }
+                                        });
+                                    }
+                                }
+                            }
 
-                    if (existingPost == null) {
-                        PostCreatingCopy newPost = new PostCreatingCopy();
-                        newPost.setUserId(user.getId());
-                        newPost.setPostId(clickedPost.getPostId());
-                        newPost.setSportType(clickedPost.getSportType());
-                        newPost.setCityName(clickedPost.getCityName());
-                        newPost.setDateTime(clickedPost.getDateTime());
-                        newPost.setHourTime(clickedPost.getHourTime());
-                        newPost.setSkillLevel(clickedPost.getSkillLevel());
-                        newPost.setAdditionalInfo(clickedPost.getAdditionalInfo());
-                        newPost.setSavedByUser(true);
-
-                        realm1.insertOrUpdate(newPost);
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+                                Log.e("Firebase Read Error", Objects.requireNonNull(error.getMessage()));
+                            }
+                        });
+                    } else {
+                        Toast.makeText(view.getContext(), "Post już jest zapisany!", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }, () -> {
-                Intent intent = new Intent(view.getContext(), MainMenuPosts.class);
-                view.getContext().startActivity(intent);
-                Toast.makeText(view.getContext(), "Zapisano!", Toast.LENGTH_SHORT).show();
 
-            }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Firebase Read Error", Objects.requireNonNull(error.getMessage()));
+                }
+            });
         }
     }
 
-    public static void handleMoreInfoButton(FragmentManager fragmentManager, PostCreating postCreating, String userId, MyBottomSheetFragment.OnDataPass dataPass) {
+    public static void handleMoreInfoButton(FragmentManager fragmentManager, PostCreating postCreating, MyBottomSheetFragment.OnDataPass dataPass) {
         FirebaseAuthManager firebaseAuthManager = new FirebaseAuthManager();
         if (firebaseAuthManager.isUserLoggedIn()) {
             MyBottomSheetFragment bottomSheetFragment = MyBottomSheetFragment.newInstance(postCreating);

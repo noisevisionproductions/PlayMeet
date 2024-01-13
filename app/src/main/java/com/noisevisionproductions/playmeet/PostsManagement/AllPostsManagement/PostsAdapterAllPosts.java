@@ -19,8 +19,6 @@ import com.noisevisionproductions.playmeet.R;
 
 import java.util.List;
 
-import io.realm.Realm;
-
 public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> {
 
     private final List<PostCreating> listOfPostCreating;
@@ -35,18 +33,15 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         PostCreating postCreating = listOfPostCreating.get(position);
 
-        try (Realm ignored = Realm.getDefaultInstance()) {
-            holder.uniquePostId.setText(String.valueOf(postCreating.getPostId()));
-            holder.sportNames.setText(postCreating.getSportType());
-            holder.cityNames.setText(postCreating.getCityName());
-            holder.skillLevel.setText(postCreating.getSkillLevel());
-            holder.addInfo.setText(postCreating.getAdditionalInfo());
-            holder.postId = Integer.parseInt(String.valueOf(postCreating.getPostId()));
-        }
+        holder.sportNames.setText(postCreating.getSportType());
+        holder.cityNames.setText(postCreating.getCityName());
+        holder.skillLevel.setText(postCreating.getSkillLevel());
+        holder.addInfo.setText(postCreating.getAdditionalInfo());
 
-        holder.arrowDownOpenMenuButton.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, postCreating.getUserId(), data -> {
+        // oba obiekty z layoutu reagują na kliknięcie, bo 1 to strzałka, a 2 to pasek na długości postu, który jest odpowiedzialny za pozycję strzałki
+        holder.arrowDownOpenMenuButton.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, data -> {
         }));
-        holder.arrowDownOpenMenu.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, postCreating.getUserId(), data -> {
+        holder.arrowDownOpenMenu.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, data -> {
         }));
     }
 
@@ -59,26 +54,18 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
 
     @Override
     public int getItemCount() {
-        if (listOfPostCreating != null) {
-            return listOfPostCreating.size();
-        } else {
-            return 0;
-        }
+        return listOfPostCreating.size();
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
-        private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo/*, chosenDate, chosenHour*/;
+        private final TextInputEditText sportNames, cityNames, skillLevel, addInfo;
         protected final ConstraintLayout arrowDownOpenMenu;
         protected final LinearLayoutCompat extraInfoContainer;
         final CardView layoutOfPost;
         protected final AppCompatButton arrowDownOpenMenuButton, savePostButton, chatButton;
-        public int postId;
 
         public MyViewHolder(View v) {
             super(v);
-
-            uniquePostId = v.findViewById(R.id.uniquePostId);
-            uniquePostId.setFocusable(false);
 
             sportNames = v.findViewById(R.id.sportNames);
             sportNames.setFocusable(false);
@@ -103,8 +90,6 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
             savePostButton = v.findViewById(R.id.savePostButton);
 
             chatButton = v.findViewById(R.id.chatButton);
-
         }
     }
-
 }

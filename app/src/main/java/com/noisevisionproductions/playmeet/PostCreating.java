@@ -8,7 +8,7 @@ import io.realm.annotations.RealmClass;
 @RealmClass
 public class PostCreating extends RealmObject {
     @PrimaryKey
-    private int postId;
+    private String postId;
     private boolean isCreatedByUser = false;
     private boolean isPostSavedByUser = false;
     private boolean isExtraInfoOpen = false;
@@ -24,7 +24,7 @@ public class PostCreating extends RealmObject {
     public PostCreating() {
     }
 
-    public PostCreating(int postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
+    public PostCreating(String postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
         this.postId = postId;
         this.sportType = sportType;
         this.cityName = cityName;
@@ -78,11 +78,11 @@ public class PostCreating extends RealmObject {
         this.userId = userId;
     }
 
-    public Integer getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(Integer postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 

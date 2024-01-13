@@ -5,22 +5,26 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.EditableField;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import javax.annotation.Nullable;
-
-import io.realm.Realm;
 
 public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private AppCompatButton savePostButton, chatButton;
@@ -52,13 +56,8 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
             dialog.getBehavior().setPeekHeight(getResources().getDisplayMetrics().heightPixels / 2);
         }
 
-        setupEditableFieldsUserInfo();
+        getUserDataFromFirebase();
         setupEditableFieldsPostInfo();
-
-        RecyclerView recyclerViewUser = view.findViewById(R.id.recycler_view_user_info);
-        recyclerViewUser.setLayoutManager(new LinearLayoutManager(getContext()));
-        PostExtendedInfoFieldsAdapter adapterUser = new PostExtendedInfoFieldsAdapter(editableFieldsUserInfo);
-        recyclerViewUser.setAdapter(adapterUser);
 
         RecyclerView recyclerViewPost = view.findViewById(R.id.recycler_view_post_info);
         recyclerViewPost.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -67,30 +66,46 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         handleButtons(view);
     }
 
-    private void setupEditableFieldsUserInfo() {
-        getRealmUserData();
-        editableFieldsUserInfo = new EditableField[]{
-                new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                new EditableField(getString(R.string.provideCity), userModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                new EditableField(getString(R.string.provideGender), userModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-        };
-    }
-
     private void setupEditableFieldsPostInfo() {
         editableFieldsPostInfo = new EditableField[]{
                 new EditableField("Data:", postCreating.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                 new EditableField("Godzina:", postCreating.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                new EditableField("Post ID:", postCreating.getPostId(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)
         };
     }
 
-    private void getRealmUserData() {
-        try (Realm realm = Realm.getDefaultInstance()) {
-            userModel = realm.where(UserModel.class)
-                    .equalTo("userId", postCreating.getUserId())
-                    .findFirst();
-        }
+    private void getUserDataFromFirebase() {
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(postCreating.getUserId());
+
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    userModel = snapshot.getValue(UserModel.class);
+
+                    if (userModel == null) {
+                        Toast.makeText(getContext(), "Błąd", Toast.LENGTH_LONG).show();
+                    } else {
+                        editableFieldsUserInfo = new EditableField[]{
+                                new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                new EditableField(getString(R.string.provideCity), userModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                new EditableField(getString(R.string.provideGender), userModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                        };
+                        RecyclerView recyclerViewUser = requireView().findViewById(R.id.recycler_view_user_info);
+                        recyclerViewUser.setLayoutManager(new LinearLayoutManager(getContext()));
+                        PostExtendedInfoFieldsAdapter adapterUser = new PostExtendedInfoFieldsAdapter(editableFieldsUserInfo);
+                        recyclerViewUser.setAdapter(adapterUser);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void handleButtons(View view) {

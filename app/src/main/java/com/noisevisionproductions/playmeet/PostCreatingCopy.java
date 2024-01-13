@@ -8,7 +8,7 @@ import io.realm.annotations.PrimaryKey;
 public class PostCreatingCopy extends RealmObject {
     @PrimaryKey
     private String postUuid;
-    private int postId;
+    private String postId;
     private String userId;
     private String sportType;
     private String cityName;
@@ -35,11 +35,11 @@ public class PostCreatingCopy extends RealmObject {
         this.userId = userId;
     }
 
-    public int getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(int postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 
