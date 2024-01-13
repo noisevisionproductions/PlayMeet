@@ -20,6 +20,7 @@ public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
     protected void onButtonClicked() {
         FirebaseAuthManager authenticationManager = new FirebaseAuthManager();
 
+// mimo, że pojawia się informacja co robi te przycisk, to jest on dostępny tylko dla zarejestrowanych użytkowników, dlatego sprawdzam autoryzację
         if (authenticationManager.isUserLoggedIn()) {
             Intent intent = new Intent(getActivity(), PostCreatingLogic.class);
             startActivity(intent);
@@ -30,6 +31,7 @@ public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
         }
     }
 
+// informacja, która informuje użytkownika, co robi przycisk po kliknięciu w niego. Info pojawia się, gdy użytkownik przyciśnie go, ale nie kliknie
     @Override
     protected void showInfo() {
         toast = Toast.makeText(getActivity(), "Stwórz nowy post", Toast.LENGTH_SHORT);
