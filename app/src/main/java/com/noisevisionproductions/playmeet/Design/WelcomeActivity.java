@@ -19,7 +19,7 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         RealmDataManager realm = RealmDataManager.getInstance();
-       /* Realm.init(this);
+   /*  *//**//*   Realm.init(this);
         //realm.deleteMessagesAndChatRooms();
         realm.deleteAllRealmDataUseForTestingOnly();
         realm.realmMigrationResetDatabaseOnlyForTesting();
