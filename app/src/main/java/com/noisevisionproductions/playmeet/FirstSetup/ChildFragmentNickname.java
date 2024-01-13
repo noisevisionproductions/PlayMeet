@@ -58,7 +58,8 @@ public class ChildFragmentNickname extends Fragment {
 
     public void hideKeyboard(View view) {
         View.OnTouchListener onTouchListener = (v, event) -> {
-            NavigationUtils.hideKeyboardForFragments(requireActivity(), view);
+           
+// kiedy użytkownik jest w trybie wprowadzania tekstu, to po kliknięciu w layout, chowa klawiaturę oraz anuluje skupienie z pola tekstowego NavigationUtils.hideKeyboardForFragments(requireActivity(), view);
             v.performClick();
             getNicknameInput.clearFocus();
             return false;
@@ -67,8 +68,11 @@ public class ChildFragmentNickname extends Fragment {
     }
 
     public void handleSetNicknameButton() {
+// podczas wprowadzania nicku, spacje zostają automatycznie usuwane
         deleteSpaces();
-        setUserInfoButton.setOnClickListener(v -> isNicknameAvailable());
+       
+// po kliknięciu w przycisk, który ustawia nick, to najpierw sprawdza walidację tego Nicku, czy spełnia warunki
+ setUserInfoButton.setOnClickListener(v -> isNicknameAvailable());
     }
 
     public void setNickname(View view) {
@@ -77,12 +81,15 @@ public class ChildFragmentNickname extends Fragment {
 
     public void isNicknameAvailable() {
         if (validateNickname()) {
+// jeżeli walidacja nicku przebiegła pomyślnie, to sprawdzam dostępność nicku w bazie danych
             DatabaseReference nicknameReference = FirebaseDatabase.getInstance().getReference().child("UserModel");
+// sprawdzam, czy istnieje w bazie obiekt w kolekcji UserModel, który ma wartość nickname, która porównuje ją z podanym nickiem
             Query query = nicknameReference.orderByChild("nickname").equalTo(nickname);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
+// odpowiednie informowanie użytkownika, czy nickname jest dostępny czy nie
                         setAutoCompleteTextViewError("Nazwa użytkownika jest zajęta");
                         getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
                     } else {
@@ -100,20 +107,24 @@ public class ChildFragmentNickname extends Fragment {
     }
 
     private boolean validateNickname() {
+// minimalna oraz maksymalna ilość znaków dla nicku
         int minLength = 3;
         int maxLength = 30;
         nickname = getNicknameInput.getText().toString();
 
         if (nickname.isEmpty()) {
+// walidacja pustego pola tekstowego
             setAutoCompleteTextViewError("Pole nie może być puste");
             getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
             return false;
         } else if (nickname.length() < minLength || nickname.length() > maxLength) {
+// walidacja długości nicku
             setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");
             getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
             return false;
         } else {
             setAutoCompleteTextViewError(null);
+// jeżeli walidacja przebiegła pomyślnie, to usuwam bledy
 
             return true;
         }
@@ -129,6 +140,7 @@ public class ChildFragmentNickname extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().contains(" ")) {
+// usuwam spacje poprzez zamianę " " na ""
                     String filteredText = s.toString().replace(" ", "");
                     getNicknameInput.setText(filteredText);
                     getNicknameInput.setSelection(filteredText.length());
@@ -149,8 +161,10 @@ public class ChildFragmentNickname extends Fragment {
 
     public void onNicknameEntered(String nickname, View view) {
         this.nickname = nickname;
+// pobieram id z FrameLayout z aktualnego layoutu
 
         FrameLayout nicknameLayoutFragment = view.findViewById(R.id.nicknameLayoutFragment);
+// dodaje animacje przejścia między fragmentami
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_left);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -163,18 +177,22 @@ public class ChildFragmentNickname extends Fragment {
                 // chowa wszystkie obiekty z aktualnego layoutu, aby nie pojawiały się na kolejnym fragmencie
                 hideLayout();
 
+// ustawiam kolejny fragment, który ma się pojawić i zastępuje aktualny fragment nowym
                 ChildFragmentCity childFragmentCity = new ChildFragmentCity();
+// tworzę Bundle, który przechowuje podany nickname w celu przeniesienia go do kolejnego fragmentu, ponieważ dopiero na ostatnim fragmencie zostaną wszystkie zebrane dane zapisywane w bazie danych
                 Bundle args = new Bundle();
                 args.putString("nickname", nickname);
                 childFragmentCity.setArguments(args);
 
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+// animacja, gdzie stary fragment chowa się za ekran w lewo, a nowy fragment pojawia się spoza okna z prawej strony
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
                 fragmentTransaction.replace(R.id.fragment_container, childFragmentCity, "tag_child_fragment_city");
 
                 Fragment previousFragment = getParentFragmentManager().findFragmentByTag("tag_child_fragment_nickname");
                 if (previousFragment != null) {
-                    fragmentTransaction.remove(previousFragment);
+ 
+// usuwam stary fragment, aby nowy był kompatybilny i nie było żadnych problemów                 fragmentTransaction.remove(previousFragment);
                 }
                 nicknameLayoutFragment.setVisibility(View.INVISIBLE);
 
