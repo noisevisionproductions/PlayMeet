@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
+// jest to drugi adapter do spinnera, poświęcony do menu filtrowania postów, ponieważ używam do tego TODO nazwa 
 public class MySpinnerAdapterForFilterMenu extends ArrayAdapter<String> {
     public MySpinnerAdapterForFilterMenu(@NonNull Context context, int resource, List<String> items) {
         super(context, resource, items);
