@@ -19,10 +19,12 @@ public class FirebaseHelper {
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
+// po wywołaniu tej metody, pobieram aktualnie zalogowanego użytkownika
     public FirebaseUser getCurrentUser() {
         return firebaseUser;
     }
 
+// pobieram dane z podanej referencji, (jesli jest ona powiązana z aktualnie zalogowanym użytkownikiem) z bazy danych 
     public void getData(ValueEventListener listener, String reference) {
         if (firebaseUser != null) {
             DatabaseReference userReference = databaseReference.child(reference).child(firebaseUser.getUid());
@@ -30,6 +32,7 @@ public class FirebaseHelper {
         }
     }
 
+// aktualizuje bazę danych podając dane oraz referencję do niej, w której mają być te dane zapisane
     public void updateDataUsingHashMap(HashMap<String, Object> userModel, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure, String reference) {
         if (firebaseUser != null) {
             DatabaseReference userReference = databaseReference.child(reference).child(firebaseUser.getUid());
