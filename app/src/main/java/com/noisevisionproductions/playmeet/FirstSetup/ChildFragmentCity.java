@@ -59,9 +59,12 @@ public class ChildFragmentCity extends Fragment {
     }
 
     public void chooseCity() {
-        SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.parseCityNames(requireContext()), new AdapterView.OnItemSelectedListener() {
+       
+// używam specjalnie stworzonej klasy, która irytuje przez cały plik xml, w którym znajdują się miasta i wybiera tylko te, które potrzebuje
+SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.parseCityNames(requireContext()), new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+// wybrane z listy miasto jest przekazywane do kolejnej metody
                 String selectedCity = (String) parent.getItemAtPosition(position);
                 setChosenCity(selectedCity);
             }
@@ -87,7 +90,9 @@ public class ChildFragmentCity extends Fragment {
 
                 FrameLayout cityFragmentLayout = view.findViewById(R.id.cityFragmentLayout);
 
+// tworzę nowy fragment, który pojawi się jako kolejny i będzie zastępować aktualny 
                 ChildFragmentGender childFragmentGender = new ChildFragmentGender();
+// dodaje do Bundle nickname z poprzedniego fragmentu oraz city z aktualnego. Dzięki temu oba te Stringi będą dostępne w ostatnim fragmencie
                 Bundle args = new Bundle();
                 args.putString("nickname", getNickname());
                 args.putString("city", city);
@@ -102,6 +107,7 @@ public class ChildFragmentCity extends Fragment {
                     fragmentTransaction.remove(previousFragment);
                 }
                 cityFragmentLayout.setVisibility(View.INVISIBLE);
+// ustawiam aktualny fragment jako niewidzialny, aby animacja była płynna i wyglądała jak należy
 
                 fragmentTransaction.commit();
             }
@@ -114,6 +120,7 @@ public class ChildFragmentCity extends Fragment {
         view.startAnimation(animation);
     }
 
+// pobieram ustawiony nickname z poprzedniego fragmentu
     public String getNickname() {
         Bundle args = getArguments();
         return args != null ? args.getString("nickname") : null;
