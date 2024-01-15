@@ -1,31 +1,25 @@
 package com.noisevisionproductions.playmeet.Chat;
 
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class PrivateChatModel extends RealmObject {
-    @PrimaryKey
+public class ChatRoomModel {
     private String roomId;
     private String nickNameOfOwnerOfThePost;
     private String nickNameOfUser2;
     private String userIdThatCreatedPost;
     private String user2;
-    private RealmList<ChatMessageModel> messages;
+    private Map<String, ChatMessageModel> messages;
 
 
-    public PrivateChatModel() {
+    public ChatRoomModel() {
         this.roomId = UUID.randomUUID().toString();
-    }
-
-    public PrivateChatModel(String roomId, String userIdThatCreatedPost, String user2, RealmList<ChatMessageModel> messages) {
-        this.roomId = (roomId != null) ? roomId : UUID.randomUUID().toString(); // generuje nowy roomId, gdy aktualny juz istnieje
-        this.userIdThatCreatedPost = userIdThatCreatedPost;
-        this.user2 = user2;
-        this.messages = messages;
     }
 
     public String getNickNameOfOwnerOfThePost() {
@@ -61,23 +55,20 @@ public class PrivateChatModel extends RealmObject {
     }
 
     public ChatMessageModel getLastMessage() {
-        if (messages.isEmpty()) {
-// jeżeli lista z wiadomościami nie jest pusta, to zostaje ustawiana ostatnia wiadomość z listy
+        if (messages == null || messages.isEmpty()) {
             return null;
         } else {
-            return messages.last();
+            List<ChatMessageModel> messagesList = new ArrayList<>(messages.values());
+            messagesList.sort(Comparator.comparing(ChatMessageModel::getTimestamp));
+            return messagesList.get(messagesList.size() - 1);
         }
     }
 
     public void setLastMessage(ChatMessageModel lastMessage) {
         if (messages == null) {
-            messages = new RealmList<>();
+            messages = new HashMap<>();
         }
-        if (!messages.isEmpty()) {
-            messages.remove(messages.size() - 1);
-        }
-        messages.add(lastMessage);
-
+        messages.put(lastMessage.getUuid(), lastMessage);
     }
 
     public String getRoomId() {
@@ -88,11 +79,12 @@ public class PrivateChatModel extends RealmObject {
         this.roomId = roomId;
     }
 
-    public RealmList<ChatMessageModel> getMessages() {
+    public Map<String, ChatMessageModel> getMessages() {
         return messages;
     }
 
-    public void setMessages(RealmList<ChatMessageModel> messages) {
+    public void setMessages(Map<String, ChatMessageModel> messages) {
         this.messages = messages;
     }
+
 }

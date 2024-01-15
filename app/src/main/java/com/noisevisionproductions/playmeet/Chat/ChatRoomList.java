@@ -7,87 +7,62 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noisevisionproductions.playmeet.DataManagement.ChatRoomDiffUtil;
-import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.Adapters.ListOfChatRoomsAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
+import com.noisevisionproductions.playmeet.R;
 
 public class ChatRoomList extends Fragment {
-    private Realm realm;
-    private final List<PrivateChatModel> chatRoomsList = new ArrayList<>();
+    private DatabaseReference chatRoomsReference;
+    // ValueEvenentListener potrzebny do powiadamiania adaptera o zmianach
+    private ListOfChatRoomsAdapter listOfChatRoomsAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        realm = Realm.getDefaultInstance();
+        View view = inflater.inflate(R.layout.activity_list_of_chatrooms, container, false);
 
-        View currentView = inflater.inflate(R.layout.activity_list_of_chatrooms, container, false);
+        setupFirebase(view);
 
-        createChatRoomList(currentView);
-        randomChatButton(currentView);
-        return currentView;
+        return view;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        realm.close();
+    public void setupFirebase(View view) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (firebaseUser != null) {
+            chatRoomsReference = FirebaseDatabase.getInstance().getReference("ChatRooms");
+            setRecyclerView(view);
+        }
     }
 
-    public void onChatClicked(PrivateChatModel chat) {
+    public void setRecyclerView(View view) {
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewChatRoomList);
+        listOfChatRoomsAdapter = new ListOfChatRoomsAdapter(this::onChatClicked, new FirebaseRecyclerOptions.Builder<ChatRoomModel>()
+                .setQuery(chatRoomsReference, ChatRoomModel.class)
+                .build());
+        recyclerView.setAdapter(listOfChatRoomsAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    public void onChatClicked(ChatRoomModel chat) {
+        // gdy użytkownik kliknie w wybrany czat room z listy, to go do niego przenosi
         Intent intent = new Intent(requireView().getContext(), ChatActivity.class);
         intent.putExtra("roomId", chat.getRoomId());
         startActivity(intent);
     }
 
-    public void createChatRoomList(@NonNull View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewChatRoomList);
-        ListOfChatRoomsAdapter listOfChatRoomsAdapter = new ListOfChatRoomsAdapter(chatRoomsList, this::onChatClicked);
-        recyclerView.setAdapter(listOfChatRoomsAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
-
-        if (user != null) {
-            RealmResults<PrivateChatModel> chatsListFromRealm = realm.where(PrivateChatModel.class)
-                    .beginGroup()
-                    .equalTo("userIdThatCreatedPost", user.getId())
-                    .or()
-                    .equalTo("user2", user.getId())
-                    .endGroup()
-                    .findAll();
-
-            List<PrivateChatModel> newChatRoomList = new ArrayList<>(realm.copyFromRealm(chatsListFromRealm));
-            updateChatRoomListWithDiffUtil(newChatRoomList, listOfChatRoomsAdapter);
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (listOfChatRoomsAdapter != null) {
+            listOfChatRoomsAdapter.startListening();
         }
     }
-
-    public void updateChatRoomListWithDiffUtil(List<PrivateChatModel> newChatRoomList, ListOfChatRoomsAdapter listOfChatRoomsAdapter) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatRoomDiffUtil(chatRoomsList, newChatRoomList));
-        chatRoomsList.clear();
-        chatRoomsList.addAll(newChatRoomList);
-        diffResult.dispatchUpdatesTo(listOfChatRoomsAdapter);
-    }
-
-    public void randomChatButton(View view) {
-        AppCompatButton button = view.findViewById(R.id.randomChatButton);
-
-        button.setOnClickListener(v -> {
-            Intent intent = new Intent(v.getContext(), ChatActivity.class);
-            startActivity(intent);
-        });
-    }
 }
+

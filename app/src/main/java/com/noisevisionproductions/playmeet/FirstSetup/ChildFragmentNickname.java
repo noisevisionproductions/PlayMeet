@@ -58,8 +58,10 @@ public class ChildFragmentNickname extends Fragment {
 
     public void hideKeyboard(View view) {
         View.OnTouchListener onTouchListener = (v, event) -> {
-           
-// kiedy użytkownik jest w trybie wprowadzania tekstu, to po kliknięciu w layout, chowa klawiaturę oraz anuluje skupienie z pola tekstowego NavigationUtils.hideKeyboardForFragments(requireActivity(), view);
+
+            // kiedy użytkownik jest w trybie wprowadzania tekstu, to po kliknięciu w layout,
+            // chowa klawiaturę oraz anuluje skupienie z pola tekstowego
+            // NavigationUtils.hideKeyboardForFragments(requireActivity(), view);
             v.performClick();
             getNicknameInput.clearFocus();
             return false;
@@ -68,11 +70,11 @@ public class ChildFragmentNickname extends Fragment {
     }
 
     public void handleSetNicknameButton() {
-// podczas wprowadzania nicku, spacje zostają automatycznie usuwane
+        // podczas wprowadzania nicku, spacje zostają automatycznie usuwane
         deleteSpaces();
-       
-// po kliknięciu w przycisk, który ustawia nick, to najpierw sprawdza walidację tego Nicku, czy spełnia warunki
- setUserInfoButton.setOnClickListener(v -> isNicknameAvailable());
+
+        // po kliknięciu w przycisk, który ustawia nick, to najpierw sprawdza walidację tego Nicku, czy spełnia warunki
+        setUserInfoButton.setOnClickListener(v -> isNicknameAvailable());
     }
 
     public void setNickname(View view) {
@@ -81,15 +83,15 @@ public class ChildFragmentNickname extends Fragment {
 
     public void isNicknameAvailable() {
         if (validateNickname()) {
-// jeżeli walidacja nicku przebiegła pomyślnie, to sprawdzam dostępność nicku w bazie danych
+            // jeżeli walidacja nicku przebiegła pomyślnie, to sprawdzam dostępność nicku w bazie danych
             DatabaseReference nicknameReference = FirebaseDatabase.getInstance().getReference().child("UserModel");
-// sprawdzam, czy istnieje w bazie obiekt w kolekcji UserModel, który ma wartość nickname, która porównuje ją z podanym nickiem
+            // sprawdzam, czy istnieje w bazie obiekt w kolekcji UserModel, który ma wartość nickname, która porównuje ją z podanym nickiem
             Query query = nicknameReference.orderByChild("nickname").equalTo(nickname);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-// odpowiednie informowanie użytkownika, czy nickname jest dostępny czy nie
+                        // odpowiednie informowanie użytkownika, czy nickname jest dostępny czy nie
                         setAutoCompleteTextViewError("Nazwa użytkownika jest zajęta");
                         getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
                     } else {
@@ -191,7 +193,7 @@ public class ChildFragmentNickname extends Fragment {
 
                 Fragment previousFragment = getParentFragmentManager().findFragmentByTag("tag_child_fragment_nickname");
                 if (previousFragment != null) {
- 
+
 // usuwam stary fragment, aby nowy był kompatybilny i nie było żadnych problemów                 fragmentTransaction.remove(previousFragment);
                 }
                 nicknameLayoutFragment.setVisibility(View.INVISIBLE);

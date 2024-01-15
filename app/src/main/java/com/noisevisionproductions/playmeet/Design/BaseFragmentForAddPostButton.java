@@ -28,16 +28,15 @@ public abstract class BaseFragmentForAddPostButton extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(getLayoutId(), viewGroup, false);
-
-// jeżeli klasa dziedzicząca ma w swoim layoucie przycisk dodania postu, to ustawia logikę po kliknięciu w niego 
+        // jeżeli klasa dziedzicząca ma w swoim layoucie przycisk dodania postu, to ustawia logikę po kliknięciu w niego
         AppCompatButton addPostButton = view.findViewById(R.id.addPostButton);
         if (addPostButton != null) {
             addPostButton.setOnClickListener(v -> onButtonClicked());
             addPostButton.setOnTouchListener((v, event) -> {
-// gdy użytkownik przyciśnie przycisk, to wyświetla się informacja, która opisuje, co robi ten przycisk
+                // gdy użytkownik przyciśnie przycisk, to wyświetla się informacja, która opisuje, co robi ten przycisk
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     showInfo();
-// oraz anuluje tą informację, gdy użytkownik puści przycisk
+                    // oraz anuluje tą informację, gdy użytkownik puści przycisk
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     hideInfo();
                 }

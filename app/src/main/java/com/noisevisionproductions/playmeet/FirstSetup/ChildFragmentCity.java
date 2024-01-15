@@ -59,12 +59,12 @@ public class ChildFragmentCity extends Fragment {
     }
 
     public void chooseCity() {
-       
-// używam specjalnie stworzonej klasy, która irytuje przez cały plik xml, w którym znajdują się miasta i wybiera tylko te, które potrzebuje
-SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.parseCityNames(requireContext()), new AdapterView.OnItemSelectedListener() {
+        // używam specjalnie stworzonej klasy, która irytuje przez cały plik xml,
+        // w którym znajdują się miasta i wybiera tylko te, które potrzebuje
+        SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.parseCityNames(requireContext()), new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-// wybrane z listy miasto jest przekazywane do kolejnej metody
+                // wybrane z listy miasto jest przekazywane do kolejnej metody
                 String selectedCity = (String) parent.getItemAtPosition(position);
                 setChosenCity(selectedCity);
             }
@@ -90,9 +90,10 @@ SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.par
 
                 FrameLayout cityFragmentLayout = view.findViewById(R.id.cityFragmentLayout);
 
-// tworzę nowy fragment, który pojawi się jako kolejny i będzie zastępować aktualny 
+                // tworzę nowy fragment, który pojawi się jako kolejny i będzie zastępować aktualny
                 ChildFragmentGender childFragmentGender = new ChildFragmentGender();
-// dodaje do Bundle nickname z poprzedniego fragmentu oraz city z aktualnego. Dzięki temu oba te Stringi będą dostępne w ostatnim fragmencie
+                // dodaje do Bundle nickname z poprzedniego fragmentu oraz city z aktualnego.
+                // Dzięki temu oba te Stringi będą dostępne w ostatnim fragmencie
                 Bundle args = new Bundle();
                 args.putString("nickname", getNickname());
                 args.putString("city", city);
@@ -107,7 +108,7 @@ SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.par
                     fragmentTransaction.remove(previousFragment);
                 }
                 cityFragmentLayout.setVisibility(View.INVISIBLE);
-// ustawiam aktualny fragment jako niewidzialny, aby animacja była płynna i wyglądała jak należy
+                // ustawiam aktualny fragment jako niewidzialny, aby animacja była płynna i wyglądała jak należy
 
                 fragmentTransaction.commit();
             }
@@ -120,7 +121,7 @@ SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.par
         view.startAnimation(animation);
     }
 
-// pobieram ustawiony nickname z poprzedniego fragmentu
+    // pobieram ustawiony nickname z poprzedniego fragmentu
     public String getNickname() {
         Bundle args = getArguments();
         return args != null ? args.getString("nickname") : null;

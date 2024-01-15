@@ -2,15 +2,15 @@ package com.noisevisionproductions.playmeet.DataManagement;
 
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.noisevisionproductions.playmeet.Chat.PrivateChatModel;
+import com.noisevisionproductions.playmeet.Chat.ChatRoomModel;
 
 import java.util.List;
 
 public class ChatRoomDiffUtil extends DiffUtil.Callback {
-    private final List<PrivateChatModel> oldList;
-    private final List<PrivateChatModel> newList;
+    private final List<ChatRoomModel> oldList;
+    private final List<ChatRoomModel> newList;
 
-    public ChatRoomDiffUtil(List<PrivateChatModel> oldList, List<PrivateChatModel> newList) {
+    public ChatRoomDiffUtil(List<ChatRoomModel> oldList, List<ChatRoomModel> newList) {
         this.oldList = oldList;
         this.newList = newList;
     }

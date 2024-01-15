@@ -1,23 +1,15 @@
-val realmAppId: String = project.properties["REALM_APP_ID"] as String
-
 fun pickFirst() {
     TODO("Not yet implemented")
 }
 
-realm {
-    isSyncEnabled = true
-}
-
 plugins {
     id("com.android.application")
-    id("realm-android")
     id("com.google.gms.google-services")
 }
 
 android {
     namespace = "com.noisevisionproductions.playmeet"
     compileSdk = 34
-
 
     packaging {
         resources {
@@ -38,12 +30,9 @@ android {
     }
 
     buildTypes {
-        debug {
-            buildConfigField("String", "RealmAppId", "\"${realmAppId}\"")
-        }
-        release {
-            buildConfigField("String", "RealmAppId", "\"${realmAppId}\"")
 
+        release {
+            
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -67,6 +56,7 @@ android {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-database")
+    implementation("com.firebaseui:firebase-ui-database:8.0.0")
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.gms:google-services:4.4.0")
@@ -78,7 +68,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.7.6")
     implementation("androidx.navigation:navigation-ui:2.7.6")
     implementation("androidx.navigation:navigation-common:2.7.6")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
