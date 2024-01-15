@@ -53,7 +53,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     private int currentPage = 1;
     private String lastKey = null;
     private final ExecutorService threadPool = Executors.newFixedThreadPool(2);
-
+//
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_posts_list, container, false);
 
