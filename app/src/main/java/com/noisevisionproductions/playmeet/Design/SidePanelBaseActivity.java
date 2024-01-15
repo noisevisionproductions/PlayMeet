@@ -10,16 +10,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
-import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
-import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
-import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.UserManagement.UserAccountLogic;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Objects;
+import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
+import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
+import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.UserManagement.UserAccountLogic;
 
 public abstract class SidePanelBaseActivity extends AppCompatActivity {
     private FirebaseAuthManager authenticationManager;

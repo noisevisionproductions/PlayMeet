@@ -22,6 +22,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
@@ -50,6 +51,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     private boolean isLoading = false;
     private int initialPostsToLoad;
     private int currentPage = 1;
+    private String lastKey = null;
     private final ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -151,23 +153,33 @@ public class PostsOfTheGamesFragment extends Fragment {
 
     private List<PostCreating> loadNextPager() {
         int postsPerPage = 10;
-        int startIndex = (currentPage - 1) * postsPerPage;
-        int endIndex = startIndex + postsPerPage;
+        //int endIndex = startIndex + postsPerPage;
         DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
-        postsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        Query query;
+        if (lastKey == null) {
+            query = postsReference.orderByKey().limitToFirst(postsPerPage);
+        } else {
+            query = postsReference.orderByKey().startAt(lastKey).limitToFirst(postsPerPage + 1);
+        }
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     List<PostCreating> nextPagerPosts = new ArrayList<>();
-                    int index = 0;
+                    boolean isFirstItem = true;
 
                     for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        if (index >= startIndex && index < endIndex) {
-                            PostCreating posts = postSnapshot.getValue(PostCreating.class);
+                        // Skip the first item if this is a subsequent load
+                        if (isFirstItem && lastKey != null) {
+                            isFirstItem = false;
+                            continue;
                         }
-                        index++;
+
+                        PostCreating posts = postSnapshot.getValue(PostCreating.class);
+                        nextPagerPosts.add(posts);
+                        lastKey = postSnapshot.getKey();
                     }
-                    currentPage++;
+
                     handleLoadedData(nextPagerPosts);
                 }
             }
@@ -366,13 +378,6 @@ public class PostsOfTheGamesFragment extends Fragment {
 
     public interface OnDataReceived {
         void onDataReceived(String data);
-    }
-
-    public void setOnDataReceived(OnDataReceived onDataReceived) {
-    }
-
-    public void updateRecyclerView(String data) {
-
     }
 
 }
