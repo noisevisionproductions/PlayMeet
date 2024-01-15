@@ -2,55 +2,73 @@ package com.noisevisionproductions.playmeet.Chat;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Adapters.ChatMessageAdapter;
-import com.noisevisionproductions.playmeet.DataManagement.ChatMessageDiffUtilCallback;
-import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.Objects;
 import java.util.UUID;
 
-import io.realm.Realm;
-import io.realm.RealmList;
-import io.realm.RealmResults;
-import io.realm.mongodb.App;
-
 public class ChatActivity extends AppCompatActivity {
-    private final List<ChatMessageModel> messagesList = new ArrayList<>();
-    private Realm realm;
-    private io.realm.mongodb.User user;
+    private DatabaseReference messagesReference;
+    private DatabaseReference chatRoomReference;
     private AppCompatEditText messageInputFromUser;
     private AppCompatImageButton sendMessageButton;
     private ChatMessageAdapter chatMessageAdapter;
-    private RecyclerView recyclerView;
     private String currentRoomId;
+    private FirebaseUser currentUser;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        realm = Realm.getDefaultInstance();
+        setContentView(R.layout.activity_chat_and_history);
 
         String roomId = getIntent().getStringExtra("roomId");
         setCurrentRoomId(roomId);
 
-        setContentView(R.layout.activity_chat_and_history);
+        setupFirebase();
+    }
 
-        openChat();
+    private void setupFirebase() {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (currentUser != null && currentRoomId != null) {
+            messagesReference = FirebaseDatabase.getInstance().getReference("ChatMessages").child(currentRoomId);
+            chatRoomReference = FirebaseDatabase.getInstance().getReference("ChatRooms").child(currentRoomId);
+
+            if (messagesReference != null) {
+                setRecyclerView();
+                openChat();
+            }
+        }
+    }
+
+    public void setRecyclerView() {
+        RecyclerView recyclerView = findViewById(R.id.recycler_view_chat);
+        chatMessageAdapter = new ChatMessageAdapter(new FirebaseRecyclerOptions.Builder<ChatMessageModel>()
+                .setQuery(messagesReference, ChatMessageModel.class)
+                .build());
+        recyclerView.setAdapter(chatMessageAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     public void setCurrentRoomId(String roomId) {
@@ -60,61 +78,71 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        realm.close();
     }
 
     public void openChat() {
-        App realmApp = RealmAppConfig.getApp();
-        user = realmApp.currentUser();
-
         messageInputFromUser = findViewById(R.id.messageInputFromUser);
         sendMessageButton = findViewById(R.id.sendMessageButton);
 
-        setRecyclerView();
         sendMessageToTheUser();
-        showMessages();
-    }
-
-    public void setRecyclerView() {
-        recyclerView = findViewById(R.id.recycler_view_chat);
-        chatMessageAdapter = new ChatMessageAdapter(messagesList);
-        recyclerView.setAdapter(chatMessageAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
     }
 
     public void sendMessageToTheUser() {
-        sendMessageButton.setOnClickListener(v -> realm.executeTransactionAsync(realm -> {
-            UserModel userModel = realm.where(UserModel.class)
-                    .equalTo("userId", user.getId())
-                    .findFirst();
+        sendMessageButton.setOnClickListener(v -> {
+            String uniqueMessageId = UUID.randomUUID().toString();
+            String messageText = Objects.requireNonNull(messageInputFromUser.getText()).toString();
+            String senderId = currentUser.getUid();
 
-            if (userModel != null) {
-                UserModel userModelFromRealm = realm.copyFromRealm(userModel);
-                String uuid = UUID.randomUUID().toString();
+            FirebaseDatabase.getInstance().getReference("UserModel").child(senderId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                UserModel senderUser = snapshot.getValue(UserModel.class);
+                                if (senderUser != null) {
+                                    String senderNickname = senderUser.getNickname();
+                                    if (senderNickname != null && !TextUtils.isEmpty(messageText)) {
+                                        long timestamp = System.currentTimeMillis();
+                                        ChatMessageModel chatMessageModel = new ChatMessageModel(uniqueMessageId, senderId, senderNickname, messageText, timestamp);
 
-                ChatMessageModel chatMessageModel = realm.createObject(ChatMessageModel.class, uuid);
+                                        DatabaseReference newMessageReference = messagesReference.push();
+                                        newMessageReference.setValue(chatMessageModel);
 
-                chatMessageModel.getUsers().add(userModelFromRealm);
-                chatMessageModel.setMessage(String.valueOf(messageInputFromUser.getText()));
-                chatMessageModel.setTimestamp(LocalDateTime.now());
+                                        chatRoomReference.child("lastMessage").setValue(chatMessageModel);
 
-                PrivateChatModel privateChatModel = realm.where(PrivateChatModel.class)
-                        .equalTo("roomId", currentRoomId)
-                        .findFirst();
-                if (privateChatModel != null) {
-                    privateChatModel.getMessages().add(chatMessageModel);
-                    realm.insertOrUpdate(chatMessageModel);
-                }
+                                        messageInputFromUser.setText("");
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), "Nie ustawiono nicku!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }
+                        }
 
-                if (!messagesList.isEmpty()) {
-                    recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
-                }
-                hideKeyboardAfterSendingMsg();
-            }
-        }, this::showMessages));
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+        });
     }
 
     public void showMessages() {
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        chatMessageAdapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        chatMessageAdapter.stopListening();
+    }
+
+   /* public void showMessages() {
         // pobieranie wszystkich postów
         RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
 
@@ -127,15 +155,15 @@ public class ChatActivity extends AppCompatActivity {
             }
 
             // pobieranie wszystkich wiadomości
-            RealmResults<PrivateChatModel> allMessages = realm.where(PrivateChatModel.class).findAll();
+            RealmResults<ChatRoomModel> allMessages = realm.where(ChatRoomModel.class).findAll();
             List<ChatMessageModel> newMessagesList = new ArrayList<>();
 
             // filtrowanie pobranych wiadomości
-            for (PrivateChatModel privateChatModel : allMessages) {
+            for (ChatRoomModel chatRoomModel : allMessages) {
                 // sprawdzenie, czy userId jest powiązane z danym chatRoomem
-                if ((userIds.contains(privateChatModel.getUserIdThatCreatedPost()) || userIds.contains(privateChatModel.getUser2()))
-                        && privateChatModel.getRoomId().equals(currentRoomId)) {
-                    RealmList<ChatMessageModel> chatMessages = privateChatModel.getMessages();
+                if ((userIds.contains(chatRoomModel.getUserIdThatCreatedPost()) || userIds.contains(chatRoomModel.getUser2()))
+                        && chatRoomModel.getRoomId().equals(currentRoomId)) {
+                    RealmList<ChatMessageModel> chatMessages = chatRoomModel.getMessages();
                     newMessagesList.addAll(realm.copyFromRealm(chatMessages));
                 }
             }
@@ -145,9 +173,9 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
             }
         }
-    }
+    }*/
 
-    public void updateMessagesUtilDiff(List<ChatMessageModel> newMessagesList) {
+   /* public void updateMessagesUtilDiff(List<ChatMessageModel> newMessagesList) {
         ChatMessageDiffUtilCallback diffUtilCallback = new ChatMessageDiffUtilCallback(messagesList, newMessagesList);
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
         messagesList.clear();
@@ -156,7 +184,7 @@ public class ChatActivity extends AppCompatActivity {
         if (!messagesList.isEmpty()) {
             recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
         }
-    }
+    }*/
 
     public void hideKeyboardAfterSendingMsg() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

@@ -7,7 +7,6 @@ import com.noisevisionproductions.playmeet.PostCreating;
 import java.util.List;
 
 public class PostDiffCallback extends DiffUtil.Callback {
-
     private final List<PostCreating> oldList;
     private final List<PostCreating> newList;
 

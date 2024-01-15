@@ -1,11 +1,8 @@
 package com.noisevisionproductions.playmeet.UserManagement;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+public class UserModel{
 
-public class UserModel extends RealmObject {
 
-    @PrimaryKey
     private String userId;
     private String nickname;
     private String name;

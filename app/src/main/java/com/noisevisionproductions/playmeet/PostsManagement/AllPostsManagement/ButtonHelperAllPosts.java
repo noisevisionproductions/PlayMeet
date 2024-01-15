@@ -8,78 +8,76 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Chat.ChatActivity;
-import com.noisevisionproductions.playmeet.Chat.PrivateChatModel;
+import com.noisevisionproductions.playmeet.Chat.ChatRoomModel;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
-import com.noisevisionproductions.playmeet.Firebase.RealmDataManager;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
-import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
 import java.util.Objects;
 
-import io.realm.Realm;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
-
 public class ButtonHelperAllPosts {
-    public static void handleChatButtonClick(View view, String userId) {
-        App realmApp = RealmAppConfig.getApp();
-        User user = realmApp.currentUser();
+    public static void handleChatButtonClick(View view, String userIdThatCreatedPost) {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        String userIdCurrent = firebaseHelper.getCurrentUser().getUid();
+        FirebaseUser firebaseUser = firebaseHelper.getCurrentUser();
 
-        if (user != null) {
-            String user2 = user.getId();
+        if (firebaseUser != null) {
+            DatabaseReference chatRoomReference = FirebaseDatabase.getInstance().getReference("ChatRooms");
 
-            try (Realm realm = Realm.getDefaultInstance()) {
+            chatRoomReference.orderByChild("userIdThatCreatedPost").equalTo(userIdThatCreatedPost).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String currentRoomId;
+                    boolean chatRoomExists = false;
 
-                PrivateChatModel existingChatRoom = realm.where(PrivateChatModel.class)
-                        .beginGroup()
-                        .equalTo("userIdThatCreatedPost", userId)
-                        .equalTo("user2", user2)
-                        .endGroup()
-                        .findFirst();
+                    // pobieram listę pokoi czatu
+                    for (DataSnapshot chatRoomSnapshot : snapshot.getChildren()) {
+                        ChatRoomModel chatRoomModel = chatRoomSnapshot.getValue(ChatRoomModel.class);
 
-                // checking if room already exist
-                RealmDataManager realmDataManager = RealmDataManager.getInstance();
+                        if (chatRoomModel != null && chatRoomModel.getUser2().equals(userIdCurrent)) {
+                            // jeżeli pokój czatu już jest przypisany do zalogowanego użytkownika, to go do niego przenosi
+                            chatRoomExists = true;
+                            currentRoomId = chatRoomModel.getRoomId();
 
-                String currentRoomId;
-                if (existingChatRoom == null) {
-                    PrivateChatModel privateChatModel = new PrivateChatModel();
-                    privateChatModel.setUserIdThatCreatedPost(userId);
-
-                    Log.d("debug", privateChatModel.getRoomId());
-                    privateChatModel.setUser2(user2);
-
-                    UserModel userModel = realm.where(UserModel.class)
-                            .equalTo("userId", user.getId())
-                            .findFirst();
-
-                    if (userModel != null) {
-                        privateChatModel.setNickNameOfUser2(userModel.getNickname());
+                            Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                            intent.putExtra("roomId", currentRoomId);
+                            view.getContext().startActivity(intent);
+                            break;
+                        }
                     }
-                    currentRoomId = privateChatModel.getRoomId();
+                    if (!chatRoomExists) {
+                        // jeżeli pokój czatu nie został znaleziony, to tworzę nowy
+                        String newRoomId = chatRoomReference.push().getKey();
 
-                    realmDataManager.createChatroomInDatabase(privateChatModel);
-                } else {
-                    currentRoomId = existingChatRoom.getRoomId();
-                    realmDataManager.createChatroomInDatabase(existingChatRoom);
+                        ChatRoomModel newChatRoom = new ChatRoomModel();
+                        newChatRoom.setRoomId(newRoomId);
+                        newChatRoom.setUserIdThatCreatedPost(userIdThatCreatedPost);
+                        newChatRoom.setUser2(userIdCurrent);
+
+                        if (newRoomId != null) {
+                            chatRoomReference.child(newRoomId).setValue(newChatRoom);
+                        }
+                        Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                        intent.putExtra("roomId", newRoomId);
+                        view.getContext().startActivity(intent);
+                    }
                 }
 
-                realm.executeTransactionAsync(realm1 -> {
-                }, () -> {
-                    Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                    intent.putExtra("roomId", currentRoomId);
-                    view.getContext().startActivity(intent);
-                }, error -> Log.e("Realm Transaction Error", Objects.requireNonNull(error.getMessage())));
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Firebase Read Error", error.getMessage());
+
+                }
+            });
         }
     }
 

@@ -10,61 +10,48 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
-import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
-import java.util.List;
-import java.util.Objects;
+public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel, ChatMessageAdapter.ChatViewHolder> /*RecyclerView.Adapter<ChatMessageAdapter.ChatViewHolder>*/ {
 
-import io.realm.mongodb.App;
+    public ChatMessageAdapter(@NonNull FirebaseRecyclerOptions<ChatMessageModel> options) {
+        super(options);
+    }
 
-public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.ChatViewHolder> {
-    private final List<ChatMessageModel> chatMessageModel;
-
-    public ChatMessageAdapter(List<ChatMessageModel> chatMessageAdapter) {
-        this.chatMessageModel = chatMessageAdapter;
+    @Override
+    protected void onBindViewHolder(@NonNull ChatMessageAdapter.ChatViewHolder holder, int position, @NonNull ChatMessageModel model) {
+        setMessagesLookBasedOnLoggedUser(holder, model);
+        holder.bind(model);
     }
 
     @NonNull
-    public ChatViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @Override
+    public ChatMessageAdapter.ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_in_chat_design, parent, false);
         return new ChatViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull ChatViewHolder holder, int position) {
-// zależy czy użytkownik wysłał czy odebrał wiadomość, to na tej podstawie jest odpowiedni wygląd wiadomości
-        setMessagesLookBasedOnLoggedUser(holder, position);
-        holder.itemView.setAlpha(0.0f);
-        holder.itemView.animate().alpha(1.0f).setDuration(200).start();
-        ChatMessageModel chatMessageModel = this.chatMessageModel.get(position);
-        holder.bind(chatMessageModel);
-    }
-
-    @Override
-    public int getItemCount() {
-        return chatMessageModel.size();
-    }
-
-    public void setMessagesLookBasedOnLoggedUser(ChatViewHolder holder, int position) {
-        ChatMessageModel chatMessageModel = this.chatMessageModel.get(position);
-
-        App realmApp = RealmAppConfig.getApp();
-        io.realm.mongodb.User user = realmApp.currentUser();
-
-        if (user != null && Objects.requireNonNull(chatMessageModel.getUsers().get(0)).getUserId().equals(user.getId())) {
-// ustawienie wyglądu wiadomości zależnie od tego czy wysłana czy odebrana
-            holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
-        } else {
-            holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
+    public void setMessagesLookBasedOnLoggedUser(ChatViewHolder holder, ChatMessageModel chatMessageModel) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String currentUserId = currentUser.getUid();
+            if (chatMessageModel.getUserId().equals(currentUserId)) {
+                // ustawienie wyglądu wiadomości zależnie od tego czy wysłana czy odebrana
+                holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
+            } else {
+                holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
+            }
         }
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
-        AppCompatTextView usernameTextView, messageTextView, timestampTextView;
-        LinearLayoutCompat layoutOfMessage;
+        private final AppCompatTextView usernameTextView, messageTextView, timestampTextView;
+        private final LinearLayoutCompat layoutOfMessage;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,15 +62,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         }
 
         public void bind(ChatMessageModel chatMessageModel) {
-            UserModel userModel = chatMessageModel.getUsers().get(0);
-            
-if (userModel != null) {
-
-// ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
-            usernameTextView.setText(userModel.getNickname());
+            // ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
+            usernameTextView.setText(chatMessageModel.getNickname());
             messageTextView.setText(chatMessageModel.getMessage());
-            timestampTextView.setText(chatMessageModel.getTimestamp());
+            timestampTextView.setText(chatMessageModel.formatDate());
         }
-}
     }
+
 }

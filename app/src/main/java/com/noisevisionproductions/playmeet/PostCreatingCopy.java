@@ -2,12 +2,10 @@ package com.noisevisionproductions.playmeet;
 
 import java.util.UUID;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
-public class PostCreatingCopy extends RealmObject {
-    @PrimaryKey
-    private String postUuid;
+
+public class PostCreatingCopy{
+    private final String postUuid;
     private String postId;
     private String userId;
     private String sportType;
