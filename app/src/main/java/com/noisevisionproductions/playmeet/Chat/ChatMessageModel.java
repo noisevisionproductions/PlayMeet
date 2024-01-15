@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 public class ChatMessageModel {
     // private String userId;
@@ -12,6 +13,9 @@ public class ChatMessageModel {
     private long timestamp;
     private String userId;
     private String message;
+
+    public ChatMessageModel() {
+    }
 
     public ChatMessageModel(String uuid, String userId, String nickname, String message, long timestamp) {
         this.uuid = uuid;
