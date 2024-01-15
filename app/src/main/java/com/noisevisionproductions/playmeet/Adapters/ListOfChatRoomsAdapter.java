@@ -8,81 +8,59 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noisevisionproductions.playmeet.Chat.PrivateChatModel;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
+import com.noisevisionproductions.playmeet.Chat.ChatRoomModel;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Firebase.RealmAppConfig;
 
-import java.util.List;
 
-import io.realm.Realm;
-import io.realm.mongodb.App;
-import io.realm.mongodb.User;
+public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomModel, ListOfChatRoomsAdapter.ViewHolder> {
 
-public class ListOfChatRoomsAdapter extends RecyclerView.Adapter<ListOfChatRoomsAdapter.ViewHolder> {
-    private final List<PrivateChatModel> chats;
     private final OnItemClickListener listener;
-    private final Realm realm;
 
     public interface OnItemClickListener {
-        void onItemClick(PrivateChatModel chat);
+        void onItemClick(ChatRoomModel chatRoomModel);
     }
 
-    public ListOfChatRoomsAdapter(List<PrivateChatModel> chats, OnItemClickListener listener) {
-        this.chats = chats;
+    public ListOfChatRoomsAdapter(OnItemClickListener listener, @NonNull FirebaseRecyclerOptions<ChatRoomModel> options) {
+        super(options);
         this.listener = listener;
-        this.realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull ChatRoomModel model) {
+        holder.bind(model, listener);
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chatroom_design, parent, false);
-        return new ViewHolder(view, realm);
+        return new ViewHolder(view);
     }
-
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(chats.get(position), listener);
-    }
-
-
-    @Override
-    public int getItemCount() {
-        return chats.size();
-    }
-
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView username;
-        TextView lastMessage;
-        Realm realm;
-        User user;
-        App realmApp;
+        private final TextView username;
+        private final TextView lastMessage;
 
-        public ViewHolder(View itemView, Realm realm) {
+
+        public ViewHolder(View itemView) {
             super(itemView);
-            this.realm = realm;
             username = itemView.findViewById(R.id.tv_username);
             lastMessage = itemView.findViewById(R.id.tv_last_message);
-            realmApp = RealmAppConfig.getApp();
-            user = realmApp.currentUser();
         }
 
-        public void bind(final PrivateChatModel chat, final OnItemClickListener listener) {
-           
-// ustawianie ostatniej wiadomości z czatu wraz z nickiem użytkownika, który stworzył czat
-
- username.setText(chat.getNickNameOfUser2());
-            //lastMessage.setText(chat.getLastMessage().getMessage());
-
-            if (chat.getLastMessage() != null) {
+        public void bind(final ChatRoomModel chat, final OnItemClickListener listener) {
+            // ustawianie ostatniej wiadomości z czatu wraz z nickiem użytkownika, który stworzył czat
+            ChatMessageModel getLastMessage = chat.getLastMessage();
+            if (getLastMessage != null && getLastMessage.getMessage() != null) {
                 lastMessage.setText(chat.getLastMessage().getMessage());
+                username.setText(getLastMessage.getNickname());
             } else {
                 lastMessage.setText(R.string.noPrivateMessagInfo);
             }
-
             itemView.setOnClickListener(v -> listener.onItemClick(chat));
         }
-
     }
 }

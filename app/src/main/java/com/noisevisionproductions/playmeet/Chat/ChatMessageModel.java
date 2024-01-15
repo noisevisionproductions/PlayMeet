@@ -1,37 +1,32 @@
 package com.noisevisionproductions.playmeet.Chat;
 
-import android.os.Build;
-
-import com.noisevisionproductions.playmeet.UserManagement.UserModel;
-
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.UUID;
 
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-
-public class ChatMessageModel extends RealmObject {
+public class ChatMessageModel {
     // private String userId;
-    @PrimaryKey
     private String uuid;
+    private String nickname;
     private long timestamp;
-    private RealmList<UserModel> userModels;
+    private String userId;
     private String message;
 
-    public ChatMessageModel() {
-// za każdym razem, gdy jest tworzona nowa wiadomość, zostaje generowane unikalne id dla wiadomości
-        this.uuid = UUID.randomUUID().toString();
-    }
-
-    public ChatMessageModel(String uuid, RealmList<UserModel> userModels, String message, long timestamp) {
+    public ChatMessageModel(String uuid, String userId, String nickname, String message, long timestamp) {
         this.uuid = uuid;
-        this.userModels = userModels;
+        this.userId = userId;
+        this.nickname = nickname;
         this.message = message;
         this.timestamp = timestamp;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getUuid() {
@@ -42,12 +37,12 @@ public class ChatMessageModel extends RealmObject {
         this.uuid = uuid;
     }
 
-    public RealmList<UserModel> getUsers() {
-        return userModels;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUsers(RealmList<UserModel> userModels) {
-        this.userModels = userModels;
+    public void setUserId(String userModels) {
+        this.userId = userModels;
     }
 
     public String getMessage() {
@@ -58,18 +53,19 @@ public class ChatMessageModel extends RealmObject {
         this.message = message;
     }
 
-    public String getTimestamp() {
-        return formatDate();
+    public Long getTimestamp() {
+        return timestamp;
     }
 
     public String formatDate() {
-// formatuje date oraz godzine, aby była bardziej czytelna w każdej wiadomości
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        LocalDateTime timestampAsDateTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneId.systemDefault());
+        LocalDateTime timestampAsDateTime = Instant.ofEpochMilli(timestamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
         return timestampAsDateTime.format(dateTimeFormatter);
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 }

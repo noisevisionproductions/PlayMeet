@@ -67,25 +67,28 @@ public class ChildFragmentGender extends Fragment {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-// dodaje zebrane argumenty do HashMap, aby wszystkie były jako jeden obiekt ułatwiający zapisanie w bazie danych
+        // dodaje zebrane argumenty do HashMap, aby wszystkie były jako jeden obiekt ułatwiający zapisanie w bazie danych
 
         HashMap<String, Object> userUpdate = new HashMap<>();
         userUpdate.put("nickname", getArgument(ARG_NICKNAME));
         userUpdate.put("location", getArgument(ARG_CITY));
         userUpdate.put("gender", gender);
 
-// tworzę obiekt, który pozwoli na ustawienie różnych informacji o użytkowniku, w moim wypadku jest to nickname
+        // tworzę obiekt, który pozwoli na ustawienie różnych informacji o użytkowniku, w moim wypadku jest to nickname
         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
                 .setDisplayName(getArgument(ARG_NICKNAME))
                 .build();
 
         if (firebaseUser != null) {
-// wykorzystuje obiekt, w którym ustawiałem nickname, aby przypisać go użytkownikowi w Firebase, dzięki temu będę mógł pobierać nickname wraz z UserID
+            // wykorzystuje obiekt, w którym ustawiałem nickname, aby przypisać go użytkownikowi w Firebase,
+            // dzięki temu będę mógł pobierać nickname wraz z UserID
             firebaseUser.updateProfile(profileUpdate);
         }
 
-       
-// używam klasy FirebaseHelper, aby z łatwością zapisać wszystkie zebrane dane z fragmentów w bazie danych, podając tylko poprzednio powstały hashmap firebaseHelper.updateDataUsingHashMap(userUpdate,
+
+        // używam klasy FirebaseHelper, aby z łatwością zapisać wszystkie zebrane dane z fragmentów w bazie danych,
+        // podając tylko poprzednio powstały hashmap firebaseHelper.updateDataUsingHashMap(userUpdate,
+        firebaseHelper.updateDataUsingHashMap(userUpdate,
                 aVoid -> handleTransactionSuccess(),
                 e -> handleTransactionError(DatabaseError.fromException(e)), "UserModel");
     }
@@ -117,7 +120,8 @@ public class ChildFragmentGender extends Fragment {
         SpinnerManager.setupGenderSpinner(requireContext(), genderSpinner, R.array.list_of_genders, new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-// zapisuje wybraną z listy płeć, chyba że jest to domyślna pozycja, która jest na indeksie 0, to wyświetlam błąd, aby użytkownik wybrał inną pozycję
+                // zapisuje wybraną z listy płeć, chyba że jest to domyślna pozycja, która jest na indeksie 0,
+                // to wyświetlam błąd, aby użytkownik wybrał inną pozycję
                 String selectedGender = (String) parent.getItemAtPosition(position);
                 if (position > 0) {
                     setSelectedGender(selectedGender);
