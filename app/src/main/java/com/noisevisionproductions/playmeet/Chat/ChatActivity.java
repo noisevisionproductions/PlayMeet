@@ -110,7 +110,7 @@ public class ChatActivity extends AppCompatActivity {
 
                                         chatRoomReference.child("lastMessage").setValue(chatMessageModel);
 
-                                        messageInputFromUser.setText("");
+                                        hideKeyboardAfterSendingMsg();
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Nie ustawiono nicku!", Toast.LENGTH_SHORT).show();
                                     }
@@ -126,10 +126,6 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    public void showMessages() {
-
-    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -141,50 +137,6 @@ public class ChatActivity extends AppCompatActivity {
         super.onStop();
         chatMessageAdapter.stopListening();
     }
-
-   /* public void showMessages() {
-        // pobieranie wszystkich postów
-        RealmResults<PostCreating> allPosts = realm.where(PostCreating.class).findAll();
-
-        if (!allPosts.isEmpty()) {
-            Set<String> userIds = new HashSet<>();
-
-            // przeszukiwanie wszystkich postow i dodawanie Id uzytkowników do setu
-            for (PostCreating postCreating : allPosts) {
-                userIds.add(postCreating.getUserId());
-            }
-
-            // pobieranie wszystkich wiadomości
-            RealmResults<ChatRoomModel> allMessages = realm.where(ChatRoomModel.class).findAll();
-            List<ChatMessageModel> newMessagesList = new ArrayList<>();
-
-            // filtrowanie pobranych wiadomości
-            for (ChatRoomModel chatRoomModel : allMessages) {
-                // sprawdzenie, czy userId jest powiązane z danym chatRoomem
-                if ((userIds.contains(chatRoomModel.getUserIdThatCreatedPost()) || userIds.contains(chatRoomModel.getUser2()))
-                        && chatRoomModel.getRoomId().equals(currentRoomId)) {
-                    RealmList<ChatMessageModel> chatMessages = chatRoomModel.getMessages();
-                    newMessagesList.addAll(realm.copyFromRealm(chatMessages));
-                }
-            }
-
-            updateMessagesUtilDiff(newMessagesList);
-            if (!messagesList.isEmpty()) {
-                recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
-            }
-        }
-    }*/
-
-   /* public void updateMessagesUtilDiff(List<ChatMessageModel> newMessagesList) {
-        ChatMessageDiffUtilCallback diffUtilCallback = new ChatMessageDiffUtilCallback(messagesList, newMessagesList);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffUtilCallback);
-        messagesList.clear();
-        messagesList.addAll(newMessagesList);
-        diffResult.dispatchUpdatesTo(chatMessageAdapter);
-        if (!messagesList.isEmpty()) {
-            recyclerView.post(() -> recyclerView.smoothScrollToPosition(messagesList.size() - 1));
-        }
-    }*/
 
     public void hideKeyboardAfterSendingMsg() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

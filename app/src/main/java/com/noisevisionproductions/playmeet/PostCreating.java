@@ -1,6 +1,6 @@
 package com.noisevisionproductions.playmeet;
 
-public class PostCreating{
+public class PostCreating {
     private String postId;
     private boolean isCreatedByUser = false;
     private boolean isPostSavedByUser = false;
@@ -41,10 +41,6 @@ public class PostCreating{
         copyOfAllPosts.setSkillLevel(skillLevel);
         copyOfAllPosts.setAdditionalInfo(additionalInfo);
         return copyOfAllPosts;
-    }
-
-    public boolean isPostSavedByUser() {
-        return isPostSavedByUser;
     }
 
     public void setPostSavedByUser(Boolean postSavedByUser) {
