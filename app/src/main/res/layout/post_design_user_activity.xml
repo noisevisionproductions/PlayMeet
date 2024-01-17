@@ -72,14 +72,7 @@
                 android:text="@string/openChat" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <!--avatar-->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/userAvatar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/sample_avatar"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <include layout="@layout/image_view_avatar" />
 
         <!--nazwa sportu-->
         <com.google.android.material.textfield.TextInputLayout

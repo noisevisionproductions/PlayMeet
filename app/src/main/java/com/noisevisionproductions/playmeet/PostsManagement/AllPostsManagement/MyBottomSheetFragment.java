@@ -103,7 +103,6 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
@@ -19,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
+import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -46,6 +48,10 @@ public class RegisterFragment extends Fragment {
             // jeżeli nie, to pozwalam mu na rejestrację nowego konta
             registerButton.setOnClickListener(viewRegister -> registerUser());
         }
+
+        LinearLayout mainLayout = view.findViewById(R.id.mainLayout);
+        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(requireActivity()));
+
         return view;
     }
 

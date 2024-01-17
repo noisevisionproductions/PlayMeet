@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.Design;
 
 import android.content.Intent;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,17 +14,22 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.UserAccountLogic;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public abstract class SidePanelBaseActivity extends AppCompatActivity {
     private FirebaseAuthManager authenticationManager;
     protected DrawerLayout drawerLayout;
     protected ActionBarDrawerToggle actionBarDrawerToggle;
     protected NavigationView navigationView;
+    protected View headerView;
+    protected CircleImageView userAvatar;
 
     protected void setupDrawerLayout() {
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -36,6 +42,19 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
 
         // ustawia, że ikonka na pasku akcji służy właśnie do kontrolowania stanu DrawerLayout Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.navigationViewSidePanel);
+
+        headerView = navigationView.getHeaderView(0);
+        userAvatar = headerView.findViewById(R.id.userAvatar);
+
+        setUserAvatar();
+    }
+
+    private void setUserAvatar() {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        if (firebaseHelper.getCurrentUser() != null) {
+            String userId = firebaseHelper.getCurrentUser().getUid();
+            firebaseHelper.getUserAvatar(this, userId, userAvatar);
+        }
     }
 
     @Override

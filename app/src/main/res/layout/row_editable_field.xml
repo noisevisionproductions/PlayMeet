@@ -40,7 +40,7 @@
         android:layout_weight="3"
         android:enabled="false"
         android:gravity="center"
-        android:hint=""
+        android:hint="Nie podano..."
         android:scrollbars="vertical"
         android:textColor="@android:color/white"
         android:textStyle="italic"

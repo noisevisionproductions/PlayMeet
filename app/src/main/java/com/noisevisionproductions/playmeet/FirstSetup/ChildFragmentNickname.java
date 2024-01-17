@@ -3,6 +3,7 @@ package com.noisevisionproductions.playmeet.FirstSetup;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,14 +103,14 @@ public class ChildFragmentNickname extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
+                    Log.e("UserModel", "Błąd podczas odczytu nickname z Firebase", error.toException());
                 }
             });
         }
     }
 
     private boolean validateNickname() {
-    // minimalna oraz maksymalna ilość znaków dla nicku
+        // minimalna oraz maksymalna ilość znaków dla nicku
         int minLength = 3;
         int maxLength = 30;
         nickname = getNicknameInput.getText().toString();
