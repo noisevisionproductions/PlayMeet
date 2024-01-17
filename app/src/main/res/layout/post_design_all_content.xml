@@ -7,7 +7,10 @@
     android:layout_width="match_parent"
     android:layout_height="245dp"
     android:layout_margin="10dp"
-    android:background="@drawable/border_gray"
+    android:background="@android:color/transparent"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -16,8 +19,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="#fff">
+        android:background="#FFFFFF">
 
         <!--przycisk do otwierania dodatkowych opcji-->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -137,27 +139,6 @@
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
         </com.google.android.material.textfield.TextInputLayout>
-
-        <!--  &lt;!&ndash;unikalne ID&ndash;&gt;
-          <com.google.android.material.textfield.TextInputLayout
-              android:id="@+id/uniquePostIdForButtonDesign"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              app:hintEnabled="false"
-              app:layout_constraintEnd_toEndOf="parent"
-              app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
-
-              <com.google.android.material.textfield.TextInputEditText
-                  android:id="@+id/uniquePostId"
-                  style="@style/MyTextInputLayoutDesign"
-                  android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:background="@null"
-                  android:inputType="number"
-                  android:textSize="8sp"
-                  tools:ignore="SmallSp,TextSizeCheck,TouchTargetSizeCheck" />
-
-          </com.google.android.material.textfield.TextInputLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

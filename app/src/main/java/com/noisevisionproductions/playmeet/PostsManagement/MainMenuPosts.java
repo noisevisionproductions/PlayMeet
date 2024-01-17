@@ -1,5 +1,6 @@
 package com.noisevisionproductions.playmeet.PostsManagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -20,11 +21,11 @@ import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsCreate
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsSavedByUserFragment;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.OpinionFromUser;
 
 public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomSheetFragment.OnDataPass {
-    private AppCompatButton yourPostsMenu, savedPostsMenu, showAllPostsMenu, chatRoomMenu, updateUserInfoBar;
+    private AppCompatButton yourPostsMenu, savedPostsMenu, showAllPostsMenu, chatRoomMenu, updateUserInfoBar, sendOpinionButton;
     private FirebaseAuthManager authenticationManager;
-    private View appVersionInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +44,15 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         switchToFavoritePosts();
         switchToChatRoom();
 
-        switchToUserInfoInputOnClick();
-        checkUsers();
+        sendOpinionButtonHandle();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkUsers();
+        switchToUserInfoInputOnClick();
+    }
 
     @Override
     public void onDataPass(String data) {
@@ -65,7 +71,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         chatRoomMenu = findViewById(R.id.chatRoomMenu);
 
         updateUserInfoBar = findViewById(R.id.updateUserInfoBar);
-        appVersionInfo = findViewById(R.id.appVersionInfo);
+        sendOpinionButton = findViewById(R.id.sendOpinionButton);
 
         showAllPostsMenu.setSelected(true);
     }
@@ -75,19 +81,19 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
 
         if (authenticationManager.isUserLoggedIn()) {
             if (currentUser != null) {
-                if (currentUser.getDisplayName() == null) {
+                if (currentUser.getDisplayName() == null || currentUser.getDisplayName().isEmpty()) {
                     updateUserInfoBar.setVisibility(View.VISIBLE);
-                    appVersionInfo.setVisibility(View.GONE);
+                    sendOpinionButton.setVisibility(View.GONE);
 
                     switchToUserInfoInput();
                 } else {
                     updateUserInfoBar.setVisibility(View.GONE);
-                    appVersionInfo.setVisibility(View.VISIBLE);
+                    sendOpinionButton.setVisibility(View.VISIBLE);
                 }
             }
         } else {
             updateUserInfoBar.setVisibility(View.GONE);
-            appVersionInfo.setVisibility(View.VISIBLE);
+            sendOpinionButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -96,13 +102,23 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         dialogFragment.show(getSupportFragmentManager(), "my_dialog");
     }
 
+    public void switchToOpinionLayout() {
+        Intent intent = new Intent(this, OpinionFromUser.class);
+        startActivity(intent);
+    }
+
+
     public void switchToUserInfoInputOnClick() {
         updateUserInfoBar.setOnClickListener(v -> switchToUserInfoInput());
     }
 
+    public void sendOpinionButtonHandle() {
+        sendOpinionButton.setOnClickListener(v -> switchToOpinionLayout());
+    }
+
     public void onUserInfoUpdated() {
         updateUserInfoBar.setVisibility(View.GONE);
-        appVersionInfo.setVisibility(View.VISIBLE);
+        sendOpinionButton.setVisibility(View.VISIBLE);
     }
 
     public void switchToUserPosts() {
@@ -136,7 +152,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
                         .setReorderingAllowed(true)
                         .commit();
             } else {
-                NavigationUtils.showOnlyForLoggedUserMessage(findViewById(android.R.id.content));
+                NavigationUtils.showLoginSnackBar(this);
             }
         });
     }
@@ -170,7 +186,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
                         .setReorderingAllowed(true)
                         .commit();
             } else {
-                NavigationUtils.showOnlyForLoggedUserMessage(findViewById(android.R.id.content));
+                NavigationUtils.showLoginSnackBar(this);
             }
         });
     }

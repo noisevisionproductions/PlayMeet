@@ -27,6 +27,7 @@ import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +92,8 @@ public class PostsSavedByUserFragment extends Fragment {
                     Log.e("PostsSavedByUserFragment", "Błąd podczas odczytu danych z Firebase", error.toException());
                 }
             });
+        } else {
+            NavigationUtils.showLoginSnackBar(getContext());
         }
     }
 

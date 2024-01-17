@@ -1,18 +1,13 @@
 package com.noisevisionproductions.playmeet.UserManagement;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,9 +30,9 @@ public class UserAccountLogic extends SidePanelBaseActivity {
 
     private FirebaseHelper firebaseHelper;
     private CircleImageView avatarImageView;
-    private AppCompatButton uploadAvatarButton;
     private RecyclerView recyclerView;
     private ProgressBar progressBarLayout;
+    private AppCompatButton uploadAvatarButton;
 
     public UserAccountLogic() {
     }
@@ -54,7 +49,9 @@ public class UserAccountLogic extends SidePanelBaseActivity {
 
         greetNickname();
         getAddPostButton();
-        setUserAvatar();
+
+        AvatarManagement avatarManagement = new AvatarManagement(this, uploadAvatarButton);
+        avatarManagement.setupListener();
     }
 
     private void setupRecyclerView() {
@@ -65,10 +62,36 @@ public class UserAccountLogic extends SidePanelBaseActivity {
         progressBarLayout = findViewById(R.id.progressBarLayout);
         uploadAvatarButton = findViewById(R.id.uploadAvatar);
         avatarImageView = findViewById(R.id.userAvatar);
+
         AppCompatButton button = findViewById(R.id.backToMainMenu);
         NavigationUtils.backToMainMenuButton(button, this);
 
+        ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
+        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(this));
+
         getUserDataFromRealm();
+    }
+
+    public void greetNickname() {
+        AppCompatTextView displayNickname = findViewById(R.id.nickname);
+        firebaseHelper.getData(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    UserModel userModel = snapshot.getValue(UserModel.class);
+                    if (userModel != null) {
+                        String userNickname = userModel.getNickname();
+                        displayNickname.setText(userNickname);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        }, "UserModel");
+        String userId = firebaseHelper.getCurrentUser().getUid();
+        firebaseHelper.getUserAvatar(getApplicationContext(), userId, avatarImageView);
     }
 
     private void getUserDataFromRealm() {
@@ -86,9 +109,9 @@ public class UserAccountLogic extends SidePanelBaseActivity {
                         List<EditableField> userData = new ArrayList<>();
 
                         userData.add(new EditableField(getString(R.string.provideName), userModel.getName(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
+                        userData.add(new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
                         userData.add(new EditableField(getString(R.string.provideCity), userModel.getLocation(), true, true, true, EditableField.FieldType.FIELD_TYPE_CITY_SPINNER));
                         userData.add(new EditableField(getString(R.string.provideAge), userModel.getAge(), true, true, true, EditableField.FieldType.FIELD_TYPE_AGE_SPINNER));
-                        userData.add(new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
                         EditableUserFieldsAdapter adapter = new EditableUserFieldsAdapter(getApplicationContext(), userData);
                         recyclerView.setAdapter(adapter);
                     }
@@ -102,47 +125,8 @@ public class UserAccountLogic extends SidePanelBaseActivity {
         }, "UserModel");
     }
 
-    public void greetNickname() {
-        AppCompatTextView displayNickname = findViewById(R.id.nickname);
-
-        firebaseHelper.getData(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    UserModel userModel = snapshot.getValue(UserModel.class);
-                    if (userModel != null) {
-                        String userNickname = userModel.getNickname();
-                        displayNickname.setText(userNickname);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        }, "UserModel");
-    }
-
-    public void setUserAvatar() {
-        ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), o -> {
-            if (o.getResultCode() == Activity.RESULT_OK) {
-                Intent data = o.getData();
-                if (data != null) {
-                    Uri selectedImageUri = data.getData();
-                    avatarImageView.setImageURI(selectedImageUri);
-                }
-            }
-        });
-        uploadAvatarButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            activityResultLauncher.launch(intent);
-        });
-    }
-
     public void getAddPostButton() {
         ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.layoutOfUserData, myFragment).commit();
+        getSupportFragmentManager().beginTransaction().add(R.id.mainLayout, myFragment).commit();
     }
-
 }

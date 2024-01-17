@@ -22,6 +22,10 @@
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
+            android:name=".Utilities.OpinionFromUser"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".PostsManagement.MainMenuPosts"
             android:exported="true"
             android:theme="@style/AppTheme" />

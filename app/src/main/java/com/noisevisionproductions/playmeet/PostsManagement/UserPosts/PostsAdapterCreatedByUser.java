@@ -25,6 +25,8 @@ import com.noisevisionproductions.playmeet.R;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapterCreatedByUser.MyViewHolder> {
     private final List<PostCreating> listOfPostCreating;
     private final Context context;
@@ -46,6 +48,7 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
     @Override
     public void onBindViewHolder(@NonNull PostsAdapterCreatedByUser.MyViewHolder holder, int position) {
         PostCreating posts = listOfPostCreating.get(position);
+        String userId = posts.getUserId();
 
         holder.uniquePostId.setText(String.valueOf(posts.getPostId()));
         holder.sportNames.setText(posts.getSportType());
@@ -55,6 +58,7 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
         holder.chosenDate.setText(posts.getDateTime());
         holder.chosenHour.setText(posts.getHourTime());
 
+        setUserAvatar(holder, userId, context);
         extraInfo(holder);
         deletePostButton(holder, position);
     }
@@ -127,7 +131,13 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
         }
     }
 
+    private void setUserAvatar(MyViewHolder holder, String userId, Context context) {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
+        private final CircleImageView userAvatar;
         private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
         private final CardView cardView;
         private final ConstraintLayout arrowDownOpenMenu;
@@ -136,6 +146,9 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
 
         public MyViewHolder(View v) {
             super(v);
+            userAvatar = v.findViewById(R.id.userAvatar);
+            userAvatar.setFocusable(false);
+
             uniquePostId = v.findViewById(R.id.uniquePostId);
             uniquePostId.setFocusable(false);
 

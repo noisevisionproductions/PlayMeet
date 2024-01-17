@@ -2,20 +2,18 @@ package com.noisevisionproductions.playmeet;
 
 import java.util.UUID;
 
-
-
-public class PostCreatingCopy{
+public class PostCreatingCopy {
     private final String postUuid;
     private String postId;
-    private String userId;
+    private String userIdCreator;
+    private String userIdSavedBy;
     private String sportType;
     private String cityName;
     private String dateTime;
     private String hourTime;
     private String skillLevel;
     private String additionalInfo;
-    private Boolean isSavedByUser = false;
-
+    private Boolean savedByUser = false;
 
     public PostCreatingCopy() {
         this.postUuid = UUID.randomUUID().toString();
@@ -25,12 +23,20 @@ public class PostCreatingCopy{
         return postUuid;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getUserIdCreator() {
+        return userIdCreator;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setUserIdCreator(String userIdCreator) {
+        this.userIdCreator = userIdCreator;
+    }
+
+    public String getUserIdSavedBy() {
+        return userIdSavedBy;
+    }
+
+    public void setUserIdSavedBy(String userIdSavedBy) {
+        this.userIdSavedBy = userIdSavedBy;
     }
 
     public String getPostId() {
@@ -90,10 +96,10 @@ public class PostCreatingCopy{
     }
 
     public Boolean getSavedByUser() {
-        return isSavedByUser;
+        return savedByUser;
     }
 
     public void setSavedByUser(Boolean savedByUser) {
-        isSavedByUser = savedByUser;
+        this.savedByUser = savedByUser;
     }
 }

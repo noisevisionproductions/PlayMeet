@@ -8,15 +8,10 @@
     android:background="@color/background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/postCreatingLayout"
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".PostsManagement.PostCreatingLogic">
-
-        <!--pasek informujacy o wersji-->
-        <include
-            android:id="@+id/include"
-            layout="@layout/version_info" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linearLayout"

@@ -25,10 +25,17 @@
             android:typeface="serif"
             android:visibility="gone" />
 
-        <include
-            android:id="@+id/appVersionInfo"
-            layout="@layout/version_info"
-            android:visibility="visible" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sendOpinionButton"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#443434"
+            android:gravity="center"
+            android:text="Podziel się opinią"
+            android:textColor="@color/background"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerActivePosts"

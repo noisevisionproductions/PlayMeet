@@ -25,6 +25,8 @@ import com.noisevisionproductions.playmeet.R;
 
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PostsAdapterSavedByUser extends RecyclerView.Adapter<PostsAdapterSavedByUser.MyViewHolder> {
     private final List<PostCreatingCopy> listOfPostCreatingCopy;
     private final Context context;
@@ -46,6 +48,7 @@ public class PostsAdapterSavedByUser extends RecyclerView.Adapter<PostsAdapterSa
     @Override
     public void onBindViewHolder(@NonNull PostsAdapterSavedByUser.MyViewHolder holder, int position) {
         PostCreatingCopy posts = listOfPostCreatingCopy.get(position);
+        String userId = posts.getUserIdCreator();
 
         holder.uniquePostId.setText(String.valueOf(posts.getPostId()));
         holder.sportNames.setText(posts.getSportType());
@@ -57,6 +60,7 @@ public class PostsAdapterSavedByUser extends RecyclerView.Adapter<PostsAdapterSa
 
         extraInfo(holder);
         deletePostButton(holder, position);
+        setUserAvatar(holder, userId, context);
     }
 
     @Override
@@ -101,32 +105,36 @@ public class PostsAdapterSavedByUser extends RecyclerView.Adapter<PostsAdapterSa
         String postId = postCreatingCopy.getPostId();
         DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("SavedPostCreating").child(currentUserId).child(postId);
 
-        if (postCreatingCopy.getUserId().equals(currentUserId)) {
-            // jeżeli post jest stworzony przez zalogowanego użytkownika,
-            // to zmieniam napis na przycisku na "Usuń post"
-            holder.deletePost.setText(R.string.signOutFromThePost);
-            // usuwam post z listy oraz z bazy danych
-            holder.deletePost.setOnClickListener(v -> postReference.removeValue().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    listOfPostCreatingCopy.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
-                    if (listOfPostCreatingCopy.isEmpty()) {
-                        // jeżeli zostaną usunięte wszystkie posty z listy,
-                        // to dzięki przesłaniu noPostInfo w konstruktorze,
-                        // wyświetlam informację o braku stworzonych postów
-                        // postanowiłem do tego stworzyć Handler, aby napis
-                        // pojawiał się z lekkim opóźnieniem, bo bez tego layout dziwnie się zachowuje
-                        new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
-                    } else {
-                        Log.e("PostsAdapterSavedByUser", "Błąd podczas usuwania z bazy danych", task.getException());
-                    }
+        // zmieniam napis na przycisku na "Usuń post"
+        holder.deletePost.setText(R.string.signOutFromThePost);
+        // usuwam post z listy oraz z bazy danych
+        holder.deletePost.setOnClickListener(v -> postReference.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                listOfPostCreatingCopy.remove(position);
+                notifyItemRemoved(position);
+                notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
+                if (listOfPostCreatingCopy.isEmpty()) {
+                    // jeżeli zostaną usunięte wszystkie posty z listy,
+                    // to dzięki przesłaniu noPostInfo w konstruktorze,
+                    // wyświetlam informację o braku stworzonych postów
+                    // postanowiłem do tego stworzyć Handler, aby napis
+                    // pojawiał się z lekkim opóźnieniem, bo bez tego layout dziwnie się zachowuje
+                    new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
+                } else {
+                    Log.e("PostsAdapterSavedByUser", "Błąd podczas usuwania z bazy danych", task.getException());
                 }
-            }));
-        }
+            }
+        }));
+
+    }
+
+    private void setUserAvatar(MyViewHolder holder, String userId, Context context) {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
+        private final CircleImageView userAvatar;
         private final TextInputEditText uniquePostId, sportNames, cityNames, skillLevel, addInfo, chosenDate, chosenHour;
         private final CardView cardView;
         private final ConstraintLayout arrowDownOpenMenu;
@@ -135,6 +143,9 @@ public class PostsAdapterSavedByUser extends RecyclerView.Adapter<PostsAdapterSa
 
         public MyViewHolder(View v) {
             super(v);
+            userAvatar = v.findViewById(R.id.userAvatar);
+            userAvatar.setFocusable(false);
+
             uniquePostId = v.findViewById(R.id.uniquePostId);
             uniquePostId.setFocusable(false);
 
