@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
-import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
@@ -63,41 +64,46 @@ public class PostsCreatedByUserFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
 
         FirebaseAuthManager authenticationManager = new FirebaseAuthManager();
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        String currentUserId = firebaseHelper.getCurrentUser().getUid();
-
-        if (authenticationManager.isUserLoggedIn()) {
-            // uzyskuje referencję do danych PostCreating stworzonego w Firebase
-            DatabaseReference userPostsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
-            // nastepnie pobieram posty z bazy, które mają takie samo userId, co aktualnie zalogowany użytkownik
-            userPostsReference.orderByChild("userId").equalTo(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    List<PostCreating> newUserPosts = new ArrayList<>();
-                    // wszystkie posty przypisane do użytkownika dodaję do listy newUserPosts, aby później je wyświetlić zaktualizowane za pomocą  DiffUtil
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
-                        if (postCreating != null) {
-                            newUserPosts.add(postCreating);
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (firebaseUser != null) {
+            String currentUserId = firebaseUser.getUid();
+            if (authenticationManager.isUserLoggedIn()) {
+                // uzyskuje referencję do danych PostCreating stworzonego w Firebase
+                DatabaseReference userPostsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
+                // nastepnie pobieram posty z bazy, które mają takie samo userId, co aktualnie zalogowany użytkownik
+                userPostsReference.orderByChild("userId").equalTo(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<PostCreating> newUserPosts = new ArrayList<>();
+                        // wszystkie posty przypisane do użytkownika dodaję do listy newUserPosts, aby później je wyświetlić zaktualizowane za pomocą  DiffUtil
+                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                            PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
+                            if (postCreating != null) {
+                                newUserPosts.add(postCreating);
+                            }
+                        }
+                        if (newUserPosts.isEmpty()) {
+                            // jeżeli nie ma żadnych postów, to wyświetlam informację na temat pustej listy
+                            expandableListOfYourPosts.setVisibility(View.GONE);
+                            noPostsInfo.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                        } else {
+                            expandableListOfYourPosts.setVisibility(View.VISIBLE);
+                            noPostsInfo.setVisibility(View.GONE);
+                            updatePostsUsingDiffUtil(newUserPosts);
                         }
                     }
-                    if (newUserPosts.isEmpty()) {
-                        // jeżeli nie ma żadnych postów, to wyświetlam informację na temat pustej listy
-                        expandableListOfYourPosts.setVisibility(View.GONE);
-                        noPostsInfo.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
-                    } else {
-                        expandableListOfYourPosts.setVisibility(View.VISIBLE);
-                        noPostsInfo.setVisibility(View.GONE);
-                        updatePostsUsingDiffUtil(newUserPosts);
-                    }
-                }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("PostsCreatedByUserFragment", "Błąd podczas odczytu danych z Firebase", error.toException());
-                }
-            });
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("PostsCreatedByUserFragment", "Błąd podczas odczytu danych z Firebase", error.toException());
+                    }
+                });
+            }
+        } else {
+            expandableListOfYourPosts.setVisibility(View.GONE);
+            noPostsInfo.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.GONE);
         }
     }
 

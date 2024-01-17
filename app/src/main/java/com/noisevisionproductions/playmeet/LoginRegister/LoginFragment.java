@@ -15,12 +15,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 
 import java.util.Objects;
 
@@ -43,6 +45,9 @@ public class LoginFragment extends Fragment {
         } else {
             loginButton.setOnClickListener(this::loginUser);
         }
+
+        LinearLayoutCompat mainLayout = view.findViewById(R.id.mainLayout);
+        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(requireActivity()));
 
         return view;
     }

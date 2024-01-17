@@ -43,6 +43,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     private FirebaseHelper firebaseHelper;
     private PostsAdapterAllPosts postsAdapterAllPosts;
     private final List<PostCreating> posts = new ArrayList<>();
+    private final List<String> savedPostIds = new ArrayList<>();
     private ProgressBar progressBar, loadingMorePostsIndicator;
     private AppCompatTextView loadingMorePostsText, noPostFound;
     private AppCompatButton filterButton;
@@ -63,11 +64,12 @@ public class PostsOfTheGamesFragment extends Fragment {
         getAddPostButton();
 
         filterAllPosts(view);
+
         return view;
     }
 
     public void setupView(View view) {
-        postsAdapterAllPosts = new PostsAdapterAllPosts(posts, getChildFragmentManager());
+        postsAdapterAllPosts = new PostsAdapterAllPosts(posts, getChildFragmentManager(), getContext());
         authenticationManager = new FirebaseAuthManager();
         firebaseHelper = new FirebaseHelper();
 
@@ -123,20 +125,16 @@ public class PostsOfTheGamesFragment extends Fragment {
             }
 
             new Handler().postDelayed(() -> {
-                threadPool.execute(() -> {
-                    List<PostCreating> moreData = loadNextPager();
-                    if (isAdded()) { // sprawdza, czy fragment jest aktywny, bez tego crashuje aktywnosc, bo ladowanie na poziomie ui nie jest dokocznone
-                        requireActivity().runOnUiThread(() -> {
-                            handleLoadedData(moreData);
-                            loadingMorePostsIndicator.setVisibility(View.GONE);
-                            loadingMorePostsText.setVisibility(View.GONE);
+                List<PostCreating> moreData = loadNextPager();
+                if (isAdded()) { // sprawdza, czy fragment jest aktywny, bez tego crashuje aktywnosc, bo ladowanie na poziomie ui nie jest dokocznone
+                    handleLoadedData(moreData);
 
-                            if (moreData.isEmpty()) {
-                                currentPage = 0;
-                            }
-                        });
+                    if (moreData.isEmpty()) {
+                        currentPage = 0;
                     }
-                });
+
+                }
+
                 isLoading = false;
             }, delayLoading);
         }
@@ -176,17 +174,18 @@ public class PostsOfTheGamesFragment extends Fragment {
                         }
 
                         PostCreating posts = postSnapshot.getValue(PostCreating.class);
-                        nextPagerPosts.add(posts);
-                        lastKey = postSnapshot.getKey();
-                    }
+                        if (posts != null && !posts.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(posts.getPostId())) {
+                            nextPagerPosts.add(posts);
+                            lastKey = postSnapshot.getKey();
+                        }
 
+                    }
                     handleLoadedData(nextPagerPosts);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
         return Collections.emptyList();
@@ -287,7 +286,7 @@ public class PostsOfTheGamesFragment extends Fragment {
             savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot savedPostsSnapshot) {
-                    List<String> savedPostIds = new ArrayList<>();
+                    //List<String> savedPostIds = new ArrayList<>();
 
                     if (savedPostsSnapshot.exists()) {
                         for (DataSnapshot postSnapshot : savedPostsSnapshot.getChildren()) {
@@ -303,7 +302,7 @@ public class PostsOfTheGamesFragment extends Fragment {
                             for (DataSnapshot postSnapshot : allPostsSnapshot.getChildren()) {
                                 PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
 
-                                if (postCreating != null && !postCreating.isCreatedByUser() && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(postCreating.getPostId())) {
+                                if (postCreating != null && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(postCreating.getPostId())) {
                                     newPostCreatingList.add(postCreating);
                                 }
                             }
@@ -373,7 +372,6 @@ public class PostsOfTheGamesFragment extends Fragment {
             PostsFilter postsFilter = new PostsFilter(postsAdapterAllPosts, posts, filterButton, deleteFilters, noPostFound);
             postsFilter.filterPostsWindow((Activity) getContext());
         });
-
     }
 
     public interface OnDataReceived {

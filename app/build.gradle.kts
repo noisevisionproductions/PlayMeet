@@ -32,7 +32,7 @@ android {
     buildTypes {
 
         release {
-            
+
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -56,10 +56,14 @@ android {
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-database")
+    implementation("com.google.firebase:firebase-storage")
     implementation("com.firebaseui:firebase-ui-database:8.0.0")
     implementation("com.firebaseui:firebase-ui-auth:7.2.0")
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.gms:google-services:4.4.0")
+    implementation("com.github.bumptech.glide:glide:4.14.2")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
+    implementation("androidx.exifinterface:exifinterface:1.3.7")
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")

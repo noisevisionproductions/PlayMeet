@@ -8,7 +8,7 @@
     android:background="@color/background">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutOfUserData"
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background"
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:hint="@string/nicknameIsEmpty"
-                android:paddingBottom="20dp"
+                android:paddingBottom="50dp"
                 android:textColor="#0000FF"
                 android:textSize="25sp"
                 android:textStyle="bold"
@@ -86,7 +86,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewUserInfo"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:paddingTop="20dp" />
 

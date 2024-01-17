@@ -26,7 +26,7 @@ public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
             startActivity(intent);
         } else {
             if (getView() != null) {
-                NavigationUtils.showOnlyForLoggedUserMessage(getView());
+                NavigationUtils.showLoginSnackBar(getContext());
             }
         }
     }

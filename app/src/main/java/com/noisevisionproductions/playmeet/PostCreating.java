@@ -2,9 +2,8 @@ package com.noisevisionproductions.playmeet;
 
 public class PostCreating {
     private String postId;
-    private boolean isCreatedByUser = false;
-    private boolean isPostSavedByUser = false;
-    private boolean isExtraInfoOpen = false;
+    private Boolean createdByUser = false;
+    private Boolean savedByUser = false;
     private String userId;
     private String sportType;
     private String cityName;
@@ -13,9 +12,9 @@ public class PostCreating {
     private String skillLevel;
     private String additionalInfo;
 
-
     public PostCreating() {
     }
+
 
     public PostCreating(String postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
         this.postId = postId;
@@ -30,9 +29,8 @@ public class PostCreating {
     public PostCreating copyOfAllPosts() {
         PostCreating copyOfAllPosts = new PostCreating();
         copyOfAllPosts.setPostId(postId);
-        copyOfAllPosts.setIsCreatedByUser(isCreatedByUser);
-        copyOfAllPosts.setPostSavedByUser(isPostSavedByUser);
-        copyOfAllPosts.setExtraInfoOpen(isExtraInfoOpen);
+        copyOfAllPosts.setIsCreatedByUser(createdByUser);
+        copyOfAllPosts.setSavedByUser(savedByUser);
         copyOfAllPosts.setUserId(userId);
         copyOfAllPosts.setSportType(sportType);
         copyOfAllPosts.setCityName(cityName);
@@ -43,20 +41,12 @@ public class PostCreating {
         return copyOfAllPosts;
     }
 
-    public void setPostSavedByUser(Boolean postSavedByUser) {
-        isPostSavedByUser = postSavedByUser;
+    public void setSavedByUser(Boolean savedByUser) {
+        this.savedByUser = savedByUser;
     }
 
-    public void setIsCreatedByUser(Boolean isCreatedByUser) {
-        this.isCreatedByUser = isCreatedByUser;
-    }
-
-    public boolean isCreatedByUser() {
-        return isCreatedByUser;
-    }
-
-    public void setExtraInfoOpen(boolean extraInfoOpen) {
-        isExtraInfoOpen = extraInfoOpen;
+    public void setIsCreatedByUser(Boolean createdByUser) {
+        this.createdByUser = createdByUser;
     }
 
     public String getUserId() {

@@ -110,7 +110,7 @@ public class PostsFilter {
 
     private void setDialogButtons(AlertDialog.Builder builder) {
         // tworzy AlertDialog z przyciskami do filtrowania
-        final CharSequence[] items = {"Sport", "Miasto", "Poziom gry", "Numer postu"};
+        final CharSequence[] items = {"Sport", "Miasto", "Poziom gry", "ID postu"};
 
         // na starcie chowa wszystkie opcje filtrowania
         spinnerSport.setVisibility(View.GONE);
@@ -119,15 +119,15 @@ public class PostsFilter {
 
         // ustawianie maksymalnej dlugości tekstu jako 6 do postId
         InputFilter[] textFilter = new InputFilter[1];
-        textFilter[0] = new InputFilter.LengthFilter(6);
+        textFilter[0] = new InputFilter.LengthFilter(40);
         postIdText.setFilters(textFilter);
-        postIdText.setHint("Wprowadź numer postu...");
+        postIdText.setHint("Wprowadź ID postu...");
         postIdText.setGravity(Gravity.CENTER);
         postIdText.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
                 postIdText.setHint("");
             } else {
-                postIdText.setHint("Wprowadź numer postu...");
+                postIdText.setHint("Wprowadź ID postu...");
             }
         });
         postIdText.setVisibility(View.GONE);
@@ -183,7 +183,7 @@ public class PostsFilter {
 
     private EditText createTextFieldForPostID(Activity activity) {
         EditText text = new EditText(activity);
-        text.setInputType(InputType.TYPE_CLASS_NUMBER);
+        text.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         return text;
     }
 

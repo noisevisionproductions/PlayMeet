@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentManager;
 
 import com.noisevisionproductions.playmeet.R;
 
-
 public class LoginAndRegisterActivity extends AppCompatActivity {
     private AppCompatButton buttonLogin, buttonRegister;
 
@@ -26,7 +25,6 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
         switchToLogin();
         switchToRegister();
     }
-
 
     public void switchToLogin() {
         buttonLogin.setOnClickListener(view -> {

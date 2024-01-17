@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
@@ -48,6 +49,9 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         setDate();
         setHour();
         createPost();
+
+        ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
+        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(this));
     }
 
     public void createPost() {
@@ -57,9 +61,11 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
             if (firebaseHelper.getCurrentUser() != null) {
                 postCreating.setIsCreatedByUser(true);
                 postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
+                setAdditionalInfo();
+                setUniqueId();
+            } else {
+                Toast.makeText(PostCreatingLogic.this, "Użytkownik nie autoryzowany", Toast.LENGTH_SHORT).show();
             }
-            setAdditionalInfo();
-            setUniqueId();
         });
     }
 

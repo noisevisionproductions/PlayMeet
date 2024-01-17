@@ -3,30 +3,35 @@ package com.noisevisionproductions.playmeet.Utilities;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.view.Gravity;
+import android.graphics.Color;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 
-import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
-import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
+import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
+import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 
 public class NavigationUtils extends AppCompatActivity {
-    public static void backToMainMenuButton(Button button, final Context context) {
+    public static void backToMainMenuButton(AppCompatButton button, final Context context) {
         button.setOnClickListener(view -> {
             Intent intent = new Intent(context, MainMenuPosts.class);
             context.startActivity(intent);
         });
     }
 
-    public static void hideKeyboardForFragments(Context context, View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    public static void hideSoftKeyboard(Activity activity) {
+        View currentFocus = activity.getCurrentFocus();
+        if (currentFocus != null) {
+            InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
     }
 
     public static void handleCancelButtonForFragments(Button button, Fragment fragment) {
@@ -37,12 +42,16 @@ public class NavigationUtils extends AppCompatActivity {
         });
     }
 
-    public static void showOnlyForLoggedUserMessage(View view) {
-        Snackbar snackbar = Snackbar.make(view, "Dostępne jedynie dla zalogowanych użytkowników!", Snackbar.LENGTH_SHORT);
-        View snackbarView = snackbar.getView();
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
-        params.gravity = Gravity.TOP;
-        snackbarView.setLayoutParams(params);
-        snackbar.show();
+    public static void showLoginSnackBar(Context context) {
+        View view = ((Activity) context).findViewById(android.R.id.content);
+        Snackbar snackBarLogin = Snackbar.make(view, "Tylko dla zalogowanych użytkowników", Snackbar.LENGTH_SHORT)
+                .setTextColor(Color.WHITE)
+                .setActionTextColor(Color.GREEN);
+        snackBarLogin.setAction("Zaloguj się", v -> {
+            Intent intent = new Intent(context, LoginAndRegisterActivity.class);
+            view.getContext().startActivity(intent);
+        });
+        snackBarLogin.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE).setDuration(700);
+        snackBarLogin.show();
     }
 }

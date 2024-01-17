@@ -42,7 +42,6 @@ public class UserDataManager {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-
                 }
             }, "UserModel");
         }

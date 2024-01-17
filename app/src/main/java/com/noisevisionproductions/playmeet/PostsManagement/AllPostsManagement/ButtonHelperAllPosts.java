@@ -1,5 +1,6 @@
 package com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement;
 
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
+import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
 
 import java.util.Objects;
 
@@ -75,7 +77,6 @@ public class ButtonHelperAllPosts {
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Log.e("Firebase Read Error", error.getMessage());
-
                 }
             });
         }
@@ -98,10 +99,11 @@ public class ButtonHelperAllPosts {
                                     // pobieram dane postu, do którego użytkownik chce się zapisać
                                     PostCreating originalPost = originalPostSnapshot.getValue(PostCreating.class);
 
-                                    if (originalPost != null) {
+                                    if (originalPost != null && !originalPost.getUserId().equals(firebaseHelper.getCurrentUser().getUid())) {
                                         // tworzę kopię postu z bazy danych, aby móc go potem wyświetlić jako zapisany z innym layoutuem
                                         PostCreatingCopy newSavedPost = new PostCreatingCopy();
-                                        newSavedPost.setUserId(firebaseHelper.getCurrentUser().getUid());
+                                        newSavedPost.setUserIdCreator(originalPost.getUserId());
+                                        newSavedPost.setUserIdSavedBy(firebaseHelper.getCurrentUser().getUid());
                                         newSavedPost.setPostId(originalPost.getPostId());
                                         newSavedPost.setSportType(originalPost.getSportType());
                                         newSavedPost.setCityName(originalPost.getCityName());
@@ -121,7 +123,11 @@ public class ButtonHelperAllPosts {
                                                 Log.e("Firebase Save Error", Objects.requireNonNull(databaseError.getMessage()));
                                             }
                                         });
+                                    } else {
+                                        Toast.makeText(view.getContext(), "To Twój post!", Toast.LENGTH_SHORT).show();
                                     }
+                                } else {
+                                    Toast.makeText(view.getContext(), "Post został przez Ciebie zapisany", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -130,8 +136,6 @@ public class ButtonHelperAllPosts {
                                 Log.e("Firebase Read Error", Objects.requireNonNull(error.getMessage()));
                             }
                         });
-                    } else {
-                        Toast.makeText(view.getContext(), "Post już jest zapisany!", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -143,7 +147,7 @@ public class ButtonHelperAllPosts {
         }
     }
 
-    public static void handleMoreInfoButton(FragmentManager fragmentManager, PostCreating postCreating, MyBottomSheetFragment.OnDataPass dataPass) {
+    public static void handleMoreInfoButton(FragmentManager fragmentManager, PostCreating postCreating, MyBottomSheetFragment.OnDataPass dataPass, Context context) {
         FirebaseAuthManager firebaseAuthManager = new FirebaseAuthManager();
         if (firebaseAuthManager.isUserLoggedIn()) {
             MyBottomSheetFragment bottomSheetFragment = MyBottomSheetFragment.newInstance(postCreating);
@@ -151,6 +155,8 @@ public class ButtonHelperAllPosts {
             bottomSheetFragment.setDataPass(dataPass);
 
             bottomSheetFragment.show(fragmentManager, bottomSheetFragment.getTag());
+        } else {
+            NavigationUtils.showLoginSnackBar(context);
         }
     }
 }
