@@ -1,5 +1,6 @@
 package com.noisevisionproductions.playmeet.FirstSetup;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -94,9 +95,9 @@ public class ChildFragmentNickname extends Fragment {
                     if (snapshot.exists()) {
                         // odpowiednie informowanie użytkownika, czy nickname jest dostępny czy nie
                         setAutoCompleteTextViewError("Nazwa użytkownika jest zajęta");
-                        getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
+                        //   getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), Color.BLUE));
                     } else {
-                        getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.successColor));
+                        //    getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.successColor));
                         setNickname(requireView());
                     }
                 }
@@ -118,12 +119,12 @@ public class ChildFragmentNickname extends Fragment {
         if (nickname.isEmpty()) {
             // walidacja pustego pola tekstowego
             setAutoCompleteTextViewError("Pole nie może być puste");
-            getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
+            // getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
             return false;
         } else if (nickname.length() < minLength || nickname.length() > maxLength) {
             // walidacja długości nicku
-            setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");
-            getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
+            setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");/**/
+            // getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
             return false;
         } else {
             setAutoCompleteTextViewError(null);
