@@ -1,58 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="more_blue">#0000FF</color>
-    <color name="errorColor">#FF0000</color>
-    <color name="successColor">#00FF00</color>
-    <!-- Primary Colors -->
-    <color name="primary">#F44336</color>
-    <color name="primary_content">#ffffff</color>
-    <color name="primary_dark">#ff0333</color>
-    <color name="primary_light">#ff6985</color>
+    <color name="text">#e9e8f0</color>
+    <color name="background">#1b171f</color>
+    <color name="primary">#8097f0</color>
+    <color name="secondary">#7fb9f0</color>
+    <color name="accent">#7ddcf0</color>
 
-    <!-- Secondary Colors -->
-    <color name="secondary">#365cff</color>
-    <color name="secondary_content">#ffffff</color>
-    <color name="secondary_dark">#0333ff</color>
-    <color name="secondary_light">#6985ff</color>
+    <color name="primary05">#0d8097f0</color>
+    <color name="primary10">#1a8097f0</color>
+    <color name="primary15">#268097f0</color>
+    <color name="primary20">#338097f0</color>
 
-    <!-- Background, Foreground, Border -->
-    <color name="background">#7EABAE</color>
-    <color name="foreground">#fcfafa</color>
-    <color name="border">#e9d6d9</color>
+    <color name="secondary05">#0d7fb9f0</color>
+    <color name="secondary10">#1a7fb9f0</color>
+    <color name="secondary15">#267fb9f0</color>
+    <color name="secondary20">#337fb9f0</color>
 
-    <!-- Copy Colors -->
-    <color name="copy">#321b1f</color>
-    <color name="copy_light">#854753</color>
-    <color name="copy_lighter">#af6a77</color>
+    <color name="accent05">#0d7ddcf0</color>
+    <color name="accent10">#1a7ddcf0</color>
+    <color name="accent15">#267ddcf0</color>
+    <color name="accent20">#337ddcf0</color>
 
-    <!-- Status Colors -->
-    <color name="success">#36ff36</color>
-    <color name="warning">#ffff36</color>
-    <color name="error">#ff3636</color>
-    <color name="success_content">#003600</color>
-    <color name="warning_content">#363600</color>
-    <color name="error_content">#ffffff</color>
-
-    <!-- Kolory główne -->
-    <color name="app_bar_color">#ff365c</color>
-    <color name="app_bar_text_color">#ffffff</color>
-    <color name="primary_button_color">#ff0333</color>
-    <color name="primary_hyperlink_color">#ff6985</color>
-
-    <!-- Kolory pomocnicze -->
-    <color name="notification_color">#365cff</color>
-    <color name="notification_text_color">#ffffff</color>
-    <color name="secondary_button_color">#0333ff</color>
-    <color name="secondary_hyperlink_color">#6985ff</color>
-
-    <!-- Tło, pierwszy plan, obramowanie -->
-    <color name="activity_background_color">#7EABAE</color>
-    <color name="widget_background_color">#fcfafa</color>
-    <color name="divider_color">#e9d6d9</color>
-
-    <!-- Kolory tekstu -->
-    <color name="primary_text_color">#000000</color>
-    <color name="secondary_text_color">#9DC4CC</color>
-    <color name="hint_text_color">#af6a77</color>
+    <color name="background05">#0d1f1719</color>
+    <color name="background10">#1a1f1719</color>
+    <color name="background15">#261f1719</color>
+    <color name="background20">#331f1719</color>
 
 </resources>
