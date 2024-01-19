@@ -67,44 +67,49 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private void setupEditableFieldsPostInfo() {
-        editableFieldsPostInfo = new EditableField[]{
-                new EditableField("Data:", postCreating.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                new EditableField("Godzina:", postCreating.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                new EditableField("Post ID:", postCreating.getPostId(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)
-        };
+        if (postCreating != null) {
+            editableFieldsPostInfo = new EditableField[]{
+                    new EditableField("Data:", postCreating.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Godzina:", postCreating.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Post ID:", postCreating.getPostId(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)
+            };
+        }
     }
 
     private void getUserDataFromFirebase() {
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(postCreating.getUserId());
+        if (postCreating != null) {
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(postCreating.getUserId());
 
-        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    userModel = snapshot.getValue(UserModel.class);
+            userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        userModel = snapshot.getValue(UserModel.class);
 
-                    if (userModel == null) {
-                        Toast.makeText(getContext(), "Błąd", Toast.LENGTH_LONG).show();
-                    } else {
-                        editableFieldsUserInfo = new EditableField[]{
-                                new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                new EditableField(getString(R.string.provideCity), userModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                new EditableField(getString(R.string.provideGender), userModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                        };
-                        RecyclerView recyclerViewUser = requireView().findViewById(R.id.recycler_view_user_info);
-                        recyclerViewUser.setLayoutManager(new LinearLayoutManager(getContext()));
-                        PostExtendedInfoFieldsAdapter adapterUser = new PostExtendedInfoFieldsAdapter(editableFieldsUserInfo);
-                        recyclerViewUser.setAdapter(adapterUser);
+                        if (userModel == null) {
+                            Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
+                        } else {
+                            editableFieldsUserInfo = new EditableField[]{
+                                    new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                    new EditableField(getString(R.string.provideNick), userModel.getNickname(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                    new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                    new EditableField(getString(R.string.provideCity), userModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                    new EditableField(getString(R.string.provideGender), userModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                    new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                            };
+                            RecyclerView recyclerViewUser = requireView().findViewById(R.id.recycler_view_user_info);
+                            recyclerViewUser.setLayoutManager(new LinearLayoutManager(getContext()));
+                            PostExtendedInfoFieldsAdapter adapterUser = new PostExtendedInfoFieldsAdapter(editableFieldsUserInfo);
+                            recyclerViewUser.setAdapter(adapterUser);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                }
+            });
+        }
     }
 
     private void handleButtons(View view) {

@@ -3,18 +3,18 @@ package com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.textfield.TextInputEditText;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
@@ -45,17 +45,15 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
         holder.cityNames.setText(postCreating.getCityName());
         holder.skillLevel.setText(postCreating.getSkillLevel());
         holder.addInfo.setText(postCreating.getAdditionalInfo());
+        if (postCreating.getHowManyPeopleNeeded() > 0) {
+            holder.numberOfPeople.setText(postCreating.getPeopleStatus());
+        }
 
-        // oba obiekty z layoutu reagują na kliknięcie, bo 1 to strzałka, a 2 to pasek na długości postu, który jest odpowiedzialny za pozycję strzałki
-        holder.arrowDownOpenMenuButton.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, data -> {
-        }, context));
-        holder.arrowDownOpenMenu.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, data -> {
-        }, context));
-    }
+        holder.layoutOfPost.startAnimation(holder.postAnimation);
 
-    private void setUserAvatar(MyViewHolder holder, String userId, Context context) {
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
+        // po kliknieciu w post, otwiera wiecej informacji o nim
+        holder.layoutOfPost.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, data -> {
+        }, context));
     }
 
     @NonNull
@@ -70,42 +68,50 @@ public class PostsAdapterAllPosts extends RecyclerView.Adapter<PostsAdapterAllPo
         return listOfPostCreating.size();
     }
 
+    private void setUserAvatar(MyViewHolder holder, String userId, Context context) {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
-        private final TextInputEditText sportNames, cityNames, skillLevel, addInfo;
-        protected final ConstraintLayout arrowDownOpenMenu;
-        protected final LinearLayoutCompat extraInfoContainer;
-        final CardView layoutOfPost;
-        protected final AppCompatButton arrowDownOpenMenuButton, savePostButton, chatButton;
+        private final AppCompatTextView sportNames, cityNames, skillLevel, addInfo, numberOfPeople;
+        private final CardView layoutOfPost;
+        private final Animation postAnimation;
 
         public MyViewHolder(View v) {
             super(v);
             userAvatar = v.findViewById(R.id.userAvatar);
-            userAvatar.setFocusable(false);
-
             sportNames = v.findViewById(R.id.sportNames);
-            sportNames.setFocusable(false);
-
             cityNames = v.findViewById(R.id.chosenCity);
-            cityNames.setFocusable(false);
-
-            skillLevel = v.findViewById(R.id.skilLevel);
-            skillLevel.setFocusable(false);
-
+            skillLevel = v.findViewById(R.id.skillLevel);
             addInfo = v.findViewById(R.id.addInfoPost);
-            addInfo.setFocusable(false);
-
+            numberOfPeople = v.findViewById(R.id.numberOfPeople);
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
 
-            arrowDownOpenMenu = v.findViewById(R.id.arrowDownOpenMenu);
+            postAnimation = AnimationUtils.loadAnimation(layoutOfPost.getContext(), R.anim.post_loading_animation);
+            layoutOfPost.setAnimation(postAnimation);
 
-            extraInfoContainer = v.findViewById(R.id.extraInfoContainer);
+            setPostAnimation();
+        }
 
-            arrowDownOpenMenuButton = v.findViewById(R.id.arrowDownOpenMenuButton);
-
-            savePostButton = v.findViewById(R.id.savePostButton);
-
-            chatButton = v.findViewById(R.id.chatButton);
+        private void setPostAnimation() {
+            layoutOfPost.setOnHoverListener((view, motionEvent) -> {
+                if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
+                    view.animate()
+                            .scaleX(1.2f)
+                            .scaleY(1.2f)
+                            .setDuration(300)
+                            .start();
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_EXIT) {
+                    view.animate()
+                            .scaleX(1.0f)
+                            .scaleY(1.0f)
+                            .setDuration(300)
+                            .start();
+                }
+                return false;
+            });
         }
     }
 }

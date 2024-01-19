@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_background_color">
+    android:background="@color/background">
 
     <LinearLayout
         android:id="@+id/mainLayout"
@@ -71,25 +71,20 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.textfield.TextInputLayout
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/userPasswordSecondInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:passwordToggleEnabled="true">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/userPasswordSecondInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/hasloponownie"
-                android:inputType="textPassword"
-                android:maxEms="32"
-                android:minEms="3"
-                android:textColor="#443434"
-                android:textSize="20sp"
-                app:passwordToggleEnabled="true"
-                tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginBottom="10dp"
+            android:hint="@string/hasloponownie"
+            android:inputType="textPassword"
+            android:maxEms="32"
+            android:minEms="3"
+            android:textColor="@color/accent"
+            android:textSize="20sp"
+            app:passwordToggleEnabled="true"
+            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/registerButton"

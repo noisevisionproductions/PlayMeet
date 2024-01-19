@@ -5,5 +5,5 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:padding="20dp"
-    android:indeterminateTint="#0000FF"
+    android:indeterminateTint="@color/accent"
     android:visibility="gone" />

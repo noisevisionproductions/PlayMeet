@@ -20,8 +20,6 @@ import com.noisevisionproductions.playmeet.Adapters.ListOfChatRoomsAdapter;
 import com.noisevisionproductions.playmeet.R;
 
 public class ChatRoomList extends Fragment {
-    private DatabaseReference chatRoomsReference;
-    // ValueEvenentListener potrzebny do powiadamiania adaptera o zmianach
     private ListOfChatRoomsAdapter listOfChatRoomsAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,16 +34,19 @@ public class ChatRoomList extends Fragment {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser != null) {
-            chatRoomsReference = FirebaseDatabase.getInstance().getReference("ChatRooms");
+            String currentUserId = firebaseUser.getUid();
+            DatabaseReference chatRoomsReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUserId).child("ChatRooms");
+            FirebaseRecyclerOptions<ChatRoomModel> options = new FirebaseRecyclerOptions.Builder<ChatRoomModel>()
+                    .setQuery(chatRoomsReference, ChatRoomModel.class)
+                    .build();
+
+            listOfChatRoomsAdapter = new ListOfChatRoomsAdapter(this::onChatClicked, options, getContext());
             setRecyclerView(view);
         }
     }
 
     public void setRecyclerView(View view) {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewChatRoomList);
-        listOfChatRoomsAdapter = new ListOfChatRoomsAdapter(this::onChatClicked, new FirebaseRecyclerOptions.Builder<ChatRoomModel>()
-                .setQuery(chatRoomsReference, ChatRoomModel.class)
-                .build());
         recyclerView.setAdapter(listOfChatRoomsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }

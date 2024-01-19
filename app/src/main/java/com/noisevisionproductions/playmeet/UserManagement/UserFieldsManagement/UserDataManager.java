@@ -34,7 +34,7 @@ public class UserDataManager {
                             // metody updateUser z FirebaseHelper, która automatycznie zapisuje podane jej dane
                             // oraz wyświetla komunikaty o sukcesie oraz błędach
                             HashMap<String, Object> update = handleFieldUpdate(userModel, label, newValue, context);
-                            firebaseHelper.updateDataUsingHashMap(update, aVoid -> Snackbar.make(view, "Zapisano " + newLabel, Snackbar.LENGTH_SHORT).show(),
+                            firebaseHelper.updateDataUsingHashMap(update, aVoid -> Snackbar.make(view, "Zapisano " + newLabel, Snackbar.LENGTH_SHORT).setDuration(400).show(),
                                     error -> Log.e("Firebase Update", "Wystąpił błąd podczas aktualizacji danych.", error), "UserModel");
                         }
                     }

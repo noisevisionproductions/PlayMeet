@@ -11,6 +11,8 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         android:padding="5dp"
+        android:textColorHint="@color/textHint"
+        android:textColor="@color/text"
         android:textSize="17sp"
         android:typeface="serif" />
 
@@ -22,7 +24,8 @@
         android:layout_weight="3"
         android:hint="@string/userDidNotProvided"
         android:padding="5dp"
-        android:textColorHint="#808080"
+        android:textColorHint="@color/textHint"
+        android:textColor="@color/text"
         android:textSize="17sp"
         android:textStyle="bold"
         android:typeface="serif" />
