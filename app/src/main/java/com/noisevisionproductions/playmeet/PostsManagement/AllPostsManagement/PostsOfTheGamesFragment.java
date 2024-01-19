@@ -22,7 +22,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
@@ -33,26 +32,25 @@ import com.noisevisionproductions.playmeet.PostsManagement.PostsFiltering.PostsF
 import com.noisevisionproductions.playmeet.R;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private FirebaseAuthManager authenticationManager;
+    private DatabaseReference allPostsReference;
     private FirebaseHelper firebaseHelper;
     private PostsAdapterAllPosts postsAdapterAllPosts;
     private final List<PostCreating> posts = new ArrayList<>();
     private final List<String> savedPostIds = new ArrayList<>();
     private ProgressBar progressBar, loadingMorePostsIndicator;
-    private AppCompatTextView loadingMorePostsText, noPostFound;
     private AppCompatButton filterButton;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private boolean isLoading = false;
-    private int initialPostsToLoad;
     private int currentPage = 1;
-    private String lastKey = null;
+    private static final int POSTS_PER_PAGE = 10;
+    private AppCompatTextView loadingMorePostsText, noPostFound;
     private final ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -68,10 +66,11 @@ public class PostsOfTheGamesFragment extends Fragment {
         return view;
     }
 
-    public void setupView(View view) {
+    private void setupView(View view) {
         postsAdapterAllPosts = new PostsAdapterAllPosts(posts, getChildFragmentManager(), getContext());
         authenticationManager = new FirebaseAuthManager();
         firebaseHelper = new FirebaseHelper();
+        allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
 
         progressBar = view.findViewById(R.id.progressBarLayout);
         loadingMorePostsIndicator = view.findViewById(R.id.loadMorePostsIndicator);
@@ -81,124 +80,48 @@ public class PostsOfTheGamesFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view_posts);
 
-        initialPostsToLoad = 10;
-
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-    }
-
-    public void loadPartOfThePosts() {
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                if (layoutManager != null) {
-                    int visibleItemCount = layoutManager.getChildCount();
-                    int totalItemCount = layoutManager.getItemCount();
-                    int firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition();
-
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                            && !isLoading) {
-                        loadMoreData();
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (!isLoading) {
+                    if (linearLayoutManager != null) {
+                        int totalItemCount = linearLayoutManager.getItemCount();
+                        int lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
+                        if (lastVisibleItemPosition + 1 == totalItemCount) {
+                            loadMorePosts();
+                            isLoading = true;
+                        }
                     }
                 }
             }
         });
+
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
     }
 
-    private void loadMoreData() {
-        if (!isLoading) {
-            isLoading = true;
+    private void loadMorePosts() {
+        currentPage++;
 
-            loadingMorePostsIndicator.setVisibility(View.VISIBLE);
-            loadingMorePostsText.setVisibility(View.VISIBLE);
+        loadingMorePostsIndicator.setVisibility(View.VISIBLE);
+        loadingMorePostsText.setVisibility(View.VISIBLE);
 
-            int delayLoading = 1000;
-
-            if (currentPage <= 0) {
-                loadingMorePostsIndicator.setVisibility(View.GONE);
-                loadingMorePostsText.setVisibility(View.GONE);
-                isLoading = false;
-                return;
-            }
-
-            new Handler().postDelayed(() -> {
-                List<PostCreating> moreData = loadNextPager();
-                if (isAdded()) { // sprawdza, czy fragment jest aktywny, bez tego crashuje aktywnosc, bo ladowanie na poziomie ui nie jest dokocznone
-                    handleLoadedData(moreData);
-
-                    if (moreData.isEmpty()) {
-                        currentPage = 0;
-                    }
-
-                }
-
-                isLoading = false;
-            }, delayLoading);
-        }
-    }
-
-    private void handleLoadedData(List<PostCreating> moreData) {
-        if (moreData != null) {
-            int oldSize = posts.size();
-            posts.addAll(moreData);
-            postsAdapterAllPosts.notifyItemRangeInserted(oldSize, moreData.size());
-        }
-        isLoading = false;
-    }
-
-    private List<PostCreating> loadNextPager() {
-        int postsPerPage = 10;
-        //int endIndex = startIndex + postsPerPage;
-        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
-        Query query;
-        if (lastKey == null) {
-            query = postsReference.orderByKey().limitToFirst(postsPerPage);
+        if (authenticationManager.isUserLoggedIn()) {
+            postCreateForLoggedInUser();
         } else {
-            query = postsReference.orderByKey().startAt(lastKey).limitToFirst(postsPerPage + 1);
+            postCreateForUnregisteredUser();
         }
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    List<PostCreating> nextPagerPosts = new ArrayList<>();
-                    boolean isFirstItem = true;
-
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        // Skip the first item if this is a subsequent load
-                        if (isFirstItem && lastKey != null) {
-                            isFirstItem = false;
-                            continue;
-                        }
-
-                        PostCreating posts = postSnapshot.getValue(PostCreating.class);
-                        if (posts != null && !posts.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(posts.getPostId())) {
-                            nextPagerPosts.add(posts);
-                            lastKey = postSnapshot.getKey();
-                        }
-
-                    }
-                    handleLoadedData(nextPagerPosts);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-        return Collections.emptyList();
     }
 
-    public void refreshData() {
+    private void refreshData() {
         swipeRefreshLayout.setRefreshing(true);
 
         int delayLoading = 1000;
 
         new Handler().postDelayed(() -> {
             int oldSize = posts.size();
-            currentPage = 1;
 
             posts.clear();
 
@@ -222,7 +145,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
 
-    protected void showAllPosts() {
+    private void showAllPosts() {
         recyclerView.setAdapter(postsAdapterAllPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
@@ -233,99 +156,57 @@ public class PostsOfTheGamesFragment extends Fragment {
             postCreateForUnregisteredUser();
         }
 
-        //pozwala na przewijanie postow jeden po drugim
-
-        if (postsAdapterAllPosts != null) {
-            loadPartOfThePosts();
-        }
-
         getAddPostButton();
     }
 
-    public void postCreateForUnregisteredUser() {
-        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
-        postsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    List<PostCreating> newPostCreatingList = new ArrayList<>();
-
-                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                        PostCreating posts = postSnapshot.getValue(PostCreating.class);
-                        newPostCreatingList.add(posts);
-                    }
-
-                    int size = Math.min(initialPostsToLoad, newPostCreatingList.size());
-
-                    if (size > 0) {
-                        recyclerView.setVisibility(View.VISIBLE);
-                        noPostFound.setVisibility(View.GONE);
-                        updatePostsUsingDiffUtil(newPostCreatingList.subList(0, size));
-                    } else {
-                        recyclerView.setVisibility(View.GONE);
-                        noPostFound.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    recyclerView.setVisibility(View.GONE);
-                    noPostFound.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                recyclerView.setVisibility(View.GONE);
-                noPostFound.setVisibility(View.VISIBLE);
-            }
-        });
-    }
-
-    public void postCreateForLoggedInUser() {
+    private void postCreateForLoggedInUser() {
         if (firebaseHelper.getCurrentUser() != null) {
             DatabaseReference savedPostsReference = FirebaseDatabase.getInstance().getReference().child("SavedPostCreating").child(firebaseHelper.getCurrentUser().getUid());
-            DatabaseReference allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
             savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot savedPostsSnapshot) {
-                    //List<String> savedPostIds = new ArrayList<>();
-
                     if (savedPostsSnapshot.exists()) {
                         for (DataSnapshot postSnapshot : savedPostsSnapshot.getChildren()) {
                             savedPostIds.add(postSnapshot.getKey());
                         }
                     }
 
-                    allPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot allPostsSnapshot) {
-                            List<PostCreating> newPostCreatingList = new ArrayList<>();
+                    allPostsReference.orderByKey()
+                            .limitToFirst(currentPage * POSTS_PER_PAGE)
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot allPostsSnapshot) {
+                                    List<PostCreating> newPostCreatingList = new ArrayList<>();
 
-                            for (DataSnapshot postSnapshot : allPostsSnapshot.getChildren()) {
-                                PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
+                                    for (DataSnapshot postSnapshot : allPostsSnapshot.getChildren()) {
+                                        PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
 
-                                if (postCreating != null && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(postCreating.getPostId())) {
-                                    newPostCreatingList.add(postCreating);
+                                        if (postCreating != null && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(postCreating.getPostId())) {
+                                            newPostCreatingList.add(postCreating);
+                                        }
+                                    }
+
+                                    if (newPostCreatingList.isEmpty()) {
+                                        recyclerView.setVisibility(View.GONE);
+                                        noPostFound.setVisibility(View.VISIBLE);
+                                    } else {
+                                        recyclerView.setVisibility(View.VISIBLE);
+                                        noPostFound.setVisibility(View.GONE);
+                                        updatePostsUsingDiffUtil(newPostCreatingList);
+
+                                    }
+                                    loadingMorePostsIndicator.setVisibility(View.GONE);
+                                    loadingMorePostsText.setVisibility(View.GONE);
                                 }
-                            }
 
-                            int size = Math.min(initialPostsToLoad, newPostCreatingList.size());
-                            newPostCreatingList = newPostCreatingList.subList(0, size);
-
-                            if (newPostCreatingList.isEmpty()) {
-                                recyclerView.setVisibility(View.GONE);
-                                noPostFound.setVisibility(View.VISIBLE);
-                            } else {
-                                recyclerView.setVisibility(View.VISIBLE);
-                                noPostFound.setVisibility(View.GONE);
-                                updatePostsUsingDiffUtil(newPostCreatingList);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            recyclerView.setVisibility(View.GONE);
-                            noPostFound.setVisibility(View.VISIBLE);
-                        }
-                    });
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+                                    loadingMorePostsIndicator.setVisibility(View.GONE);
+                                    loadingMorePostsText.setVisibility(View.GONE);
+                                    recyclerView.setVisibility(View.GONE);
+                                    noPostFound.setVisibility(View.VISIBLE);
+                                }
+                            });
                 }
 
                 @Override
@@ -340,8 +221,42 @@ public class PostsOfTheGamesFragment extends Fragment {
         }
     }
 
+    private void postCreateForUnregisteredUser() {
+        allPostsReference.orderByKey()
+                .limitToFirst(currentPage * POSTS_PER_PAGE)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            List<PostCreating> newPostCreatingList = new ArrayList<>();
+
+                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                                PostCreating posts = postSnapshot.getValue(PostCreating.class);
+                                newPostCreatingList.add(posts);
+                            }
+
+                            updatePostsUsingDiffUtil(newPostCreatingList);
+                        } else {
+                            recyclerView.setVisibility(View.GONE);
+                            noPostFound.setVisibility(View.VISIBLE);
+                        }
+                        loadingMorePostsIndicator.setVisibility(View.GONE);
+                        loadingMorePostsText.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        loadingMorePostsIndicator.setVisibility(View.GONE);
+                        loadingMorePostsText.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.GONE);
+                        noPostFound.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+
     // obliczanie roznicy miedzy postami w celu szybszego ladowania, pozwala na dzialanie na watku w tle
-    public void updatePostsUsingDiffUtil(List<PostCreating> newPosts) {
+    private void updatePostsUsingDiffUtil(List<PostCreating> newPosts) {
         final List<PostCreating> oldPosts = new ArrayList<>(this.posts);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -361,12 +276,12 @@ public class PostsOfTheGamesFragment extends Fragment {
         });
     }
 
-    public void getAddPostButton() {
+    private void getAddPostButton() {
         ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
         getChildFragmentManager().beginTransaction().add(R.id.layoutForAddPostButton, myFragment).commit();
     }
 
-    public void filterAllPosts(View view) {
+    private void filterAllPosts(View view) {
         AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
         filterButton.setOnClickListener(v -> {
             PostsFilter postsFilter = new PostsFilter(postsAdapterAllPosts, posts, filterButton, deleteFilters, noPostFound);

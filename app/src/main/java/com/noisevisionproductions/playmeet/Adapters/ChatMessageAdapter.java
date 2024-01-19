@@ -1,5 +1,6 @@
 package com.noisevisionproductions.playmeet.Adapters;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +16,23 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
 
-public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel, ChatMessageAdapter.ChatViewHolder> /*RecyclerView.Adapter<ChatMessageAdapter.ChatViewHolder>*/ {
+import de.hdodenhof.circleimageview.CircleImageView;
 
-    public ChatMessageAdapter(@NonNull FirebaseRecyclerOptions<ChatMessageModel> options) {
+public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel, ChatMessageAdapter.ChatViewHolder> {
+    private final Context context;
+
+    public ChatMessageAdapter(@NonNull FirebaseRecyclerOptions<ChatMessageModel> options, Context context) {
         super(options);
+        this.context = context;
     }
 
     @Override
     protected void onBindViewHolder(@NonNull ChatMessageAdapter.ChatViewHolder holder, int position, @NonNull ChatMessageModel model) {
         setMessagesLookBasedOnLoggedUser(holder, model);
-        holder.bind(model);
+        bind(model, holder);
     }
 
     @NonNull
@@ -37,21 +43,29 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
     }
 
     public void setMessagesLookBasedOnLoggedUser(ChatViewHolder holder, ChatMessageModel chatMessageModel) {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            String currentUserId = currentUser.getUid();
-            if (chatMessageModel.getUserId().equals(currentUserId)) {
-                // ustawienie wyglądu wiadomości zależnie od tego czy wysłana czy odebrana
-                holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
-            } else {
-                holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
-            }
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        String currentUserId = firebaseHelper.getCurrentUser().getUid();
+        if (chatMessageModel.getUserId().equals(currentUserId)) {
+            firebaseHelper.getUserAvatar(context, currentUserId, holder.userAvatar);
+            // ustawienie wyglądu wiadomości zależnie od tego czy wysłana czy odebrana
+            //holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
+        } else {
+            firebaseHelper.getUserAvatar(context, chatMessageModel.getUserId(), holder.userAvatar);
+            holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
         }
+    }
+
+    public void bind(ChatMessageModel chatMessageModel, ChatViewHolder holder) {
+        // ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
+        holder.usernameTextView.setText(chatMessageModel.getNickname());
+        holder.messageTextView.setText(chatMessageModel.getMessage());
+        holder.timestampTextView.setText(chatMessageModel.formatDate());
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {
         private final AppCompatTextView usernameTextView, messageTextView, timestampTextView;
         private final LinearLayoutCompat layoutOfMessage;
+        private final CircleImageView userAvatar;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,14 +73,7 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
             messageTextView = itemView.findViewById(R.id.messageTextView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
             layoutOfMessage = itemView.findViewById(R.id.layoutOfMessage);
-        }
-
-        public void bind(ChatMessageModel chatMessageModel) {
-            // ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
-            usernameTextView.setText(chatMessageModel.getNickname());
-            messageTextView.setText(chatMessageModel.getMessage());
-            timestampTextView.setText(chatMessageModel.formatDate());
+            userAvatar = itemView.findViewById(R.id.userAvatar);
         }
     }
-
 }

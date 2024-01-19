@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.noisevisionproductions.playmeet.R;
+
 import java.util.List;
 
 // Ustawiam wlasciwosci AppSpinnerAdapter przy tworzeniu postów
@@ -44,8 +46,7 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
             textView.setTextColor(Color.GRAY);
             textView.setEnabled(false);
         } else {
-            // jeżeli spinner jest na innym indeksie niż 0, to ustawiam tekst na domyślny kolor
-            textView.setTextColor(Color.BLACK);
+            textView.setTextColor(Color.parseColor("#e9e8f0"));
         }
         return view;
     }

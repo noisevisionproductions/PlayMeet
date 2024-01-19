@@ -66,9 +66,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
+                    android:padding="10dp"
                     android:text="@string/noPostFound"
-                    android:textColor="@color/primary_text_color"
-                    android:textSize="30sp"
+                    android:textColor="@color/text"
+                    android:textSize="24sp"
                     android:visibility="gone" />
 
                 <!-- tekst oraz ikonka ładowania podczas pobierania postów z bazy -->
@@ -86,7 +87,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:indeterminateTint="#0000FF"
+                        android:indeterminateTint="@color/accent"
                         android:padding="5dp"
                         android:visibility="gone" />
 
@@ -95,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/loadingMorePosts"
-                        android:textColor="#0000FF"
+                        android:textColor="@color/text"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:visibility="gone" />

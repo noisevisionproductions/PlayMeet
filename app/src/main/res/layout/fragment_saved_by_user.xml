@@ -20,9 +20,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
+            android:padding="10dp"
             android:text="@string/noPostSaved"
-            android:textColor="@color/primary_text_color"
-            android:textSize="28sp"
+            android:textColor="@color/text"
+            android:textSize="24sp"
             android:visibility="gone" />
 
         <!--wyswietlanie postow stworzonych przez uzytkownika-->

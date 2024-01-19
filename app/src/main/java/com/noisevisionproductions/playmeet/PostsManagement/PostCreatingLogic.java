@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -30,6 +31,7 @@ import java.util.Objects;
 public class PostCreatingLogic extends SidePanelBaseActivity {
     private final PostCreating postCreating = new PostCreating();
     private FirebaseHelper firebaseHelper;
+    private AppCompatSpinner sportSpinner, citySpinner, skillSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,22 +56,29 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(this));
     }
 
-    public void createPost() {
+    private void createPost() {
         AppCompatButton createPost = findViewById(R.id.submitPost);
 
         createPost.setOnClickListener(view -> {
-            if (firebaseHelper.getCurrentUser() != null) {
-                postCreating.setIsCreatedByUser(true);
-                postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
-                setAdditionalInfo();
-                setUniqueId();
+            if (isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
+                if (firebaseHelper.getCurrentUser() != null) {
+                    postCreating.setIsCreatedByUser(true);
+                    postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
+                    setHowManyPeopleNeeded();
+                    setAdditionalInfo();
+                    setUniqueId();
+                } else {
+                    Toast.makeText(PostCreatingLogic.this, "Użytkownik nie autoryzowany", Toast.LENGTH_SHORT).show();
+                }
+
             } else {
-                Toast.makeText(PostCreatingLogic.this, "Użytkownik nie autoryzowany", Toast.LENGTH_SHORT).show();
+                handleInvalidSelection();
+                NavigationUtils.createSnackBarUsingView(view, "Uzupełnij wymagane pola");
             }
         });
     }
 
-    public void setUniqueId() {
+    private void setUniqueId() {
         DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("PostCreating");
         String postId = postReference.push().getKey();
         postCreating.setPostId(postId);
@@ -89,19 +98,20 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         }
     }
 
-    public void setSportType() {
+    private void setSportType() {
         String[] items = getResources().getStringArray(R.array.arrays_sport_names);
         MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        AppCompatSpinner spinner = findViewById(R.id.arrays_sport_names);
-        spinner.setAdapter(adapter);
+        sportSpinner = findViewById(R.id.arrays_sport_names);
+        sportSpinner.setAdapter(adapter);
 
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        sportSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedSport = (String) adapterView.getItemAtPosition(i);
-
-                postCreating.setSportType(selectedSport);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                String selectedSport = (String) adapterView.getItemAtPosition(position);
+                if (position > 0) {
+                    postCreating.setSportType(selectedSport);
+                }
             }
 
             @Override
@@ -110,14 +120,16 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         });
     }
 
-    public void setCityName() {
-        AppCompatSpinner chooseCity = findViewById(R.id.cities_in_poland);
+    private void setCityName() {
+        citySpinner = findViewById(R.id.cities_in_poland);
 
-        SpinnerManager.setupCitySpinner(this, chooseCity, CityXmlParser.parseCityNames(this), new AdapterView.OnItemSelectedListener() {
+        SpinnerManager.setupCitySpinner(this, citySpinner, CityXmlParser.parseCityNames(this), new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCity = (String) parent.getItemAtPosition(position);
-                postCreating.setCityName(selectedCity);
+                if (position > 0) {
+                    postCreating.setCityName(selectedCity);
+                }
             }
 
             @Override
@@ -127,18 +139,19 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         });
     }
 
-    public void setSkillLevel() {
+    private void setSkillLevel() {
         String[] items = getResources().getStringArray(R.array.arrays_skill_level);
         MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        AppCompatSpinner spinner = findViewById(R.id.arrays_skill_level);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        skillSpinner = findViewById(R.id.arrays_skill_level);
+        skillSpinner.setAdapter(adapter);
+        skillSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedSkillLevel = (String) adapterView.getItemAtPosition(i);
-
-                postCreating.setSkillLevel(selectedSkillLevel);
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                String selectedSkillLevel = (String) adapterView.getItemAtPosition(position);
+                if (position > 0) {
+                    postCreating.setSkillLevel(selectedSkillLevel);
+                }
             }
 
             @Override
@@ -148,14 +161,27 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         });
     }
 
-    public void setAdditionalInfo() {
+    private void setHowManyPeopleNeeded() {
+        TextInputEditText peopleNeeded = findViewById(R.id.howManyPeopleNeeded);
+
+        String typedInfo = Objects.requireNonNull(peopleNeeded.getText()).toString();
+        if (!typedInfo.isEmpty()) {
+            postCreating.setHowManyPeopleNeeded(Integer.parseInt(typedInfo));
+        }
+    }
+
+    private void setAdditionalInfo() {
         TextInputEditText addInfo = findViewById(R.id.addInfo);
 
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
-        postCreating.setAdditionalInfo(typedInfo);
+        if (!typedInfo.isEmpty()) {
+            if (!typedInfo.equals("0")) {
+                postCreating.setAdditionalInfo(typedInfo);
+            }
+        }
     }
 
-    public void setDate() {
+    private void setDate() {
         TextInputEditText chooseDate = findViewById(R.id.chooseDate);
         chooseDate.setFocusable(false);
 
@@ -163,11 +189,55 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         chooseDate.setOnClickListener(v -> dateChoosingLogic.pickDate(chooseDate));
     }
 
-    public void setHour() {
+    private void setHour() {
         TextInputEditText chooseHour = findViewById(R.id.chooseHour);
         chooseHour.setFocusable(false);
 
         DateChoosingLogic dateChoosingLogic = new DateChoosingLogic(this, postCreating);
         chooseHour.setOnClickListener(v -> dateChoosingLogic.pickHour(chooseHour));
+    }
+
+    private boolean isValidSportSelection() {
+        return !sportSpinner.getSelectedItem().equals("Wybierz sport");
+    }
+
+    private boolean isValidCitySelection() {
+        return !citySpinner.getSelectedItem().equals("Wybierz miasto");
+    }
+
+    private boolean isValidSkillSelection() {
+        return !skillSpinner.getSelectedItem().equals("Wybierz poziom");
+    }
+
+    private void handleInvalidSelection() {
+        if (!isValidSportSelection()) {
+            setSpinnerError(sportSpinner, "Wybierz sport");
+        } else {
+            clearSpinnerError(sportSpinner);
+        }
+        if (!isValidCitySelection()) {
+            setSpinnerError(citySpinner, "Wybierz miasto");
+        } else {
+            clearSpinnerError(citySpinner);
+        }
+        if (!isValidSkillSelection()) {
+            setSpinnerError(skillSpinner, "Wybierz poziom");
+        } else {
+            clearSpinnerError(skillSpinner);
+        }
+    }
+
+    private void setSpinnerError(AppCompatSpinner spinner, String errorText) {
+        View selectedView = spinner.getSelectedView();
+        if (selectedView instanceof TextView textView) {
+            textView.setError(errorText);
+        }
+    }
+
+    private void clearSpinnerError(AppCompatSpinner spinner) {
+        View selectedView = spinner.getSelectedView();
+        if (selectedView instanceof TextView textView) {
+            textView.setError(null);
+        }
     }
 }

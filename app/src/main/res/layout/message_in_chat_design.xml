@@ -8,31 +8,31 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imageViewProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/sample_avatar" />
+    <include
+        layout="@layout/image_view_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:paddingLeft="10dp">
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/usernameTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="@string/username"
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Message" />
+            android:text="@string/message" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -40,6 +40,6 @@
         android:id="@+id/timestampTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Timestamp" />
+        android:text="@string/timeStamp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

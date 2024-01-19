@@ -1,9 +1,12 @@
 package com.noisevisionproductions.playmeet.PostsManagement;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -15,6 +18,7 @@ import com.noisevisionproductions.playmeet.Chat.ChatRoomList;
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
 import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.MyBottomSheetFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.PostsOfTheGamesFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsCreatedByUserFragment;
@@ -45,6 +49,8 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         switchToChatRoom();
 
         sendOpinionButtonHandle();
+
+        handleBackPressed();
     }
 
     @Override
@@ -62,7 +68,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         }
     }
 
-    public void setUpUIElements() {
+    private void setUpUIElements() {
         authenticationManager = new FirebaseAuthManager();
 
         yourPostsMenu = findViewById(R.id.yourPostsMenu);
@@ -76,7 +82,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         showAllPostsMenu.setSelected(true);
     }
 
-    public void checkUsers() {
+    private void checkUsers() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (authenticationManager.isUserLoggedIn()) {
@@ -121,7 +127,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         sendOpinionButton.setVisibility(View.VISIBLE);
     }
 
-    public void switchToUserPosts() {
+    private void switchToUserPosts() {
         yourPostsMenu.setOnClickListener(view -> {
 
             yourPostsMenu.setSelected(true);
@@ -137,7 +143,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         });
     }
 
-    public void switchToFavoritePosts() {
+    private void switchToFavoritePosts() {
         savedPostsMenu.setOnClickListener(view -> {
             if (authenticationManager.isUserLoggedIn()) {
 
@@ -157,7 +163,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         });
     }
 
-    public void switchToMainMenu() {
+    private void switchToMainMenu() {
         showAllPostsMenu.setOnClickListener(view -> {
             yourPostsMenu.setSelected(false);
             savedPostsMenu.setSelected(false);
@@ -172,7 +178,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         });
     }
 
-    public void switchToChatRoom() {
+    private void switchToChatRoom() {
         chatRoomMenu.setOnClickListener(view -> {
             if (authenticationManager.isUserLoggedIn()) {
                 yourPostsMenu.setSelected(false);
@@ -191,5 +197,32 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         });
     }
 
+    private void handleBackPressed() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitDialog();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
+    }
 
+    private void showExitDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Wyjście")
+                .setMessage("Wylogować, czy zamknąć aplikację?")
+                .setPositiveButton("Wyloguj się", (dialog, which) -> {
+                    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    if (currentUser != null) {
+                        firebaseAuth.signOut();
+                        Toast.makeText(getApplicationContext(), "Pomyślnie wylogowano", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("Wyjście", (dialog, which) -> finishAffinity())
+                .setNeutralButton("Anuluj", null)
+                .show();
+    }
 }

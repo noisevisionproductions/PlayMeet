@@ -37,7 +37,7 @@ public class PostsCreatedByUserFragment extends Fragment {
     private ProgressBar progressBar;
     private PostsAdapterCreatedByUser postsAdapterCreatedByUser;
     private RecyclerView expandableListOfYourPosts;
-    private AppCompatTextView noPostsInfo;
+    private AppCompatTextView noPostsInfo, howUserPostLooksLike;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,10 +52,11 @@ public class PostsCreatedByUserFragment extends Fragment {
 
     public void setupView(View view) {
         noPostsInfo = view.findViewById(R.id.noPostInfo);
+        howUserPostLooksLike = view.findViewById(R.id.howUserPostLooksLike);
         progressBar = view.findViewById(R.id.progressBarLayout);
 
         expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
-        postsAdapterCreatedByUser = new PostsAdapterCreatedByUser(getContext(), postsCreatedByUser, noPostsInfo);
+        postsAdapterCreatedByUser = new PostsAdapterCreatedByUser(getContext(), getChildFragmentManager(), postsCreatedByUser, expandableListOfYourPosts, howUserPostLooksLike, noPostsInfo);
         expandableListOfYourPosts.setAdapter(postsAdapterCreatedByUser);
         expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
@@ -86,8 +87,10 @@ public class PostsCreatedByUserFragment extends Fragment {
                             // jeżeli nie ma żadnych postów, to wyświetlam informację na temat pustej listy
                             expandableListOfYourPosts.setVisibility(View.GONE);
                             noPostsInfo.setVisibility(View.VISIBLE);
+                            howUserPostLooksLike.setVisibility(View.GONE);
                             progressBar.setVisibility(View.GONE);
                         } else {
+                            howUserPostLooksLike.setVisibility(View.VISIBLE);
                             expandableListOfYourPosts.setVisibility(View.VISIBLE);
                             noPostsInfo.setVisibility(View.GONE);
                             updatePostsUsingDiffUtil(newUserPosts);
@@ -102,6 +105,7 @@ public class PostsCreatedByUserFragment extends Fragment {
             }
         } else {
             expandableListOfYourPosts.setVisibility(View.GONE);
+            howUserPostLooksLike.setVisibility(View.GONE);
             noPostsInfo.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }

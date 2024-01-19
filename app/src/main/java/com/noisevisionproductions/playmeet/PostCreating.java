@@ -1,5 +1,7 @@
 package com.noisevisionproductions.playmeet;
 
+import java.util.Objects;
+
 public class PostCreating {
     private String postId;
     private Boolean createdByUser = false;
@@ -10,6 +12,8 @@ public class PostCreating {
     private String dateTime;
     private String hourTime;
     private String skillLevel;
+    private int howManyPeopleNeeded;
+    private int peopleSignedUp = 0;
     private String additionalInfo;
 
     public PostCreating() {
@@ -39,6 +43,15 @@ public class PostCreating {
         copyOfAllPosts.setSkillLevel(skillLevel);
         copyOfAllPosts.setAdditionalInfo(additionalInfo);
         return copyOfAllPosts;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+
+        PostCreating that = (PostCreating) obj;
+        return Objects.equals(postId, that.postId);
     }
 
     public void setSavedByUser(Boolean savedByUser) {
@@ -95,6 +108,31 @@ public class PostCreating {
 
     public void setSkillLevel(String skillLevel) {
         this.skillLevel = skillLevel;
+    }
+
+    public int getHowManyPeopleNeeded() {
+        return howManyPeopleNeeded;
+    }
+    public int getPeopleSignedUp(){
+        return peopleSignedUp;
+    }
+
+    public void setHowManyPeopleNeeded(int howManyPeopleNeeded) {
+        this.howManyPeopleNeeded = howManyPeopleNeeded;
+    }
+
+    public void userSignedUp() {
+        peopleSignedUp++;
+    }
+
+    public void deleteSignedUpUser() {
+        if (peopleSignedUp > 0) {
+            peopleSignedUp -= 1;
+        }
+    }
+
+    public String getPeopleStatus() {
+        return peopleSignedUp + "/" + howManyPeopleNeeded;
     }
 
     public String getDateTime() {

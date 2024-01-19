@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="60dp"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="20dp">
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/labelTextView"
@@ -19,7 +20,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_weight="3"
         android:visibility="gone" />
 
@@ -29,7 +30,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:layout_margin="10dp"
+        android:layout_marginEnd="10dp"
         android:layout_weight="3"
         android:visibility="gone" />
 
@@ -37,10 +38,11 @@
         android:id="@+id/editText"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginEnd="10dp"
         android:layout_weight="3"
         android:enabled="false"
         android:gravity="center"
-        android:hint="Nie podano..."
+        android:hint="@string/userDidNotProvided"
         android:scrollbars="vertical"
         android:textColor="@android:color/white"
         android:textStyle="italic"

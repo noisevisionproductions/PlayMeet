@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,54 +34,57 @@ public class ButtonHelperAllPosts {
         FirebaseUser firebaseUser = firebaseHelper.getCurrentUser();
 
         if (firebaseUser != null) {
-            DatabaseReference chatRoomReference = FirebaseDatabase.getInstance().getReference("ChatRooms");
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("UserModel");
 
-            chatRoomReference.orderByChild("userIdThatCreatedPost").equalTo(userIdThatCreatedPost).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String currentRoomId;
-                    boolean chatRoomExists = false;
+            userReference.child(userIdCurrent).child("ChatRooms").orderByChild("userIdThatCreatedPost").equalTo(userIdThatCreatedPost)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String currentRoomId;
+                            boolean chatRoomExists = false;
 
-                    // pobieram listę pokoi czatu
-                    for (DataSnapshot chatRoomSnapshot : snapshot.getChildren()) {
-                        ChatRoomModel chatRoomModel = chatRoomSnapshot.getValue(ChatRoomModel.class);
+                            // pobieram listę pokoi czatu
+                            for (DataSnapshot chatRoomSnapshot : snapshot.getChildren()) {
+                                ChatRoomModel chatRoomModel = chatRoomSnapshot.getValue(ChatRoomModel.class);
 
-                        if (chatRoomModel != null && chatRoomModel.getUser2().equals(userIdCurrent)) {
-                            // jeżeli pokój czatu już jest przypisany do zalogowanego użytkownika, to go do niego przenosi
-                            chatRoomExists = true;
-                            currentRoomId = chatRoomModel.getRoomId();
+                                if (chatRoomModel != null && chatRoomModel.getUser2().equals(userIdCurrent)) {
+                                    // jeżeli pokój czatu już jest przypisany do zalogowanego użytkownika, to go do niego przenosi
+                                    chatRoomExists = true;
+                                    currentRoomId = chatRoomModel.getRoomId();
 
-                            Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                            intent.putExtra("roomId", currentRoomId);
-                            view.getContext().startActivity(intent);
-                            break;
+                                    Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                                    intent.putExtra("roomId", currentRoomId);
+                                    view.getContext().startActivity(intent);
+                                    break;
+                                }
+                            }
+                            if (!chatRoomExists) {
+                                // jeżeli pokój czatu nie został znaleziony, to tworzę nowy
+                                String newRoomId = userReference.child(userIdCurrent).child("ChatRooms").push().getKey();
+
+                                ChatRoomModel newChatRoom = new ChatRoomModel();
+                                newChatRoom.setRoomId(newRoomId);
+                                newChatRoom.setUserIdThatCreatedPost(userIdThatCreatedPost);
+                                newChatRoom.setUser2(userIdCurrent);
+
+                                if (newRoomId != null) {
+                                    userReference.child(userIdCurrent).child("ChatRooms").child(newRoomId).setValue(newChatRoom);
+                                    userReference.child(userIdThatCreatedPost).child("ChatRooms").child(newRoomId).setValue(newChatRoom);
+                                }
+                                Intent intent = new Intent(view.getContext(), ChatActivity.class);
+                                intent.putExtra("roomId", newRoomId);
+                                view.getContext().startActivity(intent);
+                            }
                         }
-                    }
-                    if (!chatRoomExists) {
-                        // jeżeli pokój czatu nie został znaleziony, to tworzę nowy
-                        String newRoomId = chatRoomReference.push().getKey();
 
-                        ChatRoomModel newChatRoom = new ChatRoomModel();
-                        newChatRoom.setRoomId(newRoomId);
-                        newChatRoom.setUserIdThatCreatedPost(userIdThatCreatedPost);
-                        newChatRoom.setUser2(userIdCurrent);
-
-                        if (newRoomId != null) {
-                            chatRoomReference.child(newRoomId).setValue(newChatRoom);
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("Firebase Read Error", error.getMessage());
                         }
-                        Intent intent = new Intent(view.getContext(), ChatActivity.class);
-                        intent.putExtra("roomId", newRoomId);
-                        view.getContext().startActivity(intent);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Firebase Read Error", error.getMessage());
-                }
-            });
+                    });
         }
     }
+
 
     public static void handleSavePostButton(View view, String postId) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
@@ -99,35 +103,45 @@ public class ButtonHelperAllPosts {
                                     // pobieram dane postu, do którego użytkownik chce się zapisać
                                     PostCreating originalPost = originalPostSnapshot.getValue(PostCreating.class);
 
-                                    if (originalPost != null && !originalPost.getUserId().equals(firebaseHelper.getCurrentUser().getUid())) {
-                                        // tworzę kopię postu z bazy danych, aby móc go potem wyświetlić jako zapisany z innym layoutuem
-                                        PostCreatingCopy newSavedPost = new PostCreatingCopy();
-                                        newSavedPost.setUserIdCreator(originalPost.getUserId());
-                                        newSavedPost.setUserIdSavedBy(firebaseHelper.getCurrentUser().getUid());
-                                        newSavedPost.setPostId(originalPost.getPostId());
-                                        newSavedPost.setSportType(originalPost.getSportType());
-                                        newSavedPost.setCityName(originalPost.getCityName());
-                                        newSavedPost.setDateTime(originalPost.getDateTime());
-                                        newSavedPost.setHourTime(originalPost.getHourTime());
-                                        newSavedPost.setSkillLevel(originalPost.getSkillLevel());
-                                        newSavedPost.setAdditionalInfo(originalPost.getAdditionalInfo());
-                                        newSavedPost.setSavedByUser(true);
+                                    if (originalPost != null) {
+                                        if (!originalPost.getUserId().equals(firebaseHelper.getCurrentUser().getUid())) {
+                                            // tworzę kopię postu z bazy danych, aby móc go potem wyświetlić jako zapisany z innym layoutuem
+                                            PostCreatingCopy newSavedPost = new PostCreatingCopy();
+                                            newSavedPost.setUserIdCreator(originalPost.getUserId());
+                                            newSavedPost.setUserIdSavedBy(firebaseHelper.getCurrentUser().getUid());
+                                            newSavedPost.setPostId(originalPost.getPostId());
+                                            newSavedPost.setSportType(originalPost.getSportType());
+                                            newSavedPost.setCityName(originalPost.getCityName());
+                                            newSavedPost.setDateTime(originalPost.getDateTime());
+                                            newSavedPost.setHourTime(originalPost.getHourTime());
+                                            newSavedPost.setSkillLevel(originalPost.getSkillLevel());
+                                            newSavedPost.setAdditionalInfo(originalPost.getAdditionalInfo());
+                                            newSavedPost.setSavedByUser(true);
 
-                                        // zapisuję wybrany post w bazie danych pod "SavedPostCreating"
-                                        savedPostsReference.setValue(newSavedPost, (databaseError, databaseReference) -> {
-                                            if (databaseError == null) {
-                                                Intent intent = new Intent(view.getContext(), MainMenuPosts.class);
-                                                view.getContext().startActivity(intent);
-                                                Toast.makeText(view.getContext(), "Zapisano!", Toast.LENGTH_SHORT).show();
+                                            // aktualizuję ilość zapisanych osób w oryginalnym poście
+                                            if (originalPost.getPeopleSignedUp() < originalPost.getHowManyPeopleNeeded()) {
+                                                originalPost.userSignedUp();
+                                                allPostsReference.setValue(originalPost);
                                             } else {
-                                                Log.e("Firebase Save Error", Objects.requireNonNull(databaseError.getMessage()));
+                                                Snackbar.make(view, "Wygląda na to, że nie ma już miejsca", Snackbar.LENGTH_SHORT).show();
                                             }
-                                        });
-                                    } else {
-                                        Toast.makeText(view.getContext(), "To Twój post!", Toast.LENGTH_SHORT).show();
+
+                                            // zapisuję wybrany post w bazie danych pod "SavedPostCreating"
+                                            savedPostsReference.setValue(newSavedPost, (databaseError, databaseReference) -> {
+                                                if (databaseError == null) {
+                                                    Intent intent = new Intent(view.getContext(), MainMenuPosts.class);
+                                                    view.getContext().startActivity(intent);
+                                                    Toast.makeText(view.getContext(), "Zapisano!", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Log.e("Firebase Save Error", Objects.requireNonNull(databaseError.getMessage()));
+                                                }
+                                            });
+                                        } else {
+                                            Toast.makeText(view.getContext(), "To Twój post!", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 } else {
-                                    Toast.makeText(view.getContext(), "Post został przez Ciebie zapisany", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(view.getContext(), "Post został już przez Ciebie zapisany", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
