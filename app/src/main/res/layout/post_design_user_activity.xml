@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="240dp"
     android:layout_margin="10dp"
-    app:cardBackgroundColor="#ACD131"
+    app:cardBackgroundColor="@color/background"
     app:cardCornerRadius="10dp"
     app:cardElevation="5dp"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_margin="5dp"
-        android:background="#ACD131">
+        android:background="@color/secondary20">
 
         <!--przycisk do otwierania dodatkowych opcji-->
         <androidx.constraintlayout.widget.ConstraintLayout

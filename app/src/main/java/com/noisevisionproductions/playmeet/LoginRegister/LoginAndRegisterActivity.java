@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.LoginRegister;
 
 import android.os.Bundle;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
@@ -24,6 +25,7 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
 
         switchToLogin();
         switchToRegister();
+        backPressed();
     }
 
     public void switchToLogin() {
@@ -52,5 +54,14 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                     .setReorderingAllowed(true)
                     .commit();
         });
+    }
+
+    private void backPressed() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        };
     }
 }

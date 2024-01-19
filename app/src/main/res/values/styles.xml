@@ -8,13 +8,13 @@
     <style name="noBar" parent="Theme.AppCompat.NoActionBar" />
 
     <style name="TestStyle" parent="Widget.AppCompat.Spinner">
-        <item name="android:background">#333333</item>
-        <item name="android:textColor">#443434</item>
+        <item name="android:background">@color/background</item>
+        <item name="android:textColor">@color/text</item>
     </style>
 
     <style name="MyAppCompatButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_style</item>
-        <item name="android:textColor">#443434</item>
+        <item name="android:textColor">@color/text</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:typeface">serif</item>
@@ -25,8 +25,8 @@
         <item name="android:popupBackground">@drawable/rounded_menu_background_for_spinner</item>
         <item name="android:padding">10dp</item>
         <item name="android:dropDownVerticalOffset">40dp</item>
-        <item name="android:textColor">#443434</item>
-        <item name="android:textColorHint">#443434</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textColorHint">@color/text60</item>
         <item name="android:gravity">center</item>
     </style>
 
@@ -45,7 +45,7 @@
 
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_style</item>
-        <item name="android:textColor">#443434</item>
+        <item name="android:textColor">@color/text</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:textStyle">bold</item>
@@ -54,15 +54,15 @@
     </style>
 
     <style name="MyAppCompatTextViewStyle" parent="Widget.AppCompat.TextView">
-        <item name="android:textColor">#443434</item>
-        <item name="android:textColorHint">#EADBC4</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textColorHint">@color/text60</item>
         <item name="android:typeface">serif</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="MyTextInputLayoutDesign" parent="ThemeOverlay.Material3.TextInputEditText">
-        <item name="android:textColor">#443434</item>
-        <item name="android:textColorHint">#443434</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textColorHint">@color/text60</item>
     </style>
 
     <style name="DialogSlideAnim" parent="Theme.AppCompat.Light.Dialog">

@@ -21,22 +21,23 @@
             android:gravity="center"
             android:paddingBottom="50dp"
             android:text="Podziel się opinią!"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/accent"
             android:textSize="25sp"
             android:textStyle="bold"
             android:typeface="serif" />
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textWithOpinion"
-            style="@style/MySpinnerStyle"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_margin="10dp"
             android:gravity="start"
             android:hint="Napisz co myślisz o aplikacji,\njakie funkcję byłyby mile widziane,\njaki błąd napotkałeś"
             android:inputType="textMultiLine"
+            android:background="@color/secondary20"
             android:maxLength="500"
-            android:textColorHint="#808080"
+            android:padding="20dp"
+            android:textColorHint="@color/textHint"
             android:textSize="20sp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat

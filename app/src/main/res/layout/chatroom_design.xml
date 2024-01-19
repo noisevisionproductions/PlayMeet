@@ -2,20 +2,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:layout_margin="10dp"
+    android:background="@color/secondary20"
     android:orientation="horizontal"
     android:paddingStart="16dp"
     android:paddingTop="8dp"
     android:paddingEnd="16dp"
-    android:paddingBottom="8dp"
-    android:layout_margin="10dp"
-    android:background="@drawable/border_gray">
+    android:paddingBottom="8dp">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imageViewProfile"
-        android:layout_width="40dp"
-        android:layout_gravity="center_vertical"
-        android:layout_height="40dp"
-        android:src="@drawable/sample_avatar" />
+    <include
+        layout="@layout/image_view_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="0dp"
@@ -25,25 +23,24 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_username"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="test"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/text"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tv_last_message"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:hint="test"
-        android:textColorHint="#000000"
-        android:textColor="#000000"
-        android:textSize="16sp" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tv_last_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="test"
+            android:textColor="@color/text"
+            android:textColorHint="@color/textHint"
+            android:textSize="16sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

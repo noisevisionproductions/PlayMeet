@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/activity_background_color">
+    android:background="@color/background">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/mainLayout"
@@ -28,6 +28,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@string/e_mail"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -39,33 +40,31 @@
             android:layout_marginBottom="10dp"
             android:hint="@string/Email"
             android:inputType="textEmailAddress"
+            android:textColorHint="@color/textHint"
             android:textSize="20sp"
             tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="10dp"
             android:text="@string/haslo"
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <com.google.android.material.textfield.TextInputLayout
+
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/passwordInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:passwordToggleEnabled="true">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/passwordInput"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/Password"
-                android:inputType="textPassword"
-                android:maxEms="32"
-                android:minEms="6"
-                android:textSize="20sp"
-                tools:ignore="VisualLintTextFieldSize,TextContrastCheck, NewApi" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginBottom="10dp"
+            android:hint="@string/Password"
+            android:inputType="textPassword"
+            android:maxEms="32"
+            android:minEms="6"
+            android:textColorHint="@color/textHint"
+            android:textSize="20sp"
+            tools:ignore="VisualLintTextFieldSize,TextContrastCheck, NewApi" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginButton"

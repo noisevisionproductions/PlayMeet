@@ -54,4 +54,8 @@ public class NavigationUtils extends AppCompatActivity {
         snackBarLogin.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE).setDuration(700);
         snackBarLogin.show();
     }
+
+    public static void createSnackBarUsingView(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    }
 }

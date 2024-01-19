@@ -1,11 +1,14 @@
 package com.noisevisionproductions.playmeet.Chat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
@@ -22,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Adapters.ChatMessageAdapter;
+import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
@@ -34,8 +38,9 @@ public class ChatActivity extends AppCompatActivity {
     private AppCompatEditText messageInputFromUser;
     private AppCompatImageButton sendMessageButton;
     private ChatMessageAdapter chatMessageAdapter;
-    private String currentRoomId;
+    private String currentRoomId, userIdThatCreatedPost;
     private FirebaseUser currentUser;
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,48 +51,78 @@ public class ChatActivity extends AppCompatActivity {
         setCurrentRoomId(roomId);
 
         setupFirebase();
+        setRecyclerView();
+        openChat();
+
+        handleBackPressed();
     }
 
     private void setupFirebase() {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null && currentRoomId != null) {
-            messagesReference = FirebaseDatabase.getInstance().getReference("ChatMessages").child(currentRoomId);
-            chatRoomReference = FirebaseDatabase.getInstance().getReference("ChatRooms").child(currentRoomId);
+            String currentUserId = currentUser.getUid();
+            chatRoomReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUserId).child("ChatRooms").child(currentRoomId);
+            messagesReference = chatRoomReference.child("ChatMessages");
 
-            if (messagesReference != null) {
-                setRecyclerView();
-                openChat();
-            }
+            // pobieram ID użytkownika, który stworzył post
+            chatRoomReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        ChatRoomModel chatRoomModel = snapshot.getValue(ChatRoomModel.class);
+                        if (chatRoomModel != null) {
+                            userIdThatCreatedPost = chatRoomModel.getUserIdThatCreatedPost();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 
-    public void setRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recycler_view_chat);
+    private void setRecyclerView() {
+        recyclerView = findViewById(R.id.recycler_view_chat);
+        // zaraz po otwarciu czatu, przenosi użytkownika na sam dół ekranu, gdzie są ostatnio wysłane wiadomości
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                scrollToBottom();
+                recyclerView.removeOnLayoutChangeListener(this);
+            }
+        });
         chatMessageAdapter = new ChatMessageAdapter(new FirebaseRecyclerOptions.Builder<ChatMessageModel>()
                 .setQuery(messagesReference, ChatMessageModel.class)
-                .build());
+                .build(), getApplicationContext());
         recyclerView.setAdapter(chatMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    public void setCurrentRoomId(String roomId) {
+    private void scrollToBottom() {
+        if (recyclerView.getAdapter() != null) {
+            int itemCount = recyclerView.getAdapter().getItemCount();
+            if (itemCount > 0) {
+                recyclerView.smoothScrollToPosition(itemCount - 1);
+            }
+        }
+    }
+
+    private void setCurrentRoomId(String roomId) {
         this.currentRoomId = roomId;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-    public void openChat() {
+    private void openChat() {
         messageInputFromUser = findViewById(R.id.messageInputFromUser);
         sendMessageButton = findViewById(R.id.sendMessageButton);
 
         sendMessageToTheUser();
     }
 
-    public void sendMessageToTheUser() {
+    private void sendMessageToTheUser() {
         sendMessageButton.setOnClickListener(v -> {
             String uniqueMessageId = UUID.randomUUID().toString();
             String messageText = Objects.requireNonNull(messageInputFromUser.getText()).toString();
@@ -101,16 +136,23 @@ public class ChatActivity extends AppCompatActivity {
                                 UserModel senderUser = snapshot.getValue(UserModel.class);
                                 if (senderUser != null) {
                                     String senderNickname = senderUser.getNickname();
-                                    if (senderNickname != null && !TextUtils.isEmpty(messageText)) {
-                                        long timestamp = System.currentTimeMillis();
-                                        ChatMessageModel chatMessageModel = new ChatMessageModel(uniqueMessageId, senderId, senderNickname, messageText, timestamp);
+                                    if (senderNickname != null) {
+                                        if (!TextUtils.isEmpty(messageText)) {
+                                            long timestamp = System.currentTimeMillis();
+                                            ChatMessageModel chatMessageModel = new ChatMessageModel(uniqueMessageId, senderId, senderNickname, messageText, timestamp);
 
-                                        DatabaseReference newMessageReference = messagesReference.push();
-                                        newMessageReference.setValue(chatMessageModel);
+                                            messagesReference.push().setValue(chatMessageModel);
+                                            chatRoomReference.child("lastMessage").setValue(chatMessageModel);
 
-                                        chatRoomReference.child("lastMessage").setValue(chatMessageModel);
-
-                                        hideKeyboardAfterSendingMsg();
+                                            FirebaseDatabase.getInstance().getReference().child("UserModel")
+                                                    .child(userIdThatCreatedPost).child("ChatRooms").child(currentRoomId).child("ChatMessages")
+                                                    .push().setValue(chatMessageModel);
+                                            FirebaseDatabase.getInstance().getReference().child("UserModel")
+                                                    .child(userIdThatCreatedPost).child("ChatRooms").child(currentRoomId).child("lastMessage")
+                                                    .setValue(chatMessageModel);
+                                            scrollToBottom();
+                                            hideKeyboardAfterSendingMsg();
+                                        }
                                     } else {
                                         Toast.makeText(getApplicationContext(), "Nie ustawiono nicku!", Toast.LENGTH_SHORT).show();
                                     }
@@ -133,14 +175,28 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        chatMessageAdapter.stopListening();
+    public void onDestroy() {
+        super.onDestroy();
+        if (chatMessageAdapter != null) {
+            chatMessageAdapter.stopListening();
+        }
     }
 
-    public void hideKeyboardAfterSendingMsg() {
+    private void hideKeyboardAfterSendingMsg() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(messageInputFromUser.getWindowToken(), 0);
         messageInputFromUser.setText("");
+    }
+
+    private void handleBackPressed() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Intent intent = new Intent(getApplicationContext(), MainMenuPosts.class);
+                startActivity(intent);
+                finish();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

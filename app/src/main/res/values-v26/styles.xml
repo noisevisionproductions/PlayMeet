@@ -7,6 +7,5 @@
         <item name="android:autofilledHighlight">@android:color/transparent</item>
     </style>
 
-    <style name="AppTheme" parent="Theme.AppCompat">
-    </style>
+    <style name="AppTheme" parent="Theme.AppCompat"></style>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_height="70dp"
     android:background="@drawable/button_add_post"
     android:text="@string/createPostButtonLogo"
-    android:textColor="#0000FF"
+    android:textColor="@color/accent"
     android:layout_margin="40dp"
     android:textSize="24sp"
     app:layout_constraintBottom_toBottomOf="parent"

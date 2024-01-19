@@ -14,15 +14,28 @@
         <include layout="@layout/progress_bar_layout" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/howUserPostLooksLike"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@string/howUserPostLooksLikeInfo"
+            android:textColor="@color/accent"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/noPostInfo"
             style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
+            android:padding="10dp"
             android:text="@string/noPostCreated"
-            android:textColor="@color/primary_text_color"
-            android:textSize="28sp"
+            android:textColor="@color/text"
+            android:textSize="24sp"
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView

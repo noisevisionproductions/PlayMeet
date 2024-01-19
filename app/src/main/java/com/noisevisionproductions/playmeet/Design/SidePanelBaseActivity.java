@@ -21,6 +21,8 @@ import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.UserAccountLogic;
 
+import java.util.Objects;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class SidePanelBaseActivity extends AppCompatActivity {
@@ -36,11 +38,13 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
         // ułatwienie otwierania i zamykania poprzez stworzenie ikony do tego na górnym pasku akcji
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        // bierze pod uwagę stan DrawerLayout czy otwarty czy zamknięty, a następnie synchronizuje ten stan z ikoną na pasku akcji      drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        // bierze pod uwagę stan DrawerLayout czy otwarty czy zamknięty, a następnie synchronizuje ten stan z ikoną na pasku akcji
         actionBarDrawerToggle.syncState();
         authenticationManager = new FirebaseAuthManager();
 
-        // ustawia, że ikonka na pasku akcji służy właśnie do kontrolowania stanu DrawerLayout Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        // ustawia, że ikonka na pasku akcji służy właśnie do kontrolowania stanu DrawerLayout
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.navigationViewSidePanel);
 
         headerView = navigationView.getHeaderView(0);

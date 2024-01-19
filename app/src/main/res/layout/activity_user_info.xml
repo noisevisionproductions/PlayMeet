@@ -21,7 +21,7 @@
             android:gravity="center"
             android:hint="@string/informationAboutProvidedData"
             android:padding="10dp"
-            android:textColorHint="#81302C"
+            android:textColorHint="@color/accent90"
             android:textSize="15sp"
             android:textStyle="bold"
             android:typeface="serif"
@@ -56,7 +56,6 @@
             android:layout_height="0dp"
             android:orientation="vertical"
             android:padding="10dp"
-            app:layout_constraintBottom_toTopOf="@+id/button_fragment"
             app:layout_constraintTop_toBottomOf="@+id/linearLayoutForAvatar">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -76,7 +75,8 @@
                 android:gravity="center"
                 android:hint="@string/nicknameIsEmpty"
                 android:paddingBottom="50dp"
-                android:textColor="#0000FF"
+                android:textColor="@color/accent"
+                android:textColorHint="@color/error"
                 android:textSize="25sp"
                 android:textStyle="bold"
                 android:typeface="serif" />
@@ -102,10 +102,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <include
-            android:id="@+id/button_fragment"
-            layout="@layout/button_create_post" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

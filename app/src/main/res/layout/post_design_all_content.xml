@@ -5,12 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
-    android:layout_height="245dp"
+    android:layout_height="200dp"
     android:layout_margin="10dp"
-    android:background="@android:color/transparent"
-    app:cardBackgroundColor="#FFFFFF"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="2dp"
+    android:foreground="@drawable/ripple_effect"
+    app:cardBackgroundColor="@color/secondary20"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -18,128 +16,91 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
-
-        <!--przycisk do otwierania dodatkowych opcji-->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/arrowDownOpenMenu"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/arrowDownOpenMenuButton"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/baseline_keyboard_arrow_down_24"
-                android:contentDescription="@string/additionalmenu"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent">
 
         <!--avatar-->
         <include layout="@layout/image_view_avatar" />
 
         <!--nazwa sportu-->
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sportNames"
+            style="@style/MyTextInputLayoutDesign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:hintEnabled="false"
+            android:background="@null"
+            android:entries="@array/arrays_sport_names"
+            android:gravity="center"
+            android:hint="@string/noSportProvided"
+            android:paddingTop="10dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/userAvatar"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/sportNames"
-                style="@style/MyTextInputLayoutDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:background="@null"
-                android:entries="@array/arrays_sport_names"
-                android:gravity="center"
-                android:hint="@string/userDidNotProvided"
-                android:textColorHint="#808080"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!--nazwa miasta-->
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/chosenCity"
+            style="@style/MyTextInputLayoutDesign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-            app:layout_constraintLeft_toRightOf="@+id/userAvatar">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/chosenCity"
-                style="@style/MyTextInputLayoutDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="@string/userDidNotProvided"
-                android:textColorHint="#808080"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:background="@null"
+            android:hint="@string/noCityProvided"
+            android:paddingStart="10dp"
+            android:paddingEnd="5dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toTopOf="@+id/skillLevel"
+            app:layout_constraintLeft_toRightOf="@+id/userAvatar"
+            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
         <!--wybor poziomu-->
-        <com.google.android.material.textfield.TextInputLayout
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/skillLevel"
+            style="@style/MyTextInputLayoutDesign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:hintEnabled="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
+            android:background="@null"
+            android:hint="@string/noSkillLevelProvided"
+            android:paddingStart="10dp"
+            android:paddingTop="30dp"
+            android:paddingEnd="5dp"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+            app:layout_constraintLeft_toRightOf="@+id/userAvatar"
+            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/skilLevel"
-                style="@style/MyTextInputLayoutDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:gravity="center"
-                android:hint="@string/userDidNotProvided"
-                android:textColorHint="#808080"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
+        <!--ilość osób-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/numberOfPeople"
+            style="@style/MyTextInputLayoutDesign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@null"
+            android:gravity="center"
+            android:hint="@string/noNumberOfPeopleProvided"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
         <!--dodatkowe info-->
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/addInfoPostForButtonDesign"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hintEnabled="false"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/addInfoPost"
+            style="@style/MyTextInputLayoutDesign"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:layout_margin="5dp"
+            android:gravity="start|center_vertical"
+            android:hint="@string/noAdditionalInfoProvided"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userAvatar">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/addInfoPost"
-                style="@style/MyTextInputLayoutDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="70dp"
-                android:layout_margin="5dp"
-                android:background="@null"
-                android:hint="@string/userDidNotProvided"
-                android:inputType="textCapSentences"
-                android:textColorHint="#808080"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </com.google.android.material.textfield.TextInputLayout>
-
+            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
