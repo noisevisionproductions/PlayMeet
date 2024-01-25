@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -15,10 +16,11 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.UserManagement.AvatarManagement;
 import com.noisevisionproductions.playmeet.UserManagement.UserAccountLogic;
 
 import java.util.Objects;
@@ -26,12 +28,12 @@ import java.util.Objects;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public abstract class SidePanelBaseActivity extends AppCompatActivity {
-    private FirebaseAuthManager authenticationManager;
     protected DrawerLayout drawerLayout;
     protected ActionBarDrawerToggle actionBarDrawerToggle;
     protected NavigationView navigationView;
     protected View headerView;
     protected CircleImageView userAvatar;
+    protected AppCompatButton addPhotoButton;
 
     protected void setupDrawerLayout() {
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -41,24 +43,30 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         // bierze pod uwagę stan DrawerLayout czy otwarty czy zamknięty, a następnie synchronizuje ten stan z ikoną na pasku akcji
         actionBarDrawerToggle.syncState();
-        authenticationManager = new FirebaseAuthManager();
 
         // ustawia, że ikonka na pasku akcji służy właśnie do kontrolowania stanu DrawerLayout
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         navigationView = findViewById(R.id.navigationViewSidePanel);
 
+        addPhotoButton = navigationView.getHeaderView(0).findViewById(R.id.addPhotoButton);
         headerView = navigationView.getHeaderView(0);
         userAvatar = headerView.findViewById(R.id.userAvatar);
 
+        getUserAvatar();
         setUserAvatar();
     }
 
-    private void setUserAvatar() {
+    private void getUserAvatar() {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         if (firebaseHelper.getCurrentUser() != null) {
             String userId = firebaseHelper.getCurrentUser().getUid();
             firebaseHelper.getUserAvatar(this, userId, userAvatar);
         }
+    }
+
+    private void setUserAvatar() {
+        AvatarManagement avatarManagement = new AvatarManagement(this, addPhotoButton);
+        avatarManagement.setupListeners();
     }
 
     @Override
@@ -77,7 +85,7 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
 
     private void updateLoginMenuItemTitle() {
         MenuItem loginItem = navigationView.getMenu().findItem(R.id.wylogujKonto);
-        if (authenticationManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             loginItem.setTitle("Wyloguj konto");
         } else {
             loginItem.setTitle("Zaloguj się");
@@ -103,7 +111,7 @@ public abstract class SidePanelBaseActivity extends AppCompatActivity {
                 }
             }
 
-            if (authenticationManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
                 if (id == R.id.wylogujKonto) {
                     FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

@@ -37,16 +37,17 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/informationAboutProvidedData">
 
-            <include layout="@layout/image_view_avatar" />
+            <include layout="@layout/avatar_image_view" />
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/uploadAvatar"
+                android:id="@+id/deleteAvatarButton"
                 style="@style/MyButtonStyle"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:background="@drawable/button_style"
-                android:text="@string/addPhoto" />
+                android:backgroundTint="@color/error"
+                android:text="@string/deleteAvatar" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

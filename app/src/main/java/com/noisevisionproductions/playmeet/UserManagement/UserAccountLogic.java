@@ -1,25 +1,33 @@
 package com.noisevisionproductions.playmeet.UserManagement;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.IntentSanitizer;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.UserFieldsManagement.EditableUserFieldsAdapter;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +40,7 @@ public class UserAccountLogic extends SidePanelBaseActivity {
     private CircleImageView avatarImageView;
     private RecyclerView recyclerView;
     private ProgressBar progressBarLayout;
-    private AppCompatButton uploadAvatarButton;
+    private AppCompatButton deleteAvatarButton;
 
     public UserAccountLogic() {
     }
@@ -50,8 +58,7 @@ public class UserAccountLogic extends SidePanelBaseActivity {
         greetNickname();
         getAddPostButton();
 
-        AvatarManagement avatarManagement = new AvatarManagement(this, uploadAvatarButton);
-        avatarManagement.setupListener();
+        deleteAvatarButton.setOnClickListener(v -> deleteUserAvatar());
     }
 
     private void setupRecyclerView() {
@@ -60,14 +67,14 @@ public class UserAccountLogic extends SidePanelBaseActivity {
         firebaseHelper = new FirebaseHelper();
 
         progressBarLayout = findViewById(R.id.progressBarLayout);
-        uploadAvatarButton = findViewById(R.id.uploadAvatar);
+        deleteAvatarButton = findViewById(R.id.deleteAvatarButton);
         avatarImageView = findViewById(R.id.userAvatar);
 
         AppCompatButton button = findViewById(R.id.backToMainMenu);
-        NavigationUtils.backToMainMenuButton(button, this);
+        ProjectUtils.backToMainMenuButton(button, this);
 
         ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
-        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(this));
+        mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(this));
 
         getUserDataFromRealm();
     }
@@ -88,6 +95,7 @@ public class UserAccountLogic extends SidePanelBaseActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase RealmTime Database error", "Printing user nickname " + error.getMessage());
             }
         }, "UserModel");
         String userId = firebaseHelper.getCurrentUser().getUid();
@@ -123,6 +131,21 @@ public class UserAccountLogic extends SidePanelBaseActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         }, "UserModel");
+    }
+
+    public void deleteUserAvatar() {
+        String userId = firebaseHelper.getCurrentUser().getUid();
+
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(userId);
+        userReference.child("avatar").removeValue();
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("avatars").child(userId);
+        storageReference.delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(getApplicationContext(), "Avatar usunięty", Toast.LENGTH_SHORT).show();
+                    avatarImageView.setImageDrawable(null);
+                })
+                .addOnFailureListener(e -> Log.e("Avatar", "Error while deleting from Firebase Storage " + e.getMessage()));
     }
 
     public void getAddPostButton() {

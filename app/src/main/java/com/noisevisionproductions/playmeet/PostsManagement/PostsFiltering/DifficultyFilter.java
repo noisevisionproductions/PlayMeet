@@ -12,6 +12,9 @@ public class DifficultyFilter extends Filter {
 
     @Override
     public boolean apply(PostCreating post) {
+        if (post == null || post.getSkillLevel() == null) {
+            return false;
+        }
         return post.getSkillLevel().equals(difficulty);
     }
 }

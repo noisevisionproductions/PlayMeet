@@ -42,8 +42,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
                 android:layout_marginBottom="20dp"
-                android:entries="@array/arrays_sport_names"
                 android:background="@color/secondary20"
+                android:entries="@array/arrays_sport_names"
                 android:textSize="30sp" />
 
             <!--nazwa miasta-->
@@ -62,22 +62,42 @@
                 style="@style/MySpinnerStyleForDefaultInput"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_marginBottom="20dp"
-                android:entries="@array/arrays_skill_level"
+                android:layout_marginBottom="10dp"
                 android:background="@color/secondary20"
+                android:entries="@array/arrays_skill_level"
                 android:textSize="30sp" />
+
+            <!--Ilość osób potrzebnych-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/howManyPeopleNeeded"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/secondary20"
+                    android:gravity="center"
+                    android:hint="@string/howManyPeopleNeeded"
+                    android:inputType="number"
+                    android:maxLength="2"
+                    android:padding="10dp"
+                    android:textAlignment="center"
+                    android:textSize="15sp" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <!--wybor daty i godziny-->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:baselineAligned="false"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
                     app:hintEnabled="false">
@@ -87,16 +107,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:background="@color/secondary20"
                         android:gravity="center"
                         android:hint="@string/chooseDate"
                         android:inputType="date"
-                        android:background="@color/secondary20"
                         android:textSize="15sp" />
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/dateNegotiable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hourDateDoesntMatter" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="100dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     app:hintEnabled="false">
 
@@ -105,53 +132,38 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:background="@color/secondary20"
                         android:hint="@string/chooseHour"
                         android:inputType="date"
                         android:textAlignment="center"
-                        android:background="@color/secondary20"
                         android:textSize="15sp" />
+
+                    <androidx.appcompat.widget.AppCompatCheckBox
+                        android:id="@+id/hourNegotiable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/hourDateDoesntMatter" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <!--Ilość osób potrzebnych-->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="false">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/howManyPeopleNeeded"
-                    android:background="@color/secondary20"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
-                    android:hint="@string/howManyPeopleNeeded"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    android:padding="10dp"
-                    android:textAlignment="center"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <!--Dodatkowe informacje-->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hintEnabled="false">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/addInfo"
-                    android:background="@color/secondary20"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:background="@color/secondary20"
                     android:hint="@string/extraInfo"
-                    android:inputType="text"
-                    android:maxLength="100"
+                    android:inputType="textAutoCorrect|textMultiLine"
+                    android:maxLength="220"
+                    android:maxLines="5"
                     android:padding="10dp"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat

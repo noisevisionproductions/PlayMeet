@@ -1,89 +1,44 @@
 package com.noisevisionproductions.playmeet.Chat;
 
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ChatRoomModel {
     private String roomId;
-    private String nickNameOfOwnerOfThePost;
-    private String nickNameOfUser2;
-    private String userIdThatCreatedPost;
-    private String user2;
-    private Map<String, ChatMessageModel> messages;
+    private long timeStamp;
+    private final Map<String, ChatMessageModel> messages = new HashMap<>();
+    private final Map<String, Boolean> participants = new HashMap<>();
 
 
     public ChatRoomModel() {
-        this.roomId = UUID.randomUUID().toString();
     }
 
-    public String getNickNameOfOwnerOfThePost() {
-        return nickNameOfOwnerOfThePost;
-    }
-
-    public void setNickNameOfOwnerOfThePost(String nickNameOfOwnerOfThePost) {
-        this.nickNameOfOwnerOfThePost = nickNameOfOwnerOfThePost;
-    }
-
-    public String getNickNameOfUser2() {
-        return nickNameOfUser2;
-    }
-
-    public void setNickNameOfUser2(String nickNameOfUser2) {
-        this.nickNameOfUser2 = nickNameOfUser2;
-    }
-
-    public void setUserIdThatCreatedPost(String userIdThatCreatedPost) {
-        this.userIdThatCreatedPost = userIdThatCreatedPost;
-    }
-
-    public void setUser2(String user2) {
-        this.user2 = user2;
-    }
-
-    public String getUserIdThatCreatedPost() {
-        return this.userIdThatCreatedPost;
-    }
-
-    public String getUser2() {
-        return this.user2;
-    }
-
-    public ChatMessageModel getLastMessage() {
-        if (messages == null || messages.isEmpty()) {
-            return null;
-        } else {
-            List<ChatMessageModel> messagesList = new ArrayList<>(messages.values());
-            messagesList.sort(Comparator.comparing(ChatMessageModel::getTimestamp));
-            return messagesList.get(messagesList.size() - 1);
-        }
-    }
-
-    public void setLastMessage(ChatMessageModel lastMessage) {
-        if (messages == null) {
-            messages = new HashMap<>();
-        }
-        messages.put(lastMessage.getUuid(), lastMessage);
+    public ChatRoomModel(String roomId) {
+        this.roomId = roomId;
     }
 
     public String getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
-    public Map<String, ChatMessageModel> getMessages() {
-        return messages;
+    public Map<String, Boolean> getParticipants() {
+        return participants;
     }
 
-    public void setMessages(Map<String, ChatMessageModel> messages) {
-        this.messages = messages;
+    public String formatDate() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        LocalDateTime timestampAsDateTime = Instant.ofEpochMilli(timeStamp)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime();
+        return timestampAsDateTime.format(dateTimeFormatter);
     }
-
 }

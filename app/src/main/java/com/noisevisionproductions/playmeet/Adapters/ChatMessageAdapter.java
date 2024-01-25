@@ -1,7 +1,6 @@
 package com.noisevisionproductions.playmeet.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
@@ -51,7 +48,7 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
             //holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
         } else {
             firebaseHelper.getUserAvatar(context, chatMessageModel.getUserId(), holder.userAvatar);
-            holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
+            //  holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
         }
     }
 

@@ -2,9 +2,15 @@
 <resources>
     <string-array name="arrays_skill_level">
         <item>Wybierz poziom</item>
+        <item>Pierwszy raz</item>
+        <item>Nowicjusz</item>
         <item>Początkujący</item>
-        <item>Średnio zaawansowany</item>
+        <item>Amator</item>
+        <item>Średnio-zaawansowany</item>
         <item>Zaawansowany</item>
+        <item>Doświadczony</item>
+        <item>Weteran</item>
         <item>Ekspert</item>
+        <item>Profesjonalista</item>
     </string-array>
 </resources>

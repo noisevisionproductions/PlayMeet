@@ -2,13 +2,14 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragmentBottomSheet"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/background"
     android:orientation="vertical">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:fillViewport="true">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -27,6 +28,7 @@
                 android:padding="20dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/aboutGameText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -38,7 +40,8 @@
                 android:id="@+id/recycler_view_post_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"
+                android:visibility="gone" />
 
             <!--Informacje o użytkowniku-->
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -49,6 +52,7 @@
                 android:padding="20dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/aboutUserText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -61,37 +65,77 @@
                 android:id="@+id/recycler_view_user_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
-            <!--Przyciski-->
+                android:scrollbars="vertical"
+                android:visibility="gone" />
+
+            <!--Informacje o użytkowniku-->
             <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/extraInfoContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:padding="20dp"
-                android:visibility="visible">
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/savePostButton"
-                    style="@style/MyButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_style"
-                    android:text="@string/signMeIn" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/signedInUsersText"
+                    style="@style/MyAppCompatTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/signedInUsersLong"
+                    android:textSize="20sp" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/chatButton"
-                    style="@style/MyButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_style"
-                    android:text="@string/openChat" />
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!--Brak zapisanych informacja-->
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/noUsersSignedUpInfo"
+                style="@style/MyAppCompatTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/noUsersSignedUpInfo"
+                android:textColor="@color/error"
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+            <!--recycler view zapisani uzytkownicy-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_signed_users"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:visibility="gone" />
+
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.core.widget.NestedScrollView>
+    <!--Przyciski-->
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/extraInfoContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:visibility="visible">
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/savePostButton"
+            style="@style/MyButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/button_style"
+            android:text="@string/signMeIn" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/chatButton"
+            style="@style/MyButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/button_style"
+            android:text="@string/openChat" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

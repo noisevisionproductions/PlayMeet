@@ -15,6 +15,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -26,21 +27,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
-import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.ButtonHelperAllPosts;
+import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.AdapterAllPosts;
+import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.ChatButtonHandler;
 import com.noisevisionproductions.playmeet.R;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapterCreatedByUser.MyViewHolder> {
+public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreatedByUserPosts.MyViewHolder> {
 
     private final List<PostCreating> listOfPostCreating;
     private final FragmentManager fragmentManager;
     private final Context context;
     private final AppCompatTextView noPostInfo, howUserPostLooksLike;
 
-    public PostsAdapterCreatedByUser(Context context, FragmentManager fragmentManager, List<PostCreating> listOfPostCreating, RecyclerView recyclerView, AppCompatTextView howUserPostLooksLike, AppCompatTextView noPostInfo) {
+    public AdapterCreatedByUserPosts(Context context, FragmentManager fragmentManager, List<PostCreating> listOfPostCreating, RecyclerView recyclerView, AppCompatTextView howUserPostLooksLike, AppCompatTextView noPostInfo) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.listOfPostCreating = listOfPostCreating;
@@ -52,31 +54,30 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PostsAdapterCreatedByUser.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AdapterCreatedByUserPosts.MyViewHolder holder, int position) {
+        setPostAnimation(holder);
         PostCreating postCreating = listOfPostCreating.get(position);
         String userId = postCreating.getUserId();
         setUserAvatar(holder, userId, context);
 
+        getSkillLevel(postCreating, holder);
         holder.sportNames.setText(postCreating.getSportType());
         holder.cityNames.setText(postCreating.getCityName());
-        holder.skillLevel.setText(postCreating.getSkillLevel());
         holder.addInfo.setText(postCreating.getAdditionalInfo());
         if (postCreating.getHowManyPeopleNeeded() > 0) {
             holder.numberOfPeople.setText(postCreating.getPeopleStatus());
         }
 
-        holder.layoutOfPost.startAnimation(holder.postAnimation);
-
         // po kliknieciu w post, otwiera wiecej informacji o nim
-        holder.layoutOfPost.setOnClickListener(v -> ButtonHelperAllPosts.handleMoreInfoButton(fragmentManager, postCreating, data -> {
+        holder.layoutOfPost.setOnClickListener(v -> ChatButtonHandler.handleMoreInfoButton(fragmentManager, postCreating, data -> {
         }, context));
     }
 
     @NonNull
     @Override
-    public PostsAdapterCreatedByUser.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AdapterCreatedByUserPosts.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
-        return new PostsAdapterCreatedByUser.MyViewHolder(v);
+        return new AdapterCreatedByUserPosts.MyViewHolder(v);
     }
 
     @Override
@@ -84,7 +85,7 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
         return listOfPostCreating.size();
     }
 
-    private void setUserAvatar(PostsAdapterCreatedByUser.MyViewHolder holder, String userId, Context context) {
+    private void setUserAvatar(AdapterCreatedByUserPosts.MyViewHolder holder, String userId, Context context) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
     }
@@ -124,7 +125,7 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
                                 }, 100);
                             }
                         } else {
-                            Log.e("PostsAdapterCreatedByUser", String.valueOf(R.string.error), task.getException());
+                            Log.e("PostsAdapterCreatedByUser", "Error when deleting created post by user " + String.valueOf(R.string.error), task.getException());
                         }
                     });
                 }
@@ -134,32 +135,78 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
             public void onChildDraw(@NonNull Canvas canvas, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
                 View itemView = viewHolder.itemView;
-                Drawable deleteIcon = ContextCompat.getDrawable(context, R.drawable.delete_icon);
-                ColorDrawable background = new ColorDrawable(Color.RED);
+                Drawable deleteIcon = ContextCompat.getDrawable(context, R.drawable.trash_bin);
+                ColorDrawable background = new ColorDrawable(Color.parseColor("#ac2614"));
+
                 if (deleteIcon != null) {
-                    int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
-                    int iconTop = itemView.getTop() + (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
-                    int iconBottom = iconTop + deleteIcon.getIntrinsicHeight();
+                    int iconSize = (int) (itemView.getHeight() * 0.8);
+                    int iconMargin = (itemView.getHeight() - iconSize) / 2;
+                    int iconTop = itemView.getTop() + iconMargin;
+                    int iconBottom = iconTop + iconSize;
                     if (dX < 0) {
-                        int iconLeft = itemView.getRight() - iconMargin - deleteIcon.getIntrinsicHeight();
+                        int iconLeft = itemView.getRight() - iconMargin - iconSize;
                         int iconRight = itemView.getRight() - iconMargin;
-                        deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
-                        background.setBounds(itemView.getRight() + ((int) dX), itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                        int iconTopBound = itemView.getTop() + iconMargin;
+                        int iconBottomBound = itemView.getBottom() - iconMargin;
+                        background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
+                        background.draw(canvas);
+
+                        deleteIcon.setBounds(Math.max(iconLeft, itemView.getRight() + (int) dX), Math.max(iconTop, iconTopBound),
+                                Math.max(iconRight, itemView.getRight()), Math.min(iconBottom, iconBottomBound));
+                        deleteIcon.draw(canvas);
                     } else {
                         background.setBounds(0, 0, 0, 0);
                     }
-                    background.draw(canvas);
-                    deleteIcon.draw(canvas);
                 }
             }
         };
     }
 
+    private void getSkillLevel(PostCreating postCreating, MyViewHolder holder) {
+        String skillLevel = postCreating.getSkillLevel();
+        int drawableId = switch (skillLevel) {
+            case "Pierwszy raz" -> R.drawable.d1_10;
+            case "Nowicjusz" -> R.drawable.d2_10;
+            case "Początkujący" -> R.drawable.d3_10;
+            case "Amator" -> R.drawable.d4_10;
+            case "Średnio-zaawansowany" -> R.drawable.d5_10;
+            case "Zaawansowany" -> R.drawable.d6_10;
+            case "Doświadczony" -> R.drawable.d7_10;
+            case "Weteran" -> R.drawable.d8_10;
+            case "Ekspert" -> R.drawable.d9_10;
+            case "Profesjonalista" -> R.drawable.d10_10;
+            default -> 0;
+        };
+        holder.skillLevel.setImageResource(drawableId);
+    }
+
+    private void setPostAnimation(MyViewHolder holder) {
+        Animation postAnimation = AnimationUtils.loadAnimation(holder.layoutOfPost.getContext(), R.anim.post_loading_animation);
+        holder.layoutOfPost.setOnHoverListener((view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
+                view.animate()
+                        .scaleX(1.2f)
+                        .scaleY(1.2f)
+                        .setDuration(300)
+                        .start();
+            } else if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_EXIT) {
+                view.animate()
+                        .scaleX(1.0f)
+                        .scaleY(1.0f)
+                        .setDuration(300)
+                        .start();
+            }
+            return false;
+        });
+        holder.layoutOfPost.setAnimation(postAnimation);
+        holder.layoutOfPost.startAnimation(postAnimation);
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
-        private final AppCompatTextView sportNames, cityNames, skillLevel, addInfo, numberOfPeople;
+        private final AppCompatTextView sportNames, cityNames, addInfo, numberOfPeople;
+        private final AppCompatImageView skillLevel;
         private final CardView layoutOfPost;
-        private final Animation postAnimation;
 
         public MyViewHolder(View v) {
             super(v);
@@ -170,30 +217,8 @@ public class PostsAdapterCreatedByUser extends RecyclerView.Adapter<PostsAdapter
             addInfo = v.findViewById(R.id.addInfoPost);
             numberOfPeople = v.findViewById(R.id.numberOfPeople);
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
-
-            postAnimation = AnimationUtils.loadAnimation(layoutOfPost.getContext(), R.anim.post_loading_animation);
-            layoutOfPost.setAnimation(postAnimation);
-
-            setPostAnimation();
-        }
-
-        private void setPostAnimation() {
-            layoutOfPost.setOnHoverListener((view, motionEvent) -> {
-                if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
-                    view.animate()
-                            .scaleX(1.2f)
-                            .scaleY(1.2f)
-                            .setDuration(300)
-                            .start();
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_EXIT) {
-                    view.animate()
-                            .scaleX(1.0f)
-                            .scaleY(1.0f)
-                            .setDuration(300)
-                            .start();
-                }
-                return false;
-            });
+            AppCompatImageView overflowIcon = v.findViewById(R.id.overflowIcon);
+            overflowIcon.setVisibility(View.GONE);
         }
     }
 }

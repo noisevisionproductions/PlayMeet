@@ -1,6 +1,5 @@
 package com.noisevisionproductions.playmeet.FirstSetup;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -28,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 
 public class ChildFragmentNickname extends Fragment {
     private AppCompatAutoCompleteTextView getNicknameInput;
@@ -45,7 +43,7 @@ public class ChildFragmentNickname extends Fragment {
         hideKeyboard(view);
         handleSetNicknameButton();
 
-        NavigationUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
+        ProjectUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
 
         return view;
     }
@@ -104,7 +102,7 @@ public class ChildFragmentNickname extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("UserModel", "Błąd podczas odczytu nickname z Firebase", error.toException());
+                    Log.e("Firebase RealmTime Database error", "Checking if nickName is available " + error.getMessage());
                 }
             });
         }
@@ -123,7 +121,7 @@ public class ChildFragmentNickname extends Fragment {
             return false;
         } else if (nickname.length() < minLength || nickname.length() > maxLength) {
             // walidacja długości nicku
-            setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");/**/
+            setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");
             // getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
             return false;
         } else {

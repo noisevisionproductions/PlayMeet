@@ -25,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 
@@ -35,7 +35,7 @@ import java.util.List;
 public class PostsCreatedByUserFragment extends Fragment {
     private final List<PostCreating> postsCreatedByUser = new ArrayList<>();
     private ProgressBar progressBar;
-    private PostsAdapterCreatedByUser postsAdapterCreatedByUser;
+    private AdapterCreatedByUserPosts adapterCreatedByUserPosts;
     private RecyclerView expandableListOfYourPosts;
     private AppCompatTextView noPostsInfo, howUserPostLooksLike;
 
@@ -56,19 +56,18 @@ public class PostsCreatedByUserFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBarLayout);
 
         expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
-        postsAdapterCreatedByUser = new PostsAdapterCreatedByUser(getContext(), getChildFragmentManager(), postsCreatedByUser, expandableListOfYourPosts, howUserPostLooksLike, noPostsInfo);
-        expandableListOfYourPosts.setAdapter(postsAdapterCreatedByUser);
+        adapterCreatedByUserPosts = new AdapterCreatedByUserPosts(getContext(), getChildFragmentManager(), postsCreatedByUser, expandableListOfYourPosts, howUserPostLooksLike, noPostsInfo);
+        expandableListOfYourPosts.setAdapter(adapterCreatedByUserPosts);
         expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     public void showUserPosts() {
         progressBar.setVisibility(View.VISIBLE);
 
-        FirebaseAuthManager authenticationManager = new FirebaseAuthManager();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String currentUserId = firebaseUser.getUid();
-            if (authenticationManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
                 // uzyskuje referencję do danych PostCreating stworzonego w Firebase
                 DatabaseReference userPostsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
                 // nastepnie pobieram posty z bazy, które mają takie samo userId, co aktualnie zalogowany użytkownik
@@ -99,7 +98,7 @@ public class PostsCreatedByUserFragment extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("PostsCreatedByUserFragment", "Błąd podczas odczytu danych z Firebase", error.toException());
+                        Log.e("Firebase RealmTime Database error", "Printing posts that User created " + error.getMessage());
                     }
                 });
             }
@@ -118,7 +117,7 @@ public class PostsCreatedByUserFragment extends Fragment {
             new Handler(Looper.getMainLooper()).post(() -> {
                 postsCreatedByUser.clear();
                 postsCreatedByUser.addAll(newPosts);
-                diffResult.dispatchUpdatesTo(postsAdapterCreatedByUser);
+                diffResult.dispatchUpdatesTo(adapterCreatedByUserPosts);
                 progressBar.setVisibility(View.GONE);
             });
         }).start();

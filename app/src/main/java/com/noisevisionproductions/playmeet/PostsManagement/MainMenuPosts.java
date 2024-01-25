@@ -3,10 +3,12 @@ package com.noisevisionproductions.playmeet.PostsManagement;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -14,22 +16,29 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Chat.ChatRoomList;
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.MyBottomSheetFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.PostsOfTheGamesFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsCreatedByUserFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsSavedByUserFragment;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 import com.noisevisionproductions.playmeet.Utilities.OpinionFromUser;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
+
+import java.util.Objects;
 
 public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomSheetFragment.OnDataPass {
     private AppCompatButton yourPostsMenu, savedPostsMenu, showAllPostsMenu, chatRoomMenu, updateUserInfoBar, sendOpinionButton;
-    private FirebaseAuthManager authenticationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +65,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
     @Override
     protected void onStart() {
         super.onStart();
-        checkUsers();
+        checkUsersForNickname();
         switchToUserInfoInputOnClick();
     }
 
@@ -69,8 +78,6 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
     }
 
     private void setUpUIElements() {
-        authenticationManager = new FirebaseAuthManager();
-
         yourPostsMenu = findViewById(R.id.yourPostsMenu);
         savedPostsMenu = findViewById(R.id.savedPostsMenu);
         showAllPostsMenu = findViewById(R.id.showAllPostsMenu);
@@ -82,21 +89,33 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         showAllPostsMenu.setSelected(true);
     }
 
-    private void checkUsers() {
+    private void checkUsersForNickname() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (authenticationManager.isUserLoggedIn()) {
-            if (currentUser != null) {
-                if (currentUser.getDisplayName() == null || currentUser.getDisplayName().isEmpty()) {
-                    updateUserInfoBar.setVisibility(View.VISIBLE);
-                    sendOpinionButton.setVisibility(View.GONE);
-
-                    switchToUserInfoInput();
-                } else {
-                    updateUserInfoBar.setVisibility(View.GONE);
-                    sendOpinionButton.setVisibility(View.VISIBLE);
+        if (currentUser != null) {
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUser.getUid());
+            userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    UserModel userModel = snapshot.getValue(UserModel.class);
+                    if (userModel != null) {
+                        String nickname = userModel.getNickname();
+                        if (nickname == null || nickname.isEmpty()) {
+                            updateUserInfoBar.setVisibility(View.VISIBLE);
+                            sendOpinionButton.setVisibility(View.GONE);
+                            switchToUserInfoInput();
+                        } else {
+                            updateUserInfoBar.setVisibility(View.GONE);
+                            sendOpinionButton.setVisibility(View.VISIBLE);
+                        }
+                    }
                 }
-            }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Firebase Save Error", "Checking if logged in user has nickName " + Objects.requireNonNull(error.getMessage()));
+                }
+            });
         } else {
             updateUserInfoBar.setVisibility(View.GONE);
             sendOpinionButton.setVisibility(View.VISIBLE);
@@ -119,7 +138,11 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
     }
 
     public void sendOpinionButtonHandle() {
-        sendOpinionButton.setOnClickListener(v -> switchToOpinionLayout());
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+            sendOpinionButton.setOnClickListener(v -> switchToOpinionLayout());
+        } else {
+            ProjectUtils.showLoginSnackBar(this);
+        }
     }
 
     public void onUserInfoUpdated() {
@@ -145,7 +168,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
 
     private void switchToFavoritePosts() {
         savedPostsMenu.setOnClickListener(view -> {
-            if (authenticationManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
 
                 yourPostsMenu.setSelected(false);
                 savedPostsMenu.setSelected(true);
@@ -158,7 +181,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
                         .setReorderingAllowed(true)
                         .commit();
             } else {
-                NavigationUtils.showLoginSnackBar(this);
+                ProjectUtils.showLoginSnackBar(this);
             }
         });
     }
@@ -180,7 +203,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
 
     private void switchToChatRoom() {
         chatRoomMenu.setOnClickListener(view -> {
-            if (authenticationManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
                 yourPostsMenu.setSelected(false);
                 savedPostsMenu.setSelected(false);
                 showAllPostsMenu.setSelected(false);
@@ -192,7 +215,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
                         .setReorderingAllowed(true)
                         .commit();
             } else {
-                NavigationUtils.showLoginSnackBar(this);
+                ProjectUtils.showLoginSnackBar(this);
             }
         });
     }

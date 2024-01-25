@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.EditableField;
 
-public class PostExtendedInfoFieldsAdapter extends RecyclerView.Adapter<PostExtendedInfoFieldsAdapter.ViewHolder> {
+public class AdapterPostExtendedInfoFields extends RecyclerView.Adapter<AdapterPostExtendedInfoFields.ViewHolder> {
     private final EditableField[] editableFields;
 
-    public PostExtendedInfoFieldsAdapter(EditableField[] editableFields) {
+    public AdapterPostExtendedInfoFields(EditableField[] editableFields) {
         this.editableFields = editableFields;
     }
 
@@ -38,7 +38,7 @@ public class PostExtendedInfoFieldsAdapter extends RecyclerView.Adapter<PostExte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        AppCompatTextView label, value;
+        private final AppCompatTextView label, value;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
