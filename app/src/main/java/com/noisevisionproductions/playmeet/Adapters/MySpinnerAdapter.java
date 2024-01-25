@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.noisevisionproductions.playmeet.R;
-
 import java.util.List;
 
 // Ustawiam wlasciwosci AppSpinnerAdapter przy tworzeniu postów
@@ -28,7 +26,6 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
         View view = super.getView(position, convertView, parent);
         TextView textView = view.findViewById(android.R.id.text1);
         textView.setGravity(Gravity.CENTER);
-
         textView.setTextColor(Color.WHITE);
 
         return view;
@@ -48,6 +45,7 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
         } else {
             textView.setTextColor(Color.parseColor("#e9e8f0"));
         }
+
         return view;
     }
 

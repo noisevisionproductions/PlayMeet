@@ -1,20 +1,26 @@
 package com.noisevisionproductions.playmeet.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.Chat.ChatRoomModel;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
+
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -36,8 +42,7 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
 
     @Override
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull ChatRoomModel model) {
-        //  holder.lastMessage.setText((CharSequence) model.getLastMessage());
-        bind(holder, model, listener);
+        getChatRoomData(holder, model);
     }
 
     @NonNull
@@ -47,34 +52,84 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
         return new ViewHolder(view);
     }
 
-    public void bind(ViewHolder holder, final ChatRoomModel chat, final OnItemClickListener listener) {
+    public void getChatRoomData(ViewHolder holder, final ChatRoomModel chat) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         String currentUserId = firebaseHelper.getCurrentUser().getUid();
+
+        // pobieram mapę uczestników czatu
+        Map<String, Boolean> participants = chat.getParticipants();
+
         // ustawianie ostatniej wiadomości z czatu wraz z nickiem użytkownika, który stworzył czat
-        ChatMessageModel getLastMessage = chat.getLastMessage();
-        String otherUserId;
-        if (chat.getUser2() != null && chat.getUser2().equals(currentUserId)) {
-            otherUserId = chat.getUserIdThatCreatedPost();
-        } else {
-            otherUserId = chat.getUser2();
-        }
-        firebaseHelper.getUserAvatar(context, otherUserId, holder.userAvatar);
-        holder.lastMessage.setText(chat.getLastMessage().getMessage());
-        holder.username.setText(chat.getLastMessage().getNickname());
+        String otherUserId = findOtherUserId(participants, currentUserId);
+
         holder.itemView.setOnClickListener(v -> listener.onItemClick(chat));
+        if (otherUserId != null) {
+            //    holder.timestampTextView.setText(chat.formatDate());
+            firebaseHelper.getUserAvatar(context, otherUserId, holder.userAvatar);
+            firebaseHelper.getUserNickName(otherUserId, new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        String nickname = snapshot.getValue(String.class);
+                        if (nickname != null) {
+                            holder.username.setText(nickname);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("Firebase RealmTime Database error", "Printing Nickname on chatRoom adapter " + error.getMessage());
+                }
+            });
+            firebaseHelper.getDatabaseReference()
+                    .child("ChatRooms")
+                    .child(chat.getRoomId())
+                    .child("messages")
+                    .orderByKey()
+                    .limitToLast(1)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                ChatMessageModel lastMessage = snapshot.getValue(ChatMessageModel.class);
+                                if (lastMessage != null) {
+                                    holder.lastMessage.setText(lastMessage.getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("Firebase RealmTime Database error", "Printing lastMessage on chatRoom adapter " + error.getMessage());
+                        }
+                    });
+        }
+
+    }
+
+    private String findOtherUserId(Map<String, Boolean> participants, String currentUserId) {
+        if (participants != null) {
+            for (String userId : participants.keySet()) {
+                if (!userId.equals(currentUserId)) {
+                    return userId;
+                }
+            }
+        }
+        return null;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final TextView username;
-        private final TextView lastMessage;
+        private final AppCompatTextView username, lastMessage, timestampTextView;
         private final CircleImageView userAvatar;
 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            username = itemView.findViewById(R.id.tv_username);
-            lastMessage = itemView.findViewById(R.id.tv_last_message);
+            username = itemView.findViewById(R.id.username);
+            lastMessage = itemView.findViewById(R.id.lastMessage);
             userAvatar = itemView.findViewById(R.id.userAvatar);
+            timestampTextView = itemView.findViewById(R.id.timestampTextView);
         }
     }
 }

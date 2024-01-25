@@ -1,6 +1,7 @@
 package com.noisevisionproductions.playmeet.PostsManagement;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -22,7 +24,7 @@ import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.Utilities.DateChoosingLogic;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.Utilities.SpinnerManager;
 
 import java.util.Arrays;
@@ -32,18 +34,20 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     private final PostCreating postCreating = new PostCreating();
     private FirebaseHelper firebaseHelper;
     private AppCompatSpinner sportSpinner, citySpinner, skillSpinner;
+    private DateChoosingLogic dateChoosingLogic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_post_creating);
         firebaseHelper = new FirebaseHelper();
+        dateChoosingLogic = new DateChoosingLogic(this, postCreating);
 
         setupDrawerLayout();
         setupNavigationView();
 
         AppCompatButton button = findViewById(R.id.backToMainMenu);
-        NavigationUtils.backToMainMenuButton(button, this);
+        ProjectUtils.backToMainMenuButton(button, this);
 
         setSportType();
         setCityName();
@@ -53,18 +57,18 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         createPost();
 
         ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
-        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(this));
+        mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(this));
     }
 
     private void createPost() {
         AppCompatButton createPost = findViewById(R.id.submitPost);
 
         createPost.setOnClickListener(view -> {
-            if (isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
+            if (isValidHowManyPeopleNeeded() && isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
                 if (firebaseHelper.getCurrentUser() != null) {
+                    setHowManyPeopleNeeded();
                     postCreating.setIsCreatedByUser(true);
                     postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
-                    setHowManyPeopleNeeded();
                     setAdditionalInfo();
                     setUniqueId();
                 } else {
@@ -73,7 +77,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
 
             } else {
                 handleInvalidSelection();
-                NavigationUtils.createSnackBarUsingView(view, "Uzupełnij wymagane pola");
+                ProjectUtils.createSnackBarUsingViewVeryShort(view, "Uzupełnij wymagane pola");
             }
         });
     }
@@ -92,7 +96,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
                             Intent intent = new Intent(PostCreatingLogic.this, MainMenuPosts.class);
                             startActivity(intent);
                         } else {
-                            Log.e("FirebaseHelper", "Błąd podczas dodawania posta do bazy danych", task.getException());
+                            Log.e("FirebaseHelper", "Creating post error ", task.getException());
                         }
                     });
         }
@@ -149,8 +153,12 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 String selectedSkillLevel = (String) adapterView.getItemAtPosition(position);
+                //    gameDifficultyList.clear();
+
                 if (position > 0) {
+
                     postCreating.setSkillLevel(selectedSkillLevel);
+
                 }
             }
 
@@ -161,12 +169,33 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         });
     }
 
-    private void setHowManyPeopleNeeded() {
-        TextInputEditText peopleNeeded = findViewById(R.id.howManyPeopleNeeded);
+    private boolean isValidHowManyPeopleNeeded() {
+        TextInputEditText peopleNeededEditText = findViewById(R.id.howManyPeopleNeeded);
+        String typedInfo = Objects.requireNonNull(peopleNeededEditText.getText()).toString();
 
-        String typedInfo = Objects.requireNonNull(peopleNeeded.getText()).toString();
         if (!typedInfo.isEmpty()) {
-            postCreating.setHowManyPeopleNeeded(Integer.parseInt(typedInfo));
+            int numberOfPeople = Integer.parseInt(typedInfo);
+            // Check if the number of people is greater than zero
+            if (numberOfPeople > 0) {
+                return true;
+            } else {
+                peopleNeededEditText.setError("Podaj poprawną liczbę osób");
+                return false;
+            }
+        } else {
+            peopleNeededEditText.setError("Pojad liczbę osób");
+            return false;
+        }
+    }
+
+    private void setHowManyPeopleNeeded() {
+        TextInputEditText peopleNeededEditText = findViewById(R.id.howManyPeopleNeeded);
+        String typedInfo = Objects.requireNonNull(peopleNeededEditText.getText()).toString();
+        if (!typedInfo.isEmpty()) {
+            int numberOfPeople = Integer.parseInt(typedInfo);
+            if (numberOfPeople > 0) {
+                postCreating.setHowManyPeopleNeeded(numberOfPeople);
+            }
         }
     }
 
@@ -184,17 +213,38 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     private void setDate() {
         TextInputEditText chooseDate = findViewById(R.id.chooseDate);
         chooseDate.setFocusable(false);
-
-        DateChoosingLogic dateChoosingLogic = new DateChoosingLogic(this, postCreating);
         chooseDate.setOnClickListener(v -> dateChoosingLogic.pickDate(chooseDate));
+
+        AppCompatCheckBox dateNegotiable = findViewById(R.id.dateNegotiable);
+        dateNegotiable.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                dateChoosingLogic.noDateGiven();
+                chooseDate.setEnabled(false);
+                chooseDate.setHintTextColor(Color.GRAY);
+            } else {
+                chooseDate.setEnabled(true);
+                chooseDate.setHintTextColor(Color.LTGRAY);
+            }
+        });
     }
 
     private void setHour() {
         TextInputEditText chooseHour = findViewById(R.id.chooseHour);
         chooseHour.setFocusable(false);
-
-        DateChoosingLogic dateChoosingLogic = new DateChoosingLogic(this, postCreating);
         chooseHour.setOnClickListener(v -> dateChoosingLogic.pickHour(chooseHour));
+
+        AppCompatCheckBox hourNegotiable = findViewById(R.id.hourNegotiable);
+        hourNegotiable.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+            if (isChecked) {
+                dateChoosingLogic.noHourGiven();
+                chooseHour.setEnabled(false);
+                chooseHour.setHintTextColor(Color.GRAY);
+
+            } else {
+                chooseHour.setEnabled(true);
+                chooseHour.setHintTextColor(Color.LTGRAY);
+            }
+        }));
     }
 
     private boolean isValidSportSelection() {

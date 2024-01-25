@@ -1,24 +1,25 @@
 package com.noisevisionproductions.playmeet;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostCreating {
     private String postId;
     private Boolean createdByUser = false;
-    private Boolean savedByUser = false;
+    private Boolean isActivityFull = false;
     private String userId;
     private String sportType;
     private String cityName;
     private String dateTime;
     private String hourTime;
     private String skillLevel;
+    private String peopleStatus;
     private int howManyPeopleNeeded;
-    private int peopleSignedUp = 0;
     private String additionalInfo;
+    private List<String> signedUpUserIds = new ArrayList<>();
 
     public PostCreating() {
     }
-
 
     public PostCreating(String postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
         this.postId = postId;
@@ -34,7 +35,7 @@ public class PostCreating {
         PostCreating copyOfAllPosts = new PostCreating();
         copyOfAllPosts.setPostId(postId);
         copyOfAllPosts.setIsCreatedByUser(createdByUser);
-        copyOfAllPosts.setSavedByUser(savedByUser);
+        copyOfAllPosts.setActivityFull(isActivityFull);
         copyOfAllPosts.setUserId(userId);
         copyOfAllPosts.setSportType(sportType);
         copyOfAllPosts.setCityName(cityName);
@@ -45,21 +46,54 @@ public class PostCreating {
         return copyOfAllPosts;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        PostCreating that = (PostCreating) obj;
-        return Objects.equals(postId, that.postId);
+    public List<String> getSignedUpUserIds() {
+        return signedUpUserIds;
     }
 
-    public void setSavedByUser(Boolean savedByUser) {
-        this.savedByUser = savedByUser;
+    public void setSignedUpUserIds(List<String> signedUpUserIds) {
+        this.signedUpUserIds = signedUpUserIds;
+    }
+
+    public int getPeopleSignedUp() {
+        return signedUpUserIds.size();
+    }
+
+    public void userSignedUp(String userId) {
+        signedUpUserIds.add(userId);
+        updatePeopleStatus();
+    }
+
+    public void deleteSignedUpUser(String userId) {
+        signedUpUserIds.remove(userId);
+        updatePeopleStatus();
+    }
+
+    public void updatePeopleStatus() {
+        peopleStatus = getPeopleSignedUp() + "/" + howManyPeopleNeeded;
+    }
+
+    public int getHowManyPeopleNeeded() {
+        return howManyPeopleNeeded;
+    }
+
+    public void setHowManyPeopleNeeded(int howManyPeopleNeeded) {
+        this.howManyPeopleNeeded = howManyPeopleNeeded;
+    }
+
+    public String getPeopleStatus() {
+        return peopleStatus = getPeopleSignedUp() + "/" + howManyPeopleNeeded;
     }
 
     public void setIsCreatedByUser(Boolean createdByUser) {
         this.createdByUser = createdByUser;
+    }
+
+    public Boolean getActivityFull() {
+        return isActivityFull;
+    }
+
+    public void setActivityFull(Boolean activityFull) {
+        isActivityFull = activityFull;
     }
 
     public String getUserId() {
@@ -110,30 +144,6 @@ public class PostCreating {
         this.skillLevel = skillLevel;
     }
 
-    public int getHowManyPeopleNeeded() {
-        return howManyPeopleNeeded;
-    }
-    public int getPeopleSignedUp(){
-        return peopleSignedUp;
-    }
-
-    public void setHowManyPeopleNeeded(int howManyPeopleNeeded) {
-        this.howManyPeopleNeeded = howManyPeopleNeeded;
-    }
-
-    public void userSignedUp() {
-        peopleSignedUp++;
-    }
-
-    public void deleteSignedUpUser() {
-        if (peopleSignedUp > 0) {
-            peopleSignedUp -= 1;
-        }
-    }
-
-    public String getPeopleStatus() {
-        return peopleSignedUp + "/" + howManyPeopleNeeded;
-    }
 
     public String getDateTime() {
         return dateTime;

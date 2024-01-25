@@ -2,6 +2,8 @@ package com.noisevisionproductions.playmeet.Firebase;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -15,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.Chat.ChatRoomModel;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
 import java.util.HashMap;
@@ -28,6 +31,10 @@ public class FirebaseHelper {
     public FirebaseHelper() {
         databaseReference = FirebaseDatabase.getInstance().getReference();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+    }
+
+    public DatabaseReference getDatabaseReference() {
+        return databaseReference;
     }
 
     // po wywołaniu tej metody, pobieram aktualnie zalogowanego użytkownika
@@ -57,8 +64,6 @@ public class FirebaseHelper {
                             Glide.with(context)
                                     .load(avatarUri)
                                     .into(avatar);
-
-
                         }
                     }
                     userReferenceForAvatar.removeEventListener(this);
@@ -68,9 +73,20 @@ public class FirebaseHelper {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 userReferenceForAvatar.removeEventListener(this);
+                Log.e("Firebase RealmTime Database error", "Downloading userAvatar from DB " + error.getMessage());
             }
         };
         userReferenceForAvatar.addListenerForSingleValueEvent(listener);
+    }
+
+    public void getUserNickName(String userId, ValueEventListener listener) {
+        DatabaseReference userReferenceForNickname = databaseReference.child("UserModel").child(userId).child("nickname");
+        userReferenceForNickname.addListenerForSingleValueEvent(listener);
+    }
+
+    public void getJoinedPeopleStatus(String postId, ValueEventListener listener) {
+        DatabaseReference postReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId).child("peopleStatus");
+        postReference.addListenerForSingleValueEvent(listener);
     }
 
     // aktualizuje bazę danych podając dane oraz referencję do niej, w której mają być te dane zapisane
@@ -81,5 +97,48 @@ public class FirebaseHelper {
                     .addOnSuccessListener(onSuccess)
                     .addOnFailureListener(onFailure);
         }
+    }
+
+    // tworzenie nowego ChatRoom po wywołaniu tej metody
+    public void getExistingChatRoomId(String user1Id, String user2Id, OnChatRoomIdFetched callback) {
+        databaseReference.child("ChatRooms")
+                .orderByChild("participants/" + user1Id).equalTo(true)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String chatRoomId = null;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            ChatRoomModel chatRoomModel = snapshot.getValue(ChatRoomModel.class);
+                            if (chatRoomModel != null && chatRoomModel.getParticipants().containsKey(user2Id)) {
+                                chatRoomId = snapshot.getKey();
+                                break;
+                            }
+                        }
+
+                        if (chatRoomId == null) {
+                            chatRoomId = databaseReference.child("ChatRooms").push().getKey();
+                            ChatRoomModel newChatRoom = new ChatRoomModel(chatRoomId);
+                            newChatRoom.getParticipants().put(user1Id, true);
+                            newChatRoom.getParticipants().put(user2Id, true);
+                            // ustawiam aktualny czas stworzenia pokoju. W adapterze używam metody formatDate() w celu sformatowania daty,
+                            // która jest łatwiejsza do odczytania
+                            newChatRoom.setTimeStamp(System.currentTimeMillis());
+
+                            if (chatRoomId != null) {
+                                databaseReference.child("ChatRooms").child(chatRoomId).setValue(newChatRoom);
+                            }
+                        }
+                        callback.onFetched(chatRoomId);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase RealmTime Database error", "Downloading and creating chat rooms " + error.getMessage());
+                    }
+                });
+    }
+
+    public interface OnChatRoomIdFetched {
+        void onFetched(String chatRoomId);
     }
 }

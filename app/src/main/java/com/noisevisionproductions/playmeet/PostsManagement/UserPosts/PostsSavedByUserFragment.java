@@ -24,10 +24,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostsDiffCallbackForCopyOfPost;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.List;
 public class PostsSavedByUserFragment extends Fragment {
     private final List<PostCreatingCopy> savedPosts = new ArrayList<>();
     private ProgressBar progressBar;
-    private PostsAdapterSavedByUser postsAdapterSavedByUser;
+    private AdapterSavedByUserPosts adapterSavedByUserPosts;
     private RecyclerView expandableListOfSavedPosts;
     private AppCompatTextView noPostInfo;
 
@@ -54,17 +54,16 @@ public class PostsSavedByUserFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBarLayout);
 
         expandableListOfSavedPosts = view.findViewById(R.id.expandableListOfSavedPosts);
-        postsAdapterSavedByUser = new PostsAdapterSavedByUser(getContext(), savedPosts, noPostInfo);
-        expandableListOfSavedPosts.setAdapter(postsAdapterSavedByUser);
+        adapterSavedByUserPosts = new AdapterSavedByUserPosts(getContext(), savedPosts, noPostInfo);
+        expandableListOfSavedPosts.setAdapter(adapterSavedByUserPosts);
         expandableListOfSavedPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
     public void showSavedPosts() {
-        FirebaseAuthManager authenticationManager = new FirebaseAuthManager();
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         String currentUserId = firebaseHelper.getCurrentUser().getUid();
 
-        if (authenticationManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             DatabaseReference savedPostsReference = FirebaseDatabase.getInstance().getReference().child("SavedPostCreating").child(currentUserId);
 
             savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -89,11 +88,11 @@ public class PostsSavedByUserFragment extends Fragment {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("PostsSavedByUserFragment", "Błąd podczas odczytu danych z Firebase", error.toException());
+                    Log.e("Firebase RealmTime Database error", "Printing posts that user signed up to " + error.getMessage());
                 }
             });
         } else {
-            NavigationUtils.showLoginSnackBar(getContext());
+            ProjectUtils.showLoginSnackBar(getContext());
         }
     }
 
@@ -106,7 +105,7 @@ public class PostsSavedByUserFragment extends Fragment {
             new Handler(Looper.getMainLooper()).post(() -> {
                 savedPosts.clear();
                 savedPosts.addAll(newPosts);
-                diffResult.dispatchUpdatesTo(postsAdapterSavedByUser);
+                diffResult.dispatchUpdatesTo(adapterSavedByUserPosts);
                 progressBar.setVisibility(View.GONE);
             });
         }).start();

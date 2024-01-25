@@ -1,4 +1,4 @@
-package com.example.playmeet;
+package com.noisevisionproductions.playmeet;
 
 import android.content.Context;
 

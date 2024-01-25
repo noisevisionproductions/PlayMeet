@@ -32,7 +32,10 @@ public class ContainerForDialogFragment extends DialogFragment {
         // tworzenie pierwszego fragmentu po wywolaniu DialogFragment
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         ChildFragmentNickname childFragmentNickname = new ChildFragmentNickname();
-        // fragment do ustawiania nicku pojawia się jako pierwszy, ustawiam również tag tego fragmentu do późniejszej referencji do tego fragmentu oraz pozwoli mi to na przekazanie danego nickName przez użytkownika do kolejnych fragmentów, dopóki nie zostaną one zapisane
+        // fragment do ustawiania nicku pojawia się jako pierwszy,
+        // ustawiam również tag tego fragmentu do późniejszej referencji do tego fragmentu
+        // oraz pozwoli mi to na przekazanie danego nickName przez użytkownika do kolejnych fragmentów,
+        // dopóki nie zostaną one zapisane
         fragmentTransaction.replace(R.id.fragment_container, childFragmentNickname, "tag_child_fragment_nickname");
         fragmentTransaction.commit();
     }
@@ -52,8 +55,7 @@ public class ContainerForDialogFragment extends DialogFragment {
         // Ustawiam na przezroczystość, aby nie było białego tła na fragmentach
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        // Zapobieganie zniknięciu DialogFragment po kliknięciu poza niego
-        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCanceledOnTouchOutside(true);
         return dialog;
     }
 }

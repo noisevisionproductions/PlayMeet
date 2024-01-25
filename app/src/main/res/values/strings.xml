@@ -72,7 +72,7 @@
     <string name="provideAge">Wiek:</string>
     <string name="Save">Zapisz</string>
     <string name="Edit">Edytuj</string>
-    <string name="openChat">Otwórz chat</string>
+    <string name="openChat">Chat</string>
     <string name="userDidNotProvided">Nie podano</string>
     <string name="moreInfoAboutGame">Więcej o grze</string>
     <string name="moreInfoAboutUser">O użytkowniku</string>
@@ -86,8 +86,8 @@
     <string name="signOutFromThePost">Wypisz się</string>
     <string name="postCreating">Tworzenie postu</string>
     <string name="chooseHour">Wybierz godzinę\n(opcjonalne)</string>
-    <string name="howManyPeopleNeeded">Ilość potrzebnych osób (opcjonalne)</string>
-    <string name="extraInfo">Dodatkowe informacje\n(opcjonalne)</string>
+    <string name="howManyPeopleNeeded">Ilość potrzebnych osób</string>
+    <string name="extraInfo">Dodatkowe informacje (opcjonalne)</string>
     <string name="chooseDate">Wybierz datę\n(opcjonalne)</string>
     <string name="noSportProvided">Nie podano sportu</string>
     <string name="noCityProvided">Nie podano miasta</string>
@@ -101,5 +101,15 @@
     <string name="timeStamp">Timestamp</string>
     <string name="message">Message</string>
     <string name="username">Username</string>
+    <string name="reportPost">Zgłoś post</string>
+    <string name="reportText">Treść zgłoszenia</string>
+    <string name="noChatRoomsAvailable">Brak dostępnych czatów. Zacznij nową rozmowę!</string>
+    <string name="chooseImageSource">Wybierz źródło zdjęcia</string>
+    <string name="deleteAvatar">Usuń Avatar</string>
+    <string name="welcomeScreen">Witamy</string>
+    <string name="hourDateDoesntMatter">Do uzgodnienia</string>
+    <string name="signedInUsers">Zapisani</string>
+    <string name="signedInUsersLong">Zapisani użytkownicy</string>
+    <string name="noUsersSignedUpInfo">Brak zapisanych</string>
 
 </resources>

@@ -9,8 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:contentDescription="test"
+        android:contentDescription="@string/welcomeScreen"
         android:src="@drawable/main_logo" />
-
 
 </RelativeLayout>

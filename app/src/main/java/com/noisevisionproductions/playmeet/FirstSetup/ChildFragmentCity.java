@@ -17,7 +17,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.DataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.Utilities.SpinnerManager;
@@ -36,7 +36,7 @@ public class ChildFragmentCity extends Fragment {
         setUpUIElements(view);
         changeFragmentToGender(view);
         chooseCity();
-        NavigationUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
+        ProjectUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
 
         return view;
     }
