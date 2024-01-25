@@ -3,6 +3,7 @@ package com.noisevisionproductions.playmeet.Utilities;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -57,7 +58,7 @@ public class OpinionFromUser extends SidePanelBaseActivity {
         setUpBackToMainMenuButton();
 
         LinearLayoutCompat mainLayout = findViewById(R.id.mainLayout);
-        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(this));
+        mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(this));
     }
 
     private void setUpSendOpinionButton(View view) {
@@ -67,7 +68,7 @@ public class OpinionFromUser extends SidePanelBaseActivity {
 
     private void setUpBackToMainMenuButton() {
         AppCompatButton backToMainMenu = findViewById(R.id.backToMainMenu);
-        NavigationUtils.backToMainMenuButton(backToMainMenu, this);
+        ProjectUtils.backToMainMenuButton(backToMainMenu, this);
     }
 
     private void submitOpinion(View view) {
@@ -104,7 +105,10 @@ public class OpinionFromUser extends SidePanelBaseActivity {
 
         UploadTask uploadTask = opinionReference.putBytes(data);
 
-        uploadTask.addOnFailureListener(e -> Snackbar.make(view, "Wystąpił błąd podczas wysyłania " + e, Snackbar.LENGTH_SHORT).show())
+        uploadTask.addOnFailureListener(e -> {
+                    Snackbar.make(view, "Wystąpił błąd podczas wysyłania " + e, Snackbar.LENGTH_SHORT).show();
+                    Log.e("Firebase Database error", "Saving opinion to DB " + e.getMessage());
+                })
                 .addOnSuccessListener(taskSnapshot -> {
                     // czyści pole tekstowe po wysłaniu
                     clearOpinionTextField(getText);
@@ -165,6 +169,9 @@ public class OpinionFromUser extends SidePanelBaseActivity {
 
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (databaseError != null) {
+                    Log.e("Firebase RealmTime Database error", "Printing Nickname on chatRoom adapter " + databaseError.getMessage());
+                }
             }
         });
     }
@@ -179,6 +186,7 @@ public class OpinionFromUser extends SidePanelBaseActivity {
             callback.onOpinionCountReceived(opinionCount);
         }).addOnFailureListener(e -> {
             // Obsłuż błąd
+            Log.e("Firebase Database error", "Downloading user opinion count from DB " + e.getMessage());
             callback.onOpinionCountReceived(0);
         });
     }

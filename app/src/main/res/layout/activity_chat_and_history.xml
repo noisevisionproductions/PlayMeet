@@ -12,6 +12,16 @@
         android:layout_height="match_parent"
         android:background="@color/background">
 
+        <ProgressBar
+            android:id="@+id/loadMorePostsIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/accent"
+            android:padding="15dp"
+            android:visibility="visible" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_chat"
             android:layout_width="match_parent"

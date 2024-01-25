@@ -3,9 +3,9 @@ package com.noisevisionproductions.playmeet.Design;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostsManagement.PostCreatingLogic;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.R;
 
 public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
@@ -18,15 +18,13 @@ public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
 
     @Override
     protected void onButtonClicked() {
-        FirebaseAuthManager authenticationManager = new FirebaseAuthManager();
-
         // mimo, że pojawia się informacja co robi te przycisk, to jest on dostępny tylko dla zarejestrowanych użytkowników, dlatego sprawdzam autoryzację
-        if (authenticationManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             Intent intent = new Intent(getActivity(), PostCreatingLogic.class);
             startActivity(intent);
         } else {
             if (getView() != null) {
-                NavigationUtils.showLoginSnackBar(getContext());
+                ProjectUtils.showLoginSnackBar(getContext());
             }
         }
     }

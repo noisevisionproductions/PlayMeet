@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -18,7 +19,7 @@ import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment
 import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 
-public class NavigationUtils extends AppCompatActivity {
+public class ProjectUtils extends AppCompatActivity {
     public static void backToMainMenuButton(AppCompatButton button, final Context context) {
         button.setOnClickListener(view -> {
             Intent intent = new Intent(context, MainMenuPosts.class);
@@ -55,7 +56,7 @@ public class NavigationUtils extends AppCompatActivity {
         snackBarLogin.show();
     }
 
-    public static void createSnackBarUsingView(View view, String message) {
-        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).show();
+    public static void createSnackBarUsingViewVeryShort(View view, String message) {
+        Snackbar.make(view, message, Snackbar.LENGTH_SHORT).setDuration(600).show();
     }
 }

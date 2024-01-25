@@ -4,24 +4,21 @@
         <item>Wybierz sport</item>
         <item>Badminton</item>
         <item>Baseball</item>
+        <item>Boks</item>
         <item>Golf</item>
-        <item>Hokej na lodzie</item>
-        <item>Hokej na trawie</item>
-        <item>Jazda konna</item>
-        <item>Kajakarstwo</item>
+        <item>Hokej</item>
+        <item>Joga</item>
         <item>Koszykówka</item>
-        <item>Lekkoatletyka</item>
-        <item>Narciarstwo</item>
+        <item>Narty</item>
+        <item>Łyżwy</item>
         <item>Piłka Nożna</item>
-        <item>Pływanie</item>
+        <item>Piłka ręczna</item>
+        <item>Rolki</item>
         <item>Rower</item>
         <item>Skoki narciarskie</item>
         <item>Siatkówka</item>
         <item>Siłownia</item>
-        <item>Strzelectwo</item>
         <item>Squash</item>
-        <item>Surfing</item>
-        <item>Sztuki walki</item>
         <item>Tenis</item>
         <item>Wspinaczka</item>
     </string-array>

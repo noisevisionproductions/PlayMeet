@@ -6,7 +6,6 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 public class ChatMessageModel {
-    // private String userId;
     private String uuid;
     private String nickname;
     private long timestamp;

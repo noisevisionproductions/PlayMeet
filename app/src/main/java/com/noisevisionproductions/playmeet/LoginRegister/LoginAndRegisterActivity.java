@@ -63,5 +63,6 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
                 finish();
             }
         };
+        getOnBackPressedDispatcher().addCallback(this, callback);
     }
 }

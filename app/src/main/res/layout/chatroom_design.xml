@@ -11,7 +11,7 @@
     android:paddingBottom="8dp">
 
     <include
-        layout="@layout/image_view_avatar"
+        layout="@layout/avatar_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp" />
 
@@ -24,7 +24,7 @@
         android:paddingEnd="10dp">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_username"
+            android:id="@+id/username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -33,14 +33,18 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_last_message"
+            android:id="@+id/lastMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="test"
             android:textColor="@color/text"
             android:textColorHint="@color/textHint"
             android:textSize="16sp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/timestampTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </androidx.appcompat.widget.LinearLayoutCompat>

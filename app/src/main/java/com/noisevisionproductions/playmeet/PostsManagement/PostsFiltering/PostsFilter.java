@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.Adapters.MySpinnerAdapterForFilterMenu;
-import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.PostsAdapterAllPosts;
 import com.noisevisionproductions.playmeet.DataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.AdapterAllPosts;
 import com.noisevisionproductions.playmeet.R;
 
 import java.util.ArrayList;
@@ -30,14 +30,14 @@ import java.util.List;
 public class PostsFilter {
     private final List<PostCreating> originalPosts = new ArrayList<>();
     private final List<PostCreating> posts;
-    private final RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> adapter;
+    private final RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter;
     private final AppCompatButton filterButton, deleteFilters;
     private final AppCompatTextView noPostFound;
     private Spinner spinnerSport, spinnerCity, spinnerDifficulty;
     private EditText postIdText;
     private final boolean[] checkedItems;
 
-    public PostsFilter(RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> adapter, List<PostCreating> posts, AppCompatButton filterButton, AppCompatButton deleteFilters, AppCompatTextView noPostFound) {
+    public PostsFilter(RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, List<PostCreating> posts, AppCompatButton filterButton, AppCompatButton deleteFilters, AppCompatTextView noPostFound) {
         this.adapter = adapter;
         this.posts = posts;
         this.filterButton = filterButton;
@@ -242,7 +242,7 @@ public class PostsFilter {
         }
     }
 
-    public static void filterPostsLogic(RecyclerView.Adapter<PostsAdapterAllPosts.MyViewHolder> adapter, List<PostCreating> posts, PostFilter filter) {
+    public static void filterPostsLogic(RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, List<PostCreating> posts, PostFilter filter) {
         List<PostCreating> filteredPosts = new ArrayList<>();
 
         for (PostCreating post : posts) {

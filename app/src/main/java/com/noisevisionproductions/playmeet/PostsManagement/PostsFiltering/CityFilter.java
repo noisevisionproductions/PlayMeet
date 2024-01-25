@@ -13,6 +13,9 @@ public class CityFilter extends Filter {
 
     @Override
     public boolean apply(PostCreating post) {
+        if (post == null || post.getCityName() == null) {
+            return false;
+        }
         return post.getCityName().equals(city);
     }
 }

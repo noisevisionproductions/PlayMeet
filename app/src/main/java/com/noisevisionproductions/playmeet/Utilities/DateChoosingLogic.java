@@ -3,6 +3,7 @@ package com.noisevisionproductions.playmeet.Utilities;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
@@ -35,6 +36,9 @@ public class DateChoosingLogic {
 
         }, chosenYear, chosenMonth, chosenDay);
 
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Wyczyść", ((dialog, which) -> {
+            textInputEditText.setText("");
+        }));
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
@@ -50,7 +54,17 @@ public class DateChoosingLogic {
             postCreating.setHourTime(formattedHour);
         }, hour, minute, is24HourFormat);
 
+        timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Wyczyść", (((dialog, which) -> {
+            textInputEditText.setText("");
+        })));
         timePickerDialog.show();
     }
 
+    public void noDateGiven() {
+        postCreating.setDateTime(String.valueOf(R.string.hourDateDoesntMatter));
+    }
+
+    public void noHourGiven() {
+        postCreating.setHourTime(String.valueOf(R.string.hourDateDoesntMatter));
+    }
 }

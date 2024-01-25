@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.FirstSetup;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.Utilities.SpinnerManager;
 
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class ChildFragmentGender extends Fragment {
         setUpUIElements(view);
         chooseGender();
         handleSetInfoButton();
-        NavigationUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
+        ProjectUtils.handleCancelButtonForFragments(cancelButton, getParentFragment());
 
         return view;
     }
@@ -108,6 +109,7 @@ public class ChildFragmentGender extends Fragment {
 
     private void handleTransactionError(DatabaseError error) {
         Toast.makeText(requireContext(), "Błąd: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        Log.e("Firebase RealmTime Database error", "Saving first setup data in DB " + error.getMessage());
     }
 
     private String getArgument(String data) {

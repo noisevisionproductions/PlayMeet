@@ -9,7 +9,7 @@
     android:padding="16dp">
 
     <include
-        layout="@layout/image_view_avatar"
+        layout="@layout/avatar_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp" />
 

@@ -2,7 +2,6 @@ package com.noisevisionproductions.playmeet.UserManagement;
 
 public class UserModel{
 
-
     private String userId;
     private String nickname;
     private String name;

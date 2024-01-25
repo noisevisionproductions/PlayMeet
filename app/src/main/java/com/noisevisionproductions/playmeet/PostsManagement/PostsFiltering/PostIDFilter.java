@@ -15,7 +15,9 @@ public class PostIDFilter extends Filter {
     @Override
     public boolean apply(PostCreating post) {
         // nie filtruje postów, jesli postId nie jest ustawione
+        if (post == null || post.getPostId() == null) {
+            return false;
+        }
         return post.getPostId().contains(postId);
-        // jesli nie jest pusty, to filtruje posty na podstawie postId
     }
 }

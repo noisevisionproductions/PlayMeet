@@ -104,7 +104,6 @@
 
             </RelativeLayout>
 
-
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

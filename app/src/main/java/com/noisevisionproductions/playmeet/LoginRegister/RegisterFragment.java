@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.LoginRegister;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
-import com.noisevisionproductions.playmeet.Utilities.NavigationUtils;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -41,7 +43,7 @@ public class RegisterFragment extends Fragment {
         getUIObjects(view);
 
         // sprawdzam, czy użytkownik jest już zalogowany. Jeśli tak, to przekierowuję go do głównego menu aplikacji
-        if (firebaseAuthManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             Intent intent = new Intent(getContext(), MainMenuPosts.class);
             startActivity(intent);
         } else {
@@ -50,7 +52,7 @@ public class RegisterFragment extends Fragment {
         }
 
         LinearLayout mainLayout = view.findViewById(R.id.mainLayout);
-        mainLayout.setOnClickListener(v -> NavigationUtils.hideSoftKeyboard(requireActivity()));
+        mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(requireActivity()));
 
         return view;
     }
@@ -73,7 +75,7 @@ public class RegisterFragment extends Fragment {
         if (checkValidation()) {
             firebaseAuthManager.userRegister(emailString, firstPasswordString, task -> {
                 // użycie operatora trójargumentowego - rezultat = (warunek) ? wartoscGdyPrawda : wartoscGdyFalsz
-                String errorMessage = task.getException() != null ? task.getException().getMessage() : "Błąd rejestracji";
+                String error = task.getException() != null ? task.getException().getMessage() : "Błąd rejestracji";
                 if (task.isSuccessful()) {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                     if (firebaseUser != null) {
@@ -88,9 +90,10 @@ public class RegisterFragment extends Fragment {
                         Toast.makeText(getActivity(), "Konto założone", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(getContext(), LoginAndRegisterActivity.class);
                         startActivity(intent);
-                    } else {
-                        Toast.makeText(getActivity(), "Błąd rejestracji: " + errorMessage, Toast.LENGTH_SHORT).show();
                     }
+                } else {
+                    Toast.makeText(getActivity(), "Błąd rejestracji: " + error, Toast.LENGTH_SHORT).show();
+                    Log.e("Register new user", "New user register error " + error);
                 }
             });
 

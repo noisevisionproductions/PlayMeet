@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,22 +26,20 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.DataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.Design.ButtonAddPostFragment;
+import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.LoginRegister.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostsManagement.PostsFiltering.PostsFilter;
 import com.noisevisionproductions.playmeet.R;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private FirebaseAuthManager authenticationManager;
     private DatabaseReference allPostsReference;
     private FirebaseHelper firebaseHelper;
-    private PostsAdapterAllPosts postsAdapterAllPosts;
+    private AdapterAllPosts adapterAllPosts;
     private final List<PostCreating> posts = new ArrayList<>();
     private final List<String> savedPostIds = new ArrayList<>();
     private ProgressBar progressBar, loadingMorePostsIndicator;
@@ -51,12 +50,13 @@ public class PostsOfTheGamesFragment extends Fragment {
     private int currentPage = 1;
     private static final int POSTS_PER_PAGE = 10;
     private AppCompatTextView loadingMorePostsText, noPostFound;
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(2);
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_posts_list, container, false);
 
         setupView(view);
+
+        // refreshData(); // odświeżam aktywność na starcie, bo filtry bez tego nie działają jak należy TODO
         showAllPosts();
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
         getAddPostButton();
@@ -67,7 +67,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     private void setupView(View view) {
-        postsAdapterAllPosts = new PostsAdapterAllPosts(posts, getChildFragmentManager(), getContext());
+        adapterAllPosts = new AdapterAllPosts(posts, getChildFragmentManager(), getContext());
         authenticationManager = new FirebaseAuthManager();
         firebaseHelper = new FirebaseHelper();
         allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
@@ -108,49 +108,39 @@ public class PostsOfTheGamesFragment extends Fragment {
         loadingMorePostsIndicator.setVisibility(View.VISIBLE);
         loadingMorePostsText.setVisibility(View.VISIBLE);
 
-        if (authenticationManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             postCreateForLoggedInUser();
         } else {
             postCreateForUnregisteredUser();
         }
     }
 
-    private void refreshData() {
+    public void refreshData() {
         swipeRefreshLayout.setRefreshing(true);
 
-        int delayLoading = 1000;
-
         new Handler().postDelayed(() -> {
-            int oldSize = posts.size();
-
             posts.clear();
 
-            if (authenticationManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
                 postCreateForLoggedInUser();
             } else {
                 postCreateForUnregisteredUser();
             }
 
-            // Calculate the new size of the dataset
-            int newSize = posts.size();
-
-            // Use notifyItemRangeRemoved and notifyItemRangeInserted
-            postsAdapterAllPosts.notifyItemRangeRemoved(0, oldSize);
-            postsAdapterAllPosts.notifyItemRangeInserted(0, newSize);
-
             filterButton.setSelected(false);
+            noPostFound.setVisibility(View.GONE);
             // Set refreshing to false after data has been refreshed
             swipeRefreshLayout.setRefreshing(false);
-        }, delayLoading);
+        }, 800);
     }
 
 
     private void showAllPosts() {
-        recyclerView.setAdapter(postsAdapterAllPosts);
+        recyclerView.setAdapter(adapterAllPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
 
-        if (authenticationManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             postCreateForLoggedInUser();
         } else {
             postCreateForUnregisteredUser();
@@ -181,7 +171,10 @@ public class PostsOfTheGamesFragment extends Fragment {
                                     for (DataSnapshot postSnapshot : allPostsSnapshot.getChildren()) {
                                         PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
 
-                                        if (postCreating != null && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(postCreating.getPostId())) {
+                                        if (postCreating != null
+                                                && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid())
+                                                && !savedPostIds.contains(postCreating.getPostId())
+                                                && !postCreating.getActivityFull()) {
                                             newPostCreatingList.add(postCreating);
                                         }
                                     }
@@ -201,6 +194,7 @@ public class PostsOfTheGamesFragment extends Fragment {
 
                                 @Override
                                 public void onCancelled(@NonNull DatabaseError error) {
+                                    Log.e("Firebase RealmTime Database error", "Downloading posts for logged user " + error.getMessage());
                                     loadingMorePostsIndicator.setVisibility(View.GONE);
                                     loadingMorePostsText.setVisibility(View.GONE);
                                     recyclerView.setVisibility(View.GONE);
@@ -246,6 +240,7 @@ public class PostsOfTheGamesFragment extends Fragment {
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase RealmTime Database error", "Printing all posts for guest user " + error.getMessage());
                         loadingMorePostsIndicator.setVisibility(View.GONE);
                         loadingMorePostsText.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.GONE);
@@ -260,20 +255,19 @@ public class PostsOfTheGamesFragment extends Fragment {
         final List<PostCreating> oldPosts = new ArrayList<>(this.posts);
         progressBar.setVisibility(View.VISIBLE);
 
-        threadPool.execute(() -> {
-            try {
-                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldPosts, newPosts));
+        try {
+            final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldPosts, newPosts));
 
-                new Handler(Looper.getMainLooper()).post(() -> {
-                    posts.clear();
-                    posts.addAll(newPosts);
-                    progressBar.setVisibility(View.GONE);
-                    diffResult.dispatchUpdatesTo(postsAdapterAllPosts);
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+            new Handler(Looper.getMainLooper()).post(() -> {
+                posts.clear();
+                posts.addAll(newPosts);
+                progressBar.setVisibility(View.GONE);
+                diffResult.dispatchUpdatesTo(adapterAllPosts);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void getAddPostButton() {
@@ -284,7 +278,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     private void filterAllPosts(View view) {
         AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
         filterButton.setOnClickListener(v -> {
-            PostsFilter postsFilter = new PostsFilter(postsAdapterAllPosts, posts, filterButton, deleteFilters, noPostFound);
+            PostsFilter postsFilter = new PostsFilter(adapterAllPosts, posts, filterButton, deleteFilters, noPostFound);
             postsFilter.filterPostsWindow((Activity) getContext());
         });
     }
