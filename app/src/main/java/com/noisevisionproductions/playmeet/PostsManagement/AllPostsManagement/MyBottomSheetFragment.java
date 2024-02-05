@@ -1,6 +1,5 @@
 package com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
-import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostsManagement.PostInfo;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.EditableField;
@@ -312,20 +310,5 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
     public void setPostCreating(PostInfo postInfo) {
         this.postInfo = postInfo;
-    }
-
-    public interface OnDataPass {
-        void onDataPass(String data);
-    }
-
-    OnDataPass dataPass;
-
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        dataPass = (OnDataPass) context;
-    }
-
-    public void setDataPass(OnDataPass dataPass) {
-        this.dataPass = dataPass;
     }
 }
