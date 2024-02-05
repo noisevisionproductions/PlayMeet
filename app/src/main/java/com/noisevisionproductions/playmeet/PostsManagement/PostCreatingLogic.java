@@ -7,17 +7,22 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Adapters.MySpinnerAdapter;
+import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.DataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
@@ -29,6 +34,7 @@ import com.noisevisionproductions.playmeet.Utilities.SpinnerManager;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class PostCreatingLogic extends SidePanelBaseActivity {
     private final PostCreating postCreating = new PostCreating();
@@ -54,30 +60,57 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         setSkillLevel();
         setDate();
         setHour();
-        createPost();
+        checkIfPostCanBeCreated();
 
-        ConstraintLayout mainLayout = findViewById(R.id.mainLayout);
-        mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(this));
+        LinearLayoutCompat linearLayout = findViewById(R.id.linearLayout);
+        linearLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(this));
     }
 
-    private void createPost() {
+    private void checkIfPostCanBeCreated() {
         AppCompatButton createPost = findViewById(R.id.submitPost);
 
         createPost.setOnClickListener(view -> {
             if (isValidHowManyPeopleNeeded() && isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
                 if (firebaseHelper.getCurrentUser() != null) {
-                    setHowManyPeopleNeeded();
-                    postCreating.setIsCreatedByUser(true);
-                    postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
-                    setAdditionalInfo();
-                    setUniqueId();
+                    checkPostLimit(firebaseHelper.getCurrentUser().getUid(), canCreatePost -> {
+                        if (canCreatePost) {
+                            createNewPost();
+                        } else {
+                            ToastManager.showToast(PostCreatingLogic.this, "Osiągnięto limit tworzenia postów");
+                        }
+                    });
                 } else {
-                    Toast.makeText(PostCreatingLogic.this, "Użytkownik nie autoryzowany", Toast.LENGTH_SHORT).show();
+                    ToastManager.showToast(PostCreatingLogic.this, "Użytkownik nie autoryzowany");
                 }
-
             } else {
                 handleInvalidSelection();
                 ProjectUtils.createSnackBarUsingViewVeryShort(view, "Uzupełnij wymagane pola");
+            }
+        });
+    }
+
+    private void createNewPost() {
+        setHowManyPeopleNeeded();
+        postCreating.setIsCreatedByUser(true);
+        postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
+        setAdditionalInfo();
+        setUniqueId();
+    }
+
+    private void checkPostLimit(String userId, Consumer<Boolean> callback) {
+        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
+        Query query = postsReference.orderByChild("userId").equalTo(userId);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int postsCount = (int) snapshot.getChildrenCount();
+                callback.accept(postsCount < 3);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseHelper", "Error checking post limit", error.toException());
+                callback.accept(false);
             }
         });
     }
@@ -91,7 +124,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
             postReference.child(postId).setValue(postCreating)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            Toast.makeText(PostCreatingLogic.this, "Post utworzony!", Toast.LENGTH_LONG).show();
+                            ToastManager.showToast(PostCreatingLogic.this, "Post utworzony!");
 
                             Intent intent = new Intent(PostCreatingLogic.this, MainMenuPosts.class);
                             startActivity(intent);
@@ -153,7 +186,6 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 String selectedSkillLevel = (String) adapterView.getItemAtPosition(position);
-                //    gameDifficultyList.clear();
 
                 if (position > 0) {
 

@@ -30,6 +30,26 @@
         </provider>
 
         <activity
+            android:name=".Design.ActivityApplicationOptions"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Design.AboutApp.ActivityUELA"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Design.AboutApp.ActivityToS"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Design.AboutApp.ActivityPrivacyPolicy"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".Design.AboutApp.AboutAppActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".Chat.ChatActivity"
             android:exported="true"
             android:theme="@style/AppTheme" />

@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +27,9 @@ import com.google.firebase.database.Transaction;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
+import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.ChatButtonHandler;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.UserManagement.UserModel;
 
 import java.util.List;
 
@@ -35,10 +38,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedByUserPosts.MyViewHolder> {
     private final List<PostCreatingCopy> listOfPostCreatingCopy;
     private final Context context;
+    private final FragmentManager fragmentManager;
     private final AppCompatTextView noPostInfo;
 
-    public AdapterSavedByUserPosts(Context context, List<PostCreatingCopy> listOfPostCreatingCopy, AppCompatTextView noPostInfo) {
+    public AdapterSavedByUserPosts(Context context, FragmentManager fragmentManager, List<PostCreatingCopy> listOfPostCreatingCopy, AppCompatTextView noPostInfo) {
         this.listOfPostCreatingCopy = listOfPostCreatingCopy;
+        this.fragmentManager = fragmentManager;
         this.context = context;
         this.noPostInfo = noPostInfo;
     }
@@ -53,54 +58,21 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
     @Override
     public void onBindViewHolder(@NonNull AdapterSavedByUserPosts.MyViewHolder holder, int position) {
         PostCreatingCopy posts = listOfPostCreatingCopy.get(position);
-        String userId = posts.getUserIdCreator();
-
-        // holder.uniquePostIdForButtonDesign.setText(String.valueOf(posts.getPostId()));
+        String userId = posts.getUserId();
         holder.sportNames.setText(posts.getSportType());
         holder.cityNames.setText(posts.getCityName());
-        holder.skillLevel.setText(posts.getSkillLevel());
-        // holder.addInfoPostForButtonDesign.setText(posts.getAdditionalInfo());
-        holder.chosenDate.setText(posts.getDateTime());
-        //holder.chosenHourForLayoutDesign.setText(posts.getHourTime());
 
-        extraInfo(holder);
+        holder.layoutOfPost.setOnClickListener(v -> ChatButtonHandler.handleMoreInfoButton(fragmentManager, posts, context));
         deletePostButton(holder, position);
-        setUserAvatar(holder, userId, context);
+        if (userId != null){
+            setUserAvatar(holder, userId, context);
+
+        }
     }
 
     @Override
     public int getItemCount() {
         return listOfPostCreatingCopy.size();
-    }
-
-    public void extraInfo(AdapterSavedByUserPosts.MyViewHolder holder) {
-        ViewGroup.LayoutParams layoutParams = holder.cardView.getLayoutParams();
-        holder.arrowDownOpenMenu.setOnClickListener(v -> {
-            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
-                holder.extraInfoContainer.setVisibility(View.VISIBLE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
-            } else {
-                holder.extraInfoContainer.setVisibility(View.GONE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-            }
-        });
-        holder.arrowDownOpenMenuButton.setOnClickListener(v -> {
-            if (holder.extraInfoContainer.getVisibility() == View.GONE) {
-                holder.extraInfoContainer.setVisibility(View.VISIBLE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 300, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_up_24);
-            } else {
-                holder.extraInfoContainer.setVisibility(View.GONE);
-                layoutParams.height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, context.getResources().getDisplayMetrics());
-                holder.cardView.requestLayout();
-                holder.arrowDownOpenMenuButton.setBackgroundResource(R.drawable.baseline_keyboard_arrow_down_24);
-            }
-        });
     }
 
     public void deletePostButton(AdapterSavedByUserPosts.MyViewHolder holder, int position) {
@@ -127,6 +99,8 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
                             postCreating.deleteSignedUpUser(currentUserId);
                             postCreating.setActivityFull(false);
                             currentData.setValue(postCreating);
+
+                            decrementCurrentUserJoinedPostsCount(currentUserId);
                         }
                         return Transaction.success(currentData);
                     }
@@ -135,25 +109,48 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
                     public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
                         if (error != null) {
                             Log.e("Firebase Update Error", "Removing signed up user when saved post is removed " + error.getMessage());
+                        } else {
+                            listOfPostCreatingCopy.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
+                            if (listOfPostCreatingCopy.isEmpty()) {
+                                // jeżeli zostaną usunięte wszystkie posty z listy,
+                                // to dzięki przesłaniu noPostInfo w konstruktorze,
+                                // wyświetlam informację o braku stworzonych postów
+                                // postanowiłem do tego stworzyć Handler, aby napis
+                                // pojawiał się z lekkim opóźnieniem, bo bez tego layout dziwnie się zachowuje
+                                new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
+                            }
                         }
                     }
                 });
-                listOfPostCreatingCopy.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
-                if (listOfPostCreatingCopy.isEmpty()) {
-                    // jeżeli zostaną usunięte wszystkie posty z listy,
-                    // to dzięki przesłaniu noPostInfo w konstruktorze,
-                    // wyświetlam informację o braku stworzonych postów
-                    // postanowiłem do tego stworzyć Handler, aby napis
-                    // pojawiał się z lekkim opóźnieniem, bo bez tego layout dziwnie się zachowuje
-                    new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
-                } else {
-                    Log.e("PostsAdapterSavedByUser", "Błąd podczas usuwania z bazy danych " + task.getException());
-                }
+            } else {
+                Log.e("PostsAdapterSavedByUser", "Błąd podczas usuwania z bazy danych " + task.getException());
             }
         }));
+    }
 
+    private void decrementCurrentUserJoinedPostsCount(String currentUserId) {
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUserId);
+        userReference.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                UserModel userModel = currentData.getValue(UserModel.class);
+                if (userModel != null) {
+                    userModel.decrementJoinedPostsCount();
+                    currentData.setValue(userModel);
+                }
+                return Transaction.success(currentData);
+            }
+
+            @Override
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                if (error != null) {
+                    Log.e("Firebase Update Error", "decrementing joined posts count in current user " + error.getMessage());
+                }
+            }
+        });
     }
 
     private void setUserAvatar(MyViewHolder holder, String userId, Context context) {
@@ -163,30 +160,16 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
-        private final AppCompatTextView uniquePostIdForButtonDesign, sportNames, cityNames, skillLevel, addInfoPostForButtonDesign, chosenDate, chosenHourForLayoutDesign;
-        private final CardView cardView;
-        private final ConstraintLayout arrowDownOpenMenu;
-        private final LinearLayoutCompat extraInfoContainer;
-        private final AppCompatButton arrowDownOpenMenuButton, deletePost;
+        private final CardView layoutOfPost;
+        private final AppCompatTextView sportNames, cityNames;
+        private final AppCompatButton deletePost;
 
         public MyViewHolder(View v) {
             super(v);
+            layoutOfPost = v.findViewById(R.id.layoutOfPost);
             userAvatar = v.findViewById(R.id.userAvatar);
-            uniquePostIdForButtonDesign = v.findViewById(R.id.uniquePostIdForButtonDesign);
             sportNames = v.findViewById(R.id.sportNames);
             cityNames = v.findViewById(R.id.chosenCity);
-            skillLevel = v.findViewById(R.id.skilLevel);
-            addInfoPostForButtonDesign = v.findViewById(R.id.addInfoPost);
-            chosenDate = v.findViewById(R.id.chosenDate);
-            chosenHourForLayoutDesign = v.findViewById(R.id.chosenHourForLayoutDesign);
-            arrowDownOpenMenu = v.findViewById(R.id.arrowDownOpenMenu);
-
-            extraInfoContainer = v.findViewById(R.id.extraInfoContainer);
-
-            cardView = v.findViewById(R.id.layoutOfPost);
-
-            arrowDownOpenMenuButton = v.findViewById(R.id.arrowDownOpenMenuButton);
-
             deletePost = v.findViewById(R.id.deletePost);
         }
     }

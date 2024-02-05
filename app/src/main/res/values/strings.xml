@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">PlayMeet</string>
+    <string name="default_web_client_id">your_web_client_id</string>
     <!-- Strings used for fragments for navigation -->
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -30,7 +31,8 @@
     <string name="findPlayerButton">Znajdź gracza</string>
     <string name="test_text">TEST</string>
     <string name="createNewPostButton">Stwórz nowy post</string>
-    <string name="backToMainMenu">Menu główne</string>
+    <string name="menu">Menu</string>
+    <string name="mainMenu">Menu główne</string>
     <string name="submitPost">Utwórz post</string>
     <string name="wybierzMiasto">Wybierz miasto</string>
     <string name="nodescription">Brak dodatkowych informacji.</string>
@@ -39,7 +41,7 @@
     <string name="expandmenu">Rozwiń menu</string>
     <string name="signMeIn">Chcę dołączyć!</string>
     <string name="nickname">Nazwa użytkownika</string>
-    <string name="myactivity">Twoja aktywność</string>
+    <string name="myactivity">Aktywność</string>
     <string name="postsAddedByYou">Twoje posty</string>
     <string name="postsSavedByYou">Zapisane posty</string>
     <string name="deletePost">Usuń post</string>
@@ -56,7 +58,7 @@
     <string name="step2of3">Krok 2 z 3</string>
     <string name="step3of3">Krok 3 z 3</string>
     <string name="saveProvidedValues">Zapisz dane</string>
-    <string name="noGenderChosenError">Proszę wybrać płeć</string>
+    <string name="noGenderChosenError">Wybierz płeć</string>
     <string name="setUpProfileFirstTime">Ustaw profil w 3 krokach</string>
     <string name="chat">Chat</string>
     <string name="informationAboutProvidedData">Podane informacje są widoczne dla wszystkich!</string>
@@ -67,7 +69,7 @@
     <string name="provideGender">Płeć:</string>
     <string name="provideCity">Miasto:</string>
     <string name="provideNick">Nick:</string>
-    <string name="provideSports">Sporty:</string>
+    <string name="provideSports">Sport:</string>
     <string name="provideAboutYou">O sobie:</string>
     <string name="provideAge">Wiek:</string>
     <string name="Save">Zapisz</string>
@@ -75,7 +77,7 @@
     <string name="openChat">Chat</string>
     <string name="userDidNotProvided">Nie podano</string>
     <string name="moreInfoAboutGame">Więcej o grze</string>
-    <string name="moreInfoAboutUser">O użytkowniku</string>
+    <string name="moreInfoAboutUser">O organizatorze</string>
     <string name="noPostFound">Nie znaleziono żadnych postów</string>
     <string name="loadingMorePosts">Ładowanie postów</string>
     <string name="resetFilters">Wyczyść filtry</string>
@@ -97,7 +99,7 @@
     <string name="giveOpinion">Podziel się opinią</string>
     <string name="howUserPostLooksLikeInfo">Tak widzą Twoje posty inni użytkownicy\n(przesuń w lewo, aby usunąć)</string>
     <string name="error">Błąd</string>
-    <string name="writeMessage">Napisz wiadomość...</string>
+    <string name="writeMessage">Napisz wiadomość…</string>
     <string name="timeStamp">Timestamp</string>
     <string name="message">Message</string>
     <string name="username">Username</string>
@@ -107,9 +109,29 @@
     <string name="chooseImageSource">Wybierz źródło zdjęcia</string>
     <string name="deleteAvatar">Usuń Avatar</string>
     <string name="welcomeScreen">Witamy</string>
-    <string name="hourDateDoesntMatter">Do uzgodnienia</string>
+    <string name="hourDateDoesntMatter">Godzina do uzgodnienia</string>
     <string name="signedInUsers">Zapisani</string>
     <string name="signedInUsersLong">Zapisani użytkownicy</string>
     <string name="noUsersSignedUpInfo">Brak zapisanych</string>
+    <string name="sendAnOpinion">Podziel się opinią!</string>
+    <string name="whatToWriteAsOpinion">Napisz co myślisz o aplikacji,\njakie funkcję byłyby mile widziane,\njaki błąd napotkałeś</string>
+    <string name="send">Wyślij</string>
+    <string name="sendAnEmail">Lub napisz na e-mail</string>
+    <string name="myEmail">noisevisionproductions@gmail.com</string>
+    <string name="copyEmail">Kopiuj e-mail</string>
+    <string name="profile">Twój Profil</string>
+    <string name="aboutApp">O aplikacji</string>
+    <string name="privacyPolicy">Polityka prywatności</string>
+    <string name="termsOfService">Warunki korzystania</string>
+    <string name="version">Wersja: %1$s</string>
+    <string name="uela">Umowa Licencyjna (UELA)</string>
+    <string name="goBack">Wróć</string>
+    <string name="options">Ustawienia</string>
+    <string name="deleteAccount">Usuń konto</string>
+    <string name="safetyPasswordCheck">Potwierdź usuwanie konta</string>
+    <string name="dateDoesntMatter">Data do uzgodnienia</string>
+    <string name="passwordForgotten">Zapomniałeś hasła?</string>
+    <string name="acceptDocuments">Rejestrując się, wyrażasz zgodę na naszą Politykę prywatności, Warunki świadczenia usług i Umowę licencyjną użytkownika końcowego</string>
+    <string name="limitOfPosts">Limit stworzonych postów jednocześnie: 3</string>
 
 </resources>

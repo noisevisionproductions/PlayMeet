@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:contentDescription="@string/welcomeScreen"
+        android:padding="30dp"
         android:src="@drawable/main_logo" />
 
 </RelativeLayout>

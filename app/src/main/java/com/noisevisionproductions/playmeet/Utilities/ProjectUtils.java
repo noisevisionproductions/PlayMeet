@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -23,6 +22,7 @@ public class ProjectUtils extends AppCompatActivity {
     public static void backToMainMenuButton(AppCompatButton button, final Context context) {
         button.setOnClickListener(view -> {
             Intent intent = new Intent(context, MainMenuPosts.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(intent);
         });
     }

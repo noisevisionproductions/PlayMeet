@@ -2,11 +2,11 @@
 
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
-    android:layout_height="240dp"
+    android:layout_height="120dp"
     android:layout_margin="10dp"
+    android:foreground="@drawable/ripple_effect"
     app:cardBackgroundColor="@color/background"
     app:cardCornerRadius="10dp"
     app:cardElevation="5dp"
@@ -17,176 +17,100 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="match_parent"
         android:layout_margin="5dp"
-        android:background="@color/secondary20">
-
-        <!--przycisk do otwierania dodatkowych opcji-->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/arrowDownOpenMenu"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/arrowDownOpenMenuButton"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:background="@drawable/baseline_keyboard_arrow_down_24"
-                android:contentDescription="@string/additionalmenu"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!--Przyciski-->
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/extraInfoContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@+id/arrowDownOpenMenu">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/deletePost"
-                style="@style/MyButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/button_style" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/chatButton"
-                style="@style/MyButtonStyle"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/button_style"
-                android:text="@string/openChat" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        android:background="@color/secondary20"
+        android:orientation="horizontal">
 
         <include layout="@layout/avatar_image_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/sport"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
+            android:text="@string/provideSports"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!--nazwa sportu-->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/sportNames"
-            style="@style/MyTextInputLayoutDesign"
-            android:layout_width="wrap_content"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="0dp"
             android:layout_height="50dp"
             android:background="@null"
             android:entries="@array/arrays_sport_names"
             android:gravity="center"
             android:hint="@string/userDidNotProvided"
+            android:padding="10dp"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:hintEnabled="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintEnd_toStartOf="@+id/buttonContainer"
+            app:layout_constraintStart_toEndOf="@+id/sport"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/city"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="0dp"
+            android:text="@string/provideCity"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar" />
 
         <!--nazwa miasta-->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/chosenCity"
-            style="@style/MyTextInputLayoutDesign"
-            android:layout_width="wrap_content"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginStart="10dp"
             android:background="@null"
             android:gravity="center"
             android:hint="@string/userDidNotProvided"
+            android:padding="10dp"
             android:textSize="12sp"
             android:textStyle="bold"
             app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-            app:layout_constraintLeft_toRightOf="@+id/userAvatar"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/buttonContainer"
+            app:layout_constraintStart_toEndOf="@+id/city" />
 
-        <!--data-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/chosenDate"
-            style="@style/MyTextInputLayoutDesign"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/buttonContainer"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:background="@null"
+            android:layout_height="0dp"
             android:gravity="center"
-            android:hint="@string/userDidNotProvided"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenHourForLayoutDesign"
-            app:layout_constraintEnd_toStartOf="@+id/chosenHourForLayoutDesign"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-
-        <!--data-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/chosenHourForLayoutDesign"
-            style="@style/MyTextInputLayoutDesign"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:background="@null"
-            android:gravity="center"
-            android:hint="@string/userDidNotProvided"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-
-        <!--wybor poziomu-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/skilLevel"
-            style="@style/MyTextInputLayoutDesign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="center"
-            android:hint="@string/userDidNotProvided"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:hintEnabled="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-
-        <!--dodatkowe info-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/addInfoPostForButtonDesign"
-            style="@style/MyTextInputLayoutDesign"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:background="@null"
-            android:hint="@string/userDidNotProvided"
-            android:inputType="textCapSentences"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:hintEnabled="false"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userAvatar"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-
-        <!--unikalne ID-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/uniquePostIdForButtonDesign"
-            style="@style/MyTextInputLayoutDesign"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:inputType="number"
-            android:textSize="11sp"
-            app:hintEnabled="false"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/addInfoPostForButtonDesign"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/chatButton"
+                style="@style/MyButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_style"
+                android:text="@string/openChat" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/deletePost"
+                style="@style/MyButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/button_style"
+                android:backgroundTint="@color/error"
+                android:text="@string/signOutFromThePost" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,9 +1,11 @@
 package com.noisevisionproductions.playmeet;
 
+import com.noisevisionproductions.playmeet.PostsManagement.PostInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostCreating {
+public class PostCreating implements PostInfo {
     private String postId;
     private Boolean createdByUser = false;
     private Boolean isActivityFull = false;
@@ -163,5 +165,4 @@ public class PostCreating {
 
 
 }
-
 

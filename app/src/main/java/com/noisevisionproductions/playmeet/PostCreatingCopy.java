@@ -1,11 +1,13 @@
 package com.noisevisionproductions.playmeet;
 
+import com.noisevisionproductions.playmeet.PostsManagement.PostInfo;
+
 import java.util.UUID;
 
-public class PostCreatingCopy {
+public class PostCreatingCopy implements PostInfo {
     private final String postUuid;
     private String postId;
-    private String userIdCreator;
+    private String userId;
     private String userIdSavedBy;
     private String sportType;
     private String cityName;
@@ -23,12 +25,12 @@ public class PostCreatingCopy {
         return postUuid;
     }
 
-    public String getUserIdCreator() {
-        return userIdCreator;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setUserIdCreator(String userIdCreator) {
-        this.userIdCreator = userIdCreator;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserIdSavedBy() {

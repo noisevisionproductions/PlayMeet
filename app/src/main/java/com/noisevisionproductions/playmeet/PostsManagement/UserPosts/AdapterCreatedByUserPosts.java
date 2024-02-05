@@ -27,7 +27,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
-import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.AdapterAllPosts;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.ChatButtonHandler;
 import com.noisevisionproductions.playmeet.R;
 
@@ -64,13 +63,14 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         holder.sportNames.setText(postCreating.getSportType());
         holder.cityNames.setText(postCreating.getCityName());
         holder.addInfo.setText(postCreating.getAdditionalInfo());
-        if (postCreating.getHowManyPeopleNeeded() > 0) {
-            holder.numberOfPeople.setText(postCreating.getPeopleStatus());
-        }
+
+        //getPeopleStatus(postCreating.getPostId(), holder);
+
+        String peopleStatus = postCreating.getPeopleStatus();
+        holder.numberOfPeople.setText(peopleStatus);
 
         // po kliknieciu w post, otwiera wiecej informacji o nim
-        holder.layoutOfPost.setOnClickListener(v -> ChatButtonHandler.handleMoreInfoButton(fragmentManager, postCreating, data -> {
-        }, context));
+        holder.layoutOfPost.setOnClickListener(v -> ChatButtonHandler.handleMoreInfoButton(fragmentManager, postCreating, context));
     }
 
     @NonNull
@@ -125,7 +125,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
                                 }, 100);
                             }
                         } else {
-                            Log.e("PostsAdapterCreatedByUser", "Error when deleting created post by user " + String.valueOf(R.string.error), task.getException());
+                            Log.e("PostsAdapterCreatedByUser", "Error when deleting created post by user " + R.string.error, task.getException());
                         }
                     });
                 }

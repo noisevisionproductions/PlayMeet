@@ -24,15 +24,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/aboutGameText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/menu_down"
+                    android:focusable="true"
+                    android:gravity="center"
                     android:text="@string/moreInfoAboutGame"
+                    android:textColor="@color/accent"
                     android:textSize="20sp" />
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -48,15 +53,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/aboutUserText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/menu_down"
+                    android:focusable="true"
+                    android:gravity="center"
                     android:text="@string/moreInfoAboutUser"
+                    android:textColor="@color/accent"
                     android:textSize="20sp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -73,15 +83,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/signedInUsersText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:drawableEnd="@drawable/menu_down"
+                    android:focusable="true"
+                    android:gravity="center"
                     android:text="@string/signedInUsersLong"
+                    android:textColor="@color/accent"
                     android:textSize="20sp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -98,14 +113,20 @@
                 android:textSize="20sp"
                 android:visibility="gone" />
 
-            <!--recycler view zapisani uzytkownicy-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_signed_users"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:visibility="gone" />
+                android:gravity="center"
+                android:orientation="horizontal">
 
+                <!--recycler view zapisani uzytkownicy-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_signed_users"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="gone" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

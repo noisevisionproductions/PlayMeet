@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="HardcodedText">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/userProfile"
-        android:title="Mój profil" />
+        android:title="@string/profile" />
     <item
-        android:id="@+id/mojaAktywnosc"
-        android:title="@string/myactivity" />
+        android:id="@+id/myActivity"
+        android:title="@string/mainMenu" />
     <item
-        android:id="@+id/wylogujKonto"
+        android:id="@+id/options"
+        android:title="@string/options" />
+    <item
+        android:id="@+id/aboutApp"
+        android:enabled="true"
+        android:title="@string/aboutApp" />
+    <item
+        android:id="@+id/logoutAccount"
         android:enabled="true"
         android:title="@string/wylogujKonto" />
 </menu>

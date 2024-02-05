@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -21,6 +20,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.Chat.ChatRoomList;
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
@@ -65,8 +65,8 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
     @Override
     protected void onStart() {
         super.onStart();
+        //  switchToUserInfoInputOnClick();
         checkUsersForNickname();
-        switchToUserInfoInputOnClick();
     }
 
     @Override
@@ -132,11 +132,6 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         startActivity(intent);
     }
 
-
-    public void switchToUserInfoInputOnClick() {
-        updateUserInfoBar.setOnClickListener(v -> switchToUserInfoInput());
-    }
-
     public void sendOpinionButtonHandle() {
         if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             sendOpinionButton.setOnClickListener(v -> switchToOpinionLayout());
@@ -148,6 +143,13 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
     public void onUserInfoUpdated() {
         updateUserInfoBar.setVisibility(View.GONE);
         sendOpinionButton.setVisibility(View.VISIBLE);
+        refreshCurrentFragment();
+    }
+
+    private void refreshCurrentFragment() {
+        Intent intent = new Intent(this, MainMenuPosts.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private void switchToUserPosts() {
@@ -239,7 +241,7 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                     if (currentUser != null) {
                         firebaseAuth.signOut();
-                        Toast.makeText(getApplicationContext(), "Pomyślnie wylogowano", Toast.LENGTH_SHORT).show();
+                        ToastManager.showToast(getApplicationContext(), "Pomyślnie wylogowano");
                         Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
                         startActivity(intent);
                     }
