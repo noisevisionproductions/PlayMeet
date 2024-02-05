@@ -43,14 +43,26 @@
         <item name="background">@drawable/my_autocomplete_background</item>
     </style>
 
+    <style name="MyButtonStyleOnWhite" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_style_on_white</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_style</item>
         <item name="android:textColor">@color/text</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
         <item name="android:typeface">serif</item>
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
     <style name="MyAppCompatTextViewStyle" parent="Widget.AppCompat.TextView">

@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class CoolDownManager {
     private static final String COOLDOWN_PREFS = "CooldownPrefs";
     private static final String LAST_REPORT_TIME_KEY = "LastReportTime";
-    private static final long COOLDOWN_TIME_MILLIS = 180000; // 3 minuty
+    private static final long COOLDOWN_REPORT_TIME = 180000; // 3 minuty
     private final SharedPreferences preferences;
 
     public CoolDownManager(Context context) {
@@ -18,7 +18,7 @@ public class CoolDownManager {
         long lastReportTimeMillis = preferences.getLong(LAST_REPORT_TIME_KEY, 0);
         long timeSinceLastReport = currentTimeMillis - lastReportTimeMillis;
 
-        if (timeSinceLastReport >= COOLDOWN_TIME_MILLIS) {
+        if (timeSinceLastReport >= COOLDOWN_REPORT_TIME) {
             // Odpowiedni czas minął, użytkownik może wysłać kolejne zgłoszenie
             preferences.edit().putLong(LAST_REPORT_TIME_KEY, currentTimeMillis).apply();
             return true;

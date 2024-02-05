@@ -14,7 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.Adapters.ListOfChatRoomsAdapter;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
@@ -30,7 +33,6 @@ public class ChatRoomList extends Fragment {
         loadMorePostsIndicator.setVisibility(View.VISIBLE);
         noChatRoomsFound = view.findViewById(R.id.noChatRoomsFound);
 
-        showChatRooms();
         setRecyclerView(view);
 
         return view;
@@ -40,15 +42,21 @@ public class ChatRoomList extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recyclerViewChatRoomList);
 
         loadMorePostsIndicator.setVisibility(View.GONE);
-        recyclerView.setAdapter(listOfChatRoomsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
+        if (listOfChatRoomsAdapter == null) {
+            initializeChatRoomsAdapter();
+        }
+        recyclerView.setAdapter(listOfChatRoomsAdapter);
     }
 
-    private void showChatRooms() {
+    private void initializeChatRoomsAdapter() {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         String currentUserId = firebaseHelper.getCurrentUser().getUid();
 
         Query query = firebaseHelper.getDatabaseReference().child("ChatRooms").orderByChild("participants/" + currentUserId).equalTo(true);
+        checkForExistingRooms(query);
+
         FirebaseRecyclerOptions<ChatRoomModel> options = new FirebaseRecyclerOptions.Builder<ChatRoomModel>()
                 .setQuery(query, ChatRoomModel.class)
                 .build();
@@ -56,17 +64,22 @@ public class ChatRoomList extends Fragment {
         listOfChatRoomsAdapter = new ListOfChatRoomsAdapter(this::onChatClicked, options, getContext());
 
         listOfChatRoomsAdapter.startListening();
+    }
 
-        listOfChatRoomsAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+    private void checkForExistingRooms(Query query) {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onChanged() {
-                super.onChanged();
-                loadMorePostsIndicator.setVisibility(View.GONE);
-                if (listOfChatRoomsAdapter.getItemCount() == 0) {
-                    noChatRoomsFound.setVisibility(View.VISIBLE);
-                } else {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
                     noChatRoomsFound.setVisibility(View.GONE);
+                } else {
+                    noChatRoomsFound.setVisibility(View.VISIBLE);
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

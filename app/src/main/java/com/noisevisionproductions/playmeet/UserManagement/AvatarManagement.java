@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -32,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
 
@@ -180,7 +180,7 @@ public class AvatarManagement {
                         .addOnSuccessListener(taskSnapshot -> storageReference.getDownloadUrl()
                                 .addOnSuccessListener(downloadUri -> saveImageUrlToUserModel(downloadUri.toString())))
                         .addOnFailureListener(e -> {
-                            Toast.makeText(activity, "Błąd!", Toast.LENGTH_SHORT).show();
+                            getErrorToast(e);
                             Log.e("Avatar", "Uploading new user avatar to DB " + e.getMessage());
                         });
             }
@@ -218,12 +218,16 @@ public class AvatarManagement {
                         Intent intent = activity.getIntent();
                         activity.finish();
                         activity.startActivity(intent);
-                        Toast.makeText(activity, "Zapisano avatar!", Toast.LENGTH_SHORT).show();
+                        ToastManager.showToast(activity, "Avatar zapisany");
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(activity, "Błąd!", Toast.LENGTH_SHORT).show();
+                        getErrorToast(e);
                         Log.e("Avatar", "Uploading avatar URL to DB " + e.getMessage());
                     });
         }
+    }
+
+    private void getErrorToast(Exception e) {
+        ToastManager.showToast(activity, "Błąd!" + e.getMessage());
     }
 }

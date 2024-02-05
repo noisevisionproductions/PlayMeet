@@ -17,6 +17,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.DataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.R;
@@ -53,7 +54,7 @@ public class ChildFragmentCity extends Fragment {
             if (citySelected) {
                 onCityChosen(city, view);
             } else {
-                Toast.makeText(requireContext(), "Proszę wybrać miasto", Toast.LENGTH_SHORT).show();
+                ToastManager.showToast(requireContext(), "Wybierz miasto");
             }
         });
     }
