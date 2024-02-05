@@ -2,9 +2,6 @@
 <resources>
     <string name="app_name">PlayMeet</string>
     <string name="default_web_client_id">your_web_client_id</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
     <!-- Account management -->
     <string name="login">Logowanie</string>
     <string name="loginButton">Zaloguj się</string>
@@ -23,36 +20,21 @@
     <!-- Side panel menu: -->
     <string name="navigation_drawer_open">Otwórz menu</string>
     <string name="navigation_drawer_close">Zamknij menu</string>
-    <string name="homeButton">Home</string>
-    <string name="wyloguuuj">Wyloguuuj</string>
 
     <!--Post creating-->
-    <string name="wybierzSport">Wybierz sport</string>
-    <string name="findPlayerButton">Znajdź gracza</string>
-    <string name="test_text">TEST</string>
-    <string name="createNewPostButton">Stwórz nowy post</string>
     <string name="menu">Menu</string>
     <string name="mainMenu">Menu główne</string>
     <string name="submitPost">Utwórz post</string>
-    <string name="wybierzMiasto">Wybierz miasto</string>
-    <string name="nodescription">Brak dodatkowych informacji.</string>
     <string name="date_format">%1$d-%2$d-%3$d</string>
     <string name="hour_format">%1$02d:%2$02d</string>
-    <string name="expandmenu">Rozwiń menu</string>
     <string name="signMeIn">Chcę dołączyć!</string>
     <string name="nickname">Nazwa użytkownika</string>
-    <string name="myactivity">Aktywność</string>
     <string name="postsAddedByYou">Twoje posty</string>
     <string name="postsSavedByYou">Zapisane posty</string>
-    <string name="deletePost">Usuń post</string>
-    <string name="additionalmenu">Menu Dodatkowe</string>
     <string name="createPostButtonLogo">+</string>
-    <string name="postSavedInfo">Zapisałeś się!</string>
-    <string name="noPrivateMessagInfo">Brak wiadomości</string>
     <string name="choose_city_string_from_spinner">Wybierz miasto</string>
     <string name="chooseGenderForSpinner">Wybierz płeć</string>
     <string name="cancelButtonString">Anuluj</string>
-    <string name="isAvailable">Dostępny?</string>
     <string name="nextStep">Dalej</string>
     <string name="step1of3">Krok 1 z 3</string>
     <string name="step2of3">Krok 2 z 3</string>
@@ -110,7 +92,6 @@
     <string name="deleteAvatar">Usuń Avatar</string>
     <string name="welcomeScreen">Witamy</string>
     <string name="hourDateDoesntMatter">Godzina do uzgodnienia</string>
-    <string name="signedInUsers">Zapisani</string>
     <string name="signedInUsersLong">Zapisani użytkownicy</string>
     <string name="noUsersSignedUpInfo">Brak zapisanych</string>
     <string name="sendAnOpinion">Podziel się opinią!</string>
@@ -133,5 +114,6 @@
     <string name="passwordForgotten">Zapomniałeś hasła?</string>
     <string name="acceptDocuments">Rejestrując się, wyrażasz zgodę na naszą Politykę prywatności, Warunki świadczenia usług i Umowę licencyjną użytkownika końcowego</string>
     <string name="limitOfPosts">Limit stworzonych postów jednocześnie: 3</string>
+    <string name="reasonForDelete">Powód usunięcia konta (opcjonalnie)</string>
 
 </resources>

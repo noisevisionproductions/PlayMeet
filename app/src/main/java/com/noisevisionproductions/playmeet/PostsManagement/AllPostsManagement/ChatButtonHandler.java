@@ -9,8 +9,6 @@ import androidx.fragment.app.FragmentManager;
 import com.noisevisionproductions.playmeet.Chat.ChatActivity;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.PostCreating;
-import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.PostsManagement.PostInfo;
 import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 

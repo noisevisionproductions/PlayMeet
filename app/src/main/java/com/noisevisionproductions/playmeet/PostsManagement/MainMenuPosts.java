@@ -10,7 +10,6 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,7 +25,6 @@ import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.LoginRegister.LoginAndRegisterActivity;
-import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.MyBottomSheetFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.PostsOfTheGamesFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsCreatedByUserFragment;
 import com.noisevisionproductions.playmeet.PostsManagement.UserPosts.PostsSavedByUserFragment;
@@ -37,7 +35,7 @@ import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 
 import java.util.Objects;
 
-public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomSheetFragment.OnDataPass {
+public class MainMenuPosts extends SidePanelBaseActivity {
     private AppCompatButton yourPostsMenu, savedPostsMenu, showAllPostsMenu, chatRoomMenu, updateUserInfoBar, sendOpinionButton;
 
     @Override
@@ -67,14 +65,6 @@ public class MainMenuPosts extends SidePanelBaseActivity implements MyBottomShee
         super.onStart();
         //  switchToUserInfoInputOnClick();
         checkUsersForNickname();
-    }
-
-    @Override
-    public void onDataPass(String data) {
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragmentBottomSheet);
-        if (fragment instanceof PostsOfTheGamesFragment.OnDataReceived) {
-            ((PostsOfTheGamesFragment.OnDataReceived) fragment).onDataReceived(data);
-        }
     }
 
     private void setUpUIElements() {
