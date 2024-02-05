@@ -8,7 +8,6 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import com.noisevisionproductions.playmeet.Design.SidePanelBaseActivity;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 
 public class ActivityUELA extends SidePanelBaseActivity {
     @Override

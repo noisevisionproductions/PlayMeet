@@ -9,7 +9,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -18,9 +17,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.noisevisionproductions.playmeet.Adapters.ToastManager;
-import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.DataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.Utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.Utilities.SpinnerManager;
 
 public class ChildFragmentCity extends Fragment {
