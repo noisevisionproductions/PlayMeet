@@ -36,7 +36,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PostsOfTheGamesFragment extends Fragment {
-    private FirebaseAuthManager authenticationManager;
     private DatabaseReference allPostsReference;
     private FirebaseHelper firebaseHelper;
     private AdapterAllPosts adapterAllPosts;
@@ -68,7 +67,6 @@ public class PostsOfTheGamesFragment extends Fragment {
 
     private void setupView(View view) {
         adapterAllPosts = new AdapterAllPosts(posts, getChildFragmentManager(), getContext());
-        authenticationManager = new FirebaseAuthManager();
         firebaseHelper = new FirebaseHelper();
         allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
 

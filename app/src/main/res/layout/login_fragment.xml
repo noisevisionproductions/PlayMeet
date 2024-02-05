@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    tools:context=".LoginRegister.LoginAndRegisterActivity">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/mainLayout"
@@ -12,8 +14,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="15dp"
-        tools:context=".LoginRegister.LoginAndRegisterActivity">
+        android:padding="15dp">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="match_parent"
@@ -22,6 +23,7 @@
             android:src="@drawable/welcome_screen_text" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
@@ -31,6 +33,7 @@
             android:textStyle="bold" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -44,12 +47,15 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:hint="@string/Email"
+            android:imeOptions="actionNext"
             android:inputType="textEmailAddress"
+            android:textColor="@color/accent"
             android:textColorHint="@color/textHint"
             android:textSize="20sp"
             tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyAppCompatTextViewStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="10dp"
@@ -57,24 +63,31 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/passwordInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/Password"
-            android:inputType="textPassword"
-            android:maxEms="32"
-            android:minEms="6"
-            android:textColorHint="@color/textHint"
-            android:textSize="20sp"
-            tools:ignore="VisualLintTextFieldSize,TextContrastCheck, NewApi" />
+            app:passwordToggleEnabled="true">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/passwordInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/Password"
+                android:imeOptions="actionDone"
+                android:inputType="textPassword"
+                android:maxEms="32"
+                android:minEms="6"
+                android:textColor="@color/accent"
+                android:textColorHint="@color/textHint"
+                android:textSize="20sp"
+                tools:ignore="VisualLintTextFieldSize,TextContrastCheck, NewApi" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginButton"
             style="@style/MyButtonStyle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"
             android:text="@string/loginButton" />
@@ -89,11 +102,19 @@
             android:id="@+id/continueAsGuest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
             android:gravity="center"
+            android:padding="20dp"
             android:text="@string/continueAsGuest"
-            android:textSize="15sp"
+            android:textSize="17sp"
             android:textStyle="italic" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/passwordForgotten"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/passwordForgotten"
+            android:textSize="17sp"
+            android:textStyle="italic" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </FrameLayout>

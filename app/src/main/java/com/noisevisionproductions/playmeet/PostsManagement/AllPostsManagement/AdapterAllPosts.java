@@ -63,8 +63,7 @@ public class AdapterAllPosts extends RecyclerView.Adapter<AdapterAllPosts.MyView
         holder.addInfo.setText(postCreating.getAdditionalInfo());
 
         // po kliknieciu w post, otwiera wiecej informacji o nim
-        holder.layoutOfPost.setOnClickListener(v -> ChatButtonHandler.handleMoreInfoButton(fragmentManager, postCreating, data -> {
-        }, context));
+        holder.layoutOfPost.setOnClickListener(v -> ChatButtonHandler.handleMoreInfoButton(fragmentManager, postCreating, context));
     }
 
     @NonNull

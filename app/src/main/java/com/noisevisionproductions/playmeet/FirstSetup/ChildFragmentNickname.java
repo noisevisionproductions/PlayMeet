@@ -112,7 +112,9 @@ public class ChildFragmentNickname extends Fragment {
         // minimalna oraz maksymalna ilość znaków dla nicku
         int minLength = 3;
         int maxLength = 30;
-        nickname = getNicknameInput.getText().toString();
+        nickname = getNicknameInput.getText().toString().trim();
+
+        String regexPattern = "^[a-zA-Z0-9]+$";
 
         if (nickname.isEmpty()) {
             // walidacja pustego pola tekstowego
@@ -122,12 +124,13 @@ public class ChildFragmentNickname extends Fragment {
         } else if (nickname.length() < minLength || nickname.length() > maxLength) {
             // walidacja długości nicku
             setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");
-            // getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
+            return false;
+        } else if (!nickname.matches(regexPattern)) {
+            setAutoCompleteTextViewError("Nazwa użytkownika może zawierać tylko litery i cyfry");
             return false;
         } else {
             setAutoCompleteTextViewError(null);
             // jeżeli walidacja przebiegła pomyślnie, to usuwam bledy
-
             return true;
         }
     }

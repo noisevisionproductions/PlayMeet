@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -24,9 +23,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.FirstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostsManagement.PostInfo;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.UserManagement.EditableField;
 import com.noisevisionproductions.playmeet.UserManagement.UserModel;
@@ -41,13 +42,15 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private FirebaseHelper firebaseHelper;
     private AppCompatButton savePostButton, chatButton;
     private AppCompatTextView aboutGameText, aboutUserText, signedInUsersText, noUsersSignedUpInfo;
-    private PostCreating postCreating;
+    private PostInfo postInfo;
     private UserModel userModel;
     private EditableField[] editableFieldsUserInfo, editableFieldsPostInfo;
 
-    public static MyBottomSheetFragment newInstance(PostCreating postCreating) {
+    public static MyBottomSheetFragment newInstance(PostInfo postInfo) {
         MyBottomSheetFragment fragment = new MyBottomSheetFragment();
-        fragment.setPostCreating(postCreating);
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        fragment.setPostCreating(postInfo);
         return fragment;
     }
 
@@ -85,20 +88,23 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         switchToScrollPriority();
 
         getUserDataFromFirebase();
-        setupEditableFieldsPostInfo(view);
+        setupEditableFieldsPostInfo(view, postInfo);
         signedUpUsersList();
 
         handleButtons(view);
     }
 
-    private void setupEditableFieldsPostInfo(View view) {
+    private void setupEditableFieldsPostInfo(View view, PostInfo postInfo) {
         // pokazuje informacje o grze
-        if (postCreating != null) {
+        if (this.postInfo != null) {
             editableFieldsPostInfo = new EditableField[]{
                     // pola związane z aktywnością
-                    new EditableField("Data:", postCreating.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    new EditableField("Godzina:", postCreating.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    new EditableField("Post ID:", postCreating.getPostId(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)
+                    new EditableField("Sport:", postInfo.getSportType(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Miasto:", postInfo.getCityName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Data:", postInfo.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Godzina:", postInfo.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Post ID:", postInfo.getPostId(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Info:", postInfo.getAdditionalInfo(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)
             };
         }
         RecyclerView recyclerViewPostInfo = view.findViewById(R.id.recycler_view_post_info);
@@ -107,20 +113,26 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         recyclerViewPostInfo.setAdapter(adapterPost);
 
         // po kliknięciu w text, rozwijam lub zwijam informacje
-        aboutGameText.setOnClickListener(v -> expandAboutGameInfo(recyclerViewPostInfo));
-    }
+        aboutGameText.setOnClickListener(new View.OnClickListener() {
+            boolean isListExpanded = false; //śledzę stan rozwinięcia listy
 
-    private void expandAboutGameInfo(RecyclerView recyclerViewPostInfo) {
-        if (recyclerViewPostInfo.getVisibility() == View.VISIBLE) {
-            recyclerViewPostInfo.setVisibility(View.GONE);
-        } else {
-            recyclerViewPostInfo.setVisibility(View.VISIBLE);
-        }
+            @Override
+            public void onClick(View v) {
+                if (isListExpanded) {
+                    collapseAboutInfo(recyclerViewPostInfo);
+                    aboutGameText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
+                } else {
+                    expandAboutInfo(recyclerViewPostInfo);
+                    aboutGameText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
+                }
+                isListExpanded = !isListExpanded;
+            }
+        });
     }
 
     private void getUserDataFromFirebase() {
-        if (postCreating != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(postCreating.getUserId());
+        if (this.postInfo != null) {
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(postInfo.getUserId());
             userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -128,7 +140,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                         userModel = snapshot.getValue(UserModel.class);
 
                         if (userModel == null) {
-                            Toast.makeText(getContext(), R.string.error, Toast.LENGTH_LONG).show();
+                            ToastManager.showToast(getContext(), getString(R.string.error));
                         } else {
                             editableFieldsUserInfo = new EditableField[]{
                                     new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
@@ -143,7 +155,21 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                             AdapterPostExtendedInfoFields adapterUser = new AdapterPostExtendedInfoFields(editableFieldsUserInfo);
                             recyclerViewUserInfo.setAdapter(adapterUser);
 
-                            aboutUserText.setOnClickListener(v -> expandAboutUserInfo(recyclerViewUserInfo));
+                            aboutUserText.setOnClickListener(new View.OnClickListener() {
+                                boolean isListExpanded = false; //śledzę stan rozwinięcia listy
+
+                                @Override
+                                public void onClick(View v) {
+                                    if (isListExpanded) {
+                                        collapseAboutInfo(recyclerViewUserInfo);
+                                        aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
+                                    } else {
+                                        expandAboutInfo(recyclerViewUserInfo);
+                                        aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
+                                    }
+                                    isListExpanded = !isListExpanded;
+                                }
+                            });
                         }
                     }
                 }
@@ -156,17 +182,9 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         }
     }
 
-    private void expandAboutUserInfo(RecyclerView recyclerViewUserInfo) {
-        if (recyclerViewUserInfo.getVisibility() == View.VISIBLE) {
-            recyclerViewUserInfo.setVisibility(View.GONE);
-        } else {
-            recyclerViewUserInfo.setVisibility(View.VISIBLE);
-        }
-    }
-
     private void signedUpUsersList() {
-        if (postCreating != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postCreating.getPostId()).child("signedUpUserIds");
+        if (this.postInfo != null) {
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postInfo.getPostId()).child("signedUpUserIds");
             userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -192,56 +210,63 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
     private void fetchUserInformation(List<String> userIdsSingedUp) {
         List<UserModel> signedUpUsers = new ArrayList<>();
-        if (!userIdsSingedUp.isEmpty()) {
-            for (String userId : userIdsSingedUp) {
-                DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(userId);
-                userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserModel userModel = snapshot.getValue(UserModel.class);
-                        if (userModel != null) {
-                            signedUpUsers.add(userModel);
-                            // używam klasy UserModel w celu stworzenia informacji o użytkowniku
+        RecyclerView recyclerViewSignedUsers = requireView().findViewById(R.id.recycler_view_signed_users);
+        AdapterSignedUpUsers adapterSignedUpUsers = new AdapterSignedUpUsers(signedUpUsers, getContext());
+        recyclerViewSignedUsers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewSignedUsers.setAdapter(adapterSignedUpUsers);
 
-                        }
-                        RecyclerView recyclerViewSignedUsers = requireView().findViewById(R.id.recycler_view_signed_users);
-                        recyclerViewSignedUsers.setLayoutManager(new LinearLayoutManager(getContext()));
-                        AdapterSignedUpUsers adapterSignedUpUsers = new AdapterSignedUpUsers(signedUpUsers, getContext());
-                        recyclerViewSignedUsers.setAdapter(adapterSignedUpUsers);
-
-                        signedInUsersText.setOnClickListener(v -> expandUserSignedUpList(recyclerViewSignedUsers));
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("UserModel");
+        ValueEventListener valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (String userId : userIdsSingedUp) {
+                    UserModel userModel = snapshot.child(userId).getValue(UserModel.class);
+                    if (userModel != null) {
+                        signedUpUsers.add(userModel);
+                        adapterSignedUpUsers.notifyItemInserted(signedUpUsers.size() - 1);
                     }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase RealmTime Database error", "User Info all post list " + error.getMessage());
-                    }
-                });
+                }
+                updateNoUsersSignedUpInfoVisibility(signedUpUsers, recyclerViewSignedUsers);
             }
-        } else {
-            signedInUsersText.setOnClickListener(v -> noUsersFoundText());
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase Realtime Database error", "User Info all post list " + error.getMessage());
+            }
+        };
+
+        // Dodaj listenera dla wszystkich użytkowników jednocześnie.
+        databaseReference.addListenerForSingleValueEvent(valueEventListener);
+
+        signedInUsersText.setOnClickListener(new View.OnClickListener() {
+            boolean isListExpanded = false;
+
+            @Override
+            public void onClick(View v) {
+                if (isListExpanded) {
+                    collapseAboutInfo(recyclerViewSignedUsers);
+                    signedInUsersText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
+                } else {
+                    expandAboutInfo(recyclerViewSignedUsers);
+                    signedInUsersText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
+                }
+                isListExpanded = !isListExpanded;
+                updateNoUsersSignedUpInfoVisibility(signedUpUsers, recyclerViewSignedUsers);
+            }
+        });
     }
 
-    private void noUsersFoundText() {
-        if (noUsersSignedUpInfo.getVisibility() == View.VISIBLE) {
-            noUsersSignedUpInfo.setVisibility(View.GONE);
-        } else {
+    private void updateNoUsersSignedUpInfoVisibility(List<UserModel> signedUpUsers, RecyclerView recyclerView) {
+        if (signedUpUsers.isEmpty() && recyclerView.getVisibility() == View.VISIBLE) {
             noUsersSignedUpInfo.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private void expandUserSignedUpList(RecyclerView recyclerViewSignedUsers) {
-        if (recyclerViewSignedUsers.getVisibility() == View.VISIBLE) {
-            recyclerViewSignedUsers.setVisibility(View.GONE);
         } else {
-            recyclerViewSignedUsers.setVisibility(View.VISIBLE);
+            noUsersSignedUpInfo.setVisibility(View.GONE);
         }
     }
 
     private void handleButtons(View view) {
-        if (postCreating != null) {
-            SavePostHandler savePostHandler = new SavePostHandler(view, postCreating.getPostId());
+        if (this.postInfo != null) {
+            SavePostHandler savePostHandler = new SavePostHandler(view, postInfo.getPostId());
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(firebaseHelper.getCurrentUser().getUid());
             userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -263,7 +288,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                                 DialogFragment dialogFragment = new ContainerForDialogFragment();
                                 dialogFragment.show(getChildFragmentManager(), "my_dialog");
                             } else {
-                                ChatButtonHandler.handleChatButtonClick(view, postCreating.getUserId(), getChildFragmentManager());
+                                ChatButtonHandler.handleChatButtonClick(view, postInfo.getUserId());
                             }
                         });
                     }
@@ -277,8 +302,16 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         }
     }
 
-    public void setPostCreating(PostCreating postCreating) {
-        this.postCreating = postCreating;
+    private void expandAboutInfo(RecyclerView recyclerView) {
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void collapseAboutInfo(RecyclerView recyclerView) {
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    public void setPostCreating(PostInfo postInfo) {
+        this.postInfo = postInfo;
     }
 
     public interface OnDataPass {

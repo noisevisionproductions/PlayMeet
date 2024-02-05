@@ -5,7 +5,6 @@ import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatEditText;
 
@@ -13,6 +12,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
 
@@ -61,7 +61,7 @@ public class ReportPost {
                     Snackbar.make(view, "Wystąpił błąd podczas wysyłania " + e, Snackbar.LENGTH_SHORT).show();
                     Log.e("Firebase Database error", "Saving report to DB " + e.getMessage());
                 })
-                .addOnSuccessListener(taskSnapshot -> Toast.makeText(view.getContext(), "Zgłoszenie wysłane!", Toast.LENGTH_SHORT).show());
+                .addOnSuccessListener(taskSnapshot -> ToastManager.showToast(view.getContext(), "Zgłoszenie wysłane!"));
     }
 
     private String getRefractoredString() {

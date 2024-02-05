@@ -1,7 +1,6 @@
 package com.noisevisionproductions.playmeet.UserManagement;
 
-public class UserModel{
-
+public class UserModel {
     private String userId;
     private String nickname;
     private String name;
@@ -9,9 +8,8 @@ public class UserModel{
     private String gender;
     private String location;
     private String aboutMe;
-    private String whenAvailable;
-    private String favoriteSport;
     private String avatar;
+    private int joinedPostsCount = 0; // śledzi liczbę postów, do których dołączył użytkownik
 
     public UserModel() {
     }
@@ -56,22 +54,6 @@ public class UserModel{
         this.aboutMe = aboutMe;
     }
 
-    public String getWhenAvailable() {
-        return whenAvailable;
-    }
-
-    public void setWhenAvailable(String whenAvailable) {
-        this.whenAvailable = whenAvailable;
-    }
-
-    public String getFavoriteSport() {
-        return favoriteSport;
-    }
-
-    public void setFavoriteSport(String favoriteSport) {
-        this.favoriteSport = favoriteSport;
-    }
-
     public String getAge() {
         return age;
     }
@@ -94,5 +76,19 @@ public class UserModel{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public int getJoinedPostsCount() {
+        return joinedPostsCount;
+    }
+
+    public void setJoinedPostsCount(int joinedPostsCount) {
+        this.joinedPostsCount = joinedPostsCount;
+    }
+
+    public void decrementJoinedPostsCount() {
+        if (this.joinedPostsCount > 0) {
+            this.joinedPostsCount -= 1;
+        }
     }
 }

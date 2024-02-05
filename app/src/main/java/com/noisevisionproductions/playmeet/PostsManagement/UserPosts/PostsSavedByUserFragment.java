@@ -54,7 +54,7 @@ public class PostsSavedByUserFragment extends Fragment {
         progressBar = view.findViewById(R.id.progressBarLayout);
 
         expandableListOfSavedPosts = view.findViewById(R.id.expandableListOfSavedPosts);
-        adapterSavedByUserPosts = new AdapterSavedByUserPosts(getContext(), savedPosts, noPostInfo);
+        adapterSavedByUserPosts = new AdapterSavedByUserPosts(getContext(), getParentFragmentManager(), savedPosts, noPostInfo);
         expandableListOfSavedPosts.setAdapter(adapterSavedByUserPosts);
         expandableListOfSavedPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }

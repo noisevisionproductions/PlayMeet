@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatSpinner;
@@ -18,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseError;
+import com.noisevisionproductions.playmeet.Adapters.ToastManager;
 import com.noisevisionproductions.playmeet.Firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
@@ -59,7 +59,7 @@ public class ChildFragmentGender extends Fragment {
             if (genderSelected) {
                 saveUserData();
             } else {
-                Toast.makeText(requireContext(), R.string.noGenderChosenError, Toast.LENGTH_SHORT).show();
+                ToastManager.showToast(requireContext(), getString(R.string.noGenderChosenError));
             }
         });
     }
@@ -104,11 +104,11 @@ public class ChildFragmentGender extends Fragment {
         if (getActivity() instanceof MainMenuPosts) {
             ((MainMenuPosts) getActivity()).onUserInfoUpdated();
         }
-        Toast.makeText(requireContext(), "Dane zostały zapisane", Toast.LENGTH_SHORT).show();
+        ToastManager.showToast(requireContext(), "Dane zostały zapisane");
     }
 
     private void handleTransactionError(DatabaseError error) {
-        Toast.makeText(requireContext(), "Błąd: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        ToastManager.showToast(requireContext(), "Błąd: " + error.getMessage());
         Log.e("Firebase RealmTime Database error", "Saving first setup data in DB " + error.getMessage());
     }
 
