@@ -1,10 +1,7 @@
-fun pickFirst() {
-    TODO("Not yet implemented")
-}
-
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
+    id("ca.cutterslade.analyze") version "1.9.2"
 }
 
 android {
@@ -30,15 +27,16 @@ android {
     }
 
     buildTypes {
-
         release {
-
+            isDebuggable = false
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+        }
+        debug {
+            isDebuggable = true
         }
     }
 
@@ -65,7 +63,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.android.gms:play-services-identity:18.0.1")
     implementation("com.github.bumptech.glide:glide:4.14.2")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.14.2")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation("androidx.exifinterface:exifinterface:1.3.7")
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation("androidx.appcompat:appcompat:1.6.1")

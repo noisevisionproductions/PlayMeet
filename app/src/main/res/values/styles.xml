@@ -3,11 +3,15 @@
     <!--dzieki temu, nie zmienia sie tło tekstu, gdy uzywa sie autofillu-->
     <style name="AppThemeForLoginAndRegister" parent="Theme.AppCompat">
         <item name="windowActionBar">false</item>
+        <item name="background">@color/background</item>
+        <item name="android:windowBackground">@color/background</item>
         <item name="windowNoTitle">true</item>
         <item name="android:autofilledHighlight">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="background">@color/background</item>
         <item name="windowActionBar">true</item>
     </style>
 
@@ -15,7 +19,10 @@
         <item name="windowActionBar">true</item>
     </style>
 
-    <style name="noBar" parent="Theme.AppCompat.NoActionBar" />
+    <style name="noBar" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="background">@color/background</item>
+    </style>
 
     <style name="MyAppCompatButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_style</item>

@@ -12,11 +12,11 @@
         android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
-        android:icon="@mipmap/playmeetlogo"
+        android:icon="@mipmap/app_logo_round"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/playmeetlogo_round"
+        android:roundIcon="@mipmap/app_logo_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoBackground"
+        android:theme="@style/AppTheme"
         tools:targetApi="tiramisu">
 
         <provider
@@ -30,56 +30,56 @@
         </provider>
 
         <activity
-            android:name=".Design.ActivityApplicationOptions"
+            android:name=".design.ActivityApplicationOptions"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".Design.AboutApp.ActivityUELA"
+            android:name=".design.aboutApp.ActivityUELA"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".Design.AboutApp.ActivityToS"
+            android:name=".design.aboutApp.ActivityToS"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".Design.AboutApp.ActivityPrivacyPolicy"
+            android:name=".design.aboutApp.ActivityPrivacyPolicy"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".Design.AboutApp.AboutAppActivity"
+            android:name=".design.aboutApp.AboutAppActivity"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".Chat.ChatActivity"
+            android:name=".chat.ChatActivity"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".Utilities.OpinionFromUser"
+            android:name=".utilities.OpinionFromUser"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".PostsManagement.MainMenuPosts"
+            android:name=".postsManagement.MainMenuPosts"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".UserManagement.UserAccountLogic"
+            android:name=".userManagement.UserAccountLogic"
             android:exported="true"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".PostsManagement.PostCreatingLogic"
+            android:name=".postsManagement.PostCreatingLogic"
             android:exported="true"
-            android:theme="@style/AppTheme.NoBackground" />
+            android:theme="@style/AppTheme" />
         <activity
-            android:name=".LoginRegister.LoginAndRegisterActivity"
-            android:exported="true"
-            android:theme="@style/AppThemeForLoginAndRegister" />
-        <activity
-            android:name=".LoginRegister.MainActivity"
+            android:name=".loginRegister.LoginAndRegisterActivity"
             android:exported="true"
             android:theme="@style/AppThemeForLoginAndRegister" />
         <activity
-            android:name=".Design.WelcomeActivity"
+            android:name=".loginRegister.MainActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeForLoginAndRegister" />
+        <activity
+            android:name=".design.WelcomeActivity"
             android:exported="true"
             android:theme="@style/noBar">
             <intent-filter>

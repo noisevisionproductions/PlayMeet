@@ -5,8 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    tools:context=".PostsManagement.PostCreatingLogic">
+    tools:context=".postsManagement.PostCreatingLogic">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="wrap_content"
@@ -19,7 +18,7 @@
             android:background="@color/background"
             android:orientation="vertical"
             android:padding="20dp"
-            tools:context=".PostsManagement.PostCreatingLogic"
+            tools:context=".postsManagement.PostCreatingLogic"
             tools:openDrawer="end">
 
             <androidx.appcompat.widget.AppCompatTextView

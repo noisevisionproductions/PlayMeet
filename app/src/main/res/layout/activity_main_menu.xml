@@ -39,7 +39,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragmentContainerActivePosts"
-            android:name="com.noisevisionproductions.playmeet.PostsManagement.AllPostsManagement.PostsOfTheGamesFragment"
+            android:name="com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.PostsOfTheGamesFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/button_container"

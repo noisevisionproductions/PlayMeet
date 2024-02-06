@@ -1,10 +1,13 @@
 package com.noisevisionproductions.playmeet;
 
-import com.noisevisionproductions.playmeet.PostsManagement.PostInfo;
+import androidx.annotation.NonNull;
+
+import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 
 import java.util.UUID;
 
 public class PostCreatingCopy implements PostInfo {
+    @NonNull
     private final String postUuid;
     private String postId;
     private String userId;
@@ -21,6 +24,7 @@ public class PostCreatingCopy implements PostInfo {
         this.postUuid = UUID.randomUUID().toString();
     }
 
+    @NonNull
     public String getPostUuid() {
         return postUuid;
     }

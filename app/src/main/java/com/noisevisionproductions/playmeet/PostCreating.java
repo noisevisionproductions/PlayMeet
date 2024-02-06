@@ -1,6 +1,8 @@
 package com.noisevisionproductions.playmeet;
 
-import com.noisevisionproductions.playmeet.PostsManagement.PostInfo;
+import androidx.annotation.NonNull;
+
+import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,7 @@ public class PostCreating implements PostInfo {
         this.hourTime = hourTime;
     }
 
+    @NonNull
     public PostCreating copyOfAllPosts() {
         PostCreating copyOfAllPosts = new PostCreating();
         copyOfAllPosts.setPostId(postId);
@@ -82,6 +85,7 @@ public class PostCreating implements PostInfo {
         this.howManyPeopleNeeded = howManyPeopleNeeded;
     }
 
+    @NonNull
     public String getPeopleStatus() {
         return peopleStatus = getPeopleSignedUp() + "/" + howManyPeopleNeeded;
     }
