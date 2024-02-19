@@ -54,6 +54,7 @@ public class GoogleSignInHelper {
                     saveIdTokenInCache();
                     firebaseAuthGoogle(account.getIdToken());
                 } catch (ApiException e) {
+                    Log.e("google login", "Google login error " + e.getMessage());
                     throw new RuntimeException(e);
                 }
             }
@@ -76,7 +77,6 @@ public class GoogleSignInHelper {
                             Intent intent = new Intent(fragment.requireActivity(), MainMenuPosts.class);
                             fragment.startActivity(intent);
                         }
-
                     } else {
                         Snackbar.make(fragment.requireView(), "Błąd logowania" + Objects.requireNonNull(task.getException()).getMessage(), Snackbar.LENGTH_LONG)
                                 .setTextColor(Color.RED).show();

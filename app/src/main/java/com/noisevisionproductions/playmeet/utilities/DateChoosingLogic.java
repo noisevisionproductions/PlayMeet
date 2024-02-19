@@ -59,10 +59,10 @@ public class DateChoosingLogic {
     }
 
     public void noDateGiven() {
-        postCreating.setDateTime(String.valueOf(R.string.hourDateDoesntMatter));
+        postCreating.setDateTime(context.getString(R.string.hourDateDoesntMatter));
     }
 
     public void noHourGiven() {
-        postCreating.setHourTime(String.valueOf(R.string.hourDateDoesntMatter));
+        postCreating.setHourTime(context.getString(R.string.hourDateDoesntMatter));
     }
 }

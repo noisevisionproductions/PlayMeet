@@ -1,12 +1,30 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
     id("ca.cutterslade.analyze") version "1.9.2"
 }
 
+val keystorePropertiesFile: File = rootProject.file("key.properties")
+val keystoreProperties = Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.noisevisionproductions.playmeet"
     compileSdk = 34
+
+    signingConfigs {
+        create("config") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
 
     packaging {
         resources {
@@ -21,7 +39,7 @@ android {
         minSdk = 26
         targetSdk = 34
         versionCode = 1
-        versionName = "1.1"
+        versionName = "1.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -29,11 +47,7 @@ android {
     buildTypes {
         release {
             isDebuggable = false
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            signingConfig = signingConfigs.getByName("config")
         }
         debug {
             isDebuggable = true
@@ -52,17 +66,16 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
-    implementation("com.google.firebase:firebase-database")
-    implementation("com.google.firebase:firebase-storage")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.1"))
+    implementation("com.google.firebase:firebase-database:20.3.0")
+    implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("com.google.firebase:firebase-auth:22.3.1")
-    implementation("com.firebaseui:firebase-ui-database:8.0.0")
-    implementation("com.firebaseui:firebase-ui-auth:7.2.0")
-    implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.gms:google-services:4.4.0")
+    implementation("com.firebaseui:firebase-ui-database:8.0.2")
+    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation("com.google.firebase:firebase-analytics:21.5.1")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("com.google.android.gms:play-services-identity:18.0.1")
-    implementation("com.github.bumptech.glide:glide:4.14.2")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation("androidx.exifinterface:exifinterface:1.3.7")
     implementation("io.reactivex.rxjava2:rxjava:2.2.21")

@@ -27,6 +27,7 @@ import com.noisevisionproductions.playmeet.design.SidePanelBaseActivity;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.userManagement.userFieldsManagement.EditableUserFieldsAdapter;
+import com.noisevisionproductions.playmeet.utilities.AESDataEncryption;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
 import java.util.ArrayList;
@@ -116,17 +117,30 @@ public class UserAccountLogic extends SidePanelBaseActivity {
                 if (snapshot.exists()) {
                     UserModel userModel = snapshot.getValue(UserModel.class);
                     if (userModel != null) {
-                        // pobieram dane użytkownika z UserModel z bazy firebase, a następnie pokazuje je już wybrane w wyświetlanych w polach
-                        // z tego względu, że używam RecyclerView do wyświetlania pól EditableField, muszę dodawać je do listy
-                        // a następnie ustawić ją w adapterze
-                        List<EditableField> userData = new ArrayList<>();
+                        // TODO zmienic wyswietlanie i edycje pol
 
-                        userData.add(new EditableField(getString(R.string.provideName), userModel.getName(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
-                        userData.add(new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
-                        userData.add(new EditableField(getString(R.string.provideCity), userModel.getLocation(), true, true, true, EditableField.FieldType.FIELD_TYPE_CITY_SPINNER));
-                        userData.add(new EditableField(getString(R.string.provideAge), userModel.getAge(), true, true, true, EditableField.FieldType.FIELD_TYPE_AGE_SPINNER));
-                        EditableUserFieldsAdapter adapter = new EditableUserFieldsAdapter(getApplicationContext(), userData);
-                        recyclerView.setAdapter(adapter);
+                        try {
+                            String decryptedName = userModel.getName() != null ? AESDataEncryption.decrypt(userModel.getName()) : "Default Name";
+                            String decryptedAboutMe = userModel.getAboutMe() != null ? AESDataEncryption.decrypt(userModel.getAboutMe()) : "Default About Me";
+                            String decryptedLocation = userModel.getLocation() != null ? AESDataEncryption.decrypt(userModel.getLocation()) : "Default Location";
+                            String decryptedAge = userModel.getAge() != null ? AESDataEncryption.decrypt(userModel.getAge()) : "Default Age";
+                            // rest of your code
+
+                            // pobieram dane użytkownika z UserModel z bazy firebase, a następnie pokazuje je już wybrane w wyświetlanych w polach
+                            // z tego względu, że używam RecyclerView do wyświetlania pól EditableField, muszę dodawać je do listy
+                            // a następnie ustawić ją w adapterze
+                            List<EditableField> userData = new ArrayList<>();
+
+                            userData.add(new EditableField(getString(R.string.provideName), userModel.getName(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
+                            userData.add(new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, true, false, EditableField.FieldType.FIELD_TYPE_EDITTEXT));
+                            userData.add(new EditableField(getString(R.string.provideCity), decryptedLocation, true, true, true, EditableField.FieldType.FIELD_TYPE_CITY_SPINNER));
+                            userData.add(new EditableField(getString(R.string.provideAge), userModel.getAge(), true, true, true, EditableField.FieldType.FIELD_TYPE_AGE_SPINNER));
+                            EditableUserFieldsAdapter adapter = new EditableUserFieldsAdapter(getApplicationContext(), userData);
+                            recyclerView.setAdapter(adapter);
+
+                        } catch (Exception e) {
+                            Log.e("Decryption error", "Error decrypting user data in user account " + e.getMessage());
+                        }
                     }
                     progressBarLayout.setVisibility(View.GONE);
                 }

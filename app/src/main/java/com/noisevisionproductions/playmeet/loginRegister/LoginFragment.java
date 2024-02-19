@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
@@ -87,7 +88,6 @@ public class LoginFragment extends Fragment {
         }
         loginButton.setOnClickListener(this::loginUser);
         googleSignIn.setOnClickListener(v -> logInWithGoogle());
-
     }
 
     private void logInWithGoogle() {
@@ -120,13 +120,13 @@ public class LoginFragment extends Fragment {
                         } else {
                             ToastManager.showToast(getActivity(), "Użytkownik nie istnieje");
                         }
-                    } else {
-                        String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
-                        ToastManager.showToast(getActivity(), "Błąd uwierzytelnienia: " + errorMessage);
+                    }
+                } else {
+                    String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
 
-                        if (errorMessage != null) {
-                            Log.d("Login error", "Login error " + errorMessage);
-                        }
+                    Toast.makeText(requireContext(), "Błąd uwierzytelnienia: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    if (errorMessage != null) {
+                        Log.d("Login error", "Login error " + errorMessage);
                     }
                 }
             });

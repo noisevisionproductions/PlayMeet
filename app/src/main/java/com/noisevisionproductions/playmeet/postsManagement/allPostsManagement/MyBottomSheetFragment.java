@@ -1,10 +1,12 @@
 package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -22,13 +24,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.ToastManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
-import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
+import com.noisevisionproductions.playmeet.utilities.UserModelDecryptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +51,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     @NonNull
     public static MyBottomSheetFragment newInstance(PostInfo postInfo) {
         MyBottomSheetFragment fragment = new MyBottomSheetFragment();
+
         Bundle args = new Bundle();
         fragment.setArguments(args);
         fragment.setPostCreating(postInfo);
@@ -59,6 +63,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_layout_all_posts, container, false);
         setupView(view);
+
         return view;
     }
 
@@ -138,39 +143,44 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
                         userModel = snapshot.getValue(UserModel.class);
-
                         if (userModel != null) {
-                            if (getContext() == null) {
-                                ToastManager.showToast(getContext(), getString(R.string.error));
-                            } else {
-                                editableFieldsUserInfo = new EditableField[]{
-                                        new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                        new EditableField(getString(R.string.provideNick), userModel.getNickname(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                        new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                        new EditableField(getString(R.string.provideCity), userModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                        new EditableField(getString(R.string.provideGender), userModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                        new EditableField(getString(R.string.provideAboutYou), userModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                };
-                                RecyclerView recyclerViewUserInfo = requireView().findViewById(R.id.recycler_view_user_info);
-                                recyclerViewUserInfo.setLayoutManager(new LinearLayoutManager(getContext()));
-                                AdapterPostExtendedInfoFields adapterUser = new AdapterPostExtendedInfoFields(editableFieldsUserInfo);
-                                recyclerViewUserInfo.setAdapter(adapterUser);
+                            try {
+                                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(userModel);
 
-                                aboutUserText.setOnClickListener(new View.OnClickListener() {
-                                    boolean isListExpanded = false; //śledzę stan rozwinięcia listy
+                                if (getContext() == null) {
+                                    ToastManager.showToast(getContext(), getString(R.string.error));
+                                } else {
+                                    editableFieldsUserInfo = new EditableField[]{
+                                            new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                            new EditableField(getString(R.string.provideNick), userModel.getNickname(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                            new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                            new EditableField(getString(R.string.provideCity), decryptedUserModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                            new EditableField(getString(R.string.provideGender), decryptedUserModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                            new EditableField(getString(R.string.provideAboutYou), decryptedUserModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                    };
+                                    RecyclerView recyclerViewUserInfo = requireView().findViewById(R.id.recycler_view_user_info);
+                                    recyclerViewUserInfo.setLayoutManager(new LinearLayoutManager(getContext()));
+                                    AdapterPostExtendedInfoFields adapterUser = new AdapterPostExtendedInfoFields(editableFieldsUserInfo);
+                                    recyclerViewUserInfo.setAdapter(adapterUser);
 
-                                    @Override
-                                    public void onClick(View v) {
-                                        if (isListExpanded) {
-                                            collapseAboutInfo(recyclerViewUserInfo);
-                                            aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
-                                        } else {
-                                            expandAboutInfo(recyclerViewUserInfo);
-                                            aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
+                                    aboutUserText.setOnClickListener(new View.OnClickListener() {
+                                        boolean isListExpanded = false; //śledzę stan rozwinięcia listy
+
+                                        @Override
+                                        public void onClick(View v) {
+                                            if (isListExpanded) {
+                                                collapseAboutInfo(recyclerViewUserInfo);
+                                                aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
+                                            } else {
+                                                expandAboutInfo(recyclerViewUserInfo);
+                                                aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
+                                            }
+                                            isListExpanded = !isListExpanded;
                                         }
-                                        isListExpanded = !isListExpanded;
-                                    }
-                                });
+                                    });
+                                }
+                            } catch (Exception e) {
+                                Log.e("Decryption error", "Error decrypting user data in user post " + e.getMessage());
                             }
                         }
                     }

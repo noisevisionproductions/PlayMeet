@@ -25,7 +25,6 @@ public class ToastManager {
         @SuppressLint("InflateParams") View layout = layoutInflater.inflate(R.layout.toast_custom_layout, null);
 
         AppCompatTextView appCompatTextView = layout.findViewById(R.id.toastTextView);
-        appCompatTextView.setTextColor(ContextCompat.getColor(context, R.color.accent));
         appCompatTextView.setText(message);
 
         currentToast = new Toast(context);

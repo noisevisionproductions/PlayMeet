@@ -46,6 +46,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_post_creating);
+
         firebaseHelper = new FirebaseHelper();
         dateChoosingLogic = new DateChoosingLogic(this, postCreating);
 

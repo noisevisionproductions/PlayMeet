@@ -115,5 +115,6 @@
     <string name="acceptDocuments">Rejestrując się, wyrażasz zgodę na naszą Politykę prywatności, Warunki świadczenia usług i Umowę licencyjną użytkownika końcowego</string>
     <string name="limitOfPosts">Limit stworzonych postów jednocześnie: 3</string>
     <string name="reasonForDelete">Powód usunięcia konta (opcjonalnie)</string>
+    <string name="you">Ty</string>
 
 </resources>

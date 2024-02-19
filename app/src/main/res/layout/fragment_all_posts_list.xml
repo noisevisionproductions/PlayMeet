@@ -62,7 +62,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/noPostFound"
                     style="@style/MyAppCompatTextViewStyle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
@@ -70,7 +70,7 @@
                     android:text="@string/noPostFound"
                     android:textColor="@color/text"
                     android:textSize="24sp"
-                    android:visibility="gone" />
+                    android:visibility="visible" />
 
                 <!-- tekst oraz ikonka ładowania podczas pobierania postów z bazy -->
                 <androidx.appcompat.widget.LinearLayoutCompat

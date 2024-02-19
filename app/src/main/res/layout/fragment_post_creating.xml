@@ -179,7 +179,6 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="bottom"
                 android:orientation="horizontal"
                 android:paddingTop="20dp"
                 app:layout_constraintBottom_toBottomOf="parent"

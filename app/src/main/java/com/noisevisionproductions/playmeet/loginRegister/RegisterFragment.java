@@ -8,24 +8,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.ToastManager;
 import com.noisevisionproductions.playmeet.design.aboutApp.AboutAppActivity;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
-import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
@@ -57,7 +57,7 @@ public class RegisterFragment extends Fragment {
             registerButton.setOnClickListener(viewRegister -> registerUser());
         }
 
-        LinearLayout mainLayout = view.findViewById(R.id.mainLayout);
+        LinearLayoutCompat mainLayout = view.findViewById(R.id.mainLayout);
         mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(requireActivity()));
 
         return view;

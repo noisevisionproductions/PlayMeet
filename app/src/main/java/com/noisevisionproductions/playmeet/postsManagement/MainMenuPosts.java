@@ -41,7 +41,6 @@ public class MainMenuPosts extends SidePanelBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
 
         setUpUIElements();
 
@@ -74,6 +73,8 @@ public class MainMenuPosts extends SidePanelBaseActivity {
         chatRoomMenu = findViewById(R.id.chatRoomMenu);
 
         updateUserInfoBar = findViewById(R.id.updateUserInfoBar);
+        updateUserInfoBar.setOnClickListener(v -> switchToUserInfoInput());
+
         sendOpinionButton = findViewById(R.id.sendOpinionButton);
 
         showAllPostsMenu.setSelected(true);

@@ -1,6 +1,9 @@
 package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
 
 import android.content.Context;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
+import com.noisevisionproductions.playmeet.utilities.UserModelDecryptor;
 
 import java.util.List;
 
@@ -38,6 +42,19 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         UserModel userModel = signedUpUserFields.get(position);
         getUserAvatar(userModel.getUserId(), holder);
         holder.nicknameText.setText(userModel.getNickname());
+        AsyncTask.execute(() -> {
+            try {
+                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(userModel);
+                // Aktualizuj interfejs użytkownika w wątku UI
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    holder.cityText.setText(decryptedUserModel.getLocation());
+                    holder.genderText.setText(decryptedUserModel.getGender());
+                });
+
+            } catch (Exception e) {
+                UserModelDecryptor.getDercyptionError("signed users adapter error " + e.getMessage());
+            }
+        });
         holder.cityText.setText(userModel.getLocation());
         holder.genderText.setText(userModel.getGender());
     }

@@ -51,7 +51,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/editButton"
-        style="@style/MyAppCompatButtonStyle"
+        style="@style/MyButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

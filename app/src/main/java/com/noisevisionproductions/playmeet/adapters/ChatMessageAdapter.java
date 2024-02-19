@@ -19,10 +19,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel, ChatMessageAdapter.ChatViewHolder> {
     private final Context context;
+    private String currentUserId;
+    private FirebaseHelper firebaseHelper;
 
     public ChatMessageAdapter(@NonNull FirebaseRecyclerOptions<ChatMessageModel> options, Context context) {
         super(options);
         this.context = context;
+        setCurrentUserId();
     }
 
     @Override
@@ -38,26 +41,30 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
         return new ChatViewHolder(view);
     }
 
-    public void setMessagesLookBasedOnLoggedUser(@NonNull ChatViewHolder holder, @NonNull ChatMessageModel chatMessageModel) {
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
+    public void bind(@NonNull ChatMessageModel chatMessageModel, @NonNull ChatViewHolder holder) {
+        // ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
+        if (chatMessageModel.getUserId().equals(currentUserId)) {
+            holder.usernameTextView.setText(context.getString(R.string.you));
+        } else {
+            holder.usernameTextView.setText(chatMessageModel.getNickname());
+        }
+        holder.messageTextView.setText(chatMessageModel.getMessage());
+        holder.timestampTextView.setText(chatMessageModel.formatDate());
+    }
+
+    private void setCurrentUserId() {
+        firebaseHelper = new FirebaseHelper();
         if (firebaseHelper.getCurrentUser() != null) {
-            String currentUserId = firebaseHelper.getCurrentUser().getUid();
-            if (chatMessageModel.getUserId().equals(currentUserId)) {
-                firebaseHelper.getUserAvatar(context, currentUserId, holder.userAvatar);
-                // ustawienie wyglądu wiadomości zależnie od tego czy wysłana czy odebrana
-                //holder.layoutOfMessage.setBackgroundColor(Color.BLUE);
-            } else {
-                firebaseHelper.getUserAvatar(context, chatMessageModel.getUserId(), holder.userAvatar);
-                //  holder.layoutOfMessage.setBackgroundColor(Color.GRAY);
-            }
+            this.currentUserId = firebaseHelper.getCurrentUser().getUid();
         }
     }
 
-    public void bind(@NonNull ChatMessageModel chatMessageModel, @NonNull ChatViewHolder holder) {
-        // ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
-        holder.usernameTextView.setText(chatMessageModel.getNickname());
-        holder.messageTextView.setText(chatMessageModel.getMessage());
-        holder.timestampTextView.setText(chatMessageModel.formatDate());
+    public void setMessagesLookBasedOnLoggedUser(@NonNull ChatViewHolder holder, @NonNull ChatMessageModel chatMessageModel) {
+        if (chatMessageModel.getUserId().equals(currentUserId)) {
+            firebaseHelper.getUserAvatar(context, currentUserId, holder.userAvatar);
+        } else {
+            firebaseHelper.getUserAvatar(context, chatMessageModel.getUserId(), holder.userAvatar);
+        }
     }
 
     static class ChatViewHolder extends RecyclerView.ViewHolder {

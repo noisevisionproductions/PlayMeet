@@ -138,7 +138,7 @@ public class SavePostHandler {
 
                 @Override
                 public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                    if (error != null) {/**/
+                    if (error != null) {
                         Log.e("Firebase Update Error", "Saving chosen post in DB - SavedPostCreating " + error.getMessage());
                     } else if (committed) {
                         DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUserId);
@@ -150,7 +150,6 @@ public class SavePostHandler {
                                 if (user == null) {
                                     return Transaction.success(mutableData);
                                 }
-
                                 // Inkrementacja licznika dołączonych postów
                                 user.setJoinedPostsCount(user.getJoinedPostsCount() + 1);
                                 mutableData.setValue(user); // Zapisz zmianę w bazie danych
