@@ -7,9 +7,9 @@ import android.content.DialogInterface;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.Calendar;
 

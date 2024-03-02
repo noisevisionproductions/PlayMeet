@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layoutOfMessage"
+    android:id="@+id/messageReceivedLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
+    android:background="@drawable/message_received_background"
     android:orientation="horizontal"
-    android:padding="16dp">
+    android:padding="10dp">
 
     <include
         layout="@layout/avatar_image_view"
@@ -25,13 +26,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/username"
-            android:textStyle="bold" />
+            android:textColor="@color/text"
+            android:textStyle="bold"
+            android:typeface="serif" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/messageTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/message" />
+            android:text="@string/message"
+            android:textColor="@color/text"
+            android:typeface="serif" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -39,6 +44,9 @@
         android:id="@+id/timestampTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/timeStamp" />
+        android:gravity="center"
+        android:text="@string/timeStamp"
+        android:textColor="@color/text"
+        android:typeface="serif" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

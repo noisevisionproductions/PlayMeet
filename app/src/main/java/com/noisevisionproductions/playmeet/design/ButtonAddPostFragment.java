@@ -3,10 +3,10 @@ package com.noisevisionproductions.playmeet.design;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.postsManagement.PostCreatingLogic;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.R;
 
 public class ButtonAddPostFragment extends BaseFragmentForAddPostButton {
     private Toast toast;

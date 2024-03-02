@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".postsManagement.PostCreatingLogic">
+    android:padding="10dp">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/submitPost">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/linearLayout"
@@ -17,55 +17,48 @@
             android:layout_height="match_parent"
             android:background="@color/background"
             android:orientation="vertical"
-            android:padding="20dp"
             tools:context=".postsManagement.PostCreatingLogic"
             tools:openDrawer="end">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/informationAboutProvidedData"
+            <!--Tworzenie postu info-->
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:hint="@string/limitOfPosts"
-                android:textColorHint="@color/accent90"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:typeface="serif"
-                app:layout_constraintBottom_toTopOf="@id/linearLayoutForAvatar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/nickname"
-                style="@style/MyAppCompatTextViewStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingTop="30dp"
-                android:paddingBottom="20dp"
-                android:text="@string/postCreating"
-                android:textColor="@color/text"
-                android:textSize="25sp" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/MyAppCompatTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/postCreating"
+                    android:textColor="@color/text"
+                    android:textSize="25sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/infoIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/postCreatingInfo"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_info" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <!--nazwa sportu-->
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/arrays_sport_names"
                 style="@style/MySpinnerStyleForDefaultInput"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:background="@color/secondary20"
                 android:entries="@array/arrays_sport_names"
-                android:textSize="30sp" />
-
-            <!--nazwa miasta-->
-            <androidx.appcompat.widget.AppCompatSpinner
-                android:id="@+id/cities_in_poland"
-                style="@style/MySpinnerStyleForDefaultInput"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="20dp"
-                android:background="@color/secondary20"
+                android:minHeight="60dp"
                 android:textSize="30sp" />
 
             <!--poziom gry-->
@@ -73,31 +66,44 @@
                 android:id="@+id/arrays_skill_level"
                 style="@style/MySpinnerStyleForDefaultInput"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginBottom="10dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
                 android:background="@color/secondary20"
                 android:entries="@array/arrays_skill_level"
+                android:minHeight="60dp"
                 android:textSize="30sp" />
 
-            <!--Ilość osób potrzebnych-->
-            <com.google.android.material.textfield.TextInputLayout
+            <!--nazwa miasta-->
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/cities_in_poland"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@color/secondary20"
+                android:hint="@string/provideCityHint"
+                android:inputType="textAutoComplete"
+                android:maxLength="50"
+                android:minHeight="50dp"
+                android:padding="10dp"
+                android:popupBackground="@drawable/rounded_menu_background_for_spinner"
+                android:textAlignment="center"
+                android:textSize="15sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/howManyPeopleNeeded"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@color/secondary20"
-                    android:gravity="center"
-                    android:hint="@string/howManyPeopleNeeded"
-                    android:inputType="number"
-                    android:maxLength="2"
-                    android:padding="10dp"
-                    android:textAlignment="center"
-                    android:textSize="15sp" />
-            </com.google.android.material.textfield.TextInputLayout>
+            <!--Ilość osób potrzebnych-->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/howManyPeopleNeeded"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@color/secondary20"
+                android:gravity="center"
+                android:hint="@string/howManyPeopleNeeded"
+                android:inputType="number"
+                android:maxLength="2"
+                android:minHeight="50dp"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textSize="15sp" />
 
             <!--wybor daty i godziny-->
             <androidx.appcompat.widget.LinearLayoutCompat
@@ -108,9 +114,10 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
                     android:layout_weight="1"
+                    android:minHeight="120dp"
                     app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -127,15 +134,18 @@
                     <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/dateNegotiable"
                         android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:text="@string/dateDoesntMatter" />
+                        android:layout_height="wrap_content"
+                        android:minHeight="60dp"
+                        android:text="@string/dateDoesntMatter"
+                        android:textColor="@color/text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
+                    android:minHeight="120dp"
                     app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -152,8 +162,10 @@
                     <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/hourNegotiable"
                         android:layout_width="wrap_content"
-                        android:layout_height="60dp"
-                        android:text="@string/hourDateDoesntMatter" />
+                        android:layout_height="wrap_content"
+                        android:minHeight="60dp"
+                        android:text="@string/hourDateDoesntMatter"
+                        android:textColor="@color/text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -166,47 +178,32 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/addInfo"
                     android:layout_width="match_parent"
-                    android:layout_height="100dp"
+                    android:layout_height="wrap_content"
                     android:background="@color/secondary20"
                     android:hint="@string/extraInfo"
                     android:inputType="textAutoCorrect|textMultiLine"
                     android:maxLength="220"
                     android:maxLines="5"
+                    android:minHeight="100dp"
                     android:padding="10dp"
+                    android:textColorHint="@color/textHint"
                     android:textSize="15sp" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="20dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/backToMainMenu"
-                    style="@style/MyButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_style"
-                    android:text="@string/menu" />
-
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/submitPost"
-                    style="@style/MyButtonStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/button_style"
-                    android:text="@string/submitPost" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.appcompat.widget.LinearLayoutCompat>
+
     </androidx.core.widget.NestedScrollView>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/submitPost"
+        style="@style/MyButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:minHeight="50dp"
+        android:text="@string/submitPost" />
 
-    <include layout="@layout/navigation_view_side_panel" />
-
-</androidx.drawerlayout.widget.DrawerLayout>
+</RelativeLayout>

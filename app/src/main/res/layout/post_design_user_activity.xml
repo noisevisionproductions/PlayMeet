@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
-    android:layout_margin="10dp"
+    android:layout_height="wrap_content"
     android:foreground="@drawable/ripple_effect"
     app:cardBackgroundColor="@color/background"
     app:cardCornerRadius="10dp"
@@ -20,68 +19,111 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:background="@color/secondary20"
+        android:minHeight="110dp"
         android:orientation="horizontal">
 
         <include layout="@layout/avatar_image_view" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/sport"
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:paddingStart="5dp"
-            android:paddingEnd="0dp"
-            android:text="@string/provideSports"
-            app:layout_constraintStart_toEndOf="@+id/userAvatar"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <!--nazwa sportu-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/sportNames"
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:entries="@array/arrays_sport_names"
-            android:gravity="center"
-            android:hint="@string/userDidNotProvided"
-            android:padding="10dp"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/buttonContainer"
-            app:layout_constraintStart_toEndOf="@+id/sport"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/city"
-            style="@style/MyAppCompatTextViewStyle"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sportNamesLayout"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:gravity="center"
-            android:paddingStart="5dp"
-            android:paddingEnd="0dp"
-            android:text="@string/provideCity"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/userAvatar" />
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:paddingTop="10dp"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sportIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_sport" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sportNames"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/noSportProvided"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--nazwa miasta-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/chosenCity"
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:background="@null"
-            android:gravity="center"
-            android:hint="@string/userDidNotProvided"
-            android:padding="10dp"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            app:hintEnabled="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttonContainer"
-            app:layout_constraintStart_toEndOf="@+id/city" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/cityNameLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            app:layout_constraintLeft_toRightOf="@+id/userAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/sportNamesLayout">
 
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_location" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/chosenCity"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="@string/noCityProvided"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintBottom_toBottomOf="@+id/locationIcon"
+                app:layout_constraintLeft_toRightOf="@+id/locationIcon" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--ilość osób-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:paddingTop="15dp"
+            app:layout_constraintLeft_toRightOf="@+id/userAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/cityNameLayout">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/numberOfPeopleIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_users" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/numberOfPeople"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@string/noNumberOfPeopleProvided"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--przyciski-->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/buttonContainer"
             android:layout_width="wrap_content"
@@ -93,11 +135,12 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/chatButton"
+                android:id="@+id/chatButtonSavedPosts"
                 style="@style/MyButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:accessibilityTraversalBefore="@id/deletePost"
                 android:background="@drawable/button_style"
                 android:text="@string/openChat" />
 
@@ -115,3 +158,5 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
+
+

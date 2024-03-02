@@ -23,45 +23,64 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.dataManagement.PostDiffCallback;
-import com.noisevisionproductions.playmeet.design.ButtonAddPostFragment;
-import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.dataManagement.PostDiffCallback;
+import com.noisevisionproductions.playmeet.dataManagement.PostsDiffCallbackForCopyOfPost;
+import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PostsCreatedByUserFragment extends Fragment {
+    private View view;
     private final List<PostCreating> postsCreatedByUser = new ArrayList<>();
+    private final List<PostCreatingCopy> savedPosts = new ArrayList<>();
     private ProgressBar progressBar;
     private AdapterCreatedByUserPosts adapterCreatedByUserPosts;
-    private RecyclerView expandableListOfYourPosts;
-    private AppCompatTextView noPostsInfo, howUserPostLooksLike;
+    private AdapterSavedByUserPosts adapterSavedByUserPosts;
+    private RecyclerView postsCreatedByUserRecyclerView, postsSignedIntoByUserRecyclerView;
+    private AppCompatTextView noPostsCreatedInfo, noPostsSignedIntoInfo;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_created_by_user, container, false);
+        view = inflater.inflate(R.layout.fragment_created_by_user, container, false);
 
-        setupView(view);
-        showUserPosts();
-        getAddPostButton();
+        setupView();
+
+        setPostsCreatedByUserRecyclerView();
+        setPostsSignedIntoByUserRecyclerView();
+
+        showPostsCreatedByUser();
+        showPostsSignedUpIntoByUser();
 
         return view;
     }
 
-    public void setupView(@NonNull View view) {
-        noPostsInfo = view.findViewById(R.id.noPostInfo);
-        howUserPostLooksLike = view.findViewById(R.id.howUserPostLooksLike);
+    private void setupView() {
+        noPostsCreatedInfo = view.findViewById(R.id.noPostsCreatedInfo);
+        noPostsSignedIntoInfo = view.findViewById(R.id.noPostsSignedIntoInfo);
         progressBar = view.findViewById(R.id.progressBarLayout);
-
-        expandableListOfYourPosts = view.findViewById(R.id.expandableListOfUserPosts);
-        adapterCreatedByUserPosts = new AdapterCreatedByUserPosts(getContext(), getChildFragmentManager(), postsCreatedByUser, expandableListOfYourPosts, howUserPostLooksLike, noPostsInfo);
-        expandableListOfYourPosts.setAdapter(adapterCreatedByUserPosts);
-        expandableListOfYourPosts.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
     }
 
-    public void showUserPosts() {
+    private void setPostsCreatedByUserRecyclerView() {
+        postsCreatedByUserRecyclerView = view.findViewById(R.id.expandableListOfUserPosts);
+        adapterCreatedByUserPosts = new AdapterCreatedByUserPosts(getContext(), getChildFragmentManager(), postsCreatedByUser, noPostsCreatedInfo);
+        postsCreatedByUserRecyclerView.setAdapter(adapterCreatedByUserPosts);
+        postsCreatedByUserRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+    }
+
+    private void setPostsSignedIntoByUserRecyclerView() {
+        postsSignedIntoByUserRecyclerView = view.findViewById(R.id.expandableListOfSavedPosts);
+        adapterSavedByUserPosts = new AdapterSavedByUserPosts(getContext(), getParentFragmentManager(), savedPosts, noPostsSignedIntoInfo);
+        postsSignedIntoByUserRecyclerView.setAdapter(adapterSavedByUserPosts);
+        postsSignedIntoByUserRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+    }
+
+    private void showPostsCreatedByUser() {
         progressBar.setVisibility(View.VISIBLE);
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -84,14 +103,12 @@ public class PostsCreatedByUserFragment extends Fragment {
                         }
                         if (newUserPosts.isEmpty()) {
                             // jeżeli nie ma żadnych postów, to wyświetlam informację na temat pustej listy
-                            expandableListOfYourPosts.setVisibility(View.GONE);
-                            noPostsInfo.setVisibility(View.VISIBLE);
-                            howUserPostLooksLike.setVisibility(View.GONE);
+                            postsCreatedByUserRecyclerView.setVisibility(View.GONE);
+                            noPostsCreatedInfo.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
                         } else {
-                            howUserPostLooksLike.setVisibility(View.VISIBLE);
-                            expandableListOfYourPosts.setVisibility(View.VISIBLE);
-                            noPostsInfo.setVisibility(View.GONE);
+                            postsCreatedByUserRecyclerView.setVisibility(View.VISIBLE);
+                            noPostsCreatedInfo.setVisibility(View.GONE);
                             updatePostsUsingDiffUtil(newUserPosts);
                         }
                     }
@@ -103,14 +120,13 @@ public class PostsCreatedByUserFragment extends Fragment {
                 });
             }
         } else {
-            expandableListOfYourPosts.setVisibility(View.GONE);
-            howUserPostLooksLike.setVisibility(View.GONE);
-            noPostsInfo.setVisibility(View.VISIBLE);
+            postsCreatedByUserRecyclerView.setVisibility(View.GONE);
+            noPostsCreatedInfo.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
         }
     }
 
-    public void updatePostsUsingDiffUtil(@NonNull List<PostCreating> newPosts) {
+    private void updatePostsUsingDiffUtil(@NonNull List<PostCreating> newPosts) {
         final List<PostCreating> oldPosts = new ArrayList<>(this.postsCreatedByUser);
         new Thread(() -> {
             final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostDiffCallback(oldPosts, newPosts));
@@ -123,8 +139,60 @@ public class PostsCreatedByUserFragment extends Fragment {
         }).start();
     }
 
-    public void getAddPostButton() {
-        ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
-        getParentFragmentManager().beginTransaction().add(R.id.layoutOfCreatedPosts, myFragment).commit();
+    private void showPostsSignedUpIntoByUser() {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        if (firebaseHelper.getCurrentUser() != null) {
+
+            String currentUserId = firebaseHelper.getCurrentUser().getUid();
+
+            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+                DatabaseReference savedPostsReference = FirebaseDatabase.getInstance().getReference().child("SavedPostCreating").child(currentUserId);
+
+                savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<PostCreatingCopy> userSavedPosts = new ArrayList<>();
+                        for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                            PostCreatingCopy postCreatingCopy = postSnapshot.getValue(PostCreatingCopy.class);
+                            if (postCreatingCopy != null && postCreatingCopy.getSavedByUser()) {
+                                userSavedPosts.add(postCreatingCopy);
+                            }
+                        }
+                        if (userSavedPosts.isEmpty()) {
+                            noPostsSignedIntoInfo.setVisibility(View.VISIBLE);
+                            postsSignedIntoByUserRecyclerView.setVisibility(View.GONE);
+                        } else {
+                            noPostsSignedIntoInfo.setVisibility(View.GONE);
+                            postsSignedIntoByUserRecyclerView.setVisibility(View.VISIBLE);
+                            updatePostsSignedUpIntoUsingDiffUtil(userSavedPosts);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.e("Firebase RealmTime Database error", "Printing posts that user signed up to " + error.getMessage());
+                    }
+                });
+            } else {
+                if (getContext() != null) {
+                    ProjectUtils.showLoginSnackBar(getContext());
+                }
+            }
+        }
+    }
+
+    private void updatePostsSignedUpIntoUsingDiffUtil(@NonNull List<PostCreatingCopy> newPosts) {
+        final List<PostCreatingCopy> oldPosts = new ArrayList<>(this.savedPosts);
+
+        new Thread(() -> {
+//            progressBar.setVisibility(View.VISIBLE);
+            final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new PostsDiffCallbackForCopyOfPost(oldPosts, newPosts));
+            new Handler(Looper.getMainLooper()).post(() -> {
+                savedPosts.clear();
+                savedPosts.addAll(newPosts);
+                diffResult.dispatchUpdatesTo(adapterSavedByUserPosts);
+                progressBar.setVisibility(View.GONE);
+            });
+        }).start();
     }
 }

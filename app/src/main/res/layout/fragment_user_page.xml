@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/background"
+            android:orientation="vertical">
+
+            <!--info o fragmencie-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/MyAppCompatTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="@string/yourAccount"
+                    android:textColor="@color/text"
+                    android:textSize="25sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/infoIconUserAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/postCreatingInfo"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_info" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            <!--zarzadzanie avatarem-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/linearLayoutForAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="20dp"
+                app:layout_constraintTop_toBottomOf="@+id/informationAboutProvidedData">
+
+                <include layout="@layout/avatar_image_view" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/addPhotoButton"
+                        style="@style/MyButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/addPhoto" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/deleteAvatarButton"
+                        style="@style/MyButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:background="@drawable/button_style"
+                        android:backgroundTint="@color/error"
+                        android:minWidth="100dp"
+                        android:text="@string/deleteAvatar" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!--info o uztkowniku-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingBottom="20dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/greetUser"
+                        style="@style/MyAppCompatTextViewStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:text="@string/provideNick"
+                        android:textSize="13sp"
+                        android:visibility="visible" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/nickname"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="14"
+                        android:gravity="center"
+                        android:hint="@string/nicknameIsEmpty"
+                        android:textColor="@color/accent"
+                        android:textColorHint="@color/errorBlank"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        android:typeface="serif" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/editNickname"
+                        android:layout_width="0dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="2"
+                        android:contentDescription="@string/nicknameChange"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="0dp"
+                        android:src="@drawable/button_edit" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <include layout="@layout/progress_bar_layout" />
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/linearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <!-- Etykieta i pole imienia -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/MyAppCompatTextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="50dp"
+                            android:text="@string/provideName"
+                            android:textSize="13sp" />
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/nameInput"
+                            style="@style/MyAutoCompleteTextViewStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:hint="@string/yourName"
+                            android:imeOptions="actionDone"
+                            android:maxLength="30" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Etykieta i pole opisu -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/MyAppCompatTextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="50dp"
+                            android:text="@string/provideAboutYou"
+                            android:textSize="13sp" />
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/aboutYouInput"
+                            style="@style/MyAutoCompleteTextViewStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:hint="@string/tellAboutYourself"
+                            android:imeOptions="actionDone"
+                            android:maxLength="150" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Etykieta i spinner miasta -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/MyAppCompatTextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="50dp"
+                            android:text="@string/provideCity"
+                            android:textSize="13sp" />
+
+                        <!--nazwa miasta-->
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/cityTextField"
+                            style="@style/MyAutoCompleteTextViewStyle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:hint="@string/provideCityHint"
+                            android:imeOptions="actionDone"
+                            android:inputType="textAutoComplete"
+                            android:maxLength="50"
+                            android:popupBackground="@drawable/rounded_menu_background_for_spinner" />
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <!-- Etykieta i spinner wieku -->
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            style="@style/MyAppCompatTextViewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minWidth="50dp"
+                            android:text="@string/provideAge"
+                            android:textSize="13sp" />
+
+                        <androidx.appcompat.widget.AppCompatSpinner
+                            android:id="@+id/ageSpinner"
+                            style="@style/MySpinnerStyleForDefaultInput"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="1"
+                            android:minHeight="60dp"
+                            android:visibility="visible" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/saveInfoButton"
+        style="@style/MyButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:background="@drawable/button_style"
+        android:minWidth="100dp"
+        android:minHeight="50dp"
+        android:text="@string/Save" />
+</RelativeLayout>

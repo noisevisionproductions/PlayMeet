@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:foreground="@drawable/ripple_effect"
+    android:minHeight="200dp"
     app:cardBackgroundColor="@color/secondary20"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
@@ -20,78 +21,162 @@
         <!--avatar-->
         <include layout="@layout/avatar_image_view" />
 
+        <!--ikonka usuniecia postu-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/deleteIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:contentDescription="@string/reportPost"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="16dp"
+            android:src="@drawable/icon_delete"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!--ikonka z dodatkowym menu-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/overflowIcon"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:clickable="true"
+            android:contentDescription="@string/reportPost"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
             android:padding="16dp"
-            android:src="@drawable/info_icon"
+            android:src="@drawable/icon_report"
             android:visibility="visible"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!--nazwa sportu-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/sportNames"
-            style="@style/MyTextInputLayoutDesign"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sportNamesLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:entries="@array/arrays_sport_names"
-            android:gravity="center"
-            android:hint="@string/noSportProvided"
+            android:layout_marginEnd="30dp"
             android:paddingTop="10dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/userAvatar"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sportIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_sport" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sportNames"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:hint="@string/noSportProvided"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--nazwa miasta-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/chosenCity"
-            style="@style/MyTextInputLayoutDesign"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@null"
-            android:hint="@string/noCityProvided"
-            android:paddingStart="10dp"
-            android:paddingEnd="5dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/skillLevel"
+            android:paddingTop="15dp"
             app:layout_constraintLeft_toRightOf="@+id/userAvatar"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+            app:layout_constraintTop_toBottomOf="@+id/sportNamesLayout">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_location" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/chosenCity"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="bottom"
+                android:hint="@string/noCityProvided"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintBottom_toBottomOf="@+id/locationIcon"
+                app:layout_constraintLeft_toRightOf="@+id/locationIcon"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--wybor poziomu-->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/skillLevel"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/noSkillLevelProvided"
-            android:paddingStart="10dp"
-            android:paddingTop="30dp"
-            android:paddingEnd="5dp"
-            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-            app:layout_constraintLeft_toRightOf="@+id/userAvatar" />
-
-        <!--ilość osób-->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/numberOfPeople"
-            style="@style/MyTextInputLayoutDesign"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@null"
+            android:paddingTop="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
+            app:layout_constraintLeft_toRightOf="@+id/userAvatar">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/skillLevelIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_difficulty" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/skillLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/noSkillLevelProvided"
+                android:minWidth="130dp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--ilość osób-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:hint="@string/noNumberOfPeopleProvided"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:orientation="horizontal"
+            android:padding="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/numberOfPeopleIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_users" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/numberOfPeople"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="@string/noNumberOfPeopleProvided"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--dodatkowe info-->
         <androidx.appcompat.widget.AppCompatTextView
@@ -99,10 +184,12 @@
             style="@style/MyTextInputLayoutDesign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="10dp"
             android:hint="@string/noAdditionalInfoProvided"
+            android:minHeight="80dp"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:typeface="serif"
             app:layout_constraintEnd_toStartOf="@+id/numberOfPeople"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/userAvatar"

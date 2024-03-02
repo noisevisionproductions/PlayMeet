@@ -1,17 +1,18 @@
-package com.noisevisionproductions.playmeet.design;
+package com.noisevisionproductions.playmeet.userManagement;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
 
@@ -30,62 +31,38 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
-import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
-import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.userManagement.UserAccountLogic;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.nio.charset.StandardCharsets;
 
-public class ActivityApplicationOptions extends SidePanelBaseActivity {
+public class DeleteUserFromDB {
 
     @Nullable
     private FirebaseUser currentUser;
     private AlertDialog dialog;
+    private final Context context;
+    private final LayoutInflater layoutInflater;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_options_menu);
-
-        setupDrawerLayout();
-        setupNavigationView();
-
-        loadLayout();
+    public DeleteUserFromDB(Context context, LayoutInflater layoutInflater) {
+        this.context = context;
+        this.layoutInflater = layoutInflater;
     }
 
-    @Override
-    protected void onDestroy() {
-        if (dialog != null && dialog.isShowing()) {
-            dialog.dismiss();
-        }
-        super.onDestroy();
-    }
-
-    private void loadLayout() {
+    public void deleteUser() {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        AppCompatButton deleteAccount = findViewById(R.id.deleteAccount);
-        deleteAccount.setOnClickListener(v -> createDeleteConfirmationDialog());
-
-        AppCompatButton backToMainMenu = findViewById(R.id.backToMainMenu);
-        backToMainMenu.setOnClickListener(v -> backToMainMenu());
-    }
-
-    private void backToMainMenu() {
-        Intent intent = new Intent(getApplicationContext(), MainMenuPosts.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+        createDeleteConfirmationDialog();
     }
 
     private void createDeleteConfirmationDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        @SuppressLint("InflateParams") View dialogView = getLayoutInflater().inflate(R.layout.dialog_get_password, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        @SuppressLint("InflateParams") View dialogView = layoutInflater.inflate(R.layout.dialog_get_password, null); // Używamy LayoutInflater dostarczonego z zewnątrz
 
         setupDialogView(dialogView);
 
-        builder.setTitle(getString(R.string.safetyPasswordCheck))
+        builder.setTitle(context.getString(R.string.safetyPasswordCheck))
                 .setView(dialogView)
                 .setPositiveButton("OK", null)
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -93,9 +70,7 @@ public class ActivityApplicationOptions extends SidePanelBaseActivity {
         dialog = builder.create();
         setupDialogOnShow();
 
-        if (!isFinishing()) {
-            dialog.show();
-        }
+        dialog.show();
     }
 
     private void setupDialogView(@NonNull View dialogView) {
@@ -109,7 +84,7 @@ public class ActivityApplicationOptions extends SidePanelBaseActivity {
     private void setupDialogOnShow() {
         dialog.setOnShowListener(dialogInterface -> {
             Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.error));
+            button.setBackgroundColor(ContextCompat.getColor(context, R.color.error));
             button.setOnClickListener(v -> handlePositiveButtonClick());
         });
     }
@@ -128,7 +103,7 @@ public class ActivityApplicationOptions extends SidePanelBaseActivity {
             if (!password.isEmpty()) {
                 deleteUserWithEmailAuth(password, reasonText);
             } else {
-                ToastManager.showToast(getApplicationContext(), "Hasło nie może być puste");
+                ToastManager.showToast(context, "Hasło nie może być puste");
             }
         }
     }
@@ -167,7 +142,7 @@ public class ActivityApplicationOptions extends SidePanelBaseActivity {
     }
 
     private void showToast(String message) {
-        ToastManager.showToast(getApplicationContext(), message);
+        ToastManager.showToast(context, message);
     }
 
     private void logError(@NonNull String message) {
@@ -240,15 +215,17 @@ public class ActivityApplicationOptions extends SidePanelBaseActivity {
 
     @NonNull
     private String getIdTokenFromSharedPreferences() {
-        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
         return sharedPreferences.getString("idToken", "");
     }
 
     private void navigateToLoginAndRegister() {
-        Intent intent = new Intent(getApplicationContext(), LoginAndRegisterActivity.class);
+        Intent intent = new Intent(context, LoginAndRegisterActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        context.startActivity(intent);
+        if (context instanceof Activity) {
+            ((Activity) context).finish();
+        }
     }
 
     private void deleteDataFromDB() {
@@ -282,10 +259,10 @@ public class ActivityApplicationOptions extends SidePanelBaseActivity {
     }
 
     private void getToastErrorFromDeleting() {
-        ToastManager.showToast(getApplicationContext(), "Wystąpił błąd. Skontaktuj się z administratorem");
+        ToastManager.showToast(context, "Wystąpił błąd. Skontaktuj się z administratorem");
     }
 
     private void getToastDeleteSuccessful() {
-        ToastManager.showToast(getApplicationContext(), "Pomyślnie usunięto profil");
+        ToastManager.showToast(context, "Pomyślnie usunięto profil");
     }
 }

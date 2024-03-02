@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     tools:context=".chat.ChatActivity"
     tools:openDrawer="end">
 
@@ -10,7 +11,8 @@
         android:id="@+id/layoutMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background">
+        android:background="@color/background"
+        android:focusableInTouchMode="true">
 
         <ProgressBar
             android:id="@+id/loadMorePostsIndicator"
@@ -24,36 +26,43 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_chat"
+            android:contentDescription="@string/chatMessages"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/bottom" />
+            android:layout_above="@id/messageInputLayout" />
 
         <RelativeLayout
-            android:id="@+id/bottom"
+            android:id="@+id/messageInputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/secondary75"
-            android:padding="5dp">
+            android:background="@drawable/chat_input_message_design"
+            android:padding="10dp">
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/messageInputFromUser"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/sendMessageButton"
                 android:background="@android:color/transparent"
                 android:hint="@string/writeMessage"
-                android:inputType="text"
-                android:textColor="@color/text"
+                android:inputType="textCapSentences"
+                android:minHeight="50dp"
+                android:textColor="#000"
                 android:textColorHint="@color/background" />
 
             <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/sendMessageButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/send_message" />
+                android:background="@drawable/button_send_message"
+                android:contentDescription="@string/sendMessage"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                android:minWidth="50dp"
+                android:minHeight="50dp" />
 
         </RelativeLayout>
 

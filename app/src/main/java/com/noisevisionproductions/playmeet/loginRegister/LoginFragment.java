@@ -26,11 +26,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
-import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
+import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.Objects;
 
@@ -149,7 +149,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void navigateToMainMenu() {
-        Intent intent = new Intent(getContext(), MainMenuPosts.class);
+        Intent intent = new Intent(getContext(), ActivityMainMenu.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
@@ -166,6 +166,7 @@ public class LoginFragment extends Fragment {
         final EditText emailInput = new EditText(getContext());
         emailInput.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         emailInput.setHint("Wprowadź e-mail");
+        emailInput.setHeight(200);
         builder.setView(emailInput);
 
         builder.setPositiveButton("Resetuj hasło", (dialog, which) -> {

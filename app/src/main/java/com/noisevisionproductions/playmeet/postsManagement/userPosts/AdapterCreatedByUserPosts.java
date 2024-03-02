@@ -1,11 +1,9 @@
 package com.noisevisionproductions.playmeet.postsManagement.userPosts;
 
+import android.app.AlertDialog;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,38 +16,32 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsPostsAdapters;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsPostsAdapters;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreatedByUserPosts.MyViewHolder> {
-
     private final List<PostCreating> listOfPostCreating;
     private final FragmentManager fragmentManager;
     private final Context context;
-    private final AppCompatTextView noPostInfo, howUserPostLooksLike;
+    private final AppCompatTextView noPostInfo;
 
-    public AdapterCreatedByUserPosts(Context context, FragmentManager fragmentManager, List<PostCreating> listOfPostCreating, RecyclerView recyclerView, AppCompatTextView howUserPostLooksLike, AppCompatTextView noPostInfo) {
+    public AdapterCreatedByUserPosts(Context context, FragmentManager fragmentManager, List<PostCreating> listOfPostCreating, AppCompatTextView noPostInfo) {
         this.context = context;
         this.fragmentManager = fragmentManager;
         this.listOfPostCreating = listOfPostCreating;
-        this.howUserPostLooksLike = howUserPostLooksLike;
         this.noPostInfo = noPostInfo;
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(getCallBack());
-        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -64,7 +56,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         holder.cityNames.setText(postCreating.getCityName());
         holder.addInfo.setText(postCreating.getAdditionalInfo());
 
-        //getPeopleStatus(postCreating.getPostId(), holder);
+        removePost(holder, position);
 
         String peopleStatus = postCreating.getPeopleStatus();
         holder.numberOfPeople.setText(peopleStatus);
@@ -77,6 +69,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
     @Override
     public AdapterCreatedByUserPosts.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
+        makePostSmaller(v, parent);
         return new AdapterCreatedByUserPosts.MyViewHolder(v);
     }
 
@@ -88,81 +81,6 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
     private void setUserAvatar(@NonNull AdapterCreatedByUserPosts.MyViewHolder holder, @NonNull String userId, @NonNull Context context) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
-    }
-
-    @NonNull
-    private ItemTouchHelper.SimpleCallback getCallBack() {
-        return new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView1, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getBindingAdapterPosition();
-                PostCreating postCreating = listOfPostCreating.get(position);
-                FirebaseHelper firebaseHelper = new FirebaseHelper();
-                if (firebaseHelper.getCurrentUser() != null) {
-                    String currentUserId = firebaseHelper.getCurrentUser().getUid();
-                    String postId = postCreating.getPostId();
-                    DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("PostCreating").child(postId);
-
-                    if (postCreating.getUserId().equals(currentUserId)) {
-                        // usuwam post użytkownika poprzez przesunięcie go w bok
-                        postReference.removeValue().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                listOfPostCreating.remove(position);
-                                notifyItemRemoved(position);
-                                notifyItemRangeChanged(position, listOfPostCreating.size());
-                                if (listOfPostCreating.isEmpty()) {
-                                    // jeżeli zostaną usunięte wszystkie posty z listy,
-                                    // to dzięki przesłaniu noPostInfo w konstruktorze,
-                                    // wyświetlam informację o braku stworzonych postów
-                                    // postanowiłem do tego stworzyć Handler, aby napis
-                                    // pojawiał się z lekkim opóźnieniem, bo bez tego layout dziwnie się zachowuje
-                                    new Handler().postDelayed(() -> {
-                                        howUserPostLooksLike.setVisibility(View.GONE);
-                                        noPostInfo.setVisibility(View.VISIBLE);
-                                    }, 100);
-                                }
-                            } else {
-                                Log.e("PostsAdapterCreatedByUser", "Error when deleting created post by user " + R.string.error, task.getException());
-                            }
-                        });
-                    }
-                }
-            }
-
-            @Override
-            public void onChildDraw(@NonNull Canvas canvas, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
-                View itemView = viewHolder.itemView;
-                Drawable deleteIcon = ContextCompat.getDrawable(context, R.drawable.trash_bin);
-                ColorDrawable background = new ColorDrawable(Color.parseColor("#ac2614"));
-
-                if (deleteIcon != null) {
-                    int iconSize = (int) (itemView.getHeight() * 0.8);
-                    int iconMargin = (itemView.getHeight() - iconSize) / 2;
-                    int iconTop = itemView.getTop() + iconMargin;
-                    int iconBottom = iconTop + iconSize;
-                    if (dX < 0) {
-                        int iconLeft = itemView.getRight() - iconMargin - iconSize;
-                        int iconRight = itemView.getRight() - iconMargin;
-                        int iconTopBound = itemView.getTop() + iconMargin;
-                        int iconBottomBound = itemView.getBottom() - iconMargin;
-                        background.setBounds(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom());
-                        background.draw(canvas);
-
-                        deleteIcon.setBounds(Math.max(iconLeft, itemView.getRight() + (int) dX), Math.max(iconTop, iconTopBound),
-                                Math.max(iconRight, itemView.getRight()), Math.min(iconBottom, iconBottomBound));
-                        deleteIcon.draw(canvas);
-                    } else {
-                        background.setBounds(0, 0, 0, 0);
-                    }
-                }
-            }
-        };
     }
 
     private void getSkillLevel(@NonNull PostCreating postCreating, @NonNull MyViewHolder holder) {
@@ -187,17 +105,9 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         Animation postAnimation = AnimationUtils.loadAnimation(holder.layoutOfPost.getContext(), R.anim.post_loading_animation);
         holder.layoutOfPost.setOnHoverListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
-                view.animate()
-                        .scaleX(1.2f)
-                        .scaleY(1.2f)
-                        .setDuration(300)
-                        .start();
+                view.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300).start();
             } else if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_EXIT) {
-                view.animate()
-                        .scaleX(1.0f)
-                        .scaleY(1.0f)
-                        .setDuration(300)
-                        .start();
+                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).start();
             }
             return false;
         });
@@ -205,10 +115,54 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         holder.layoutOfPost.startAnimation(postAnimation);
     }
 
+    private void makePostSmaller(View view, ViewGroup parent) {
+        if (listOfPostCreating.size() > 1) {
+            DisplayMetrics displayMetrics = parent.getContext().getResources().getDisplayMetrics();
+            int width = (int) (displayMetrics.widthPixels * 0.9);
+            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) view.getLayoutParams();
+            layoutParams.width = width;
+            view.setLayoutParams(layoutParams);
+        }
+    }
+
+    private void removePost(MyViewHolder holder, int position) {
+        PostCreating postCreating = listOfPostCreating.get(position);
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+
+        if (firebaseHelper.getCurrentUser() != null) {
+            String currentUserId = firebaseHelper.getCurrentUser().getUid();
+            String postId = postCreating.getPostId();
+            DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("PostCreating").child(postId);
+
+            holder.deleteIcon.setOnClickListener(v -> {
+                if (postCreating.getUserId().equals(currentUserId)) {
+                    new AlertDialog.Builder(v.getContext()).setMessage("Czy na pewno chcesz usunąć ten post?").setPositiveButton("Tak", ((dialog, which) -> postReference.removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            ToastManager.showToast(v.getContext(), "Post usunięty");
+                            listOfPostCreating.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, listOfPostCreating.size());
+                            if (listOfPostCreating.isEmpty()) {
+                                // jeżeli zostaną usunięte wszystkie posty z listy,
+                                // to dzięki przesłaniu noPostInfo w konstruktorze,
+                                // wyświetlam informację o braku stworzonych postów
+                                // postanowiłem do tego stworzyć Handler, aby napis
+                                // pojawiał się z lekkim opóźnieniem, bo bez tego layout dziwnie się zachowuje
+                                new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
+                            }
+                        } else {
+                            Log.e("PostsAdapterCreatedByUser", "Error when deleting created post by user " + R.string.error, task.getException());
+                        }
+                    }))).setNegativeButton("Nie", null).show();
+                }
+            });
+        }
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
         private final AppCompatTextView sportNames, cityNames, addInfo, numberOfPeople;
-        private final AppCompatImageView skillLevel;
+        private final AppCompatImageView skillLevel, deleteIcon;
         private final CardView layoutOfPost;
 
         public MyViewHolder(@NonNull View v) {
@@ -220,6 +174,8 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
             addInfo = v.findViewById(R.id.addInfoPost);
             numberOfPeople = v.findViewById(R.id.numberOfPeople);
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
+            deleteIcon = v.findViewById(R.id.deleteIcon);
+            deleteIcon.setVisibility(View.VISIBLE);
             AppCompatImageView overflowIcon = v.findViewById(R.id.overflowIcon);
             overflowIcon.setVisibility(View.GONE);
         }

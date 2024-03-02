@@ -1,6 +1,8 @@
 package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -19,18 +22,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.dataManagement.PostDiffCallback;
-import com.noisevisionproductions.playmeet.design.ButtonAddPostFragment;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.postsManagement.postsFiltering.PostsFilter;
-import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,9 +64,10 @@ public class PostsOfTheGamesFragment extends Fragment {
         // refreshData(); // odświeżam aktywność na starcie, bo filtry bez tego nie działają jak należy TODO
         showAllPosts();
         swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
-        getAddPostButton();
 
         filterAllPosts(view);
+
+        handleBackPressed();
 
         return view;
     }
@@ -143,8 +150,6 @@ public class PostsOfTheGamesFragment extends Fragment {
         } else {
             postCreateForUnregisteredUser();
         }
-
-        getAddPostButton();
     }
 
     private void postCreateForLoggedInUser() {
@@ -159,46 +164,41 @@ public class PostsOfTheGamesFragment extends Fragment {
                         }
                     }
 
-                    allPostsReference.orderByKey()
-                            .limitToFirst(currentPage * POSTS_PER_PAGE)
-                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot allPostsSnapshot) {
-                                    List<PostCreating> newPostCreatingList = new ArrayList<>();
+                    allPostsReference.orderByKey().limitToFirst(currentPage * POSTS_PER_PAGE).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot allPostsSnapshot) {
+                            List<PostCreating> newPostCreatingList = new ArrayList<>();
 
-                                    for (DataSnapshot postSnapshot : allPostsSnapshot.getChildren()) {
-                                        PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
+                            for (DataSnapshot postSnapshot : allPostsSnapshot.getChildren()) {
+                                PostCreating postCreating = postSnapshot.getValue(PostCreating.class);
 
-                                        if (postCreating != null
-                                                && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid())
-                                                && !savedPostIds.contains(postCreating.getPostId())
-                                                && !postCreating.getActivityFull()) {
-                                            newPostCreatingList.add(postCreating);
-                                        }
-                                    }
-
-                                    if (newPostCreatingList.isEmpty()) {
-                                        recyclerView.setVisibility(View.GONE);
-                                        noPostFound.setVisibility(View.VISIBLE);
-                                    } else {
-                                        recyclerView.setVisibility(View.VISIBLE);
-                                        noPostFound.setVisibility(View.GONE);
-                                        updatePostsUsingDiffUtil(newPostCreatingList);
-
-                                    }
-                                    loadingMorePostsIndicator.setVisibility(View.GONE);
-                                    loadingMorePostsText.setVisibility(View.GONE);
+                                if (postCreating != null && !postCreating.getUserId().equals(firebaseHelper.getCurrentUser().getUid()) && !savedPostIds.contains(postCreating.getPostId()) && !postCreating.getActivityFull()) {
+                                    newPostCreatingList.add(postCreating);
                                 }
+                            }
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.e("Firebase RealmTime Database error", "Downloading posts for logged user " + error.getMessage());
-                                    loadingMorePostsIndicator.setVisibility(View.GONE);
-                                    loadingMorePostsText.setVisibility(View.GONE);
-                                    recyclerView.setVisibility(View.GONE);
-                                    noPostFound.setVisibility(View.VISIBLE);
-                                }
-                            });
+                            if (newPostCreatingList.isEmpty()) {
+                                recyclerView.setVisibility(View.GONE);
+                                noPostFound.setVisibility(View.VISIBLE);
+                            } else {
+                                recyclerView.setVisibility(View.VISIBLE);
+                                noPostFound.setVisibility(View.GONE);
+                                updatePostsUsingDiffUtil(newPostCreatingList);
+
+                            }
+                            loadingMorePostsIndicator.setVisibility(View.GONE);
+                            loadingMorePostsText.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Log.e("Firebase RealmTime Database error", "Downloading posts for logged user " + error.getMessage());
+                            loadingMorePostsIndicator.setVisibility(View.GONE);
+                            loadingMorePostsText.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.GONE);
+                            noPostFound.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
 
                 @Override
@@ -214,39 +214,36 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     private void postCreateForUnregisteredUser() {
-        allPostsReference.orderByKey()
-                .limitToFirst(currentPage * POSTS_PER_PAGE)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            List<PostCreating> newPostCreatingList = new ArrayList<>();
+        allPostsReference.orderByKey().limitToFirst(currentPage * POSTS_PER_PAGE).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    List<PostCreating> newPostCreatingList = new ArrayList<>();
 
-                            for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                                PostCreating posts = postSnapshot.getValue(PostCreating.class);
-                                newPostCreatingList.add(posts);
-                            }
-
-                            updatePostsUsingDiffUtil(newPostCreatingList);
-                        } else {
-                            recyclerView.setVisibility(View.GONE);
-                            noPostFound.setVisibility(View.VISIBLE);
-                        }
-                        loadingMorePostsIndicator.setVisibility(View.GONE);
-                        loadingMorePostsText.setVisibility(View.GONE);
+                    for (DataSnapshot postSnapshot : snapshot.getChildren()) {
+                        PostCreating posts = postSnapshot.getValue(PostCreating.class);
+                        newPostCreatingList.add(posts);
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase RealmTime Database error", "Printing all posts for guest user " + error.getMessage());
-                        loadingMorePostsIndicator.setVisibility(View.GONE);
-                        loadingMorePostsText.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.GONE);
-                        noPostFound.setVisibility(View.VISIBLE);
-                    }
-                });
+                    updatePostsUsingDiffUtil(newPostCreatingList);
+                } else {
+                    recyclerView.setVisibility(View.GONE);
+                    noPostFound.setVisibility(View.VISIBLE);
+                }
+                loadingMorePostsIndicator.setVisibility(View.GONE);
+                loadingMorePostsText.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase RealmTime Database error", "Printing all posts for guest user " + error.getMessage());
+                loadingMorePostsIndicator.setVisibility(View.GONE);
+                loadingMorePostsText.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                noPostFound.setVisibility(View.VISIBLE);
+            }
+        });
     }
-
 
     // obliczanie roznicy miedzy postami w celu szybszego ladowania, pozwala na dzialanie na watku w tle
     private void updatePostsUsingDiffUtil(@NonNull List<PostCreating> newPosts) {
@@ -263,14 +260,8 @@ public class PostsOfTheGamesFragment extends Fragment {
                 diffResult.dispatchUpdatesTo(adapterAllPosts);
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("UpdatePosts", "Error updating posts using DiffUtil", e);
         }
-
-    }
-
-    private void getAddPostButton() {
-        ButtonAddPostFragment myFragment = new ButtonAddPostFragment();
-        getChildFragmentManager().beginTransaction().add(R.id.layoutForAddPostButton, myFragment).commit();
     }
 
     private void filterAllPosts(@NonNull View view) {
@@ -287,4 +278,26 @@ public class PostsOfTheGamesFragment extends Fragment {
         void onDataReceived(String data);
     }
 
+    private void handleBackPressed() {
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                showExitDialog();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+    }
+
+    private void showExitDialog() {
+        new AlertDialog.Builder(getContext()).setTitle("Wyjście").setMessage("Wylogować, czy zamknąć aplikację?").setPositiveButton("Wyloguj się", (dialog, which) -> {
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (currentUser != null) {
+                firebaseAuth.signOut();
+                ToastManager.showToast(requireContext(), "Pomyślnie wylogowano");
+                Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
+                startActivity(intent);
+            }
+        }).setNegativeButton("Wyjście", (dialog, which) -> requireActivity().finishAffinity()).setNeutralButton("Anuluj", null).show();
+    }
 }

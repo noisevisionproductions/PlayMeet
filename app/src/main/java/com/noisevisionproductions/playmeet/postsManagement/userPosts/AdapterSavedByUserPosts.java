@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.postsManagement.userPosts;
 
 import android.content.Context;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +22,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsPostsAdapters;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsPostsAdapters;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 
 import java.util.List;
@@ -49,6 +51,7 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
     @Override
     public AdapterSavedByUserPosts.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_user_activity, parent, false);
+        makePostSmaller(v, parent);
         return new AdapterSavedByUserPosts.MyViewHolder(v);
     }
 
@@ -56,6 +59,9 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
     public void onBindViewHolder(@NonNull AdapterSavedByUserPosts.MyViewHolder holder, int position) {
         PostCreatingCopy posts = listOfPostCreatingCopy.get(position);
         String userId = posts.getUserId();
+
+        getPeopleStatus(posts.getPostId(), holder);
+
         holder.sportNames.setText(posts.getSportType());
         holder.cityNames.setText(posts.getCityName());
 
@@ -85,9 +91,7 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
             // usuwam post z listy oraz z bazy danych
             holder.deletePost.setOnClickListener(v -> savedPostCreating.removeValue().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    DatabaseReference postReference = FirebaseDatabase.getInstance().getReference()
-                            .child("PostCreating")
-                            .child(postId);
+                    DatabaseReference postReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId);
                     postReference.runTransaction(new Transaction.Handler() {
                         @NonNull
                         @Override
@@ -157,10 +161,38 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
         firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
     }
 
+    private void makePostSmaller(View view, ViewGroup parent) {
+        if (listOfPostCreatingCopy.size() > 1) {
+            DisplayMetrics displayMetrics = parent.getContext().getResources().getDisplayMetrics();
+            int width = (int) (displayMetrics.widthPixels * 0.9);
+            RecyclerView.LayoutParams layoutParams = (RecyclerView.LayoutParams) view.getLayoutParams();
+            layoutParams.width = width;
+            view.setLayoutParams(layoutParams);
+        }
+    }
+
+    private void getPeopleStatus(@NonNull String postId, @NonNull MyViewHolder holder) {
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        firebaseHelper.getJoinedPeopleStatus(postId, new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String peopleStatus = snapshot.getValue(String.class);
+                    holder.numberOfPeople.setText(peopleStatus);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase RealmTime Database error", "Showing number of people on posts in adapter " + error.getMessage());
+            }
+        });
+    }
+
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
         private final CardView layoutOfPost;
-        private final AppCompatTextView sportNames, cityNames;
+        private final AppCompatTextView sportNames, cityNames, numberOfPeople;
         private final AppCompatButton deletePost, chatButton;
 
         public MyViewHolder(@NonNull View v) {
@@ -169,8 +201,9 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
             userAvatar = v.findViewById(R.id.userAvatar);
             sportNames = v.findViewById(R.id.sportNames);
             cityNames = v.findViewById(R.id.chosenCity);
+            numberOfPeople = v.findViewById(R.id.numberOfPeople);
             deletePost = v.findViewById(R.id.deletePost);
-            chatButton = v.findViewById(R.id.chatButton);
+            chatButton = v.findViewById(R.id.chatButtonSavedPosts);
         }
     }
 }

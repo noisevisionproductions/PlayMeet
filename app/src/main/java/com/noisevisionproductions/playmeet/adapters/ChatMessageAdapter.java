@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.R;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -21,11 +21,23 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
     private final Context context;
     private String currentUserId;
     private FirebaseHelper firebaseHelper;
+    private static final int SENT_MESSAGE_TYPE = 1;
+    private static final int RECEIVED_MESSAGE_TYPE = 2;
 
     public ChatMessageAdapter(@NonNull FirebaseRecyclerOptions<ChatMessageModel> options, Context context) {
         super(options);
         this.context = context;
         setCurrentUserId();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        ChatMessageModel chatMessageModel = getItem(position);
+        if (chatMessageModel.getUserId().equals(currentUserId)) {
+            return SENT_MESSAGE_TYPE;
+        } else {
+            return RECEIVED_MESSAGE_TYPE;
+        }
     }
 
     @Override
@@ -37,7 +49,14 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
     @NonNull
     @Override
     public ChatMessageAdapter.ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_in_chat_design, parent, false);
+        View view;
+        if (viewType == SENT_MESSAGE_TYPE) {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_sent_design, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_received_design, parent, false);
+        }
         return new ChatViewHolder(view);
     }
 
@@ -71,12 +90,14 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
         private final AppCompatTextView usernameTextView, messageTextView, timestampTextView;
         private final CircleImageView userAvatar;
 
+
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
             userAvatar = itemView.findViewById(R.id.userAvatar);
+
         }
     }
 }

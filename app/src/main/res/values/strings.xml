@@ -22,6 +22,7 @@
     <string name="navigation_drawer_close">Zamknij menu</string>
 
     <!--Post creating-->
+    <string name="start">Start</string>
     <string name="menu">Menu</string>
     <string name="mainMenu">Menu główne</string>
     <string name="submitPost">Utwórz post</string>
@@ -29,7 +30,7 @@
     <string name="hour_format">%1$02d:%2$02d</string>
     <string name="signMeIn">Chcę dołączyć!</string>
     <string name="nickname">Nazwa użytkownika</string>
-    <string name="postsAddedByYou">Twoje posty</string>
+    <string name="postsAddedByYou">Ulubione</string>
     <string name="postsSavedByYou">Zapisane posty</string>
     <string name="createPostButtonLogo">+</string>
     <string name="choose_city_string_from_spinner">Wybierz miasto</string>
@@ -42,10 +43,9 @@
     <string name="saveProvidedValues">Zapisz dane</string>
     <string name="noGenderChosenError">Wybierz płeć</string>
     <string name="setUpProfileFirstTime">Ustaw profil w 3 krokach</string>
-    <string name="chat">Chat</string>
+    <string name="chat">Czat</string>
     <string name="informationAboutProvidedData">Podane informacje są widoczne dla wszystkich!</string>
-    <string name="addPhoto">Dodaj zdjęcie</string>
-    <string name="loggedAsNickname">Zalogowano jako</string>
+    <string name="addPhoto">Dodaj avatar</string>
     <string name="nicknameIsEmpty">Nie ustawiono nicku</string>
     <string name="provideName">Imię:</string>
     <string name="provideGender">Płeć:</string>
@@ -65,7 +65,7 @@
     <string name="resetFilters">Wyczyść filtry</string>
     <string name="filters">Filtry</string>
     <string name="noPostCreated">Nie stworzyłeś żadnych postów</string>
-    <string name="noPostSaved">Nie zapisałeś żadnych postów</string>
+    <string name="noPostSaved">Jeszcze nigdzie się nie zapisałeś</string>
     <string name="continueAsGuest">Kontynuuj jako gość</string>
     <string name="signOutFromThePost">Wypisz się</string>
     <string name="postCreating">Tworzenie postu</string>
@@ -98,7 +98,7 @@
     <string name="whatToWriteAsOpinion">Napisz co myślisz o aplikacji,\njakie funkcję byłyby mile widziane,\njaki błąd napotkałeś</string>
     <string name="send">Wyślij</string>
     <string name="sendAnEmail">Lub napisz na e-mail</string>
-    <string name="myEmail">noisevisionproductions@gmail.com</string>
+    <string name="myEmail">support@playmeet.eu</string>
     <string name="copyEmail">Kopiuj e-mail</string>
     <string name="profile">Twój Profil</string>
     <string name="aboutApp">O aplikacji</string>
@@ -116,5 +116,21 @@
     <string name="limitOfPosts">Limit stworzonych postów jednocześnie: 3</string>
     <string name="reasonForDelete">Powód usunięcia konta (opcjonalnie)</string>
     <string name="you">Ty</string>
+    <string name="yourName">Twoje imię</string>
+    <string name="tellAboutYourself">Napisz coś o sobie</string>
+    <string name="createNewPostButton">Stwórz nowy post</string>
+    <string name="allPostsDescription">Lista postów stworzonych przez użytkowników</string>
+    <string name="sendMessage">Wyślij wiadomość</string>
+    <string name="noMessages">Brak wiadomości</string>
+    <string name="noNickname">Brak nicku</string>
+    <string name="nicknameChange">Zmiana nicku</string>
+    <string name="provideEmail">Wprowadź e-mail</string>
+    <string name="postCreatingInfo">Informacje o tworzeniu postów</string>
+    <string name="chatMessages">Wiadomości czatu</string>
+    <string name="provideCityHint">Wprowadź nazwę miasta</string>
+    <string name="add">Dodaj</string>
+    <string name="yourAccount">Twoje konto</string>
+    <string name="logoutAccount">Wyloguj się</string>
+    <string name="emptyField">Pusto</string>
 
 </resources>

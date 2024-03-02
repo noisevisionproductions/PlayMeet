@@ -2,21 +2,38 @@
 <resources>
     <color name="text">#e9e8f0</color>
     <color name="background">#1b171f</color>
+    <color name="background_lighter">#2c2830</color> <!-- 10% jaśniejszy -->
+    <color name="background_lightest">#3d3941</color> <!-- 20% jaśniejszy -->
+    <color name="background_darker">#100d15</color> <!-- 10% ciemniejszy -->
+    <color name="background_darkest">#05030b</color> <!-- 20% ciemniejszy -->
+
     <color name="primary">#8097f0</color>
     <color name="accent">#7ddcf0</color>
 
     <color name="text60">#99e9e8f0</color>
 
-    <color name="secondary75">#bf7fb9f0</color>
-    <color name="secondary25">#407fb9f0</color>
-    <color name="secondary20">#337fb9f0</color>
-    <color name="secondary10">#1a7fb9f0</color>
     <color name="secondary05">#0d7fb9f0</color>
+    <color name="secondary10">#1a7fb9f0</color>
+    <color name="secondary15">#267fb9f0</color>
+    <color name="secondary20">#337fb9f0</color>
+    <color name="secondary25">#407fb9f0</color>
+    <color name="secondary30">#4c7fb9f0</color>
+    <color name="secondary35">#597fb9f0</color>
+    <color name="secondary40">#667fb9f0</color>
+    <color name="secondary45">#727fb9f0</color>
+    <color name="secondary50">#7f7fb9f0</color>
+    <color name="secondary55">#8c7fb9f0</color>
+    <color name="secondary60">#987fb9f0</color>
+    <color name="secondary65">#a57fb9f0</color>
+    <color name="secondary70">#b27fb9f0</color>
+    <color name="secondary75">#bf7fb9f0</color>
+
 
     <color name="accent90">#e67ddcf0</color>
 
     <color name="textHint">#958E8E</color>
 
     <color name="error">#81302C</color>
+    <color name="errorBlank">#CC706B</color>
 
 </resources>

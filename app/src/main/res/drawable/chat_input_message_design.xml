@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <padding
+                android:bottom="2dp"
+                android:left="1dp"
+                android:right="1dp"
+                android:top="1dp" />
+            <solid android:color="#50000000" /> <!-- Cień -->
+            <corners android:radius="30dp" />
+        </shape>
+    </item>
+    <item
+        android:bottom="2dp"
+        android:right="1dp"
+        android:left="1dp">
+        <shape>
+            <solid android:color="@android:color/white" /> <!-- Kolor tła pola tekstowego -->
+            <corners android:radius="30dp" />
+        </shape>
+    </item>
+</layer-list>

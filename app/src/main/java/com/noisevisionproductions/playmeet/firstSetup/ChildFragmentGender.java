@@ -19,13 +19,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseError;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
+import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.utilities.AESDataEncryption;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -75,12 +75,13 @@ public class ChildFragmentGender extends Fragment {
     public void saveUserData() throws Exception {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        AESDataEncryption encryption = new AESDataEncryption(getContext());
 
         // dodaje zebrane argumenty do HashMap, aby wszystkie były jako jeden obiekt ułatwiający zapisanie w bazie danych
         HashMap<String, Object> userUpdate = new HashMap<>();
         userUpdate.put("nickname", getArgument(ARG_NICKNAME));
-        userUpdate.put("location", AESDataEncryption.encrypt(Objects.requireNonNull(getArgument(ARG_CITY))));
-        userUpdate.put("gender", AESDataEncryption.encrypt(gender));
+        userUpdate.put("location", encryption.encrypt(Objects.requireNonNull(getArgument(ARG_CITY))));
+        userUpdate.put("gender", encryption.encrypt(gender));
 
         // tworzę obiekt, który pozwoli na ustawienie różnych informacji o użytkowniku, w moim wypadku jest to nickname
         UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
@@ -108,8 +109,8 @@ public class ChildFragmentGender extends Fragment {
             ((DialogFragment) parentFragment).dismiss();
         }
         // zmieniam wygląd górnego paska
-        if (getActivity() instanceof MainMenuPosts) {
-            ((MainMenuPosts) getActivity()).onUserInfoUpdated();
+        if (getActivity() instanceof ActivityMainMenu) {
+            ((ActivityMainMenu) getActivity()).onUserInfoUpdated();
         }
         ToastManager.showToast(requireContext(), "Dane zostały zapisane");
     }

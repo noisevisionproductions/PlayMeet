@@ -13,6 +13,7 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="background">@color/background</item>
         <item name="windowActionBar">true</item>
+        <item name="colorPrimary">@android:color/transparent</item>
     </style>
 
     <style name="AppTheme.NoBackground" parent="AppTheme">
@@ -43,6 +44,10 @@
 
     <style name="MyAutoCompleteTextViewStyle" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="background">@drawable/my_autocomplete_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">textCapSentences</item>
+        <item name="android:minHeight">60dp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="MyButtonStyleOnWhite" parent="Widget.AppCompat.Button">
@@ -64,7 +69,19 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:typeface">serif</item>
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="MainMenuButtonsStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_style_main_menu</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:minHeight">60dp</item>
     </style>
 
     <style name="MyAppCompatTextViewStyle" parent="Widget.AppCompat.TextView">
@@ -89,5 +106,7 @@
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
+
+
 </resources>
 

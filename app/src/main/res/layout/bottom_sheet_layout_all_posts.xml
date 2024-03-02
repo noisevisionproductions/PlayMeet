@@ -6,6 +6,14 @@
     android:background="@color/background"
     android:orientation="vertical">
 
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/line_for_bottom_sheet" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -30,12 +38,14 @@
                     android:id="@+id/aboutGameText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:drawableEnd="@drawable/menu_down"
                     android:focusable="true"
                     android:gravity="center"
+                    android:minHeight="50dp"
+                    android:padding="20dp"
                     android:text="@string/moreInfoAboutGame"
                     android:textColor="@color/accent"
                     android:textSize="20sp" />
@@ -59,12 +69,14 @@
                     android:id="@+id/aboutUserText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:drawableEnd="@drawable/menu_down"
                     android:focusable="true"
                     android:gravity="center"
+                    android:minHeight="50dp"
+                    android:padding="20dp"
                     android:text="@string/moreInfoAboutUser"
                     android:textColor="@color/accent"
                     android:textSize="20sp" />
@@ -89,12 +101,14 @@
                     android:id="@+id/signedInUsersText"
                     style="@style/MyAppCompatTextViewStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
                     android:clickable="true"
                     android:drawableEnd="@drawable/menu_down"
                     android:focusable="true"
                     android:gravity="center"
+                    android:minHeight="50dp"
+                    android:padding="20dp"
                     android:text="@string/signedInUsersLong"
                     android:textColor="@color/accent"
                     android:textSize="20sp" />
@@ -109,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/noUsersSignedUpInfo"
-                android:textColor="@color/error"
+                android:textColor="@color/errorBlank"
                 android:textSize="20sp"
                 android:visibility="gone" />
 
@@ -151,7 +165,7 @@
             android:text="@string/signMeIn" />
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/chatButton"
+            android:id="@+id/chatButtonSavedPosts"
             style="@style/MyButtonStyle"
             android:layout_width="0dp"
             android:layout_height="match_parent"

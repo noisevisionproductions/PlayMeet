@@ -18,9 +18,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.ListOfChatRoomsAdapter;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.R;
 
 public class ChatRoomList extends Fragment {
     private ListOfChatRoomsAdapter listOfChatRoomsAdapter;
@@ -28,7 +28,7 @@ public class ChatRoomList extends Fragment {
     private AppCompatTextView noChatRoomsFound;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_list_of_chatrooms, container, false);
+        View view = inflater.inflate(R.layout.fragment_list_of_chatrooms, container, false);
         loadMorePostsIndicator = view.findViewById(R.id.loadMorePostsIndicator);
         loadMorePostsIndicator.setVisibility(View.VISIBLE);
         noChatRoomsFound = view.findViewById(R.id.noChatRoomsFound);

@@ -7,13 +7,15 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.UserModelDecryptor;
 
@@ -23,6 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUsers.ViewHolder> {
     private final List<UserModel> signedUpUserFields;
+    private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
     private final Context context;
 
     public AdapterSignedUpUsers(List<UserModel> signedUpUserFields, Context context) {
@@ -42,21 +45,25 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         UserModel userModel = signedUpUserFields.get(position);
         getUserAvatar(userModel.getUserId(), holder);
         holder.nicknameText.setText(userModel.getNickname());
+        holder.progressBarLayout.setVisibility(View.VISIBLE);
+        holder.signedUsersLayout.setVisibility(View.GONE);
         AsyncTask.execute(() -> {
             try {
-                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(userModel);
+                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(context, userModel);
                 // Aktualizuj interfejs użytkownika w wątku UI
-                new Handler(Looper.getMainLooper()).post(() -> {
+                mainThreadHandler.post(() -> {
+                    holder.progressBarLayout.setVisibility(View.GONE);
+                    holder.signedUsersLayout.setVisibility(View.VISIBLE);
                     holder.cityText.setText(decryptedUserModel.getLocation());
                     holder.genderText.setText(decryptedUserModel.getGender());
                 });
-
             } catch (Exception e) {
-                UserModelDecryptor.getDercyptionError("signed users adapter error " + e.getMessage());
+                mainThreadHandler.post(() -> {
+                    holder.progressBarLayout.setVisibility(View.GONE);
+                    UserModelDecryptor.getDercyptionError("signed users adapter error " + e.getMessage());
+                });
             }
         });
-        holder.cityText.setText(userModel.getLocation());
-        holder.genderText.setText(userModel.getGender());
     }
 
     @Override
@@ -72,6 +79,8 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
     static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
         private final AppCompatTextView nicknameText, cityText, genderText;
+        private final ProgressBar progressBarLayout;
+        private final LinearLayoutCompat signedUsersLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -79,6 +88,8 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
             nicknameText = itemView.findViewById(R.id.nicknameText);
             cityText = itemView.findViewById(R.id.cityText);
             genderText = itemView.findViewById(R.id.genderText);
+            progressBarLayout = itemView.findViewById(R.id.progressBarLayout);
+            signedUsersLayout = itemView.findViewById(R.id.signedUsersLayout);
         }
     }
 }

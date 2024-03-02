@@ -1,58 +1,81 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="150dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:minWidth="150dp"
     android:orientation="vertical">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/userAvatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:background="@drawable/border_gray"
-        android:padding="2dp"
-        android:src="@drawable/sample_avatar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <include layout="@layout/progress_bar_layout" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/nicknameText"
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/signedUsersLayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:hint="@string/nickname"
-        android:padding="5dp"
-        android:textColor="@color/text"
-        android:textColorHint="@color/textHint"
-        android:textSize="12sp"
-        android:typeface="serif" />
+        android:minWidth="150dp"
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/genderText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/userDidNotProvided"
-        android:padding="5dp"
-        android:textColor="@color/text"
-        android:textColorHint="@color/textHint"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:typeface="serif" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userAvatar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="5dp"
+            android:background="@drawable/border_gray"
+            android:padding="2dp"
+            android:src="@drawable/sample_avatar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/cityText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:hint="@string/userDidNotProvided"
-        android:padding="5dp"
-        android:textColor="@color/text"
-        android:textColorHint="@color/textHint"
-        android:textSize="17sp"
-        android:textStyle="bold"
-        android:typeface="serif" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/nicknameText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:hint="@string/nickname"
+            android:padding="5dp"
+            android:textColor="@color/text"
+            android:textColorHint="@color/textHint"
+            android:textSize="12sp"
+            android:typeface="serif" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/genderText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/userDidNotProvided"
+            android:padding="5dp"
+            android:textColor="@color/text"
+            android:textColorHint="@color/textHint"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cityText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/userDidNotProvided"
+            android:padding="5dp"
+            android:textColor="@color/text"
+            android:textColorHint="@color/textHint"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/chatButtonSignedUsers"
+            style="@style/MyButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/button_style"
+            android:text="@string/openChat"
+            android:visibility="invisible" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>

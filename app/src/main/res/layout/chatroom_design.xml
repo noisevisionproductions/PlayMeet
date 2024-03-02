@@ -3,6 +3,8 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="10dp"
+    android:background="@drawable/border_chat"
+    android:foreground="?attr/selectableItemBackground"
     android:orientation="horizontal"
     android:paddingStart="16dp"
     android:paddingTop="8dp"
@@ -27,7 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:autoSizeTextType="uniform"
+            android:hint="@string/noNickname"
             android:textColor="@color/text"
+            android:textColorHint="@color/textHint"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -36,6 +41,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:autoSizeTextType="uniform"
+            android:hint="@string/noMessages"
             android:textColor="@color/text"
             android:textColorHint="@color/textHint"
             android:textSize="16sp" />
@@ -46,4 +53,15 @@
         android:id="@+id/timestampTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/statusIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|end"
+        android:layout_marginEnd="5dp"
+        android:minWidth="10dp"
+        android:minHeight="10dp"
+        android:src="@drawable/status_icon"
+        android:visibility="gone" />
 </androidx.appcompat.widget.LinearLayoutCompat>

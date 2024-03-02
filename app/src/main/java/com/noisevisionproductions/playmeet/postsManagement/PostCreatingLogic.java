@@ -4,15 +4,22 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -21,67 +28,63 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
-import com.noisevisionproductions.playmeet.design.SidePanelBaseActivity;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
+import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.utilities.DateChoosingLogic;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class PostCreatingLogic extends SidePanelBaseActivity {
+public class PostCreatingLogic extends Fragment {
+    private View view;
     private final PostCreating postCreating = new PostCreating();
-    private FirebaseHelper firebaseHelper;
-    private AppCompatSpinner sportSpinner, citySpinner, skillSpinner;
+    private final FirebaseHelper firebaseHelper = new FirebaseHelper();
+    private AppCompatAutoCompleteTextView cityTextView;
+    private AppCompatSpinner sportSpinner, skillSpinner;
     private DateChoosingLogic dateChoosingLogic;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_post_creating);
-
-        firebaseHelper = new FirebaseHelper();
-        dateChoosingLogic = new DateChoosingLogic(this, postCreating);
-
-        setupDrawerLayout();
-        setupNavigationView();
-
-        AppCompatButton button = findViewById(R.id.backToMainMenu);
-        ProjectUtils.backToMainMenuButton(button, this);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_post_creating, container, false);
 
         setSportType();
         setCityName();
         setSkillLevel();
         setDate();
         setHour();
-        checkIfPostCanBeCreated();
+        checkIfPostCanBeCreated(view);
+        setButtons();
 
-        LinearLayoutCompat linearLayout = findViewById(R.id.linearLayout);
-        linearLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(this));
+        return view;
     }
 
-    private void checkIfPostCanBeCreated() {
-        AppCompatButton createPost = findViewById(R.id.submitPost);
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        dateChoosingLogic = new DateChoosingLogic(requireContext(), postCreating);
+    }
 
-        createPost.setOnClickListener(view -> {
+    private void checkIfPostCanBeCreated(View view) {
+        AppCompatButton createPost = view.findViewById(R.id.submitPost);
+
+        createPost.setOnClickListener(v -> {
             if (isValidHowManyPeopleNeeded() && isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
                 if (firebaseHelper.getCurrentUser() != null) {
                     checkPostLimit(firebaseHelper.getCurrentUser().getUid(), canCreatePost -> {
                         if (canCreatePost) {
                             createNewPost();
                         } else {
-                            ToastManager.showToast(PostCreatingLogic.this, "Osiągnięto limit tworzenia postów");
+                            ToastManager.showToast(requireContext(), "Osiągnięto limit tworzenia postów");
                         }
                     });
                 } else {
-                    ToastManager.showToast(PostCreatingLogic.this, "Użytkownik nie autoryzowany");
+                    ToastManager.showToast(requireContext(), "Użytkownik nie autoryzowany");
                 }
             } else {
                 handleInvalidSelection();
@@ -124,25 +127,24 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         postCreating.setPostId(postId);
 
         if (postId != null) {
-            postReference.child(postId).setValue(postCreating)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            ToastManager.showToast(PostCreatingLogic.this, "Post utworzony!");
+            postReference.child(postId).setValue(postCreating).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    ToastManager.showToast(requireContext(), "Post utworzony!");
 
-                            Intent intent = new Intent(PostCreatingLogic.this, MainMenuPosts.class);
-                            startActivity(intent);
-                        } else {
-                            Log.e("FirebaseHelper", "Creating post error ", task.getException());
-                        }
-                    });
+                    Intent intent = new Intent(requireContext(), ActivityMainMenu.class);
+                    startActivity(intent);
+                } else {
+                    Log.e("FirebaseHelper", "Creating post error ", task.getException());
+                }
+            });
         }
     }
 
     private void setSportType() {
         String[] items = getResources().getStringArray(R.array.arrays_sport_names);
-        MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
+        MySpinnerAdapter adapter = new MySpinnerAdapter(requireContext(), android.R.layout.simple_spinner_item, Arrays.asList(items));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        sportSpinner = findViewById(R.id.arrays_sport_names);
+        sportSpinner = view.findViewById(R.id.arrays_sport_names);
         sportSpinner.setAdapter(adapter);
 
         sportSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -161,29 +163,17 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     private void setCityName() {
-        citySpinner = findViewById(R.id.cities_in_poland);
+        cityTextView = view.findViewById(R.id.cities_in_poland);
 
-        SpinnerManager.setupCitySpinner(this, citySpinner, CityXmlParser.parseCityNames(this), new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(@NonNull AdapterView<?> parent, View view, int position, long id) {
-                String selectedCity = (String) parent.getItemAtPosition(position);
-                if (position > 0) {
-                    postCreating.setCityName(selectedCity);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, CityXmlParser.parseCityNames(requireContext()));
+        cityTextView.setAdapter(adapter);
     }
 
     private void setSkillLevel() {
         String[] items = getResources().getStringArray(R.array.arrays_skill_level);
-        MySpinnerAdapter adapter = new MySpinnerAdapter(this, android.R.layout.simple_spinner_item, Arrays.asList(items));
+        MySpinnerAdapter adapter = new MySpinnerAdapter(requireContext(), android.R.layout.simple_spinner_item, Arrays.asList(items));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        skillSpinner = findViewById(R.id.arrays_skill_level);
+        skillSpinner = view.findViewById(R.id.arrays_skill_level);
         skillSpinner.setAdapter(adapter);
         skillSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -205,7 +195,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     private boolean isValidHowManyPeopleNeeded() {
-        TextInputEditText peopleNeededEditText = findViewById(R.id.howManyPeopleNeeded);
+        TextInputEditText peopleNeededEditText = view.findViewById(R.id.howManyPeopleNeeded);
         String typedInfo = Objects.requireNonNull(peopleNeededEditText.getText()).toString();
 
         if (!typedInfo.isEmpty()) {
@@ -224,7 +214,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     private void setHowManyPeopleNeeded() {
-        TextInputEditText peopleNeededEditText = findViewById(R.id.howManyPeopleNeeded);
+        TextInputEditText peopleNeededEditText = view.findViewById(R.id.howManyPeopleNeeded);
         String typedInfo = Objects.requireNonNull(peopleNeededEditText.getText()).toString();
         if (!typedInfo.isEmpty()) {
             int numberOfPeople = Integer.parseInt(typedInfo);
@@ -235,7 +225,7 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     private void setAdditionalInfo() {
-        TextInputEditText addInfo = findViewById(R.id.addInfo);
+        TextInputEditText addInfo = view.findViewById(R.id.addInfo);
 
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
         if (!typedInfo.isEmpty()) {
@@ -246,11 +236,11 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     private void setDate() {
-        TextInputEditText chooseDate = findViewById(R.id.chooseDate);
+        TextInputEditText chooseDate = view.findViewById(R.id.chooseDate);
         chooseDate.setFocusable(false);
         chooseDate.setOnClickListener(v -> dateChoosingLogic.pickDate(chooseDate));
 
-        AppCompatCheckBox dateNegotiable = findViewById(R.id.dateNegotiable);
+        AppCompatCheckBox dateNegotiable = view.findViewById(R.id.dateNegotiable);
         dateNegotiable.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 dateChoosingLogic.noDateGiven();
@@ -264,11 +254,11 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     private void setHour() {
-        TextInputEditText chooseHour = findViewById(R.id.chooseHour);
+        TextInputEditText chooseHour = view.findViewById(R.id.chooseHour);
         chooseHour.setFocusable(false);
         chooseHour.setOnClickListener(v -> dateChoosingLogic.pickHour(chooseHour));
 
-        AppCompatCheckBox hourNegotiable = findViewById(R.id.hourNegotiable);
+        AppCompatCheckBox hourNegotiable = view.findViewById(R.id.hourNegotiable);
         hourNegotiable.setOnCheckedChangeListener(((buttonView, isChecked) -> {
             if (isChecked) {
                 dateChoosingLogic.noHourGiven();
@@ -287,8 +277,10 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
     }
 
     private boolean isValidCitySelection() {
-        return !citySpinner.getSelectedItem().equals("Wybierz miasto");
+        String city = cityTextView.getText().toString();
+        return !city.isEmpty() && ProjectUtils.isCityChosenFromTheList(city, requireContext());
     }
+
 
     private boolean isValidSkillSelection() {
         return !skillSpinner.getSelectedItem().equals("Wybierz poziom");
@@ -301,9 +293,9 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
             clearSpinnerError(sportSpinner);
         }
         if (!isValidCitySelection()) {
-            setSpinnerError(citySpinner, "Wybierz miasto");
+            cityTextView.setError("Wprowadź prawidłowe miasto lub wybierz z listy");
         } else {
-            clearSpinnerError(citySpinner);
+            cityTextView.setError(null);
         }
         if (!isValidSkillSelection()) {
             setSpinnerError(skillSpinner, "Wybierz poziom");
@@ -324,5 +316,13 @@ public class PostCreatingLogic extends SidePanelBaseActivity {
         if (selectedView instanceof TextView textView) {
             textView.setError(null);
         }
+    }
+
+    private void setButtons() {
+        AppCompatImageView infoIcon = view.findViewById(R.id.infoIcon);
+        ToastManager.createToolTip(getString(R.string.limitOfPosts), infoIcon);
+
+        LinearLayoutCompat linearLayout = view.findViewById(R.id.linearLayout);
+        linearLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(requireActivity()));
     }
 }

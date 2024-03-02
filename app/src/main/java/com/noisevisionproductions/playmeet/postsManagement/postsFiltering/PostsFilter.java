@@ -6,26 +6,30 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapterForFilterMenu;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.dataManagement.PostDiffCallback;
-import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.AdapterAllPosts;
-import com.noisevisionproductions.playmeet.R;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class PostsFilter {
@@ -34,7 +38,8 @@ public class PostsFilter {
     private final RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter;
     private final AppCompatButton filterButton, deleteFilters;
     private final AppCompatTextView noPostFound;
-    private Spinner spinnerSport, spinnerCity, spinnerDifficulty;
+    private AutoCompleteTextView cityTextView;
+    private Spinner spinnerSport, spinnerDifficulty;
     private EditText postIdText;
     @NonNull
     private final boolean[] checkedItems;
@@ -60,7 +65,7 @@ public class PostsFilter {
     }
 
     @NonNull
-    private LinearLayout createLayout(Activity activity, @NonNull Spinner spinnerSport, @NonNull Spinner spinnerCity, @NonNull Spinner spinnerDifficulty, EditText postIdText) {
+    private LinearLayout createLayout(Activity activity, @NonNull Spinner spinnerSport, @NonNull AutoCompleteTextView textViewCity, @NonNull Spinner spinnerDifficulty, EditText postIdText) {
         LinearLayout layout = new LinearLayout(activity);
         layout.setOrientation(LinearLayout.VERTICAL);
 
@@ -70,11 +75,11 @@ public class PostsFilter {
         lp.setMargins(50, 50, 50, 50);
 
         spinnerSport.setLayoutParams(lp);
-        spinnerCity.setLayoutParams(lp);
+        textViewCity.setLayoutParams(lp);
         spinnerDifficulty.setLayoutParams(lp);
 
         layout.addView(spinnerSport);
-        layout.addView(spinnerCity);
+        layout.addView(textViewCity);
         layout.addView(spinnerDifficulty);
         layout.addView(postIdText);
 
@@ -86,11 +91,11 @@ public class PostsFilter {
 
         AlertDialog.Builder builder = createDialogBuilder(activity);
         spinnerSport = createSportSpinner(activity);
-        spinnerCity = createCitySpinner(activity);
+        cityTextView = createCityTextView(activity);
         spinnerDifficulty = createDifficultySpinner(activity);
         postIdText = createTextFieldForPostID(activity);
 
-        LinearLayout layout = createLayout(activity, spinnerSport, spinnerCity, spinnerDifficulty, postIdText);
+        LinearLayout layout = createLayout(activity, spinnerSport, cityTextView, spinnerDifficulty, postIdText);
         builder.setView(layout);
 
         setDialogButtons(builder);
@@ -118,7 +123,7 @@ public class PostsFilter {
 
         // na starcie chowa wszystkie opcje filtrowania
         spinnerSport.setVisibility(View.GONE);
-        spinnerCity.setVisibility(View.GONE);
+        cityTextView.setVisibility(View.GONE);
         spinnerDifficulty.setVisibility(View.GONE);
 
         // ustawianie maksymalnej dlugości tekstu jako 6 do postId
@@ -142,7 +147,7 @@ public class PostsFilter {
             if (which == 0) {
                 spinnerSport.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             } else if (which == 1) {
-                spinnerCity.setVisibility(isChecked ? View.VISIBLE : View.GONE);
+                cityTextView.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             } else if (which == 2) {
                 spinnerDifficulty.setVisibility(isChecked ? View.VISIBLE : View.GONE);
             } else if (which == 3) {
@@ -156,7 +161,7 @@ public class PostsFilter {
 
             // pobiera wybrane / wprowadzone wartości
             String selectedSport = spinnerSport.getSelectedItem().toString();
-            String selectedCity = spinnerCity.getSelectedItem().toString();
+            String selectedCity = cityTextView.getText().toString();
             String selectedDifficulty = spinnerDifficulty.getSelectedItem().toString();
             String selectedPostId = postIdText.getText().toString();
 
@@ -189,6 +194,7 @@ public class PostsFilter {
     private EditText createTextFieldForPostID(Activity activity) {
         EditText text = new EditText(activity);
         text.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        text.setHeight(200);
         return text;
     }
 
@@ -213,17 +219,28 @@ public class PostsFilter {
     }
 
     @NonNull
-    private Spinner createCitySpinner(@NonNull Activity activity) {
-        Spinner spinner = new Spinner(activity);
-        List<String> cityNames = CityXmlParser.parseCityNames(activity);
-        Collections.sort(cityNames);
+    private AutoCompleteTextView createCityTextView(@NonNull Activity activity) {
+        AutoCompleteTextView textViewCity = new AutoCompleteTextView(activity);
+        textViewCity.setHint(activity.getString(R.string.provideCityHint));
+        textViewCity.setMinHeight(getMinHeightDPScale(activity));
+        textViewCity.setTextColor(activity.getColor(R.color.text));
+        textViewCity.setDropDownBackgroundResource(R.drawable.rounded_menu_background_for_spinner);
 
-        MySpinnerAdapterForFilterMenu adapter = new MySpinnerAdapterForFilterMenu(activity, android.R.layout.simple_spinner_item, cityNames);
+        List<String> cityList = new ArrayList<>(CityXmlParser.parseCityNames(activity.getApplicationContext()));
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity.getApplicationContext(), android.R.layout.simple_list_item_1, cityList) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                textView.setTextColor(activity.getColor(R.color.text));
+                return view;
+            }
+        };
+        textViewCity.setAdapter(adapter);
 
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
 
-        return spinner;
+        return textViewCity;
     }
 
     public interface PostFilter {
@@ -279,5 +296,11 @@ public class PostsFilter {
             filterButton.setSelected(false);
             noPostFound.setVisibility(View.GONE);
         });
+    }
+
+    private Integer getMinHeightDPScale(Activity activity) {
+        int minHeightInDp = 60;
+        float scale = activity.getResources().getDisplayMetrics().density;
+        return (int) (minHeightInDp * scale + 0.5f);
     }
 }

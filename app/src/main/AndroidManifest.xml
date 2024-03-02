@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
@@ -31,10 +30,6 @@
         </provider>
 
         <activity
-            android:name=".design.ActivityApplicationOptions"
-            android:exported="true"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".design.aboutApp.ActivityUELA"
             android:exported="true"
             android:theme="@style/AppTheme" />
@@ -47,28 +42,20 @@
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".design.aboutApp.AboutAppActivity"
+            android:name=".AppOptions"
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".chat.ChatActivity"
             android:exported="true"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".utilities.OpinionFromUser"
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".postsManagement.MainMenuPosts"
-            android:exported="true"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".userManagement.UserAccountLogic"
-            android:exported="true"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".postsManagement.PostCreatingLogic"
+            android:name=".ActivityMainMenu"
             android:exported="true"
             android:theme="@style/AppTheme" />
         <activity

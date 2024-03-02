@@ -9,6 +9,8 @@
         android:id="@+id/reportEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/reportText" />
+        android:hint="@string/reportText"
+        android:inputType="textCapSentences"
+        android:minHeight="60dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

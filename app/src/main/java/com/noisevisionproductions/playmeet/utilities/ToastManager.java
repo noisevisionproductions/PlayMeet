@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.adapters;
+package com.noisevisionproductions.playmeet.utilities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.content.ContextCompat;
 
 import com.noisevisionproductions.playmeet.R;
 
@@ -31,5 +31,10 @@ public class ToastManager {
         currentToast.setDuration(Toast.LENGTH_SHORT);
         currentToast.setView(layout);
         currentToast.show();
+    }
+
+    public static void createToolTip(String message, AppCompatImageView infoIcon) {
+        infoIcon.setTooltipText(message);
+        infoIcon.setOnClickListener(View::performLongClick);
     }
 }

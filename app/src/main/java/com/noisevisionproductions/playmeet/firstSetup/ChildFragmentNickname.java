@@ -3,7 +3,6 @@ package com.noisevisionproductions.playmeet.firstSetup;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,25 +18,21 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.utilities.NicknameValidation;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
-public class ChildFragmentNickname extends Fragment {
+public class ChildFragmentNickname extends Fragment implements NicknameValidation.NicknameValidationCallback {
     private AppCompatAutoCompleteTextView getNicknameInput;
     private TextInputLayout getNicknameInputLayout;
     private AppCompatButton setUserInfoButton, cancelButton;
     private AppCompatTextView stepNumber;
     private String nickname;
+    private View view;
 
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.dialog_fragment_nickname, container, false);
+        view = inflater.inflate(R.layout.dialog_fragment_nickname, container, false);
 
         setUpUIElements(view);
         hideKeyboard(view);
@@ -48,7 +43,7 @@ public class ChildFragmentNickname extends Fragment {
         return view;
     }
 
-    public void setUpUIElements(@NonNull View view) {
+    private void setUpUIElements(@NonNull View view) {
         getNicknameInput = view.findViewById(R.id.getNicknameInput);
         setUserInfoButton = view.findViewById(R.id.setUserInfoButtonFirstTime);
         getNicknameInputLayout = view.findViewById(R.id.getNicknameInputLayout);
@@ -56,7 +51,7 @@ public class ChildFragmentNickname extends Fragment {
         cancelButton = view.findViewById(R.id.cancelButton);
     }
 
-    public void hideKeyboard(@NonNull View view) {
+    private void hideKeyboard(@NonNull View view) {
         View.OnTouchListener onTouchListener = (v, event) -> {
 
             // kiedy użytkownik jest w trybie wprowadzania tekstu, to po kliknięciu w layout,
@@ -69,70 +64,20 @@ public class ChildFragmentNickname extends Fragment {
         view.setOnTouchListener(onTouchListener);
     }
 
-    public void handleSetNicknameButton() {
+    private void handleSetNicknameButton() {
         // podczas wprowadzania nicku, spacje zostają automatycznie usuwane
         deleteSpaces();
 
+        setUserInfoButton.setOnClickListener(v -> {
+            nickname = getNicknameInput.getText().toString().trim();
+
+            if (NicknameValidation.validateNickname(nickname, this)) {
+                NicknameValidation.isNicknameAvailable(nickname, this);
+            }
+        });
+
         // po kliknięciu w przycisk, który ustawia nick, to najpierw sprawdza walidację tego Nicku, czy spełnia warunki
-        setUserInfoButton.setOnClickListener(v -> isNicknameAvailable());
-    }
 
-    public void setNickname(@NonNull View view) {
-        onNicknameEntered(nickname, view);
-    }
-
-    public void isNicknameAvailable() {
-        if (validateNickname()) {
-            // jeżeli walidacja nicku przebiegła pomyślnie, to sprawdzam dostępność nicku w bazie danych
-            DatabaseReference nicknameReference = FirebaseDatabase.getInstance().getReference().child("UserModel");
-            // sprawdzam, czy istnieje w bazie obiekt w kolekcji UserModel, który ma wartość nickname, która porównuje ją z podanym nickiem
-            Query query = nicknameReference.orderByChild("nickname").equalTo(nickname);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        // odpowiednie informowanie użytkownika, czy nickname jest dostępny czy nie
-                        setAutoCompleteTextViewError("Nazwa użytkownika jest zajęta");
-                        //   getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), Color.BLUE));
-                    } else {
-                        //    getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.successColor));
-                        setNickname(requireView());
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Firebase RealmTime Database error", "Checking if nickName is available " + error.getMessage());
-                }
-            });
-        }
-    }
-
-    private boolean validateNickname() {
-        // minimalna oraz maksymalna ilość znaków dla nicku
-        int minLength = 3;
-        int maxLength = 30;
-        nickname = getNicknameInput.getText().toString().trim();
-
-        String regexPattern = "^[a-zA-Z0-9]+$";
-
-        if (nickname.isEmpty()) {
-            // walidacja pustego pola tekstowego
-            setAutoCompleteTextViewError("Pole nie może być puste");
-            // getNicknameInput.setTextColor(ContextCompat.getColor(requireContext(), R.color.errorColor));
-            return false;
-        } else if (nickname.length() < minLength || nickname.length() > maxLength) {
-            // walidacja długości nicku
-            setAutoCompleteTextViewError("Nazwa użytkownika powinna mieć od " + minLength + " do " + maxLength + " znaków");
-            return false;
-        } else if (!nickname.matches(regexPattern)) {
-            setAutoCompleteTextViewError("Nazwa użytkownika może zawierać tylko litery i cyfry");
-            return false;
-        } else {
-            setAutoCompleteTextViewError(null);
-            // jeżeli walidacja przebiegła pomyślnie, to usuwam bledy
-            return true;
-        }
     }
 
     public void deleteSpaces() {
@@ -159,12 +104,12 @@ public class ChildFragmentNickname extends Fragment {
         });
     }
 
-    public void setAutoCompleteTextViewError(String error) {
+    private void setAutoCompleteTextViewError(String error) {
         getNicknameInput.setError(error);
         getNicknameInput.requestFocus();
     }
 
-    public void onNicknameEntered(String nickname, @NonNull View view) {
+    private void onNicknameEntered(String nickname, @NonNull View view) {
         this.nickname = nickname;
         // pobieram id z FrameLayout z aktualnego layoutu
 
@@ -212,10 +157,30 @@ public class ChildFragmentNickname extends Fragment {
         view.startAnimation(animation);
     }
 
-    public void hideLayout() {
+    private void hideLayout() {
         getNicknameInput.setVisibility(View.GONE);
         setUserInfoButton.setVisibility(View.GONE);
         getNicknameInputLayout.setVisibility(View.GONE);
         stepNumber.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onNicknameValidationError(String error) {
+        setAutoCompleteTextViewError(error);
+
+    }
+
+    @Override
+    public void onNicknameValidationSuccess() {
+    }
+
+    @Override
+    public void onNicknameAvailable() {
+        onNicknameEntered(nickname, view);
+    }
+
+    @Override
+    public void onNicknameUnavailable(String error) {
+        setAutoCompleteTextViewError(error);
     }
 }

@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.userManagement.userFieldsManagement;
+package com.noisevisionproductions.playmeet.userManagement;
 
 import android.content.Context;
 import android.view.View;
@@ -7,9 +7,9 @@ import android.widget.AdapterView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
-import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class SpinnerUpdater {
     public static void updateSpinnerData(@NonNull AppCompatSpinner spinner, String selectedValue, @NonNull Context context) {
-        if (spinner.getId() == R.id.citySpinner) {
+        if (spinner.getId() == R.id.cityTextField) {
 
             List<String> cityNames = new ArrayList<>(CityXmlParser.parseCityNames(context));
 

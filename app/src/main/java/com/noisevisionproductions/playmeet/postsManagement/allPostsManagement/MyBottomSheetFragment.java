@@ -1,12 +1,10 @@
 package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
 
-import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -25,12 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 import com.noisevisionproductions.playmeet.utilities.UserModelDecryptor;
 
 import java.util.ArrayList;
@@ -83,7 +81,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private void setupView(@NonNull View view) {
         firebaseHelper = new FirebaseHelper();
         savePostButton = view.findViewById(R.id.savePostButton);
-        chatButton = view.findViewById(R.id.chatButton);
+        chatButton = view.findViewById(R.id.chatButtonSavedPosts);
 
         aboutGameText = view.findViewById(R.id.aboutGameText);
         aboutUserText = view.findViewById(R.id.aboutUserText);
@@ -145,15 +143,15 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                         userModel = snapshot.getValue(UserModel.class);
                         if (userModel != null) {
                             try {
-                                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(userModel);
+                                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(getContext(), userModel);
 
                                 if (getContext() == null) {
                                     ToastManager.showToast(getContext(), getString(R.string.error));
                                 } else {
                                     editableFieldsUserInfo = new EditableField[]{
-                                            new EditableField(getString(R.string.provideName), userModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                            new EditableField(getString(R.string.provideName), decryptedUserModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                                             new EditableField(getString(R.string.provideNick), userModel.getNickname(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                            new EditableField(getString(R.string.provideAge), userModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                                            new EditableField(getString(R.string.provideAge), decryptedUserModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                                             new EditableField(getString(R.string.provideCity), decryptedUserModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                                             new EditableField(getString(R.string.provideGender), decryptedUserModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                                             new EditableField(getString(R.string.provideAboutYou), decryptedUserModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),

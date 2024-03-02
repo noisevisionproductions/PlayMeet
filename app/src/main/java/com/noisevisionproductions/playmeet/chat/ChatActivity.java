@@ -3,8 +3,11 @@ package com.noisevisionproductions.playmeet.chat;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
@@ -25,10 +28,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.adapters.ChatMessageAdapter;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.adapters.ChatMessageAdapter;
 
 public class ChatActivity extends AppCompatActivity {
+    private RecyclerView recyclerView;
     private DatabaseReference messagesReference;
     private AppCompatEditText messageInputFromUser;
     private AppCompatImageButton sendMessageButton;
@@ -38,33 +42,33 @@ public class ChatActivity extends AppCompatActivity {
     private String currentRoomId;
     @Nullable
     private FirebaseUser currentUser;
-    private RecyclerView recyclerView;
     private boolean messageSent = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_and_history);
-        getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         currentRoomId = getIntent().getStringExtra("roomId");
+
+        View layoutMain = findViewById(R.id.layoutMain);
+        hideKeyboardOnLayoutClick(layoutMain);
+
         setRecyclerView();
         openChat();
 
         sendMessage();
+
+        hideKeyboardAfterSendingMsg();
     }
 
     private void setRecyclerView() {
         recyclerView = findViewById(R.id.recycler_view_chat);
         loadMorePostsIndicator = findViewById(R.id.loadMorePostsIndicator);
         loadMorePostsIndicator.setVisibility(View.VISIBLE);
+        messageInputFromUser = findViewById(R.id.messageInputFromUser);
 
         if (currentRoomId != null) {
             messagesReference = FirebaseDatabase.getInstance().getReference().child("ChatRooms").child(currentRoomId).child("messages");
@@ -88,6 +92,7 @@ public class ChatActivity extends AppCompatActivity {
 
             scrollToBottomOnMessageSent();
         }
+
     }
 
     private void sendMessage() {
@@ -191,9 +196,40 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    public void hideKeyboardOnLayoutClick(View view) {
+        // Ustawienie dotknięcia dla widoku niemającego pola tekstowego
+        if (!(view instanceof EditText)) {
+            view.setOnTouchListener((v, event) -> {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        // Kod do wykonania podczas naciśnięcia
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        hideKeyboardAfterSendingMsg();
+                        v.performClick();  // Wywołanie performClick po zwolnieniu
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            });
+        }
+
+        // Jeśli widok jest kontenerem, iterujemy przez jego dzieci i wykonujemy tę samą operację
+        if (view instanceof ViewGroup) {
+            for (int i = 0; i < ((ViewGroup) view).getChildCount(); i++) {
+                View innerView = ((ViewGroup) view).getChildAt(i);
+                hideKeyboardOnLayoutClick(innerView);
+            }
+        }
+    }
+
     private void hideKeyboardAfterSendingMsg() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(messageInputFromUser.getWindowToken(), 0);
-        messageInputFromUser.setText("");
+        InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        View currentFocusedView = getCurrentFocus();
+        if (currentFocusedView != null) {
+            currentFocusedView.clearFocus();
+            inputManager.hideSoftInputFromWindow(currentFocusedView.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 }

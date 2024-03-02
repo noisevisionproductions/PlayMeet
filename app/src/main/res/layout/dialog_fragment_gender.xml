@@ -26,8 +26,9 @@
             android:id="@+id/genderSpinner"
             style="@style/MySpinnerStyleForDefaultInput"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="10dp" />
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            android:minHeight="60dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

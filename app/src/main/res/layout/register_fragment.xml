@@ -36,17 +36,25 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-            android:id="@+id/emailInput"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:hint="@string/Email"
-            android:imeOptions="actionNext"
-            android:inputType="textEmailAddress"
-            android:textColor="@color/accent"
-            android:textSize="20sp"
-            tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+            android:contentDescription="@string/Email">
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/emailInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:hint="@string/Email"
+                android:imeOptions="actionNext"
+                android:inputType="textEmailAddress"
+                android:paddingStart="0dp"
+                android:paddingEnd="40dp"
+                android:textColor="@color/accent"
+                android:textSize="20sp"
+                tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             style="@style/MyAppCompatTextViewStyle"
@@ -58,7 +66,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:passwordToggleEnabled="true">
+            android:contentDescription="@string/Password"
+            app:endIconMode="password_toggle"
+            app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/userPasswordInput"
@@ -70,6 +80,8 @@
                 android:inputType="textPassword"
                 android:maxEms="32"
                 android:minEms="6"
+                android:paddingStart="0dp"
+                android:paddingEnd="40dp"
                 android:textColor="@color/accent"
                 android:textSize="20sp"
                 tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
@@ -86,7 +98,9 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:passwordToggleEnabled="true">
+            android:contentDescription="@string/hasloponownie"
+            app:endIconMode="password_toggle"
+            app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/userPasswordSecondInput"
@@ -98,6 +112,8 @@
                 android:inputType="textPassword"
                 android:maxEms="32"
                 android:minEms="3"
+                android:paddingStart="0dp"
+                android:paddingEnd="40dp"
                 android:textColor="@color/accent"
                 android:textSize="20sp"
                 app:passwordToggleEnabled="true"

@@ -1,35 +1,33 @@
 package com.noisevisionproductions.playmeet.firstSetup;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ChildFragmentCity extends Fragment {
-    private AppCompatButton setCity, cancelButton;
-    private AppCompatSpinner citySpinner;
+    private AppCompatButton setCityButton, cancelButton;
+    private AppCompatAutoCompleteTextView cityTextView;
     private AppCompatTextView stepNumber;
-    private String city;
-    private boolean citySelected = false;
 
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -43,42 +41,37 @@ public class ChildFragmentCity extends Fragment {
         return view;
     }
 
-    public void setUpUIElements(@NonNull View view) {
-        setCity = view.findViewById(R.id.setCity);
-        citySpinner = view.findViewById(R.id.citySpinner);
+    private void setUpUIElements(@NonNull View view) {
+        setCityButton = view.findViewById(R.id.setCity);
+        cityTextView = view.findViewById(R.id.cityTextField);
         stepNumber = view.findViewById(R.id.stepNumber);
         cancelButton = view.findViewById(R.id.cancelButton);
     }
 
-    public void changeFragmentToGender(@NonNull View view) {
-        setCity.setOnClickListener(v -> {
-            if (citySelected) {
-                onCityChosen(city, view);
+    private void changeFragmentToGender(@NonNull View view) {
+        setCityButton.setOnClickListener(v -> {
+            String enteredCity = cityTextView.getText().toString();
+            if (enteredCity.isEmpty()) {
+                cityTextView.setError("Wprowadź miasto");
+                cityTextView.requestFocus();
+            } else if (ProjectUtils.isCityChosenFromTheList(enteredCity, requireContext())) {
+                onCityChosen(enteredCity, view);
             } else {
-                ToastManager.showToast(requireContext(), "Wybierz miasto");
+                cityTextView.setError("Wybierz miasto z listy");
+                cityTextView.requestFocus();
             }
         });
     }
 
-    public void chooseCity() {
+    private void chooseCity() {
         // używam specjalnie stworzonej klasy, która irytuje przez cały plik xml,
         // w którym znajdują się miasta i wybiera tylko te, które potrzebuje
-        SpinnerManager.setupCitySpinner(requireContext(), citySpinner, CityXmlParser.parseCityNames(requireContext()), new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(@NonNull AdapterView<?> parent, View view, int position, long id) {
-                // wybrane z listy miasto jest przekazywane do kolejnej metody
-                String selectedCity = (String) parent.getItemAtPosition(position);
-                setChosenCity(selectedCity);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+        List<String> cityList = new ArrayList<>(CityXmlParser.parseCityNames(requireContext()));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, cityList);
+        cityTextView.setAdapter(adapter);
     }
 
-    public void onCityChosen(String city, @NonNull View view) {
+    private void onCityChosen(String city, @NonNull View view) {
         Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.exit_to_left);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -130,14 +123,9 @@ public class ChildFragmentCity extends Fragment {
         return args != null ? args.getString("nickname") : null;
     }
 
-    public void setChosenCity(String city) {
-        this.city = city;
-        citySelected = !TextUtils.equals(city, getString(R.string.choose_city_string_from_spinner));
-    }
-
-    public void hideLayout() {
-        setCity.setVisibility(View.GONE);
-        citySpinner.setVisibility(View.GONE);
+    private void hideLayout() {
+        setCityButton.setVisibility(View.GONE);
+        cityTextView.setVisibility(View.GONE);
         stepNumber.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
     }

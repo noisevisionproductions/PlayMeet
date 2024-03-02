@@ -32,20 +32,20 @@
                 android:id="@+id/getNicknameInputLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/nickname">
+                android:layout_weight="1">
 
                 <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                     android:id="@+id/getNicknameInput"
                     style="@style/MyAutoCompleteTextViewStyle"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:hint="@string/nickname"
                     android:inputType="text"
                     android:maxLength="30"
+                    android:minHeight="60dp"
                     android:textSize="15sp" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

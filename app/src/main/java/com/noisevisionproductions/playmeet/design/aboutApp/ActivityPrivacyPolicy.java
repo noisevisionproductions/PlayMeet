@@ -6,18 +6,15 @@ import android.webkit.WebView;
 
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.noisevisionproductions.playmeet.design.SidePanelBaseActivity;
+import com.noisevisionproductions.playmeet.AppOptions;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.design.TopMenuLayout;
 
-public class ActivityPrivacyPolicy extends SidePanelBaseActivity {
+public class ActivityPrivacyPolicy extends TopMenuLayout {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privacy_policy);
-
-        // zaladowanie panelu bocznego
-        setupDrawerLayout();
-        setupNavigationView();
 
         AppCompatButton backToMainMenu = findViewById(R.id.backToMainMenu);
         backToMainMenu.setOnClickListener(v -> backToAppInfo());
@@ -31,7 +28,7 @@ public class ActivityPrivacyPolicy extends SidePanelBaseActivity {
     }
 
     private void backToAppInfo() {
-        Intent intent = new Intent(getApplicationContext(), AboutAppActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AppOptions.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
     }

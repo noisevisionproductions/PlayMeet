@@ -21,12 +21,20 @@
             android:textStyle="bold"
             android:typeface="serif" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/citySpinner"
-            style="@style/MySpinnerStyleForDefaultInput"
+        <!--nazwa miasta-->
+        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/cityTextField"
+            style="@style/MyAutoCompleteTextViewStyle"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_margin="10dp" />
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:hint="@string/provideCityHint"
+            android:imeOptions="actionDone"
+            android:inputType="textAutoComplete"
+            android:maxLength="50"
+            android:minHeight="60dp"
+            android:popupBackground="@drawable/rounded_menu_background_for_spinner"
+            android:textSize="15sp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

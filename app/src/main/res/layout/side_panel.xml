@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
     android:layout_width="match_parent"
-    android:layout_height="110dp"
+    android:layout_height="wrap_content"
     android:gravity="bottom"
+    android:minHeight="110dp"
     android:orientation="horizontal">
 
     <include layout="@layout/avatar_image_view" />

@@ -63,7 +63,7 @@ public class ChatMessageModel {
     }
 
     public String formatDate() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'\n'HH:mm");
         LocalDateTime timestampAsDateTime = Instant.ofEpochMilli(timestamp)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();

@@ -21,13 +21,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.noisevisionproductions.playmeet.ActivityMainMenu;
+import com.noisevisionproductions.playmeet.AppOptions;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.design.aboutApp.AboutAppActivity;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
-import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -50,7 +50,7 @@ public class RegisterFragment extends Fragment {
 
         // sprawdzam, czy użytkownik jest już zalogowany. Jeśli tak, to przekierowuję go do głównego menu aplikacji
         if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || (FirebaseAuthManager.isUserLoggedIn() && Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).isEmailVerified())) {
-            Intent intent = new Intent(getContext(), MainMenuPosts.class);
+            Intent intent = new Intent(getContext(), ActivityMainMenu.class);
             startActivity(intent);
         } else {
             // jeżeli nie, to pozwalam mu na rejestrację nowego konta
@@ -192,7 +192,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void loadDocuments() {
-        Intent intent = new Intent(getContext(), AboutAppActivity.class);
+        Intent intent = new Intent(getContext(), AppOptions.class);
         startActivity(intent);
     }
 }

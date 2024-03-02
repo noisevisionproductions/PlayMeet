@@ -27,9 +27,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
+import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.Objects;
 
@@ -74,7 +74,7 @@ public class GoogleSignInHelper {
                             saveUserIdInDatabase(userId);
 
                             ToastManager.showToast(fragment.requireActivity(), "Pomyślnie zalogowano");
-                            Intent intent = new Intent(fragment.requireActivity(), MainMenuPosts.class);
+                            Intent intent = new Intent(fragment.requireActivity(), ActivityMainMenu.class);
                             fragment.startActivity(intent);
                         }
                     } else {

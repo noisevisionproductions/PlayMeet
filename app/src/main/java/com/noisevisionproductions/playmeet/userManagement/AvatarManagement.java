@@ -25,18 +25,19 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
+import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -48,18 +49,22 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class AvatarManagement {
     private ActivityResultLauncher<Intent> chooseImageFromGallery;
     private ActivityResultLauncher<Uri> takePictureLauncher;
-    private final AppCompatActivity activity;
+    private final Fragment fragment;
     private final AppCompatButton uploadAvatarButton;
+    private CircleImageView circleImageView;
     @Nullable
     private Uri currentImageUri;
     private String currentUserId;
 
-    public AvatarManagement(AppCompatActivity activity, AppCompatButton uploadAvatarButton) {
-        this.activity = activity;
+    public AvatarManagement(Fragment fragment, AppCompatButton uploadAvatarButton, CircleImageView circleImageView) {
+        this.fragment = fragment;
         this.uploadAvatarButton = uploadAvatarButton;
+        this.circleImageView = circleImageView;
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         if (firebaseHelper.getCurrentUser() != null) {
             currentUserId = firebaseHelper.getCurrentUser().getUid();
@@ -74,7 +79,7 @@ public class AvatarManagement {
     public void setupListeners() {
         // ustawiam słuchaczy na przyciski do wyboru avatara
         // jeżeli użytkowik wybrał opcję wyboru zdjęcia z galerii, zapisuję go do bazy danych
-        chooseImageFromGallery = activity.registerForActivityResult(
+        chooseImageFromGallery = fragment.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
@@ -86,7 +91,7 @@ public class AvatarManagement {
                 }
         );
         // po wybraniu opcji zrobienia zdjęcia, zapisuję je w bazie danych
-        takePictureLauncher = activity.registerForActivityResult(
+        takePictureLauncher = fragment.registerForActivityResult(
                 new ActivityResultContracts.TakePicture(),
                 result -> {
                     if (result) {
@@ -101,11 +106,11 @@ public class AvatarManagement {
     }
 
     private void chooseImageSource() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(fragment.requireContext());
 
         // Niestandardowy layout dla elementów AlertDialog
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
-                activity,
+                fragment.requireContext(),
                 android.R.layout.simple_list_item_1,
                 new CharSequence[]{"Aparat", "Galeria"}
         ) {
@@ -120,7 +125,7 @@ public class AvatarManagement {
         };
 
         // niestandardowy widok dla tytułu alertu
-        TextView titleView = new TextView(activity);
+        TextView titleView = new TextView(fragment.requireContext());
         titleView.setText(R.string.chooseImageSource);
         titleView.setGravity(Gravity.CENTER);
         titleView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 22);
@@ -142,7 +147,7 @@ public class AvatarManagement {
     @SuppressLint("QueryPermissionsNeeded")
     private void takePicture() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+        if (takePictureIntent.resolveActivity(fragment.requireActivity().getPackageManager()) != null) {
             ExecutorService executor = Executors.newSingleThreadExecutor();
             Handler handler = new Handler(Looper.getMainLooper());
 
@@ -152,7 +157,7 @@ public class AvatarManagement {
                     handler.post(() -> {
                         try {
                             // Execute the remaining code on the main thread after file creation
-                            currentImageUri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", photoFile);
+                            currentImageUri = FileProvider.getUriForFile(fragment.requireContext(), fragment.requireContext().getApplicationContext().getPackageName() + ".provider", photoFile);
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentImageUri);
                             takePictureLauncher.launch(currentImageUri);
                         } catch (Exception e) {
@@ -174,7 +179,7 @@ public class AvatarManagement {
         // dodaje do nazwy pliku format, który jest datą i czasem w celu unikalnej nazwy
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = fragment.requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
@@ -183,7 +188,7 @@ public class AvatarManagement {
         try {
             // przygotowuję obraz, konwertując go na Bitmap, który będzie potem wysłany do bazy danych i sprawdzam, czy obraz wymaga odwrócenia, czy nie,
             // bo z jakiegoś powodu po wybraniu obrazu z galerii, czasami aplikacaj go odwraca.
-            InputStream inputStream = activity.getContentResolver().openInputStream(imageUri);
+            InputStream inputStream = fragment.requireContext().getContentResolver().openInputStream(imageUri);
             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
             bitmap = rotateImage(imageUri, bitmap);
             int width = 200;
@@ -211,7 +216,7 @@ public class AvatarManagement {
     @Nullable
     private Bitmap rotateImage(@NonNull Uri imageUri, @NonNull Bitmap bitmap) throws IOException {
         //String imagePath = getImagePathFromUri(imageUri);
-        InputStream inputStream = activity.getContentResolver().openInputStream(imageUri);
+        InputStream inputStream = fragment.requireContext().getContentResolver().openInputStream(imageUri);
 
         if (inputStream != null) {
             ExifInterface exifInterface = new ExifInterface(inputStream);
@@ -235,10 +240,10 @@ public class AvatarManagement {
 
             userReference.child("avatar").setValue(imageUrl)
                     .addOnSuccessListener(aVoid -> {
-                        Intent intent = activity.getIntent();
-                        activity.finish();
-                        activity.startActivity(intent);
-                        ToastManager.showToast(activity, "Avatar zapisany");
+                        Glide.with(fragment)
+                                .load(imageUrl)
+                                .into(circleImageView);
+                        ToastManager.showToast(fragment.requireContext(), "Avatar zapisany");
                     })
                     .addOnFailureListener(e -> {
                         getErrorToast(e);
@@ -248,6 +253,6 @@ public class AvatarManagement {
     }
 
     private void getErrorToast(@NonNull Exception e) {
-        ToastManager.showToast(activity, "Błąd!" + e.getMessage());
+        ToastManager.showToast(fragment.requireContext(), "Błąd!" + e.getMessage());
     }
 }

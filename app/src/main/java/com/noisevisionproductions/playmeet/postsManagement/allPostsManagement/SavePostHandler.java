@@ -14,12 +14,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.adapters.ToastManager;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
-import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
+import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 public class SavePostHandler {
     private final View view;
@@ -122,8 +122,13 @@ public class SavePostHandler {
                             currentData.setValue(postCreating);
 
                             if (postCreating.getPeopleSignedUp() >= postCreating.getHowManyPeopleNeeded()) {
-                                // Check if the post is full
-                                getNoSlotsInfo(view);
+                                // Check if the post is full-
+                                if (view != null) {
+                                    view.post(() -> {
+                                        // This code will now run on the UI thread
+                                        ToastManager.showToast(view.getContext(), "Zapisano!");
+                                    });
+                                }
                                 postCreating.setActivityFull(true);
                             }
                         } else {
@@ -174,9 +179,16 @@ public class SavePostHandler {
         }
     }
 
-    private void getNoSlotsInfo(@NonNull View view) {
-        ToastManager.showToast(view.getContext(), "Wygląda na to, że nie ma już miejsca");
+    private void getNoSlotsInfo(final View view) {
+        // Assuming 'view' is a reference to a View from your UI, which allows us to get a Context.
+        if (view != null) {
+            view.post(() -> {
+                // This code will now run on the UI thread
+                ToastManager.showToast(view.getContext(), "Wygląda na to, że nie ma już miejsca");
+            });
+        }
     }
+
 
     @NonNull
     private PostCreatingCopy createSavedPostCopy(@NonNull PostCreating originalPost) {
@@ -198,7 +210,7 @@ public class SavePostHandler {
         savedPostsReference.setValue(newSavedPost, (databaseError, databaseReference) -> {
             if (databaseError == null) {
                 ToastManager.showToast(view.getContext(), "Dołączono!");
-                Intent intent = new Intent(view.getContext(), MainMenuPosts.class);
+                Intent intent = new Intent(view.getContext(), ActivityMainMenu.class);
                 view.getContext().startActivity(intent);
             } else {
                 Log.e("Firebase Save Error", "Saving post error just before refreshing main menu " + databaseError.getMessage());

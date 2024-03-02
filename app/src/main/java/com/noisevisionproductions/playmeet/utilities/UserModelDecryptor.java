@@ -1,17 +1,19 @@
 package com.noisevisionproductions.playmeet.utilities;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 
 public class UserModelDecryptor {
-    public static UserModel decryptUserModel(UserModel encryptedUserModel) throws Exception {
+    public static UserModel decryptUserModel(Context context, UserModel encryptedUserModel) throws Exception {
         UserModel decryptedUserModel = new UserModel();
-        decryptedUserModel.setName(encryptedUserModel.getName() != null ? AESDataEncryption.decrypt(encryptedUserModel.getName()) : null);
-        decryptedUserModel.setAge(encryptedUserModel.getAge() != null ? AESDataEncryption.decrypt(encryptedUserModel.getAge()) : null);
-        decryptedUserModel.setLocation(encryptedUserModel.getLocation() != null ? AESDataEncryption.decrypt(encryptedUserModel.getLocation()) : null);
-        decryptedUserModel.setGender(encryptedUserModel.getGender() != null ? AESDataEncryption.decrypt(encryptedUserModel.getGender()) : null);
-        decryptedUserModel.setAboutMe(encryptedUserModel.getAboutMe() != null ? AESDataEncryption.decrypt(encryptedUserModel.getAboutMe()) : null);
+        AESDataEncryption encryption = new AESDataEncryption(context);
+        decryptedUserModel.setName(encryptedUserModel.getName() != null ? encryption.decrypt(encryptedUserModel.getName()) : null);
+        decryptedUserModel.setAge(encryptedUserModel.getAge() != null ? encryption.decrypt(encryptedUserModel.getAge()) : null);
+        decryptedUserModel.setLocation(encryptedUserModel.getLocation() != null ? encryption.decrypt(encryptedUserModel.getLocation()) : null);
+        decryptedUserModel.setGender(encryptedUserModel.getGender() != null ? encryption.decrypt(encryptedUserModel.getGender()) : null);
+        decryptedUserModel.setAboutMe(encryptedUserModel.getAboutMe() != null ? encryption.decrypt(encryptedUserModel.getAboutMe()) : null);
 
         return decryptedUserModel;
     }

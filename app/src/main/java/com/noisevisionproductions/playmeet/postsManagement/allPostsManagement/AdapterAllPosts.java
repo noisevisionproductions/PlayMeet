@@ -23,10 +23,10 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.utilities.CoolDownManager;
 import com.noisevisionproductions.playmeet.utilities.ReportPost;
 
@@ -143,7 +143,6 @@ public class AdapterAllPosts extends RecyclerView.Adapter<AdapterAllPosts.MyView
                 menu.show();
             });
         }
-
     }
 
     private void setPostAnimation(@NonNull MyViewHolder holder) {

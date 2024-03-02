@@ -3,31 +3,26 @@ package com.noisevisionproductions.playmeet.utilities;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.noisevisionproductions.playmeet.design.SidePanelBaseActivity;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.postsManagement.MainMenuPosts;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.design.TopMenuLayout;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 
 import java.nio.charset.StandardCharsets;
 
-public class OpinionFromUser extends SidePanelBaseActivity {
+public class OpinionFromUser extends TopMenuLayout {
     private FirebaseHelper firebaseHelper;
     private TextInputEditText getText;
     private AppCompatTextView myEmail;
@@ -38,23 +33,18 @@ public class OpinionFromUser extends SidePanelBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_an_opinion);
 
-        // zaladowanie panelu bocznego
-        setupDrawerLayout();
-        setupNavigationView();
-
         setUpUI();
     }
 
     private void setUpUI() {
-        View view = getWindow().getDecorView().getRootView();
         firebaseHelper = new FirebaseHelper();
         getText = findViewById(R.id.textWithOpinion);
         myEmail = findViewById(R.id.myEmail);
-        AppCompatImageButton copyButton = findViewById(R.id.copyButton);
+        AppCompatButton copyButton = findViewById(R.id.copyButton);
         copyButton.setOnClickListener(v -> copyTextOnClick(myEmail.getText().toString()));
 
         // ustawianie wysyłania opini za pomocą przycisku
-        setUpSendOpinionButton(view);
+        setUpSendOpinionButton();
 
         // ustawienie przycisku cofnięcia do menu głównego
         setUpBackToMainMenuButton();
@@ -63,35 +53,32 @@ public class OpinionFromUser extends SidePanelBaseActivity {
         mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(this));
     }
 
-    private void setUpSendOpinionButton(@NonNull View view) {
+    private void setUpSendOpinionButton() {
         CoolDownManager coolDownManager = new CoolDownManager(getApplicationContext());
         AppCompatButton sendOpinion = findViewById(R.id.sendOpinion);
         if (getText.getText() != null) {
-
-            textWithOpinion = getText.getText().toString();
-
             sendOpinion.setOnClickListener(click -> {
+                textWithOpinion = getText.getText().toString();
                 if (!textWithOpinion.isEmpty()) {
                     if (coolDownManager.canSendReport()) {
-                        submitOpinion(view);
+                        submitOpinion();
                     } else {
-                        Snackbar.make(view, "Zbyt częste zgłaszanie", Snackbar.LENGTH_SHORT)
-                                .setTextColor(Color.RED).show();
+                        ProjectUtils.createSnackBarOnTop(this, "Zbyt częste zgłaszanie", Color.RED);
                     }
                 } else {
-                    Snackbar.make(view, "Pole nie może być puste!", Snackbar.LENGTH_SHORT).show();
+                    ProjectUtils.createSnackBarOnTop(this, "Pole nie może być puste", Color.RED);
                 }
             });
         }
     }
 
-    private void submitOpinion(@NonNull View view) {
+    private void submitOpinion() {
         if (firebaseHelper.getCurrentUser() != null) {
-            submitOpinionToFirebase(textWithOpinion, view);
+            submitOpinionToFirebase(textWithOpinion);
         }
     }
 
-    private void submitOpinionToFirebase(@NonNull String textWithOpinion, @NonNull View view) {
+    private void submitOpinionToFirebase(@NonNull String textWithOpinion) {
         String opinionId = getRefractoredString();
         StorageReference opinionReference = FirebaseStorage.getInstance().getReference().child("UserOpinions").child(opinionId);
         byte[] data = textWithOpinion.getBytes(StandardCharsets.UTF_8);
@@ -99,7 +86,7 @@ public class OpinionFromUser extends SidePanelBaseActivity {
         UploadTask uploadTask = opinionReference.putBytes(data);
 
         uploadTask.addOnFailureListener(e -> {
-                    Snackbar.make(view, "Wystąpił błąd podczas wysyłania " + e, Snackbar.LENGTH_SHORT).show();
+                    ProjectUtils.createSnackBarOnTop(this, "Wystąpił błąd podczas wysyłania " + e, Color.RED);
                     Log.e("Firebase Database error", "Saving opinion to DB " + e.getMessage());
                 })
                 .addOnSuccessListener(taskSnapshot -> {
@@ -107,7 +94,7 @@ public class OpinionFromUser extends SidePanelBaseActivity {
                     clearOpinionTextField(getText);
 
                     // wiadomość o sukcesie wysłania
-                    showOpinionSentMessage(view);
+                    showOpinionSentMessage();
                 });
     }
 
@@ -128,16 +115,8 @@ public class OpinionFromUser extends SidePanelBaseActivity {
         getText.setText("");
     }
 
-    private void showOpinionSentMessage(@NonNull View view) {
-        Snackbar.make(view, "Opinia wysłana!", Snackbar.LENGTH_LONG)
-                .setAction("Menu Główne", v -> navigateToMainMenu(view))
-                .show();
-    }
-
-    private void navigateToMainMenu(@NonNull View view) {
-        Intent intent = new Intent(getApplicationContext(), MainMenuPosts.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        view.getContext().startActivity(intent);
+    private void showOpinionSentMessage() {
+        ProjectUtils.createSnackBarOnTop(this, "Opinia została wysłana!", Color.GREEN);
     }
 
     private void copyTextOnClick(String text) {
