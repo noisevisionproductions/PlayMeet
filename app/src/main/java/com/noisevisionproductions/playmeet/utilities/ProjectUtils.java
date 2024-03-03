@@ -59,6 +59,7 @@ public class ProjectUtils extends AppCompatActivity {
                 .setActionTextColor(Color.GREEN);
         snackBarLogin.setAction("Zaloguj się", v -> {
             Intent intent = new Intent(context, LoginAndRegisterActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             view.getContext().startActivity(intent);
         });
         snackBarLogin.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE).setDuration(700);

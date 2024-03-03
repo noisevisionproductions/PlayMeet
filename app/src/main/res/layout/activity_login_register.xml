@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/button_style"
+            android:minHeight="50dp"
             android:text="@string/kliknijabyzalogowac" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -35,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@drawable/button_style"
+            android:minHeight="50dp"
             android:text="@string/kliknijabyzarejestrowac" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </RelativeLayout>

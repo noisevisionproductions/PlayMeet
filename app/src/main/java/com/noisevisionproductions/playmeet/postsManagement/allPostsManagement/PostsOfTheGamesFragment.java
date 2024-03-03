@@ -289,15 +289,21 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     private void showExitDialog() {
-        new AlertDialog.Builder(getContext()).setTitle("Wyjście").setMessage("Wylogować, czy zamknąć aplikację?").setPositiveButton("Wyloguj się", (dialog, which) -> {
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-            if (currentUser != null) {
-                firebaseAuth.signOut();
-                ToastManager.showToast(requireContext(), "Pomyślnie wylogowano");
-                Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
-                startActivity(intent);
-            }
-        }).setNegativeButton("Wyjście", (dialog, which) -> requireActivity().finishAffinity()).setNeutralButton("Anuluj", null).show();
+        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+            new AlertDialog.Builder(getContext()).setTitle("Wyjście").setMessage("Wylogować, czy zamknąć aplikację?").setPositiveButton("Wyloguj się", (dialog, which) -> {
+                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                if (currentUser != null) {
+                    firebaseAuth.signOut();
+                    ToastManager.showToast(requireContext(), "Pomyślnie wylogowano");
+                    Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+            }).setNegativeButton("Wyjście", (dialog, which) -> requireActivity().finishAffinity()).setNeutralButton("Anuluj", null).show();
+        } else {
+            Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
+            startActivity(intent);
+        }
     }
 }

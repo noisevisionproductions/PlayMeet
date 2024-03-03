@@ -41,6 +41,7 @@ public class LoginFragment extends Fragment {
     private AppCompatButton loginButton;
     private SignInButton googleSignIn;
     private ActivityResultLauncher<Intent> launcher;
+    private GoogleSignInHelper googleSignInHelper;
 
     public LoginFragment() {
     }
@@ -50,7 +51,7 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
 
         // tworze instancje, aby wywolac metode, ktora pozwolic na zalogowanie sie za pomoca google
-        GoogleSignInHelper googleSignInHelper = new GoogleSignInHelper(this);
+        googleSignInHelper = new GoogleSignInHelper(this);
         launcher = googleSignInHelper.getActivityResultLauncher();
 
         getUIObjects(view);
@@ -82,7 +83,9 @@ public class LoginFragment extends Fragment {
             boolean emailVerified = currentUser.isEmailVerified();
             boolean loggedInWithGoogle = FirebaseAuthManager.isUserLoggedInUsingGoogle();
 
-            if (loggedInWithGoogle || emailVerified) {
+            if (emailVerified) {
+                navigateToMainMenu();
+            } else if (loggedInWithGoogle) {
                 navigateToMainMenu();
             }
         }

@@ -1,6 +1,7 @@
 package com.noisevisionproductions.playmeet.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
@@ -62,14 +68,28 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
 
     public void bind(@NonNull ChatMessageModel chatMessageModel, @NonNull ChatViewHolder holder) {
         // ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
-        if (chatMessageModel.getUserId().equals(currentUserId)) {
-            holder.usernameTextView.setText(context.getString(R.string.you));
-        } else {
-            holder.usernameTextView.setText(chatMessageModel.getNickname());
-        }
+        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("UserModel").child(chatMessageModel.getUserId());
+        userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Użytkownik istnieje, ustaw pseudonim na wartość z bazy danych
+                    holder.usernameTextView.setText(chatMessageModel.getNickname());
+                } else {
+                    // Użytkownik nie istnieje, ustaw pseudonim na "Profil usunięty"
+                    holder.usernameTextView.setText(context.getString(R.string.noNickname));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase Realtime Database error", "Error while checking user existence " + error.getMessage());
+            }
+        });
         holder.messageTextView.setText(chatMessageModel.getMessage());
         holder.timestampTextView.setText(chatMessageModel.formatDate());
     }
+
 
     private void setCurrentUserId() {
         firebaseHelper = new FirebaseHelper();
@@ -86,7 +106,7 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
         }
     }
 
-    static class ChatViewHolder extends RecyclerView.ViewHolder {
+    public static class ChatViewHolder extends RecyclerView.ViewHolder {
         private final AppCompatTextView usernameTextView, messageTextView, timestampTextView;
         private final CircleImageView userAvatar;
 

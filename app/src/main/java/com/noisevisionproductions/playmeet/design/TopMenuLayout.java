@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import com.noisevisionproductions.playmeet.AppOptions;
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.utilities.OpinionFromUser;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
@@ -47,7 +48,15 @@ public abstract class TopMenuLayout extends AppCompatActivity {
             }
             return true;
         }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem feedbackItem = menu.findItem(R.id.feedback);
+        feedbackItem.setVisible(FirebaseAuthManager.isUserLoggedIn() || FirebaseAuthManager.isUserLoggedInUsingGoogle());
+        return super.onPrepareOptionsMenu(menu);
     }
 
     private void setAppLogo() {

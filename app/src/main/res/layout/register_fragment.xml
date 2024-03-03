@@ -5,137 +5,143 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/mainLayout"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="15dp">
+        android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/mainLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:src="@drawable/welcome_screen_text" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:padding="15dp">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="40dp"
-            android:gravity="center"
-            android:text="@string/rejestracja"
-            android:textSize="30sp" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/e_mail"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/Email">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/emailInput"
+            <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/Email"
-                android:imeOptions="actionNext"
-                android:inputType="textEmailAddress"
-                android:paddingStart="0dp"
-                android:paddingEnd="40dp"
-                android:textColor="@color/accent"
-                android:textSize="20sp"
-                tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:padding="10dp"
+                android:src="@drawable/welcome_screen_text" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/haslo"
-            android:textSize="20sp" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/Password"
-            app:endIconMode="password_toggle"
-            app:errorEnabled="true">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/userPasswordInput"
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/Password"
-                android:imeOptions="actionNext"
-                android:inputType="textPassword"
-                android:maxEms="32"
-                android:minEms="6"
-                android:paddingStart="0dp"
-                android:paddingEnd="40dp"
-                android:textColor="@color/accent"
-                android:textSize="20sp"
-                tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:text="@string/rejestracja"
+                android:textSize="30sp" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/potwierdzhaslo"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/hasloponownie"
-            app:endIconMode="password_toggle"
-            app:errorEnabled="true">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/userPasswordSecondInput"
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:hint="@string/hasloponownie"
-                android:imeOptions="actionDone"
-                android:inputType="textPassword"
-                android:maxEms="32"
-                android:minEms="3"
-                android:paddingStart="0dp"
-                android:paddingEnd="40dp"
-                android:textColor="@color/accent"
+                android:text="@string/e_mail"
                 android:textSize="20sp"
-                app:passwordToggleEnabled="true"
-                tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:textStyle="bold" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/registerButton"
-            style="@style/MyButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/registerButton" />
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/Email">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/acceptDocuments"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="20dp"
-            android:text="@string/acceptDocuments"
-            android:textColor="@color/text"
-            android:textSize="12sp"
-            android:textStyle="italic" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/emailInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/Email"
+                    android:imeOptions="actionNext"
+                    android:inputType="textEmailAddress"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="40dp"
+                    android:textColor="@color/accent"
+                    android:textSize="20sp"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/haslo"
+                android:textSize="20sp" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/Password"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/userPasswordInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/Password"
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxEms="32"
+                    android:minEms="6"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="40dp"
+                    android:textColor="@color/accent"
+                    android:textSize="20sp"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/potwierdzhaslo"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/hasloponownie"
+                app:endIconMode="password_toggle"
+                app:errorEnabled="true">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/userPasswordSecondInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:hint="@string/hasloponownie"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:maxEms="32"
+                    android:minEms="3"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="40dp"
+                    android:textColor="@color/accent"
+                    android:textSize="20sp"
+                    app:passwordToggleEnabled="true"
+                    tools:ignore="TextContrastCheck,VisualLintTextFieldSize" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/registerButton"
+                style="@style/MyButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="50dp"
+                android:text="@string/registerButton" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/acceptDocuments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="20dp"
+                android:text="@string/acceptDocuments"
+                android:textColor="@color/text"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>

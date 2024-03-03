@@ -101,13 +101,10 @@ public class ChatActivity extends AppCompatActivity {
                 String messageText = messageInputFromUser.getText().toString();
                 if (!messageText.isEmpty()) {
                     String messageId = messagesReference.push().getKey();
-                    if (currentUser != null) {
+                    if (currentUser != null && messageId != null) {
                         ChatMessageModel newMessage = new ChatMessageModel(messageId, currentUser.getUid(), currentUser.getDisplayName(), messageText, System.currentTimeMillis());
-
-                        if (messageId != null) {
-                            messagesReference.child(messageId).setValue(newMessage);
-                            messageSent = true;
-                        }
+                        messagesReference.child(messageId).setValue(newMessage);
+                        messageSent = true;
                         messageInputFromUser.setText("");
                         hideKeyboardAfterSendingMsg();
                     }

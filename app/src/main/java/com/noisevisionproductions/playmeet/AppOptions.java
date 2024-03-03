@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -55,14 +56,21 @@ public class AppOptions extends TopMenuLayout {
         uela.setPaintFlags(uela.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         uela.setOnClickListener(v -> switchToUELA());
 
-        AppCompatTextView deleteAccount = findViewById(R.id.logoutAccount);
-        deleteAccount.setOnClickListener(v -> logoutUser());
+        AppCompatTextView logoutAccount = findViewById(R.id.logoutAccount);
+        logoutAccount.setOnClickListener(v -> logoutUser());
+
+        if (isUserLoggedIn()) {
+            logoutAccount.setVisibility(View.GONE);
+        }
 
         deleteUser();
     }
 
     private void deleteUser() {
         AppCompatButton deleteAccount = findViewById(R.id.deleteAccount);
+        if (isUserLoggedIn()) {
+            deleteAccount.setVisibility(View.GONE);
+        }
         DeleteUserFromDB deleteUserFromDB = new DeleteUserFromDB(this, getLayoutInflater());
         deleteAccount.setOnClickListener(v -> deleteUserFromDB.deleteUser());
     }
@@ -75,7 +83,7 @@ public class AppOptions extends TopMenuLayout {
             versionInfo.setText(text);
 
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            Log.e("Printing app version", "error while printing app version" + e.getMessage());
         }
     }
 
@@ -106,5 +114,9 @@ public class AppOptions extends TopMenuLayout {
     private void switchToUELA() {
         Intent intent = new Intent(getApplicationContext(), ActivityUELA.class);
         startActivity(intent);
+    }
+
+    private boolean isUserLoggedIn() {
+        return !FirebaseAuthManager.isUserLoggedInUsingGoogle() && !FirebaseAuthManager.isUserLoggedIn();
     }
 }

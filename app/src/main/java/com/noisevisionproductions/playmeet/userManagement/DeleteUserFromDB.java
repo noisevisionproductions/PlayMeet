@@ -31,9 +31,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
+import com.noisevisionproductions.playmeet.postsManagement.userPosts.PostHelperSignedUpUser;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.nio.charset.StandardCharsets;
@@ -70,7 +72,10 @@ public class DeleteUserFromDB {
         dialog = builder.create();
         setupDialogOnShow();
 
-        dialog.show();
+        if (context instanceof Activity && !((Activity) context).isFinishing() && !((Activity) context).isDestroyed()) {
+            dialog.show();
+        }
+
     }
 
     private void setupDialogView(@NonNull View dialogView) {
@@ -114,17 +119,11 @@ public class DeleteUserFromDB {
 
             Runnable onSuccess = () -> dialog.dismiss();
 
-            Runnable onFailure = () -> showToast("Error submitting feedback. Please try again.");
-            submitReasonForDeleteAccountToDB(reasonText, onSuccess, onFailure);
+            submitReasonForDeleteAccountToDB(reasonText, onSuccess);
         }
     }
 
-    private void submitReasonForDeleteAccountToDB(@NonNull String textWithReason, @Nullable Runnable onSuccess, @Nullable Runnable onFailure) {
-        if (textWithReason.isEmpty()) {
-            if (onFailure != null) onFailure.run();
-            return;
-        }
-
+    private void submitReasonForDeleteAccountToDB(@NonNull String textWithReason, @Nullable Runnable onSuccess) {
         String time = String.valueOf(System.currentTimeMillis());
         StorageReference reasonReference = FirebaseStorage.getInstance().getReference()
                 .child("DeleteAccountReasons")
@@ -135,14 +134,11 @@ public class DeleteUserFromDB {
 
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             if (onSuccess != null) onSuccess.run();
-        }).addOnFailureListener(e -> {
-            logError("Saving reason for delete to DB " + e.getMessage());
-            if (onFailure != null) onFailure.run();
-        });
+        }).addOnFailureListener(e -> logError("Saving reason for delete to DB " + e.getMessage()));
     }
 
-    private void showToast(String message) {
-        ToastManager.showToast(context, message);
+    private void showToast() {
+        ToastManager.showToast(context, "Błąd uwierzytelnienia");
     }
 
     private void logError(@NonNull String message) {
@@ -171,7 +167,6 @@ public class DeleteUserFromDB {
                 if (!idToken.isEmpty()) {
                     AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
                     authenticateAndDeleteUser(credential, null);
-
                 } else {
                     logError("idToken is null or empty");
                 }
@@ -186,13 +181,12 @@ public class DeleteUserFromDB {
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             if (reasonText != null && !reasonText.isEmpty()) {
-                                submitReasonForDeleteAccountToDB(reasonText, this::deleteUserAccount,
-                                        () -> showToast("Nie udało się przesłać wiadomości"));
+                                submitReasonForDeleteAccountToDB(reasonText, this::deleteUserAccount);
                             } else {
                                 deleteUserAccount();
                             }
                         } else {
-                            showToast("Błąd uwierzytelnienia");
+                            showToast();
                         }
                     })
                     .addOnFailureListener(e -> logError("Authentication error: " + e.getMessage()));
@@ -221,6 +215,10 @@ public class DeleteUserFromDB {
 
     private void navigateToLoginAndRegister() {
         Intent intent = new Intent(context, LoginAndRegisterActivity.class);
+        // sprawdzam, czy dialog sie wyświetla. jeżeli tak, to go usuwam, aby zapobiec wyciekom
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
         if (context instanceof Activity) {
@@ -232,6 +230,7 @@ public class DeleteUserFromDB {
         if (currentUser != null) {
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("UserModel").child(currentUser.getUid());
             userReference.removeValue();
+            removeUserIdFromSavedPosts(currentUser.getUid());
 
             UserAccountLogic userAccountLogic = new UserAccountLogic();
             userAccountLogic.deleteUserAvatar();
@@ -258,6 +257,30 @@ public class DeleteUserFromDB {
         }
     }
 
+    private void removeUserIdFromSavedPosts(String userId) {
+        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("PostCreating");
+        postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postsSnapshot : snapshot.getChildren()) {
+                    PostCreating postCreating = postsSnapshot.getValue(PostCreating.class);
+
+                    if (postCreating != null && postCreating.getPeopleSignedUp() > 0) {
+                        postCreating.deleteSignedUpUser(userId);
+                        postCreating.setActivityFull(false);
+                        PostHelperSignedUpUser.decrementJoinedPostsCount(userId);
+                        postsRef.child(postCreating.getPostId()).setValue(postCreating);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase Error", error.getMessage());
+            }
+        });
+    }
+
     private void getToastErrorFromDeleting() {
         ToastManager.showToast(context, "Wystąpił błąd. Skontaktuj się z administratorem");
     }
@@ -265,4 +288,5 @@ public class DeleteUserFromDB {
     private void getToastDeleteSuccessful() {
         ToastManager.showToast(context, "Pomyślnie usunięto profil");
     }
+
 }

@@ -7,7 +7,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserInfo;
 
 public class FirebaseAuthManager {
     @NonNull
@@ -33,15 +32,12 @@ public class FirebaseAuthManager {
 
     public static boolean isUserLoggedInUsingGoogle() {
         FirebaseAuth firebase = FirebaseAuth.getInstance();
-        // sprwadzam, czy logowanie było poprzez Google
         FirebaseUser firebaseUser = firebase.getCurrentUser();
         if (firebaseUser != null) {
-            for (UserInfo userInfo : firebaseUser.getProviderData()) {
-                if (userInfo.getProviderId().equals(GoogleAuthProvider.PROVIDER_ID)) {
-                    return true;
-                }
-            }
+            String lastProviderId = firebaseUser.getProviderData().get(firebaseUser.getProviderData().size() - 1).getProviderId();
+            return lastProviderId.equals(GoogleAuthProvider.PROVIDER_ID);
         }
         return false;
     }
+
 }

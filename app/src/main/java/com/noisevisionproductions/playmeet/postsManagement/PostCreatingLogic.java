@@ -54,8 +54,8 @@ public class PostCreatingLogic extends Fragment {
         view = inflater.inflate(R.layout.fragment_post_creating, container, false);
 
         setSportType();
-        setCityName();
         setSkillLevel();
+        setCityName();
         setDate();
         setHour();
         checkIfPostCanBeCreated(view);
@@ -78,6 +78,8 @@ public class PostCreatingLogic extends Fragment {
                 if (firebaseHelper.getCurrentUser() != null) {
                     checkPostLimit(firebaseHelper.getCurrentUser().getUid(), canCreatePost -> {
                         if (canCreatePost) {
+                            String selectedCity = cityTextView.getText().toString();
+                            postCreating.setCityName(selectedCity);
                             createNewPost();
                         } else {
                             ToastManager.showToast(requireContext(), "Osiągnięto limit tworzenia postów");

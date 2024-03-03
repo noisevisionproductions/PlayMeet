@@ -75,6 +75,7 @@ public class GoogleSignInHelper {
 
                             ToastManager.showToast(fragment.requireActivity(), "Pomyślnie zalogowano");
                             Intent intent = new Intent(fragment.requireActivity(), ActivityMainMenu.class);
+                            intent.putExtra("loggedIn", true);
                             fragment.startActivity(intent);
                         }
                     } else {

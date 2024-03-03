@@ -42,7 +42,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private AppCompatButton savePostButton, chatButton;
     private AppCompatTextView aboutGameText, aboutUserText, signedInUsersText, noUsersSignedUpInfo;
     private PostInfo postInfo;
-    @androidx.annotation.Nullable
+    @Nullable
     private UserModel userModel;
     private EditableField[] editableFieldsUserInfo, editableFieldsPostInfo;
 
@@ -161,26 +161,14 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                                     AdapterPostExtendedInfoFields adapterUser = new AdapterPostExtendedInfoFields(editableFieldsUserInfo);
                                     recyclerViewUserInfo.setAdapter(adapterUser);
 
-                                    aboutUserText.setOnClickListener(new View.OnClickListener() {
-                                        boolean isListExpanded = false; //śledzę stan rozwinięcia listy
-
-                                        @Override
-                                        public void onClick(View v) {
-                                            if (isListExpanded) {
-                                                collapseAboutInfo(recyclerViewUserInfo);
-                                                aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
-                                            } else {
-                                                expandAboutInfo(recyclerViewUserInfo);
-                                                aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
-                                            }
-                                            isListExpanded = !isListExpanded;
-                                        }
-                                    });
+                                    handleAboutUserTextClick(recyclerViewUserInfo);
                                 }
                             } catch (Exception e) {
                                 Log.e("Decryption error", "Error decrypting user data in user post " + e.getMessage());
                             }
                         }
+                    } else {
+                        ToastManager.showToast(requireContext(), "Błąd podczas pobierania danych użytkownika");
                     }
                 }
 
@@ -190,6 +178,24 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                 }
             });
         }
+    }
+
+    private void handleAboutUserTextClick(RecyclerView recyclerViewUserInfo) {
+        aboutUserText.setOnClickListener(new View.OnClickListener() {
+            boolean isListExpanded = false; //śledzę stan rozwinięcia listy
+
+            @Override
+            public void onClick(View v) {
+                if (isListExpanded) {
+                    collapseAboutInfo(recyclerViewUserInfo);
+                    aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
+                } else {
+                    expandAboutInfo(recyclerViewUserInfo);
+                    aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
+                }
+                isListExpanded = !isListExpanded;
+            }
+        });
     }
 
     private void signedUpUsersList() {

@@ -2,10 +2,13 @@ package com.noisevisionproductions.playmeet;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.DialogFragment;
@@ -35,11 +38,21 @@ import java.util.Objects;
 public class ActivityMainMenu extends TopMenuLayout {
     private AppCompatButton yourPostsMenu, createPostMenu, showAllPostsMenu, chatRoomMenu, userProfileMenu, updateUserInfoBar;
     private FragmentContainerView fragmentContainerActivePosts;
+    private DialogFragment dialogFragment;
     private final PostCreatingLogic postCreatingLogic = new PostCreatingLogic();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
+        dispatcher.addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                resetAllMenuButtons();
+                switchToMainMenuFragment();
+            }
+        });
         setContentView(R.layout.activity_main_menu);
 
         setUpUIElements();
@@ -50,15 +63,12 @@ public class ActivityMainMenu extends TopMenuLayout {
         switchToCreatePost();
         switchToChatRoom();
         switchToUserProfile();
-
-        //handleBackPressed();
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        //  switchToUserInfoInputOnClick();
-        checkUsersForNickname();
+    protected void onResume() {
+        super.onResume();
+        new Handler().postDelayed(this::checkUsersForNickname, 500);
     }
 
     private void setUpUIElements() {
@@ -68,6 +78,7 @@ public class ActivityMainMenu extends TopMenuLayout {
         chatRoomMenu = findViewById(R.id.chatRoomMenu);
         userProfileMenu = findViewById(R.id.userProfileMenu);
         fragmentContainerActivePosts = findViewById(R.id.fragmentContainerActivePosts);
+        dialogFragment = new ContainerForDialogFragment();
 
         updateUserInfoBar = findViewById(R.id.updateUserInfoBar);
         updateUserInfoBar.setOnClickListener(v -> switchToUserInfoInput());
@@ -75,7 +86,7 @@ public class ActivityMainMenu extends TopMenuLayout {
         showAllPostsMenu.setSelected(true);
     }
 
-    private void checkUsersForNickname() {
+    public void checkUsersForNickname() {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
@@ -109,8 +120,9 @@ public class ActivityMainMenu extends TopMenuLayout {
     }
 
     public void switchToUserInfoInput() {
-        DialogFragment dialogFragment = new ContainerForDialogFragment();
-        dialogFragment.show(getSupportFragmentManager(), "my_dialog");
+        if (dialogFragment != null && !dialogFragment.isAdded()) {
+            dialogFragment.show(getSupportFragmentManager(), "my_dialog");
+        }
     }
 
     public void onUserInfoUpdated() {
@@ -133,6 +145,23 @@ public class ActivityMainMenu extends TopMenuLayout {
         fragmentContainerActivePosts.setLayoutParams(layoutParams);
     }
 
+    private void switchToMainMenu() {
+        showAllPostsMenu.setOnClickListener(view -> {
+            switchToMainMenuFragment();
+        });
+    }
+
+    private void switchToMainMenuFragment() {
+        yourPostsMenu.setSelected(false);
+        createPostMenu.setSelected(false);
+        showAllPostsMenu.setSelected(true);
+        chatRoomMenu.setSelected(false);
+        userProfileMenu.setSelected(false);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, PostsOfTheGamesFragment.class, null).commit();
+    }
+
     private void switchToUserPosts() {
         yourPostsMenu.setOnClickListener(view -> {
 
@@ -143,12 +172,11 @@ public class ActivityMainMenu extends TopMenuLayout {
             userProfileMenu.setSelected(false);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, PostsCreatedByUserFragment.class, null).setReorderingAllowed(true).commit();
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, PostsCreatedByUserFragment.class, null).addToBackStack("PostsOfTheGamesFragment").commit();
         });
     }
 
     private void switchToCreatePost() {
-
         createPostMenu.setOnClickListener(view -> {
             if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
 
@@ -159,29 +187,17 @@ public class ActivityMainMenu extends TopMenuLayout {
                 userProfileMenu.setSelected(false);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().setReorderingAllowed(true).addToBackStack(null).replace(R.id.fragmentContainerActivePosts, postCreatingLogic).commit();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, postCreatingLogic).addToBackStack("PostsOfTheGamesFragment").commit();
             } else {
                 ProjectUtils.showLoginSnackBar(this);
             }
         });
     }
 
-    private void switchToMainMenu() {
-        showAllPostsMenu.setOnClickListener(view -> {
-            yourPostsMenu.setSelected(false);
-            createPostMenu.setSelected(false);
-            showAllPostsMenu.setSelected(true);
-            chatRoomMenu.setSelected(false);
-            userProfileMenu.setSelected(false);
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, PostsOfTheGamesFragment.class, null).setReorderingAllowed(true).commit();
-        });
-    }
-
     private void switchToChatRoom() {
         chatRoomMenu.setOnClickListener(view -> {
             if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+
                 yourPostsMenu.setSelected(false);
                 createPostMenu.setSelected(false);
                 showAllPostsMenu.setSelected(false);
@@ -189,7 +205,7 @@ public class ActivityMainMenu extends TopMenuLayout {
                 userProfileMenu.setSelected(false);
 
                 FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, ChatRoomList.class, null).setReorderingAllowed(true).commit();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, ChatRoomList.class, null).addToBackStack("PostsOfTheGamesFragment").commit();
             } else {
                 ProjectUtils.showLoginSnackBar(this);
             }
@@ -198,15 +214,26 @@ public class ActivityMainMenu extends TopMenuLayout {
 
     private void switchToUserProfile() {
         userProfileMenu.setOnClickListener(view -> {
+            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
 
-            yourPostsMenu.setSelected(false);
-            createPostMenu.setSelected(false);
-            showAllPostsMenu.setSelected(false);
-            chatRoomMenu.setSelected(false);
-            userProfileMenu.setSelected(true);
+                yourPostsMenu.setSelected(false);
+                createPostMenu.setSelected(false);
+                showAllPostsMenu.setSelected(false);
+                chatRoomMenu.setSelected(false);
+                userProfileMenu.setSelected(true);
 
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, UserAccountLogic.class, null).setReorderingAllowed(true).commit();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, UserAccountLogic.class, null).addToBackStack("PostsOfTheGamesFragment").commit();
+            } else {
+                ProjectUtils.showLoginSnackBar(this);
+            }
         });
+    }
+
+    private void resetAllMenuButtons() {
+        yourPostsMenu.setSelected(false);
+        createPostMenu.setSelected(false);
+        chatRoomMenu.setSelected(false);
+        userProfileMenu.setSelected(false);
     }
 }

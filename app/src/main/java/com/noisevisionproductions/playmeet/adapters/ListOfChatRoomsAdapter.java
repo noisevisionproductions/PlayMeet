@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -128,14 +127,12 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
         private final AppCompatTextView username;
         private final AppCompatTextView lastMessage;
         private final CircleImageView userAvatar;
-        private final AppCompatImageView statucIcon;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.username);
             lastMessage = itemView.findViewById(R.id.lastMessage);
             userAvatar = itemView.findViewById(R.id.userAvatar);
-            statucIcon = itemView.findViewById(R.id.statusIcon);
         }
     }
 }
