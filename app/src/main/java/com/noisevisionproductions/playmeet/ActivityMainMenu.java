@@ -158,6 +158,7 @@ public class ActivityMainMenu extends TopMenuLayout {
         chatRoomMenu.setSelected(false);
         userProfileMenu.setSelected(false);
 
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, PostsOfTheGamesFragment.class, null).commit();
     }

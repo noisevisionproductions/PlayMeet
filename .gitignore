@@ -16,3 +16,7 @@ local.properties
 gradle.properties
 key.properties
 config.properties
+firebase.json
+.firebaserc
+Run
+/app/google-services.json
