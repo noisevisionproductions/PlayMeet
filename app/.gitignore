@@ -14,3 +14,10 @@
 .cxx
 local.properties
 gradle.properties
+key.properties
+config.properties
+firebase.json
+.firebaserc
+Run
+/app/google-services.json
+/app/release/app-release.aab

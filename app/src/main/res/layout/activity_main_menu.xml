@@ -48,7 +48,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:drawableTop="@drawable/icon_home"
-            android:fontFamily="@font/inter_regular"
             android:text="@string/start" />
 
         <androidx.appcompat.widget.AppCompatButton
