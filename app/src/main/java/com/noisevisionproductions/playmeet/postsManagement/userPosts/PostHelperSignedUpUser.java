@@ -28,48 +28,53 @@ import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import java.util.List;
 
 public class PostHelperSignedUpUser {
-    public static void deletePost(String currentUserId, String postId, AdapterSavedByUserPosts adapter, AdapterSavedByUserPosts.MyViewHolder holder, List<PostCreatingCopy> listOfPostCreatingCopy, AppCompatTextView noPostInfo, int position) {
-        DatabaseReference savedPostCreating = FirebaseDatabase.getInstance().getReference("SavedPostCreating").child(currentUserId).child(postId);
+    public static void deletePost(AdapterSavedByUserPosts adapter, AdapterSavedByUserPosts.MyViewHolder holder, List<PostCreatingCopy> listOfPostCreatingCopy, AppCompatTextView noPostInfo, int position) {
+        PostCreatingCopy postCreatingCopy = listOfPostCreatingCopy.get(position);
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        if (firebaseHelper.getCurrentUser() != null) {
+            String currentUserId = firebaseHelper.getCurrentUser().getUid();
+            String postId = postCreatingCopy.getPostId();
+            DatabaseReference savedPostCreating = FirebaseDatabase.getInstance().getReference("SavedPostCreating").child(currentUserId).child(postId);
 
-        holder.deletePost.setText(R.string.signOutFromThePost);
-        holder.deletePost.setOnClickListener(v -> savedPostCreating.removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DatabaseReference postReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId);
-                postReference.runTransaction(new Transaction.Handler() {
-                    @NonNull
-                    @Override
-                    public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                        PostCreating postCreating = currentData.getValue(PostCreating.class);
-                        if (postCreating != null && postCreating.getPeopleSignedUp() > 0) {
-                            postCreating.deleteSignedUpUser(currentUserId);
-                            postCreating.setActivityFull(false);
-                            currentData.setValue(postCreating);
+            holder.deletePost.setText(R.string.signOutFromThePost);
+            holder.deletePost.setOnClickListener(v -> savedPostCreating.removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DatabaseReference postReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId);
+                    postReference.runTransaction(new Transaction.Handler() {
+                        @NonNull
+                        @Override
+                        public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                            PostCreating postCreating = currentData.getValue(PostCreating.class);
+                            if (postCreating != null && postCreating.getPeopleSignedUp() > 0) {
+                                postCreating.deleteSignedUpUser(currentUserId);
+                                postCreating.setActivityFull(false);
+                                currentData.setValue(postCreating);
 
-                            decrementJoinedPostsCount(currentUserId);
+                                decrementJoinedPostsCount(currentUserId);
+                            }
+                            return Transaction.success(currentData);
                         }
-                        return Transaction.success(currentData);
-                    }
 
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                        if (error != null) {
-                            Log.e("Firebase Update Error", "Removing signed up user when saved post is removed " + error.getMessage());
-                        } else {
-                            listOfPostCreatingCopy.remove(position);
-                            adapter.notifyItemRemoved(position);
-                            adapter.notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
-                            if (listOfPostCreatingCopy.isEmpty()) {
-                                new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
+                        @Override
+                        public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
+                            if (error != null) {
+                                Log.e("Firebase Update Error", "Removing signed up user when saved post is removed " + error.getMessage());
+                            } else {
+                                listOfPostCreatingCopy.remove(position);
+                                adapter.notifyItemRemoved(position);
+                                adapter.notifyItemRangeChanged(position, listOfPostCreatingCopy.size());
+                                if (listOfPostCreatingCopy.isEmpty()) {
+                                    new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
+                                }
                             }
                         }
-                    }
-                });
-            } else {
-                Log.e("PostsAdapterSavedByUser", "Błąd podczas usuwania z bazy danych " + task.getException());
-            }
-        }));
+                    });
+                } else {
+                    Log.e("PostsAdapterSavedByUser", "Błąd podczas usuwania z bazy danych " + task.getException());
+                }
+            }));
+        }
     }
-
 
     public static void decrementJoinedPostsCount(String currentUserId) {
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUserId);

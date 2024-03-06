@@ -24,7 +24,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsPostsAdapters;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsForChatAndSignIn;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.List;
@@ -62,7 +62,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         holder.numberOfPeople.setText(peopleStatus);
 
         // po kliknieciu w post, otwiera wiecej informacji o nim
-        holder.layoutOfPost.setOnClickListener(v -> ButtonsPostsAdapters.handleMoreInfoButton(fragmentManager, postCreating, context));
+        holder.layoutOfPost.setOnClickListener(v -> ButtonsForChatAndSignIn.handleMoreInfoButton(fragmentManager, postCreating, context));
     }
 
     @NonNull

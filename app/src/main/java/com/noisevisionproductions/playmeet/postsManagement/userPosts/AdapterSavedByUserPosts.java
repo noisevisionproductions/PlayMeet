@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.PostCreatingCopy;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsPostsAdapters;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsForChatAndSignIn;
 
 import java.util.List;
 
@@ -25,6 +25,7 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
     private final Context context;
     private final FragmentManager fragmentManager;
     private final AppCompatTextView noPostInfo;
+
 
     public AdapterSavedByUserPosts(Context context, FragmentManager fragmentManager, List<PostCreatingCopy> listOfPostCreatingCopy, AppCompatTextView noPostInfo) {
         this.listOfPostCreatingCopy = listOfPostCreatingCopy;
@@ -50,19 +51,20 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
             PostHelperSignedUpUser.setUserAvatar(holder, userId, context);
         }
         PostHelperSignedUpUser.getPeopleStatus(posts.getPostId(), holder);
-        PostHelperSignedUpUser.deletePost(userId, posts.getPostId(), this, holder, listOfPostCreatingCopy, noPostInfo, position);
+        PostHelperSignedUpUser.deletePost(this, holder, listOfPostCreatingCopy, noPostInfo, position);
 
         holder.sportNames.setText(posts.getSportType());
         holder.cityNames.setText(posts.getCityName());
 
-        holder.layoutOfPost.setOnClickListener(v -> ButtonsPostsAdapters.handleMoreInfoButton(fragmentManager, posts, context));
-        holder.chatButton.setOnClickListener(v -> ButtonsPostsAdapters.handleChatButtonClick(v, posts.getUserId()));
+        holder.layoutOfPost.setOnClickListener(v -> ButtonsForChatAndSignIn.handleMoreInfoButton(fragmentManager, posts, context));
+        holder.chatButton.setOnClickListener(v -> ButtonsForChatAndSignIn.handleChatButtonClick(v, posts.getUserId(), fragmentManager));
     }
 
     @Override
     public int getItemCount() {
         return listOfPostCreatingCopy.size();
     }
+
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         protected final CircleImageView userAvatar;

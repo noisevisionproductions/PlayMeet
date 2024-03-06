@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -63,17 +64,22 @@ public class PostsOfTheGamesFragment extends Fragment {
 
         // refreshData(); // odświeżam aktywność na starcie, bo filtry bez tego nie działają jak należy TODO
         showAllPosts();
-        swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
+       /* swipeRefreshLayout.setOnRefreshListener(() -> new Handler().postDelayed(this::refreshData, 100));
 
         filterAllPosts(view);
-
+*/
         handleBackPressed();
 
         return view;
     }
 
     private void setupView(@NonNull View view) {
-        adapterAllPosts = new AdapterAllPosts(posts, getChildFragmentManager(), getContext());
+        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
+        FirebaseRecyclerOptions<PostCreating> options = new FirebaseRecyclerOptions.Builder<PostCreating>()
+                .setQuery(postsReference, PostCreating.class)
+                .build();
+        adapterAllPosts = new AdapterAllPosts(options, getChildFragmentManager(), getContext());
+
         firebaseHelper = new FirebaseHelper();
         allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
 
@@ -85,7 +91,9 @@ public class PostsOfTheGamesFragment extends Fragment {
 
         recyclerView = view.findViewById(R.id.recycler_view_posts);
 
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+
+     /*   recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -102,9 +110,20 @@ public class PostsOfTheGamesFragment extends Fragment {
                     }
                 }
             }
-        });
+        });*/
 
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+    }
+
+    private void showAllPosts() {
+        recyclerView.setAdapter(adapterAllPosts);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        recyclerView.setHasFixedSize(true);
+
+    /*    if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+            postCreateForLoggedInUser();
+        } else {
+            postCreateForUnregisteredUser();
+        }*/
     }
 
     private void loadMorePosts() {
@@ -113,7 +132,7 @@ public class PostsOfTheGamesFragment extends Fragment {
         loadingMorePostsIndicator.setVisibility(View.VISIBLE);
         loadingMorePostsText.setVisibility(View.VISIBLE);
 
-        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedIn()) {
             postCreateForLoggedInUser();
         } else {
             postCreateForUnregisteredUser();
@@ -126,7 +145,7 @@ public class PostsOfTheGamesFragment extends Fragment {
         new Handler().postDelayed(() -> {
             posts.clear();
 
-            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedIn()) {
                 postCreateForLoggedInUser();
             } else {
                 postCreateForUnregisteredUser();
@@ -139,18 +158,6 @@ public class PostsOfTheGamesFragment extends Fragment {
         }, 800);
     }
 
-
-    private void showAllPosts() {
-        recyclerView.setAdapter(adapterAllPosts);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setHasFixedSize(true);
-
-        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
-            postCreateForLoggedInUser();
-        } else {
-            postCreateForUnregisteredUser();
-        }
-    }
 
     private void postCreateForLoggedInUser() {
         if (firebaseHelper.getCurrentUser() != null) {
@@ -289,7 +296,7 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     private void showExitDialog() {
-        if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+        if (FirebaseAuthManager.isUserLoggedIn()) {
             new AlertDialog.Builder(getContext()).setTitle("Wyjście").setMessage("Wylogować, czy zamknąć aplikację?").setPositiveButton("Wyloguj się", (dialog, which) -> {
                 FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -303,7 +310,22 @@ public class PostsOfTheGamesFragment extends Fragment {
             }).setNegativeButton("Wyjście", (dialog, which) -> requireActivity().finishAffinity()).setNeutralButton("Anuluj", null).show();
         } else {
             Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapterAllPosts.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (adapterAllPosts != null) {
+            adapterAllPosts.stopListening();
         }
     }
 }

@@ -86,7 +86,7 @@ public class PostsCreatedByUserFragment extends Fragment {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser != null) {
             String currentUserId = firebaseUser.getUid();
-            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedIn()) {
                 // uzyskuje referencję do danych PostCreating stworzonego w Firebase
                 DatabaseReference userPostsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
                 // nastepnie pobieram posty z bazy, które mają takie samo userId, co aktualnie zalogowany użytkownik
@@ -145,7 +145,7 @@ public class PostsCreatedByUserFragment extends Fragment {
 
             String currentUserId = firebaseHelper.getCurrentUser().getUid();
 
-            if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+            if (FirebaseAuthManager.isUserLoggedIn()) {
                 DatabaseReference savedPostsReference = FirebaseDatabase.getInstance().getReference().child("SavedPostCreating").child(currentUserId);
 
                 savedPostsReference.addListenerForSingleValueEvent(new ValueEventListener() {
