@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +30,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.dataManagement.PostDiffCallback;
@@ -74,14 +76,9 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     private void setupView(@NonNull View view) {
-        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
-        FirebaseRecyclerOptions<PostCreating> options = new FirebaseRecyclerOptions.Builder<PostCreating>()
-                .setQuery(postsReference, PostCreating.class)
-                .build();
-        adapterAllPosts = new AdapterAllPosts(options, getChildFragmentManager(), getContext());
 
         firebaseHelper = new FirebaseHelper();
-        allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
+        //allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
 
         progressBar = view.findViewById(R.id.progressBarLayout);
         loadingMorePostsIndicator = view.findViewById(R.id.loadMorePostsIndicator);
@@ -115,9 +112,18 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     private void showAllPosts() {
+        Query query = FirebaseFirestore.getInstance().collection("PostCreating");
+        FirestoreRecyclerOptions<PostCreating> options = new FirestoreRecyclerOptions.Builder<PostCreating>()
+                .setQuery(query, PostCreating.class)
+                .build();
+        adapterAllPosts = new AdapterAllPosts(options, getChildFragmentManager(), getContext());
+
         recyclerView.setAdapter(adapterAllPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
+
+        adapterAllPosts.startListening();
+
 
     /*    if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
             postCreateForLoggedInUser();

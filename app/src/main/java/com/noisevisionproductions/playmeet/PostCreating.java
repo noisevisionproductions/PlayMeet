@@ -25,6 +25,10 @@ public class PostCreating implements PostInfo {
     public PostCreating() {
     }
 
+    public Boolean getCreatedByUser() {
+        return createdByUser;
+    }
+
     public PostCreating(String postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
         this.postId = postId;
         this.sportType = sportType;

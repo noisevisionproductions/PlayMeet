@@ -1,6 +1,5 @@
 package com.noisevisionproductions.playmeet.postsManagement;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,12 +27,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.FirestoreUtil;
 import com.noisevisionproductions.playmeet.utilities.DateChoosingLogic;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
@@ -101,7 +100,7 @@ public class PostCreatingLogic extends Fragment {
         if (firebaseHelper.getCurrentUser() != null) {
             postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
             setAdditionalInfo();
-            setUniqueId();
+            setUniqueIdAndSavePostInDB();
         }
     }
 
@@ -123,23 +122,13 @@ public class PostCreatingLogic extends Fragment {
         });
     }
 
-    private void setUniqueId() {
+    private void setUniqueIdAndSavePostInDB() {
         DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("PostCreating");
         String postId = postReference.push().getKey();
         postCreating.setPostId(postId);
+        FirestoreUtil firestoreUtil = new FirestoreUtil();
 
-        if (postId != null) {
-            postReference.child(postId).setValue(postCreating).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    ToastManager.showToast(requireContext(), "Post utworzony!");
-
-                    Intent intent = new Intent(requireContext(), ActivityMainMenu.class);
-                    startActivity(intent);
-                } else {
-                    Log.e("FirebaseHelper", "Creating post error ", task.getException());
-                }
-            });
-        }
+        firestoreUtil.insertPost(postCreating, requireContext());
     }
 
     private void setSportType() {

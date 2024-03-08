@@ -13,8 +13,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.noisevisionproductions.playmeet.PostCreating;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
@@ -22,12 +22,12 @@ import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterAllPosts extends FirebaseRecyclerAdapter<PostCreating, AdapterAllPosts.MyViewHolder> {
+public class AdapterAllPosts extends FirestoreRecyclerAdapter<PostCreating, AdapterAllPosts.MyViewHolder> {
 
     private final FragmentManager fragmentManager;
     private final Context context;
 
-    public AdapterAllPosts(FirebaseRecyclerOptions<PostCreating> options, FragmentManager fragmentManager, Context context) {
+    public AdapterAllPosts(@NonNull FirestoreRecyclerOptions<PostCreating> options, FragmentManager fragmentManager, Context context) {
         super(options);
         this.fragmentManager = fragmentManager;
         this.context = context;
