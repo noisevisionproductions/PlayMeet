@@ -4,9 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class PostCreating implements PostInfo {
     private String postId;
     private Boolean createdByUser = false;
@@ -20,7 +17,7 @@ public class PostCreating implements PostInfo {
     private String peopleStatus;
     private int howManyPeopleNeeded;
     private String additionalInfo;
-    private List<String> signedUpUserIds = new ArrayList<>();
+    private int signedUpCount = 0;
 
     public PostCreating() {
     }
@@ -55,30 +52,30 @@ public class PostCreating implements PostInfo {
         return copyOfAllPosts;
     }
 
-    public List<String> getSignedUpUserIds() {
-        return signedUpUserIds;
-    }
-
-    public void setSignedUpUserIds(List<String> signedUpUserIds) {
-        this.signedUpUserIds = signedUpUserIds;
-    }
 
     public int getPeopleSignedUp() {
-        return signedUpUserIds.size();
+        return signedUpCount;
     }
 
-    public void userSignedUp(String userId) {
-        signedUpUserIds.add(userId);
+    public void userSignedUp() {
+        signedUpCount++;
         updatePeopleStatus();
     }
 
-    public void deleteSignedUpUser(String userId) {
-        signedUpUserIds.remove(userId);
-        updatePeopleStatus();
+    public void deleteSignedUpUser() {
+        if (signedUpCount > 0) {
+            signedUpCount--;
+            updatePeopleStatus();
+        }
     }
 
     public void updatePeopleStatus() {
         peopleStatus = getPeopleSignedUp() + "/" + howManyPeopleNeeded;
+    }
+
+    @NonNull
+    public String getPeopleStatus() {
+        return peopleStatus;
     }
 
     public int getHowManyPeopleNeeded() {
@@ -87,11 +84,6 @@ public class PostCreating implements PostInfo {
 
     public void setHowManyPeopleNeeded(int howManyPeopleNeeded) {
         this.howManyPeopleNeeded = howManyPeopleNeeded;
-    }
-
-    @NonNull
-    public String getPeopleStatus() {
-        return peopleStatus = getPeopleSignedUp() + "/" + howManyPeopleNeeded;
     }
 
     public void setIsCreatedByUser(Boolean createdByUser) {

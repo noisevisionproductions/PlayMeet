@@ -266,7 +266,7 @@ public class DeleteUserFromDB {
                     PostCreating postCreating = postsSnapshot.getValue(PostCreating.class);
 
                     if (postCreating != null && postCreating.getPeopleSignedUp() > 0) {
-                        postCreating.deleteSignedUpUser(userId);
+                        //   postCreating.deleteSignedUpUser(userId);
                         postCreating.setActivityFull(false);
                         PostHelperSignedUpUser.decrementJoinedPostsCount(userId);
                         postsRef.child(postCreating.getPostId()).setValue(postCreating);

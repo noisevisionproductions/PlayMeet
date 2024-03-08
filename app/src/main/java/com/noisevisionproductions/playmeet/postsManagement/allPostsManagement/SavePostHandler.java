@@ -70,15 +70,15 @@ public class SavePostHandler {
                             if (!snapshot.exists()) {
                                 PostCreating originalPost = originalPostSnapshot.getValue(PostCreating.class);
                                 if (originalPost != null) {
-                                    if (!originalPost.getSignedUpUserIds().contains(currentUserId)) {
+                                    /*  if (!originalPost.getSignedUpUserIds().contains(currentUserId)) {*/
                                         if (!originalPost.getUserId().equals(currentUserId)) {
                                             handleSaveForOtherUser(originalPost);
                                         } else {
                                             ToastManager.showToast(view.getContext(), "To Twój post!");
                                         }
-                                    } else {
+                                    /*} else {
                                         ToastManager.showToast(view.getContext(), "Jesteś już zapisany w tej aktywności");
-                                    }
+                                    }*/
                                 }
                             } else {
                                 ToastManager.showToast(view.getContext(), "Post został już przez Ciebie zapisany");
@@ -107,7 +107,7 @@ public class SavePostHandler {
         DatabaseReference allPostsReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId);
 
         if (originalPost.getPeopleSignedUp() < originalPost.getHowManyPeopleNeeded()) {
-            originalPost.userSignedUp(currentUserId);
+            //originalPost.userSignedUp(currentUserId);
 
             allPostsReference.runTransaction(new Transaction.Handler() {
                 @NonNull
@@ -118,7 +118,7 @@ public class SavePostHandler {
                     if (postCreating != null) {
                         if (postCreating.getPeopleSignedUp() < postCreating.getHowManyPeopleNeeded()) {
                             // User signs up for the post
-                            postCreating.userSignedUp(currentUserId);
+                            // postCreating.userSignedUp(currentUserId);
                             currentData.setValue(postCreating);
 
                             if (postCreating.getPeopleSignedUp() >= postCreating.getHowManyPeopleNeeded()) {

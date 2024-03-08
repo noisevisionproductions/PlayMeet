@@ -46,7 +46,7 @@ public class PostHelperSignedUpUser {
                         public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                             PostCreating postCreating = currentData.getValue(PostCreating.class);
                             if (postCreating != null && postCreating.getPeopleSignedUp() > 0) {
-                                postCreating.deleteSignedUpUser(currentUserId);
+                                //    postCreating.deleteSignedUpUser(currentUserId);
                                 postCreating.setActivityFull(false);
                                 currentData.setValue(postCreating);
 
