@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/app_logo_round"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/app_logo_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="tiramisu">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths_for_user_photos" />
+        </provider>
+
+        <service
+            android:name=".utilities.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".design.aboutApp.ActivityUELA"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".design.aboutApp.ActivityToS"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".design.aboutApp.ActivityPrivacyPolicy"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AppOptions"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".chat.ChatActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".utilities.OpinionFromUser"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ActivityMainMenu"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".loginRegister.LoginAndRegisterActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeForLoginAndRegister" />
+        <activity
+            android:name=".loginRegister.MainActivity"
+            android:exported="true"
+            android:theme="@style/AppThemeForLoginAndRegister" />
+        <activity
+            android:name=".design.WelcomeActivity"
+            android:exported="true"
+            android:theme="@style/noBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.postsManagement;
 
 public interface PostInfo {
     String getUserId();
+
     String getSportType();
 
     String getCityName();

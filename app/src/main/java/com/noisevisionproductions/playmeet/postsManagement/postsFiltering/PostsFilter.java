@@ -21,7 +21,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapterForFilterMenu;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
@@ -33,8 +33,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class PostsFilter {
-    private final List<PostCreating> originalPosts = new ArrayList<>();
-    private final List<PostCreating> posts;
+    private final List<PostModel> originalPosts = new ArrayList<>();
+    private final List<PostModel> posts;
     private final RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter;
     private final AppCompatButton filterButton, deleteFilters;
     private final AppCompatTextView noPostFound;
@@ -44,14 +44,14 @@ public class PostsFilter {
     @NonNull
     private final boolean[] checkedItems;
 
-    public PostsFilter(RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, @NonNull List<PostCreating> posts, AppCompatButton filterButton, AppCompatButton deleteFilters, AppCompatTextView noPostFound) {
+    public PostsFilter(RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, @NonNull List<PostModel> posts, AppCompatButton filterButton, AppCompatButton deleteFilters, AppCompatTextView noPostFound) {
         this.adapter = adapter;
         this.posts = posts;
         this.filterButton = filterButton;
         this.deleteFilters = deleteFilters;
         this.noPostFound = noPostFound;
         this.checkedItems = new boolean[4];
-        for (PostCreating post : posts) {
+        for (PostModel post : posts) {
             originalPosts.add(post.copyOfAllPosts());
         }
     }
@@ -244,7 +244,7 @@ public class PostsFilter {
     }
 
     public interface PostFilter {
-        boolean filter(PostCreating post);
+        boolean filter(PostModel post);
     }
 
     public void filterPostsByQuery(@NonNull List<Filter> filters) {
@@ -267,10 +267,10 @@ public class PostsFilter {
         }
     }
 
-    public static void filterPostsLogic(@NonNull RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, @NonNull List<PostCreating> posts, @NonNull PostFilter filter) {
-        List<PostCreating> filteredPosts = new ArrayList<>();
+    public static void filterPostsLogic(@NonNull RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, @NonNull List<PostModel> posts, @NonNull PostFilter filter) {
+        List<PostModel> filteredPosts = new ArrayList<>();
 
-        for (PostCreating post : posts) {
+        for (PostModel post : posts) {
             if (filter.filter(post)) {
                 filteredPosts.add(post);
             }
@@ -287,7 +287,7 @@ public class PostsFilter {
     public void deleteFilters() {
         deleteFilters.setOnClickListener(v -> {
             Arrays.fill(checkedItems, false);
-            List<PostCreating> newPosts = new ArrayList<>(originalPosts);
+            List<PostModel> newPosts = new ArrayList<>(originalPosts);
             PostDiffCallback diffCallback = new PostDiffCallback(posts, newPosts);
             DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
             posts.clear();

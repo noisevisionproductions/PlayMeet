@@ -10,7 +10,6 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
@@ -33,7 +31,6 @@ import com.noisevisionproductions.playmeet.utilities.UserModelDecryptor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.annotation.Nullable;
 
@@ -92,7 +89,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
         getUserDataFromFirebase();
         setupEditableFieldsPostInfo(view, postInfo);
-        signedUpUsersList();
+        //signedUpUsersList();
 
         handleButtons(view);
     }
@@ -102,13 +99,18 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         if (this.postInfo != null) {
             editableFieldsPostInfo = new EditableField[]{
                     // pola związane z aktywnością
-                    new EditableField("Sport:", postInfo.getSportType(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    new EditableField("Miasto:", postInfo.getCityName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    new EditableField("Data:", postInfo.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    new EditableField("Godzina:", postInfo.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    new EditableField("Post ID:", postInfo.getPostId(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    new EditableField("Info:", postInfo.getAdditionalInfo(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)
-            };
+                    new EditableField("Sport:", postInfo.getSportType(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Miasto:", postInfo.getCityName(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Data:", postInfo.getDateTime(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Godzina:", postInfo.getHourTime(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    /* new EditableField("Post ID:", postInfo.getPostId(), false, false, false,
+                             EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), */
+                    new EditableField("Info:", postInfo.getAdditionalInfo(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)};
         }
         RecyclerView recyclerViewPostInfo = view.findViewById(R.id.recycler_view_post_info);
         recyclerViewPostInfo.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -148,14 +150,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                                 if (getContext() == null) {
                                     ToastManager.showToast(getContext(), getString(R.string.error));
                                 } else {
-                                    editableFieldsUserInfo = new EditableField[]{
-                                            new EditableField(getString(R.string.provideName), decryptedUserModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                            new EditableField(getString(R.string.provideNick), userModel.getNickname(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                            new EditableField(getString(R.string.provideAge), decryptedUserModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                            new EditableField(getString(R.string.provideCity), decryptedUserModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                            new EditableField(getString(R.string.provideGender), decryptedUserModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                            new EditableField(getString(R.string.provideAboutYou), decryptedUserModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                                    };
+                                    editableFieldsUserInfo = new EditableField[]{new EditableField(getString(R.string.provideName), decryptedUserModel.getName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField(getString(R.string.provideNick), userModel.getNickname(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField(getString(R.string.provideAge), decryptedUserModel.getAge(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField(getString(R.string.provideCity), decryptedUserModel.getLocation(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField(getString(R.string.provideGender), decryptedUserModel.getGender(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField(getString(R.string.provideAboutYou), decryptedUserModel.getAboutMe(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),};
                                     RecyclerView recyclerViewUserInfo = requireView().findViewById(R.id.recycler_view_user_info);
                                     recyclerViewUserInfo.setLayoutManager(new LinearLayoutManager(getContext()));
                                     AdapterPostExtendedInfoFields adapterUser = new AdapterPostExtendedInfoFields(editableFieldsUserInfo);
@@ -200,7 +195,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
     private void signedUpUsersList() {
         if (this.postInfo != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postInfo.getPostId()).child("signedUpUserIds");
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
             userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -284,38 +279,9 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         if (this.postInfo != null) {
             SavePostHandler savePostHandler = new SavePostHandler(view, postInfo.getPostId());
             if (firebaseHelper.getCurrentUser() != null) {
-                DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(firebaseHelper.getCurrentUser().getUid());
-                userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        UserModel userModel = snapshot.getValue(UserModel.class);
-                        if (userModel != null) {
-                            String nickname = userModel.getNickname();
-                            // przyciski do zapisania się do postu oraz stworzenia czatu jedynie, gdy użytkownik ustawi nick
-                            savePostButton.setOnClickListener(v -> {
-                                if (nickname == null || nickname.isEmpty()) {
-                                    DialogFragment dialogFragment = new ContainerForDialogFragment();
-                                    dialogFragment.show(getChildFragmentManager(), "my_dialog");
-                                } else {
-                                    savePostHandler.handleSavePostButton();
-                                }
-                            });
-                            chatButton.setOnClickListener(v -> {
-                                if (nickname == null || nickname.isEmpty()) {
-                                    DialogFragment dialogFragment = new ContainerForDialogFragment();
-                                    dialogFragment.show(getChildFragmentManager(), "my_dialog");
-                                } else {
-                                    ButtonsPostsAdapters.handleChatButtonClick(view, postInfo.getUserId());
-                                }
-                            });
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.e("Firebase Save Error", "Checking if logged in user has nickName " + Objects.requireNonNull(error.getMessage()));
-                    }
-                });
+                String currentUserId = firebaseHelper.getCurrentUser().getUid();
+                savePostButton.setOnClickListener(v -> ButtonsForChatAndSignIn.checkNicknameAndPerformAction(currentUserId, savePostHandler::handleOriginalPost, getChildFragmentManager()));
+                chatButton.setOnClickListener(v -> ButtonsForChatAndSignIn.handleChatButtonClick(view, postInfo.getUserId(), getChildFragmentManager()));
             }
         }
     }

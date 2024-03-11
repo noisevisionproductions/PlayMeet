@@ -28,12 +28,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.userManagement.OnCompletionListener;
 import com.noisevisionproductions.playmeet.utilities.DateChoosingLogic;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
@@ -44,7 +46,7 @@ import java.util.function.Consumer;
 
 public class PostCreatingLogic extends Fragment {
     private View view;
-    private final PostCreating postCreating = new PostCreating();
+    private final PostModel postModel = new PostModel();
     private final FirebaseHelper firebaseHelper = new FirebaseHelper();
     private AppCompatAutoCompleteTextView cityTextView;
     private AppCompatSpinner sportSpinner, skillSpinner;
@@ -67,7 +69,7 @@ public class PostCreatingLogic extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dateChoosingLogic = new DateChoosingLogic(requireContext(), postCreating);
+        dateChoosingLogic = new DateChoosingLogic(requireContext(), postModel);
     }
 
     private void checkIfPostCanBeCreated(View view) {
@@ -79,7 +81,7 @@ public class PostCreatingLogic extends Fragment {
                     checkPostLimit(firebaseHelper.getCurrentUser().getUid(), canCreatePost -> {
                         if (canCreatePost) {
                             String selectedCity = cityTextView.getText().toString();
-                            postCreating.setCityName(selectedCity);
+                            postModel.setCityName(selectedCity);
                             createNewPost();
                         } else {
                             ToastManager.showToast(requireContext(), "Osiągnięto limit tworzenia postów");
@@ -97,11 +99,11 @@ public class PostCreatingLogic extends Fragment {
 
     private void createNewPost() {
         setHowManyPeopleNeeded();
-        postCreating.setIsCreatedByUser(true);
+        postModel.setCreatedByUser(true);
         if (firebaseHelper.getCurrentUser() != null) {
-            postCreating.setUserId(firebaseHelper.getCurrentUser().getUid());
+            postModel.setUserId(firebaseHelper.getCurrentUser().getUid());
             setAdditionalInfo();
-            setUniqueId();
+            savePostToDB();
         }
     }
 
@@ -123,23 +125,33 @@ public class PostCreatingLogic extends Fragment {
         });
     }
 
-    private void setUniqueId() {
-        DatabaseReference postReference = FirebaseDatabase.getInstance().getReference("PostCreating");
-        String postId = postReference.push().getKey();
-        postCreating.setPostId(postId);
+    private void savePostToDB() {
+        FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
+        firestorePostRepository.addPost(postModel, new OnPostCreatedListener() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                String postId = documentReference.getId();
+                postModel.setPostId(postId);
+                firestorePostRepository.updatePost(postId, postModel, new OnCompletionListener() {
+                    @Override
+                    public void onSuccess() {
+                        ToastManager.showToast(requireContext(), "Post utworzony!");
+                        Intent intent = new Intent(requireContext(), ActivityMainMenu.class);
+                        startActivity(intent);
+                    }
 
-        if (postId != null) {
-            postReference.child(postId).setValue(postCreating).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    ToastManager.showToast(requireContext(), "Post utworzony!");
+                    @Override
+                    public void onFailure(Exception e) {
 
-                    Intent intent = new Intent(requireContext(), ActivityMainMenu.class);
-                    startActivity(intent);
-                } else {
-                    Log.e("FirebaseHelper", "Creating post error ", task.getException());
-                }
-            });
-        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("insertPost", "Error saving post in DB" + e.getMessage());
+            }
+        });
     }
 
     private void setSportType() {
@@ -154,7 +166,7 @@ public class PostCreatingLogic extends Fragment {
             public void onItemSelected(@NonNull AdapterView<?> adapterView, View view, int position, long l) {
                 String selectedSport = (String) adapterView.getItemAtPosition(position);
                 if (position > 0) {
-                    postCreating.setSportType(selectedSport);
+                    postModel.setSportType(selectedSport);
                 }
             }
 
@@ -184,7 +196,7 @@ public class PostCreatingLogic extends Fragment {
 
                 if (position > 0) {
 
-                    postCreating.setSkillLevel(selectedSkillLevel);
+                    postModel.setSkillLevel(selectedSkillLevel);
 
                 }
             }
@@ -221,7 +233,7 @@ public class PostCreatingLogic extends Fragment {
         if (!typedInfo.isEmpty()) {
             int numberOfPeople = Integer.parseInt(typedInfo);
             if (numberOfPeople > 0) {
-                postCreating.setHowManyPeopleNeeded(numberOfPeople);
+                postModel.setHowManyPeopleNeeded(numberOfPeople);
             }
         }
     }
@@ -232,7 +244,7 @@ public class PostCreatingLogic extends Fragment {
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
         if (!typedInfo.isEmpty()) {
             if (!typedInfo.equals("0")) {
-                postCreating.setAdditionalInfo(typedInfo);
+                postModel.setAdditionalInfo(typedInfo);
             }
         }
     }
@@ -245,7 +257,6 @@ public class PostCreatingLogic extends Fragment {
         AppCompatCheckBox dateNegotiable = view.findViewById(R.id.dateNegotiable);
         dateNegotiable.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                dateChoosingLogic.noDateGiven();
                 chooseDate.setEnabled(false);
                 chooseDate.setHintTextColor(Color.GRAY);
             } else {
@@ -253,6 +264,7 @@ public class PostCreatingLogic extends Fragment {
                 chooseDate.setHintTextColor(Color.LTGRAY);
             }
         });
+        dateChoosingLogic.noDateGiven();
     }
 
     private void setHour() {
@@ -263,7 +275,6 @@ public class PostCreatingLogic extends Fragment {
         AppCompatCheckBox hourNegotiable = view.findViewById(R.id.hourNegotiable);
         hourNegotiable.setOnCheckedChangeListener(((buttonView, isChecked) -> {
             if (isChecked) {
-                dateChoosingLogic.noHourGiven();
                 chooseHour.setEnabled(false);
                 chooseHour.setHintTextColor(Color.GRAY);
 
@@ -272,6 +283,7 @@ public class PostCreatingLogic extends Fragment {
                 chooseHour.setHintTextColor(Color.LTGRAY);
             }
         }));
+        dateChoosingLogic.noHourGiven();
     }
 
     private boolean isValidSportSelection() {

@@ -19,12 +19,12 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.AppOptions;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
+import com.noisevisionproductions.playmeet.userManagement.OnCompletionListener;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
@@ -90,7 +90,6 @@ public class RegisterFragment extends Fragment {
                     if (getActivity() != null) {
                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         if (firebaseUser != null) {
-
                             firebaseUser.sendEmailVerification().addOnCompleteListener(verificationTask -> {
                                 if (verificationTask.isSuccessful()) {
                                     ToastManager.showToast(getActivity(), "Rejestracja pomyślna. E-mail weryfikacyjny został wysłany!");
@@ -102,10 +101,10 @@ public class RegisterFragment extends Fragment {
                             });
                             saveUserModelToDatabase(firebaseUser.getUid());
                         }
-                    } else {
-                        ToastManager.showToast(getActivity(), "Błąd rejestracji: " + error);
-                        Log.e("Register new user", "New user register error " + error);
                     }
+                } else {
+                    ToastManager.showToast(requireActivity(), "Błąd rejestracji: " + error);
+                    Log.e("Register new user", "New user register error " + error);
                 }
             });
 
@@ -115,8 +114,20 @@ public class RegisterFragment extends Fragment {
     private void saveUserModelToDatabase(String userId) {
         UserModel userModel = new UserModel();
         userModel.setUserId(userId);
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("UserModel");
-        usersRef.child(userModel.getUserId()).setValue(userModel);
+        FirebaseUserRepository firebaseUserRepository = new FirebaseUserRepository();
+        firebaseUserRepository.addUser(userModel, new OnCompletionListener() {
+            @Override
+            public void onSuccess() {
+                if (getActivity() != null) {
+                    Log.e("Saving User To DB", "User saved in DB.");
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("Saving User To DB", "Failure saving user in DB " + e.getMessage());
+            }
+        });
     }
 
     private void redirectToLoginScreen() {

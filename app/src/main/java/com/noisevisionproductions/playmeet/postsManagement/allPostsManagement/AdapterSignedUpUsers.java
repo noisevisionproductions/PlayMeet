@@ -76,7 +76,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
         private final AppCompatTextView nicknameText, cityText, genderText;
         private final ProgressBar progressBarLayout;

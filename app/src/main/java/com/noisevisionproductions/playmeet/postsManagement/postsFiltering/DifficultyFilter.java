@@ -2,7 +2,7 @@ package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
 import androidx.annotation.Nullable;
 
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 
 public class DifficultyFilter extends Filter {
     private final String difficulty;
@@ -13,7 +13,7 @@ public class DifficultyFilter extends Filter {
     }
 
     @Override
-    public boolean apply(@Nullable PostCreating post) {
+    public boolean apply(@Nullable PostModel post) {
         if (post == null || post.getSkillLevel() == null) {
             return false;
         }

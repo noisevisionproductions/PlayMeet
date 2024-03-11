@@ -31,12 +31,11 @@ import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.io.ByteArrayOutputStream;
@@ -45,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -56,7 +56,7 @@ public class AvatarManagement {
     private ActivityResultLauncher<Uri> takePictureLauncher;
     private final Fragment fragment;
     private final AppCompatButton uploadAvatarButton;
-    private CircleImageView circleImageView;
+    private final CircleImageView circleImageView;
     @Nullable
     private Uri currentImageUri;
     private String currentUserId;
@@ -161,12 +161,10 @@ public class AvatarManagement {
                             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, currentImageUri);
                             takePictureLauncher.launch(currentImageUri);
                         } catch (Exception e) {
-                            e.printStackTrace();
                             Log.e("Making photo", "Taking photo by user " + e.getMessage());
                         }
                     });
                 } catch (IOException e) {
-                    e.printStackTrace();
                     Log.e("Making photo", "Creating image file " + e.getMessage());
                 }
             });
@@ -216,39 +214,52 @@ public class AvatarManagement {
     @Nullable
     private Bitmap rotateImage(@NonNull Uri imageUri, @NonNull Bitmap bitmap) throws IOException {
         //String imagePath = getImagePathFromUri(imageUri);
-        InputStream inputStream = fragment.requireContext().getContentResolver().openInputStream(imageUri);
-
-        if (inputStream != null) {
-            ExifInterface exifInterface = new ExifInterface(inputStream);
-            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-
-            Matrix matrix = new Matrix();
-            switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90 -> matrix.setRotate(90);
-                case ExifInterface.ORIENTATION_ROTATE_180 -> matrix.setRotate(180);
-                case ExifInterface.ORIENTATION_ROTATE_270 -> matrix.setRotate(270);
+        try (InputStream inputStream = fragment.requireContext().getContentResolver().openInputStream(imageUri)) {
+            if (inputStream != null) {
+                Matrix matrix = getMatrix(inputStream);
+                return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             }
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-
+        } catch (IOException e) {
+            // zapobieganie wyciekom pamięci
+            Log.e("Rotating Image", "Rotating image error " + e.getMessage());
         }
         return null;
     }
 
+    @NonNull
+    private static Matrix getMatrix(InputStream inputStream) throws IOException {
+        ExifInterface exifInterface = new ExifInterface(inputStream);
+        int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        Matrix matrix = new Matrix();
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90 -> matrix.setRotate(90);
+            case ExifInterface.ORIENTATION_ROTATE_180 -> matrix.setRotate(180);
+            case ExifInterface.ORIENTATION_ROTATE_270 -> matrix.setRotate(270);
+        }
+        return matrix;
+    }
+
     private void saveImageUrlToUserModel(@Nullable String imageUrl) {
         if (imageUrl != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUserId);
+            FirebaseUserRepository firebaseUserRepository = new FirebaseUserRepository();
+            HashMap<String, Object> userUpdate = new HashMap<>();
+            userUpdate.put("avatar", imageUrl);
+            firebaseUserRepository.updateUser(currentUserId, userUpdate, new OnCompletionListener() {
+                @Override
+                public void onSuccess() {
+                    Glide.with(fragment)
+                            .load(imageUrl)
+                            .into(circleImageView);
+                    ToastManager.showToast(fragment.requireContext(), "Avatar zapisany");
+                }
 
-            userReference.child("avatar").setValue(imageUrl)
-                    .addOnSuccessListener(aVoid -> {
-                        Glide.with(fragment)
-                                .load(imageUrl)
-                                .into(circleImageView);
-                        ToastManager.showToast(fragment.requireContext(), "Avatar zapisany");
-                    })
-                    .addOnFailureListener(e -> {
-                        getErrorToast(e);
-                        Log.e("Avatar", "Uploading avatar URL to DB " + e.getMessage());
-                    });
+                @Override
+                public void onFailure(Exception e) {
+                    getErrorToast(e);
+                    Log.e("Avatar", "Uploading avatar URL to DB " + e.getMessage());
+                }
+            });
         }
     }
 

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -24,13 +23,14 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 
 public class ChatRoomList extends Fragment {
     private ListOfChatRoomsAdapter listOfChatRoomsAdapter;
-    private ProgressBar loadMorePostsIndicator;
+    // private ProgressBar chatRoomsLoading;
     private AppCompatTextView noChatRoomsFound;
+    private RecyclerView recyclerView;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_list_of_chatrooms, container, false);
-        loadMorePostsIndicator = view.findViewById(R.id.loadMorePostsIndicator);
-        loadMorePostsIndicator.setVisibility(View.VISIBLE);
+        //   chatRoomsLoading = view.findViewById(R.id.chatRoomsLoading);
+        // chatRoomsLoading.setVisibility(View.VISIBLE);
         noChatRoomsFound = view.findViewById(R.id.noChatRoomsFound);
 
         setRecyclerView(view);
@@ -39,15 +39,15 @@ public class ChatRoomList extends Fragment {
     }
 
     public void setRecyclerView(@NonNull View view) {
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewChatRoomList);
+        recyclerView = view.findViewById(R.id.recyclerViewChatRoomList);
 
-        loadMorePostsIndicator.setVisibility(View.GONE);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
         if (listOfChatRoomsAdapter == null) {
             initializeChatRoomsAdapter();
         }
         recyclerView.setAdapter(listOfChatRoomsAdapter);
+
     }
 
     private void initializeChatRoomsAdapter() {
@@ -55,7 +55,10 @@ public class ChatRoomList extends Fragment {
         if (firebaseHelper.getCurrentUser() != null) {
             String currentUserId = firebaseHelper.getCurrentUser().getUid();
 
-            Query query = firebaseHelper.getDatabaseReference().child("ChatRooms").orderByChild("participants/" + currentUserId).equalTo(true);
+            Query query = firebaseHelper.getDatabaseReference()
+                    .child("ChatRooms")
+                    .orderByChild("participants/" + currentUserId)
+                    .equalTo(true);
             checkForExistingRooms(query);
 
             FirebaseRecyclerOptions<ChatRoomModel> options = new FirebaseRecyclerOptions.Builder<ChatRoomModel>()
@@ -74,8 +77,10 @@ public class ChatRoomList extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     noChatRoomsFound.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                 } else {
                     noChatRoomsFound.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                 }
             }
 

@@ -5,10 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -27,9 +29,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomModel, ListOfChatRoomsAdapter.ViewHolder> {
-
     private final OnItemClickListener listener;
     private final Context context;
+
 
     public interface OnItemClickListener {
         void onItemClick(ChatRoomModel chatRoomModel);
@@ -53,7 +55,8 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
         return new ViewHolder(view);
     }
 
-    public void getChatRoomData(@NonNull ViewHolder holder, @NonNull final ChatRoomModel chat) {
+    private void getChatRoomData(@NonNull ViewHolder holder, @NonNull final ChatRoomModel chat) {
+        setLoading(true, holder);
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         if (firebaseHelper.getCurrentUser() != null) {
 
@@ -75,6 +78,7 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
                         if (snapshot.exists()) {
                             String nickname = snapshot.getValue(String.class);
                             if (nickname != null) {
+                                setLoading(false, holder);
                                 holder.username.setText(nickname);
                             }
                         }
@@ -122,17 +126,25 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
         return null;
     }
 
+    private void setLoading(boolean isLoading, ViewHolder holder) {
+        holder.chatroomProgressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        holder.chatRoomLayout.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final AppCompatTextView username;
         private final AppCompatTextView lastMessage;
         private final CircleImageView userAvatar;
+        private final LinearLayoutCompat chatRoomLayout;
+        private final ProgressBar chatroomProgressBar;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             username = itemView.findViewById(R.id.username);
             lastMessage = itemView.findViewById(R.id.lastMessage);
             userAvatar = itemView.findViewById(R.id.userAvatar);
+            chatRoomLayout = itemView.findViewById(R.id.chatRoomLayout);
+            chatroomProgressBar = itemView.findViewById(R.id.chatroomProgressBar);
         }
     }
 }

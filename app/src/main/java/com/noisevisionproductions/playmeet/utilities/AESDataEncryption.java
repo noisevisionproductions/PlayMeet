@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.utilities;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.noisevisionproductions.playmeet.R;
 
@@ -36,10 +37,10 @@ public class AESDataEncryption {
             this.key = keyString.getBytes(StandardCharsets.UTF_8);
         } catch (Resources.NotFoundException e) {
             System.err.println("Nie znaleziono pliku config.properties w folderze res/raw");
-            e.printStackTrace();
+            Log.e("Error While encrypting", "Error While encrypting " + e.getMessage());
         } catch (IOException e) {
+            Log.e("Error While encrypting", "Error While encrypting " + e.getMessage());
             System.err.println("Błąd podczas ładowania pliku config.properties");
-            e.printStackTrace();
         }
     }
 

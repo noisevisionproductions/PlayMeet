@@ -21,7 +21,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseError;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
+import com.noisevisionproductions.playmeet.userManagement.OnCompletionListener;
 import com.noisevisionproductions.playmeet.utilities.AESDataEncryption;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
@@ -72,34 +73,37 @@ public class ChildFragmentGender extends Fragment {
         });
     }
 
-    public void saveUserData() throws Exception {
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        AESDataEncryption encryption = new AESDataEncryption(getContext());
+    public void saveUserData() {
+        try {
+            AESDataEncryption encryption = new AESDataEncryption(getContext());
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            if (firebaseUser != null) {
+                UserProfileChangeRequest profileUpdateFirstSetup = new UserProfileChangeRequest.Builder()
+                        .setDisplayName(getArgument(ARG_NICKNAME))
+                        .build();
 
-        // dodaje zebrane argumenty do HashMap, aby wszystkie były jako jeden obiekt ułatwiający zapisanie w bazie danych
-        HashMap<String, Object> userUpdate = new HashMap<>();
-        userUpdate.put("nickname", getArgument(ARG_NICKNAME));
-        userUpdate.put("location", encryption.encrypt(Objects.requireNonNull(getArgument(ARG_CITY))));
-        userUpdate.put("gender", encryption.encrypt(gender));
+                HashMap<String, Object> userUpdate = new HashMap<>();
+                userUpdate.put("nickname", getArgument(ARG_NICKNAME));
+                userUpdate.put("location", encryption.encrypt(Objects.requireNonNull(getArgument(ARG_CITY))));
+                userUpdate.put("gender", encryption.encrypt(gender));
 
-        // tworzę obiekt, który pozwoli na ustawienie różnych informacji o użytkowniku, w moim wypadku jest to nickname
-        UserProfileChangeRequest profileUpdate = new UserProfileChangeRequest.Builder()
-                .setDisplayName(getArgument(ARG_NICKNAME))
-                .build();
+                FirebaseUserRepository userRepository = new FirebaseUserRepository();
+                userRepository.updateUser(firebaseUser.getUid(), userUpdate, new OnCompletionListener() {
+                    @Override
+                    public void onSuccess() {
+                        handleTransactionSuccess();
+                        firebaseUser.updateProfile(profileUpdateFirstSetup);
+                    }
 
-        if (firebaseUser != null) {
-            // wykorzystuje obiekt, w którym ustawiałem nickname, aby przypisać go użytkownikowi w Firebase,
-            // dzięki temu będę mógł pobierać nickname wraz z UserID
-            firebaseUser.updateProfile(profileUpdate);
+                    @Override
+                    public void onFailure(Exception e) {
+                        handleTransactionError(DatabaseError.fromException(e));
+                    }
+                });
+            }
+        } catch (Exception e) {
+            Log.e("Saving first user setup info", "First user setup error " + e.getMessage());
         }
-
-
-        // używam klasy FirebaseHelper, aby z łatwością zapisać wszystkie zebrane dane z fragmentów w bazie danych,
-        // podając tylko poprzednio powstały hashmap firebaseHelper.updateDataUsingHashMap(userUpdate,
-        firebaseHelper.updateDataUsingHashMap(userUpdate,
-                aVoid -> handleTransactionSuccess(),
-                e -> handleTransactionError(DatabaseError.fromException(e)), "UserModel");
     }
 
     private void handleTransactionSuccess() {
