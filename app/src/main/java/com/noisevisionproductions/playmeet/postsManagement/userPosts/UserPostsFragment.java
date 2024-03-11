@@ -98,6 +98,7 @@ public class UserPostsFragment extends Fragment {
                     postsCreatedByUserRecyclerView.setVisibility(View.GONE);
                     noPostsCreatedInfo.setVisibility(View.VISIBLE);
                 }
+                progress_bar_yourPosts.setVisibility(View.GONE);
             });
         } else {
             postsCreatedByUserRecyclerView.setVisibility(View.GONE);
@@ -122,6 +123,7 @@ public class UserPostsFragment extends Fragment {
                 noPostsSignedIntoInfo.setVisibility(View.VISIBLE);
                 postsSignedIntoByUserRecyclerView.setVisibility(View.GONE);
             }
+            progress_bar_registeredPosts.setVisibility(View.GONE);
         });
     }
 
@@ -133,7 +135,6 @@ public class UserPostsFragment extends Fragment {
                 postsCreatedByUser.clear();
                 postsCreatedByUser.addAll(newPosts);
                 diffResult.dispatchUpdatesTo(adapterCreatedByUserPosts);
-                progress_bar_yourPosts.setVisibility(View.GONE);
                 postsCreatedByUserRecyclerView.setVisibility(View.VISIBLE);
             });
         }).start();
@@ -147,7 +148,6 @@ public class UserPostsFragment extends Fragment {
                 savedPosts.clear();
                 savedPosts.addAll(newPosts);
                 diffResult.dispatchUpdatesTo(adapterSavedByUserPosts);
-                progress_bar_registeredPosts.setVisibility(View.GONE);
                 postsSignedIntoByUserRecyclerView.setVisibility(View.VISIBLE);
             });
         }).start();

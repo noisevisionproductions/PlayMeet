@@ -13,4 +13,8 @@ public interface PostRepository {
     void removeUserFromRegistration(String postId, String userId, OnCompletionListener listener);
 
     void registerUserToPost(String postId, String userId, OnCompletionListener listener);
+
+    void deleteAllUserPosts(String userId, OnCompletionListener listener, Runnable onComplete);
+
+    void deleteAllUserRegistrationsAndUpdatePosts(String userId, OnCompletionListener listener);
 }

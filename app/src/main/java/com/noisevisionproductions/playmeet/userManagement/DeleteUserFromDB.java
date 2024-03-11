@@ -23,43 +23,39 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserInfo;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
-import com.noisevisionproductions.playmeet.postsManagement.userPosts.PostHelperSignedUpUser;
+import com.noisevisionproductions.playmeet.postsManagement.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.nio.charset.StandardCharsets;
 
-// TODO: zaktualizowac klase aby wspolgrala z FirebaseUserRepository.class
 public class DeleteUserFromDB {
-
     @Nullable
-    private FirebaseUser currentUser;
+    private final FirebaseUser currentUser;
     private AlertDialog dialog;
     private final Context context;
     private final LayoutInflater layoutInflater;
+    private final FirestorePostRepository firestorePostRepository;
+    private String currentUserId;
 
     public DeleteUserFromDB(Context context, LayoutInflater layoutInflater) {
         this.context = context;
         this.layoutInflater = layoutInflater;
-    }
-
-    public void deleteUser() {
+        firestorePostRepository = new FirestorePostRepository();
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        createDeleteConfirmationDialog();
+
+        if (currentUser != null) {
+            currentUserId = currentUser.getUid();
+        }
     }
 
-    private void createDeleteConfirmationDialog() {
+    public void createDeleteConfirmationDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         @SuppressLint("InflateParams") View dialogView = layoutInflater.inflate(R.layout.dialog_get_password, null); // Używamy LayoutInflater dostarczonego z zewnątrz
 
@@ -147,20 +143,24 @@ public class DeleteUserFromDB {
     }
 
     private void deleteUserWithEmailAuth(@NonNull String password, String reasonText) {
-        if (currentUser != null) {
-            for (UserInfo userInfo : currentUser.getProviderData()) {
-                if ("password".equals(userInfo.getProviderId()) && currentUser.getEmail() != null) {
-                    AuthCredential credential = EmailAuthProvider.getCredential(currentUser.getEmail(), password);
-                    authenticateAndDeleteUser(credential, reasonText);
-                    return;
-                }
+        if (!isCurrentUserAvailable()) {
+            logError("Current user is not available");
+            return;
+        }
+        for (UserInfo userInfo : currentUser.getProviderData()) {
+            if ("password".equals(userInfo.getProviderId()) && currentUser.getEmail() != null) {
+                AuthCredential credential = EmailAuthProvider.getCredential(currentUser.getEmail(), password);
+                authenticateAndDeleteUser(credential, reasonText);
+                return;
             }
         }
     }
 
     private void deleteUserWithGoogleAuth() {
-        if (currentUser == null) return;
-
+        if (!isCurrentUserAvailable()) {
+            logError("Current user is not available");
+            return;
+        }
         for (UserInfo userInfo : currentUser.getProviderData()) {
             if ("google.com".equals(userInfo.getProviderId())) {
                 String idToken = getIdTokenFromSharedPreferences();
@@ -176,42 +176,30 @@ public class DeleteUserFromDB {
         }
     }
 
-    private void authenticateAndDeleteUser(@NonNull AuthCredential credential, @Nullable String reasonText) {
-        if (currentUser != null) {
-            currentUser.reauthenticate(credential)
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            if (reasonText != null && !reasonText.isEmpty()) {
-                                submitReasonForDeleteAccountToDB(reasonText, this::deleteUserAccount);
-                            } else {
-                                deleteUserAccount();
-                            }
-                        } else {
-                            showToast();
-                        }
-                    })
-                    .addOnFailureListener(e -> logError("Authentication error: " + e.getMessage()));
-        }
-    }
-
-    private void deleteUserAccount() {
-        deleteDataFromDB();
-        getToastDeleteSuccessful();
-        if (currentUser != null) {
-            currentUser.delete().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    navigateToLoginAndRegister();
-                } else {
-                    getToastErrorFromDeleting();
-                }
-            });
-        }
-    }
-
     @NonNull
     private String getIdTokenFromSharedPreferences() {
         SharedPreferences sharedPreferences = context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
         return sharedPreferences.getString("idToken", "");
+    }
+
+    private void authenticateAndDeleteUser(@NonNull AuthCredential credential, @Nullable String reasonText) {
+        if (!isCurrentUserAvailable()) {
+            logError("Current user is not available");
+            return;
+        }
+        currentUser.reauthenticate(credential)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        if (reasonText != null && !reasonText.isEmpty()) {
+                            submitReasonForDeleteAccountToDB(reasonText, this::deleteAllUserPosts);
+                        } else {
+                            deleteAllUserPosts();
+                        }
+                    } else {
+                        showToast();
+                    }
+                })
+                .addOnFailureListener(e -> logError("Authentication error: " + e.getMessage()));
     }
 
     private void navigateToLoginAndRegister() {
@@ -227,59 +215,67 @@ public class DeleteUserFromDB {
         }
     }
 
-    private void deleteDataFromDB() {
-        if (currentUser != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("UserModel").child(currentUser.getUid());
-            userReference.removeValue();
-            removeUserIdFromSavedPosts(currentUser.getUid());
-
-            UserAccountLogic userAccountLogic = new UserAccountLogic();
-            userAccountLogic.deleteUserAvatar();
-
-            DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
-            postsReference
-                    .orderByChild("userId")
-                    .equalTo(currentUser.getUid())
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                                    postSnapshot.getRef().removeValue();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                            Log.e("Firebase RealmTime Database error", "Error while removing user from DB " + error.getMessage());
-                        }
-                    });
+    private void deleteAllUserPosts() {
+        if (!isCurrentUserAvailable()) {
+            logError("Current user is not available");
+            return;
         }
+        firestorePostRepository.deleteAllUserPosts(currentUserId, new OnCompletionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d("Firestore removing user posts", "Firestore removing user posts successful.");
+                currentUser.delete().addOnCompleteListener(task -> {
+                    getToastDeleteSuccessful();
+                    if (task.isSuccessful()) {
+                        navigateToLoginAndRegister();
+                    } else {
+                        getToastErrorFromDeleting();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("Firestore removing user posts error", "Firestore removing user posts error " + e.getMessage());
+            }
+        }, () -> deleteAllUserRegistrationsAndUpdatePosts(() -> Log.d("User removing", "User removed completelly")));
     }
 
-    private void removeUserIdFromSavedPosts(String userId) {
-        DatabaseReference postsRef = FirebaseDatabase.getInstance().getReference().child("PostCreating");
-        postsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+    private void deleteAllUserRegistrationsAndUpdatePosts(Runnable onComplete) {
+        firestorePostRepository.deleteAllUserRegistrationsAndUpdatePosts(currentUserId, new OnCompletionListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot postsSnapshot : snapshot.getChildren()) {
-                    PostModel postModel = postsSnapshot.getValue(PostModel.class);
-
-                    if (postModel != null && postModel.getPeopleSignedUp() > 0) {
-                        //   postCreating.deleteSignedUpUser(userId);
-                        postModel.setActivityFull(false);
-                        PostHelperSignedUpUser.decrementJoinedPostsCount(userId);
-                        postsRef.child(postModel.getPostId()).setValue(postModel);
-                    }
+            public void onSuccess() {
+                Log.d("Firestore registration update", "Firestore registration update successful.");
+                if (onComplete != null) {
+                    deleteUserFromRealtimeDB();
+                    onComplete.run();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase Error", error.getMessage());
+            public void onFailure(Exception e) {
+                Log.e("Firestore registration update", "Firestore registration update error " + e.getMessage());
             }
         });
+    }
+
+    private void deleteUserFromRealtimeDB() {
+        FirebaseUserRepository firebaseUserRepository = new FirebaseUserRepository();
+        firebaseUserRepository.deleteUser(currentUserId, new OnCompletionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d("Removing user from realtime DB", "Removing user from realtime DB Success.");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("Removing user from realtime DB error", "Removing user from realtime DB error " + e.getMessage());
+            }
+        });
+    }
+
+    private boolean isCurrentUserAvailable() {
+        return currentUser != null;
     }
 
     private void getToastErrorFromDeleting() {

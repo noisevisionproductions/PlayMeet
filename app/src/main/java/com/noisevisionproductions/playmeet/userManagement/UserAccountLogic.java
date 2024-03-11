@@ -165,9 +165,6 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         } catch (Exception e) {
             Log.e("Encryption Error", "Błąd szyfrowania danych: " + e.getMessage());
         }
-        //userReference.updateChildren(userUpdates).addOnSuccessListener(aVoid ->
-        // Log.d("Updating user info in DB", "Dane użytkownika zostały zaktualizowane."))
-        // .addOnFailureListener(e -> Log.e("Updating user info in DB", "Błąd podczas aktualizacji danych użytkownika: " + e.getMessage()));
     }
 
     private void getUserData() {

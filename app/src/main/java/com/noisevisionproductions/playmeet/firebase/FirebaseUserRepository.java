@@ -59,14 +59,19 @@ public class FirebaseUserRepository implements UserRepository {
 
     @Override
     public void deleteUser(String userId, OnCompletionListener listener) {
-        userReference.child("UserModel").child(userId).removeValue()
+        userReference.child("UserModel")
+                .child(userId)
+                .removeValue()
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(listener::onFailure);
     }
 
     @Override
     public void updateJoinedPostsCount(String userId, int count, OnCompletionListener listener) {
-        userReference.child("UserModel").child(userId).child("joinedPostsCount").setValue(count)
+        userReference.child("UserModel")
+                .child(userId)
+                .child("joinedPostsCount")
+                .setValue(count)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(listener::onFailure);
     }

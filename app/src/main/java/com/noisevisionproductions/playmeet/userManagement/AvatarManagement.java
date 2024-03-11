@@ -1,7 +1,6 @@
 package com.noisevisionproductions.playmeet.userManagement;
 
-import static android.app.Activity.RESULT_OK;
-
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -9,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,6 +25,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.content.FileProvider;
 import androidx.exifinterface.media.ExifInterface;
@@ -54,6 +55,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class AvatarManagement {
     private ActivityResultLauncher<Intent> chooseImageFromGallery;
     private ActivityResultLauncher<Uri> takePictureLauncher;
+    private ActivityResultLauncher<String[]> requestPermissionsLauncher;
     private final Fragment fragment;
     private final AppCompatButton uploadAvatarButton;
     private final CircleImageView circleImageView;
@@ -69,11 +71,33 @@ public class AvatarManagement {
         if (firebaseHelper.getCurrentUser() != null) {
             currentUserId = firebaseHelper.getCurrentUser().getUid();
         }
+        setupPermissionRequest();
     }
 
-    public void pickImageFromGallery() {
+    private void setupPermissionRequest() {
+        requestPermissionsLauncher = fragment.registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), results -> {
+            boolean allPermissionsGranted = !results.containsValue(false);
+            if (allPermissionsGranted) {
+                launchGalleryIntent();
+            } else {
+                setupPermissionRequest();
+            }
+        });
+    }
+
+    private void launchGalleryIntent() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         chooseImageFromGallery.launch(intent);
+    }
+
+    private void openGalleryBasedOnSDk() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionsLauncher.launch(new String[]{
+                    Manifest.permission.READ_MEDIA_IMAGES
+            });
+        } else {
+            requestPermissionsLauncher.launch(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
+        }
     }
 
     public void setupListeners() {
@@ -82,7 +106,7 @@ public class AvatarManagement {
         chooseImageFromGallery = fragment.registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    if (result.getResultCode() == AppCompatActivity.RESULT_OK && result.getData() != null) {
                         currentImageUri = result.getData().getData();
                         if (currentImageUri != null) {
                             uploadImageToFirebaseStorage(currentImageUri);
@@ -101,7 +125,6 @@ public class AvatarManagement {
                     }
                 }
         );
-
         uploadAvatarButton.setOnClickListener(v -> chooseImageSource());
     }
 
@@ -112,8 +135,7 @@ public class AvatarManagement {
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
                 fragment.requireContext(),
                 android.R.layout.simple_list_item_1,
-                new CharSequence[]{"Aparat", "Galeria"}
-        ) {
+                new CharSequence[]{"Aparat", "Galeria"}) {
             @NonNull
             @Override
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -138,7 +160,7 @@ public class AvatarManagement {
                         takePicture();
                 case 1 ->
                     // wybór z galerii
-                        pickImageFromGallery();
+                        openGalleryBasedOnSDk();
             }
         });
         builder.show();

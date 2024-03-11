@@ -72,7 +72,7 @@ public class AppOptions extends TopMenuLayout {
             deleteAccount.setVisibility(View.GONE);
         }
         DeleteUserFromDB deleteUserFromDB = new DeleteUserFromDB(this, getLayoutInflater());
-        deleteAccount.setOnClickListener(v -> deleteUserFromDB.deleteUser());
+        deleteAccount.setOnClickListener(v -> deleteUserFromDB.createDeleteConfirmationDialog());
     }
 
     private void printVersionInfo() {
