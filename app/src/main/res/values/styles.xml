@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--dzieki temu, nie zmienia sie tło tekstu, gdy uzywa sie autofillu-->
+    <style name="AppThemeForLoginAndRegister" parent="Theme.AppCompat">
+        <item name="windowActionBar">false</item>
+        <item name="background">@color/background</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:autofilledHighlight">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.AppCompat">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="background">@color/background</item>
+        <item name="windowActionBar">true</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+    </style>
+
+    <style name="AppTheme.NoBackground" parent="AppTheme">
+        <item name="windowActionBar">true</item>
+    </style>
+
+    <style name="noBar" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="background">@color/background</item>
+    </style>
+
+    <style name="MyAppCompatButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_style</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">serif</item>
+    </style>
+
+    <style name="MySpinnerStyleForDefaultInput" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@drawable/no_arrow_spinner_background</item>
+        <item name="android:popupBackground">@drawable/rounded_menu_background_for_spinner</item>
+        <item name="android:dropDownVerticalOffset">50dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="MyAutoCompleteTextViewStyle" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="background">@drawable/my_autocomplete_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:inputType">textCapSentences</item>
+        <item name="android:minHeight">60dp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="MyButtonStyleOnWhite" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_style_on_white</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_style</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_margin">2dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="MainMenuButtonsStyle" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button_style_main_menu</item>
+        <item name="android:textColor">@color/text</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:fontFamily">@font/inter_regular</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:minHeight">60dp</item>
+    </style>
+
+    <style name="MyAppCompatTextViewStyle" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textColorHint">@color/text60</item>
+        <item name="android:typeface">serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MyTextInputLayoutDesign" parent="ThemeOverlay.Material3.TextInputEditText">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textColorHint">@color/text60</item>
+    </style>
+
+    <style name="DialogSlideAnim" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_in_top</item>
+        <item name="android:windowExitAnimation">@anim/slide_out_bottom</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
+
+
+</resources>
+
