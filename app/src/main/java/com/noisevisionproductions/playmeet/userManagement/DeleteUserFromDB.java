@@ -31,7 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
@@ -40,6 +40,7 @@ import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.nio.charset.StandardCharsets;
 
+// TODO: zaktualizowac klase aby wspolgrala z FirebaseUserRepository.class
 public class DeleteUserFromDB {
 
     @Nullable
@@ -263,13 +264,13 @@ public class DeleteUserFromDB {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postsSnapshot : snapshot.getChildren()) {
-                    PostCreating postCreating = postsSnapshot.getValue(PostCreating.class);
+                    PostModel postModel = postsSnapshot.getValue(PostModel.class);
 
-                    if (postCreating != null && postCreating.getPeopleSignedUp() > 0) {
+                    if (postModel != null && postModel.getPeopleSignedUp() > 0) {
                         //   postCreating.deleteSignedUpUser(userId);
-                        postCreating.setActivityFull(false);
+                        postModel.setActivityFull(false);
                         PostHelperSignedUpUser.decrementJoinedPostsCount(userId);
-                        postsRef.child(postCreating.getPostId()).setValue(postCreating);
+                        postsRef.child(postModel.getPostId()).setValue(postModel);
                     }
                 }
             }

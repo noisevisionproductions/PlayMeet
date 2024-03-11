@@ -3,8 +3,11 @@ package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
@@ -15,43 +18,44 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.postsManagement.userPosts.PostHelperSignedUpUser;
+import com.noisevisionproductions.playmeet.postsManagement.userPosts.ViewHolderUpdater;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterAllPosts extends FirestoreRecyclerAdapter<PostCreating, AdapterAllPosts.MyViewHolder> {
-
+public class AdapterAllPosts extends FirestoreRecyclerAdapter<PostModel, AdapterAllPosts.MyViewHolder> {
     private final FragmentManager fragmentManager;
     private final Context context;
 
-    public AdapterAllPosts(@NonNull FirestoreRecyclerOptions<PostCreating> options, FragmentManager fragmentManager, Context context) {
+    public AdapterAllPosts(@NonNull FirestoreRecyclerOptions<PostModel> options, FragmentManager fragmentManager, Context context) {
         super(options);
         this.fragmentManager = fragmentManager;
         this.context = context;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull MyViewHolder holder, int i, @NonNull PostCreating postCreating) {
-        AdapterAllPostsManagement.setPostAnimation(holder);
+    protected void onBindViewHolder(@NonNull MyViewHolder holder, int i, @NonNull PostModel postModel) {
+        holder.applyAnimation();
+        String userId = postModel.getUserId();
 
-        String userId = postCreating.getUserId();
-        AdapterAllPostsManagement.setUserAvatar(holder, userId, context);
+        AdapterAllPostsManagement.getSkillLevel(postModel, holder);
+        AdapterAllPostsManagement.reportPost(holder, postModel.getPostId(), context);
 
-        AdapterAllPostsManagement.getSkillLevel(postCreating, holder);
-        AdapterAllPostsManagement.reportPost(holder, postCreating.getPostId(), context);
+        PostHelperSignedUpUser.getPeopleStatus(postModel.getPostId(), holder);
 
-        AdapterAllPostsManagement.getPeopleStatus(postCreating.getPostId(), holder);
-
-        holder.sportNames.setText(postCreating.getSportType());
-        holder.cityNames.setText(postCreating.getCityName());
-        holder.addInfo.setText(postCreating.getAdditionalInfo());
+        holder.setUserAvatar(context, userId);
+        holder.sportNames.setText(postModel.getSportType());
+        holder.cityNames.setText(postModel.getCityName());
+        holder.addInfo.setText(postModel.getAdditionalInfo());
 
         // po kliknieciu w post, otwiera wiecej informacji o nim
         if (FirebaseAuthManager.isUserLoggedIn()) {
-            holder.layoutOfPost.setOnClickListener(v -> ButtonsForChatAndSignIn.handleMoreInfoButton(fragmentManager, postCreating, context));
+            holder.layoutOfPost.setOnClickListener(v -> ButtonsForChatAndSignIn.handleMoreInfoButton(fragmentManager, postModel, context));
         } else {
             ProjectUtils.showLoginSnackBar(context);
         }
@@ -64,7 +68,7 @@ public class AdapterAllPosts extends FirestoreRecyclerAdapter<PostCreating, Adap
         return new MyViewHolder(v);
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public static class MyViewHolder extends RecyclerView.ViewHolder implements ViewHolderUpdater {
         protected final CircleImageView userAvatar;
         private final AppCompatTextView sportNames;
         private final AppCompatTextView cityNames;
@@ -84,6 +88,32 @@ public class AdapterAllPosts extends FirestoreRecyclerAdapter<PostCreating, Adap
             numberOfPeople = v.findViewById(R.id.numberOfPeople);
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
             overflowIcon = v.findViewById(R.id.overflowIcon);
+        }
+
+        @Override
+        public void updatePeopleStatus(String status) {
+            this.numberOfPeople.setText(status);
+        }
+
+        @Override
+        public void applyAnimation() {
+            Animation postAnimation = AnimationUtils.loadAnimation(itemView.getContext(), R.anim.post_loading_animation);
+            itemView.setOnHoverListener((view, motionEvent) -> {
+                if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
+                    view.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300).start();
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_EXIT) {
+                    view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).start();
+                }
+                return false;
+            });
+            itemView.setAnimation(postAnimation);
+            itemView.startAnimation(postAnimation);
+        }
+
+        @Override
+        public void setUserAvatar(Context context, String userId) {
+            FirebaseHelper firebaseHelper = new FirebaseHelper();
+            firebaseHelper.getUserAvatar(context, userId, this.userAvatar);
         }
     }
 }

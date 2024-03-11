@@ -2,47 +2,47 @@ package com.noisevisionproductions.playmeet;
 
 import androidx.annotation.NonNull;
 
+import com.google.firebase.database.PropertyName;
 import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 
-public class PostCreating implements PostInfo {
+public class PostModel implements PostInfo {
+    @PropertyName("postId")
     private String postId;
+    @PropertyName("createdByUser")
     private Boolean createdByUser = false;
+    @PropertyName("activityFull")
     private Boolean isActivityFull = false;
+    @PropertyName("userId")
     private String userId;
+    @PropertyName("sportTpe")
     private String sportType;
+    @PropertyName("cityName")
     private String cityName;
+    @PropertyName("dateTime")
     private String dateTime;
+    @PropertyName("hourTime")
     private String hourTime;
+    @PropertyName("skillLevel")
     private String skillLevel;
+    @PropertyName("peopleStatus")
     private String peopleStatus;
+    @PropertyName("howManyPeopleNeeded")
     private int howManyPeopleNeeded;
+    @PropertyName("additionalInfo")
     private String additionalInfo;
+    @PropertyName("signedUpCount")
     private int signedUpCount = 0;
 
-    public PostCreating() {
-    }
-
-    public Boolean getCreatedByUser() {
-        return createdByUser;
-    }
-
-    public PostCreating(String postId, String sportType, String cityName, String additionalInfo, String skillLevel, String dateTime, String hourTime) {
-        this.postId = postId;
-        this.sportType = sportType;
-        this.cityName = cityName;
-        this.additionalInfo = additionalInfo;
-        this.skillLevel = skillLevel;
-        this.dateTime = dateTime;
-        this.hourTime = hourTime;
+    public PostModel() {
     }
 
     @NonNull
-    public PostCreating copyOfAllPosts() {
-        PostCreating copyOfAllPosts = new PostCreating();
-        copyOfAllPosts.setPostId(postId);
-        copyOfAllPosts.setIsCreatedByUser(createdByUser);
+    public PostModel copyOfAllPosts() {
+        PostModel copyOfAllPosts = new PostModel();
+        // copyOfAllPosts.setPostId(postId);
+        // copyOfAllPosts.getCreatedByUser(createdByUser);
         copyOfAllPosts.setActivityFull(isActivityFull);
-        copyOfAllPosts.setUserId(userId);
+        // copyOfAllPosts.setUserId(userId);
         copyOfAllPosts.setSportType(sportType);
         copyOfAllPosts.setCityName(cityName);
         copyOfAllPosts.setDateTime(dateTime);
@@ -59,12 +59,14 @@ public class PostCreating implements PostInfo {
 
     public void userSignedUp() {
         signedUpCount++;
+        isActivityFull = signedUpCount >= howManyPeopleNeeded;
         updatePeopleStatus();
     }
 
     public void deleteSignedUpUser() {
         if (signedUpCount > 0) {
             signedUpCount--;
+            isActivityFull = signedUpCount >= howManyPeopleNeeded;
             updatePeopleStatus();
         }
     }
@@ -78,15 +80,21 @@ public class PostCreating implements PostInfo {
         return peopleStatus;
     }
 
-    public int getHowManyPeopleNeeded() {
-        return howManyPeopleNeeded;
+    @Override
+    public String getPostId() {
+        return postId;
     }
 
-    public void setHowManyPeopleNeeded(int howManyPeopleNeeded) {
-        this.howManyPeopleNeeded = howManyPeopleNeeded;
+    public void setPostId(String postId) {
+        updatePeopleStatus();
+        this.postId = postId;
     }
 
-    public void setIsCreatedByUser(Boolean createdByUser) {
+    public Boolean getCreatedByUser() {
+        return createdByUser;
+    }
+
+    public void setCreatedByUser(Boolean createdByUser) {
         this.createdByUser = createdByUser;
     }
 
@@ -98,6 +106,7 @@ public class PostCreating implements PostInfo {
         isActivityFull = activityFull;
     }
 
+    @Override
     public String getUserId() {
         return userId;
     }
@@ -106,14 +115,7 @@ public class PostCreating implements PostInfo {
         this.userId = userId;
     }
 
-    public String getPostId() {
-        return postId;
-    }
-
-    public void setPostId(String postId) {
-        this.postId = postId;
-    }
-
+    @Override
     public String getSportType() {
         return sportType;
     }
@@ -122,6 +124,7 @@ public class PostCreating implements PostInfo {
         this.sportType = sportType;
     }
 
+    @Override
     public String getCityName() {
         return cityName;
     }
@@ -130,12 +133,22 @@ public class PostCreating implements PostInfo {
         this.cityName = cityName;
     }
 
-    public String getAdditionalInfo() {
-        return additionalInfo;
+    @Override
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public void setAdditionalInfo(String additionalInfo) {
-        this.additionalInfo = additionalInfo;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
+    }
+
+    @Override
+    public String getHourTime() {
+        return hourTime;
+    }
+
+    public void setHourTime(String hourTime) {
+        this.hourTime = hourTime;
     }
 
     public String getSkillLevel() {
@@ -146,23 +159,33 @@ public class PostCreating implements PostInfo {
         this.skillLevel = skillLevel;
     }
 
-
-    public String getDateTime() {
-        return dateTime;
+    public void setPeopleStatus(String peopleStatus) {
+        this.peopleStatus = peopleStatus;
     }
 
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
+    public int getHowManyPeopleNeeded() {
+        return howManyPeopleNeeded;
     }
 
-    public String getHourTime() {
-        return hourTime;
+    public void setHowManyPeopleNeeded(int howManyPeopleNeeded) {
+        this.howManyPeopleNeeded = howManyPeopleNeeded;
     }
 
-    public void setHourTime(String hourTime) {
-        this.hourTime = hourTime;
+    @Override
+    public String getAdditionalInfo() {
+        return additionalInfo;
     }
 
+    public void setAdditionalInfo(String additionalInfo) {
+        this.additionalInfo = additionalInfo;
+    }
 
+    public int getSignedUpCount() {
+        return signedUpCount;
+    }
+
+    public void setSignedUpCount(int signedUpCount) {
+        this.signedUpCount = signedUpCount;
+    }
 }
 

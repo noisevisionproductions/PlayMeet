@@ -31,6 +31,7 @@ import com.google.firebase.storage.StorageReference;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.utilities.AESDataEncryption;
 import com.noisevisionproductions.playmeet.utilities.NicknameValidation;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
@@ -117,32 +118,56 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(requireActivity()));
     }
 
-    private void saveUserInfo() throws Exception {
+    private void saveUserInfo() {
         String name = nameInput.getText() != null ? nameInput.getText().toString() : "";
         String about = aboutYouInput.getText() != null ? aboutYouInput.getText().toString() : "";
         String city = cityTextView.getText() != null ? cityTextView.getText().toString() : "";
         String age = ageSpinner.getSelectedItem() != null ? ageSpinner.getSelectedItem().toString() : "";
 
         updateUserInfo(name, about, city, age);
-
-        ToastManager.showToast(requireContext(), "Dane zapisane!");
     }
 
-    private void updateUserInfo(String name, String about, String city, String age) throws Exception {
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUser);
-        AESDataEncryption encryption = new AESDataEncryption(getContext());
+    private void updateUserInfo(String name, String about, String city, String age) {
+        try {
+            AESDataEncryption encryption = new AESDataEncryption(getContext());
 
-        Map<String, Object> userUpdates = new HashMap<>();
-        userUpdates.put("name", encryption.encrypt(name));
-        userUpdates.put("aboutMe", encryption.encrypt(about));
-        if (city.isEmpty() || !ProjectUtils.isCityChosenFromTheList(city, requireContext())) {
-            cityTextView.setError("Wybierz prawidłowe miasto");
-        } else {
-            userUpdates.put("location", encryption.encrypt(city));
+            Map<String, Object> userUpdates = new HashMap<>();
+            if (!name.isEmpty()) {
+                userUpdates.put("name", encryption.encrypt(name));
+            }
+            if (!about.isEmpty()) {
+                userUpdates.put("aboutMe", encryption.encrypt(about));
+            }
+            if (city.isEmpty() || !ProjectUtils.isCityChosenFromTheList(city, requireContext())) {
+                cityTextView.setError("Wybierz prawidłowe miasto");
+                return; // Przerywa metodę, jeśli miasto jest nieprawidłowe.
+            } else {
+                userUpdates.put("location", encryption.encrypt(city));
+            }
+            if (!age.isEmpty()) {
+                if (!age.equals("Wybierz swój wiek")) {
+                    userUpdates.put("age", encryption.encrypt(age));
+                }
+            }
+            FirebaseUserRepository firebaseUserRepository = new FirebaseUserRepository();
+            firebaseUserRepository.updateUser(currentUser, userUpdates, new OnCompletionListener() {
+                @Override
+                public void onSuccess() {
+                    ToastManager.showToast(requireContext(), "Dane zapisane!");
+                    Log.d("Updating user info in DB", "Dane użytkownika zostały zaktualizowane.");
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    Log.e("Updating user info in DB", "Błąd podczas aktualizacji danych użytkownika: " + e.getMessage());
+                }
+            });
+        } catch (Exception e) {
+            Log.e("Encryption Error", "Błąd szyfrowania danych: " + e.getMessage());
         }
-        userUpdates.put("age", encryption.encrypt(age));
-
-        userReference.updateChildren(userUpdates).addOnSuccessListener(aVoid -> Log.d("Updating user info in DB", "Dane użytkownika zostały zaktualizowane.")).addOnFailureListener(e -> Log.e("Updating user info in DB", "Błąd podczas aktualizacji danych użytkownika: " + e.getMessage()));
+        //userReference.updateChildren(userUpdates).addOnSuccessListener(aVoid ->
+        // Log.d("Updating user info in DB", "Dane użytkownika zostały zaktualizowane."))
+        // .addOnFailureListener(e -> Log.e("Updating user info in DB", "Błąd podczas aktualizacji danych użytkownika: " + e.getMessage()));
     }
 
     private void getUserData() {

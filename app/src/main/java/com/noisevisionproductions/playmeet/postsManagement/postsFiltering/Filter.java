@@ -1,6 +1,6 @@
 package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 
 public abstract class Filter {
     private final boolean isEnabled;
@@ -13,5 +13,5 @@ public abstract class Filter {
         return isEnabled;
     }
 
-    public abstract boolean apply(PostCreating post);
+    public abstract boolean apply(PostModel post);
 }

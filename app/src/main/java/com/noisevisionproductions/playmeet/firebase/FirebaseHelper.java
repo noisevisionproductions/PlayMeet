@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -19,8 +17,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.chat.ChatRoomModel;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
-
-import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -90,16 +86,6 @@ public class FirebaseHelper {
     public void getJoinedPeopleStatus(@NonNull String postId, @NonNull ValueEventListener listener) {
         DatabaseReference postReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId).child("peopleStatus");
         postReference.addListenerForSingleValueEvent(listener);
-    }
-
-    // aktualizuje bazę danych podając dane oraz referencję do niej, w której mają być te dane zapisane
-    public void updateDataUsingHashMap(@NonNull HashMap<String, Object> userModel, @NonNull OnSuccessListener<Void> onSuccess, @NonNull OnFailureListener onFailure, @NonNull String reference) {
-        if (firebaseUser != null) {
-            DatabaseReference userReference = databaseReference.child(reference).child(firebaseUser.getUid());
-            userReference.updateChildren(userModel)
-                    .addOnSuccessListener(onSuccess)
-                    .addOnFailureListener(onFailure);
-        }
     }
 
     // tworzenie nowego ChatRoom po wywołaniu tej metody

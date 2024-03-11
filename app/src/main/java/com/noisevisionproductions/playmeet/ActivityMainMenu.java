@@ -28,7 +28,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.postsManagement.PostCreatingLogic;
 import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.PostsOfTheGamesFragment;
-import com.noisevisionproductions.playmeet.postsManagement.userPosts.PostsCreatedByUserFragment;
+import com.noisevisionproductions.playmeet.postsManagement.userPosts.UserPostsFragment;
 import com.noisevisionproductions.playmeet.userManagement.UserAccountLogic;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
@@ -173,7 +173,7 @@ public class ActivityMainMenu extends TopMenuLayout {
             userProfileMenu.setSelected(false);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, PostsCreatedByUserFragment.class, null).addToBackStack("PostsOfTheGamesFragment").commit();
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, UserPostsFragment.class, null).addToBackStack("PostsOfTheGamesFragment").commit();
         });
     }
 

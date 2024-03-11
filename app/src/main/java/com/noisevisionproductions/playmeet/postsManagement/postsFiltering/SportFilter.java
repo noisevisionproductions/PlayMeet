@@ -2,7 +2,7 @@ package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
 import androidx.annotation.Nullable;
 
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 
 public class SportFilter extends Filter {
     private final String sport;
@@ -13,7 +13,7 @@ public class SportFilter extends Filter {
     }
 
     @Override
-    public boolean apply(@Nullable PostCreating post) {
+    public boolean apply(@Nullable PostModel post) {
         if (post == null || post.getSportType() == null) {
             return false;
         }

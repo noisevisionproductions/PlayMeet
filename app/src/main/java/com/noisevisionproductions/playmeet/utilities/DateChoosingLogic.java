@@ -8,17 +8,17 @@ import android.content.DialogInterface;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 
 import java.util.Calendar;
 
 public class DateChoosingLogic {
     private final Context context;
-    private final PostCreating postCreating;
+    private final PostModel postModel;
 
-    public DateChoosingLogic(Context context, PostCreating postCreating) {
-        this.postCreating = postCreating;
+    public DateChoosingLogic(Context context, PostModel postModel) {
+        this.postModel = postModel;
         this.context = context;
     }
 
@@ -34,7 +34,7 @@ public class DateChoosingLogic {
 
             String date = context.getString(R.string.date_format, day, month + 1, year);
             textInputEditText.setText(date);
-            postCreating.setDateTime(date);
+            postModel.setDateTime(date);
 
         }, chosenYear, chosenMonth, chosenDay);
 
@@ -51,7 +51,7 @@ public class DateChoosingLogic {
         TimePickerDialog timePickerDialog = new TimePickerDialog(context, (view, hourOfDay, minuteOfHour) -> {
             String formattedHour = context.getString(R.string.hour_format, hourOfDay, minuteOfHour);
             textInputEditText.setText(formattedHour);
-            postCreating.setHourTime(formattedHour);
+            postModel.setHourTime(formattedHour);
         }, hour, minute, is24HourFormat);
 
         timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Wyczyść", (((dialog, which) -> textInputEditText.setText(""))));
@@ -59,10 +59,10 @@ public class DateChoosingLogic {
     }
 
     public void noDateGiven() {
-        postCreating.setDateTime(context.getString(R.string.hourDateDoesntMatter));
+        postModel.setDateTime(context.getString(R.string.hourDateDoesntMatter));
     }
 
     public void noHourGiven() {
-        postCreating.setHourTime(context.getString(R.string.hourDateDoesntMatter));
+        postModel.setHourTime(context.getString(R.string.hourDateDoesntMatter));
     }
 }

@@ -89,7 +89,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
         getUserDataFromFirebase();
         setupEditableFieldsPostInfo(view, postInfo);
-        signedUpUsersList();
+        //signedUpUsersList();
 
         handleButtons(view);
     }
@@ -99,7 +99,18 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         if (this.postInfo != null) {
             editableFieldsPostInfo = new EditableField[]{
                     // pola związane z aktywnością
-                    new EditableField("Sport:", postInfo.getSportType(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField("Miasto:", postInfo.getCityName(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField("Data:", postInfo.getDateTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField("Godzina:", postInfo.getHourTime(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField("Post ID:", postInfo.getPostId(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), new EditableField("Info:", postInfo.getAdditionalInfo(), false, false, false, EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)};
+                    new EditableField("Sport:", postInfo.getSportType(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Miasto:", postInfo.getCityName(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Data:", postInfo.getDateTime(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    new EditableField("Godzina:", postInfo.getHourTime(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
+                    /* new EditableField("Post ID:", postInfo.getPostId(), false, false, false,
+                             EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), */
+                    new EditableField("Info:", postInfo.getAdditionalInfo(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)};
         }
         RecyclerView recyclerViewPostInfo = view.findViewById(R.id.recycler_view_post_info);
         recyclerViewPostInfo.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -184,7 +195,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
     private void signedUpUsersList() {
         if (this.postInfo != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postInfo.getPostId()).child("signedUpUserIds");
+            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
             userReference.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -269,7 +280,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
             SavePostHandler savePostHandler = new SavePostHandler(view, postInfo.getPostId());
             if (firebaseHelper.getCurrentUser() != null) {
                 String currentUserId = firebaseHelper.getCurrentUser().getUid();
-                savePostButton.setOnClickListener(v -> ButtonsForChatAndSignIn.checkNicknameAndPerformAction(currentUserId, savePostHandler::handleSavePostButton, getChildFragmentManager()));
+                savePostButton.setOnClickListener(v -> ButtonsForChatAndSignIn.checkNicknameAndPerformAction(currentUserId, savePostHandler::handleOriginalPost, getChildFragmentManager()));
                 chatButton.setOnClickListener(v -> ButtonsForChatAndSignIn.handleChatButtonClick(view, postInfo.getUserId(), getChildFragmentManager()));
             }
         }

@@ -2,35 +2,22 @@ package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-import com.noisevisionproductions.playmeet.PostCreating;
+import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
-import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.utilities.CoolDownManager;
 import com.noisevisionproductions.playmeet.utilities.ReportPost;
 
 public class AdapterAllPostsManagement {
 
-    public static void setUserAvatar(@NonNull AdapterAllPosts.MyViewHolder holder, @NonNull String userId, @NonNull Context context) {
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
-    }
-
-    public static void getSkillLevel(@NonNull PostCreating postCreating, @NonNull AdapterAllPosts.MyViewHolder holder) {
-        String skillLevel = postCreating.getSkillLevel();
+    public static void getSkillLevel(@NonNull PostModel postModel, @NonNull AdapterAllPosts.MyViewHolder holder) {
+        String skillLevel = postModel.getSkillLevel();
         int drawableId = switch (skillLevel) {
             case "Pierwszy raz" -> R.drawable.d1_10;
             case "Nowicjusz" -> R.drawable.d2_10;
@@ -45,24 +32,6 @@ public class AdapterAllPostsManagement {
             default -> 0;
         };
         holder.skillLevel.setImageResource(drawableId);
-    }
-
-    public static void getPeopleStatus(@NonNull String postId, @NonNull AdapterAllPosts.MyViewHolder holder) {
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        firebaseHelper.getJoinedPeopleStatus(postId, new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String peopleStatus = snapshot.getValue(String.class);
-                    holder.numberOfPeople.setText(peopleStatus);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("Firebase RealmTime Database error", "Showing number of people on posts in adapter " + error.getMessage());
-            }
-        });
     }
 
     public static void reportPost(@NonNull AdapterAllPosts.MyViewHolder holder, String postId, Context context) {
@@ -88,19 +57,5 @@ public class AdapterAllPostsManagement {
                 menu.show();
             });
         }
-    }
-
-    public static void setPostAnimation(@NonNull AdapterAllPosts.MyViewHolder holder) {
-        Animation postAnimation = AnimationUtils.loadAnimation(holder.layoutOfPost.getContext(), R.anim.post_loading_animation);
-        holder.layoutOfPost.setOnHoverListener((view, motionEvent) -> {
-            if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_ENTER) {
-                view.animate().scaleX(1.2f).scaleY(1.2f).setDuration(300).start();
-            } else if (motionEvent.getAction() == MotionEvent.ACTION_HOVER_EXIT) {
-                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(300).start();
-            }
-            return false;
-        });
-        holder.layoutOfPost.setAnimation(postAnimation);
-        holder.layoutOfPost.startAnimation(postAnimation);
     }
 }

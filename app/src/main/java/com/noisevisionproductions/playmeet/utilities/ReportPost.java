@@ -1,5 +1,6 @@
 package com.noisevisionproductions.playmeet.utilities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.util.Log;
@@ -32,24 +33,30 @@ public class ReportPost {
             currentUserId = firebaseHelper.getCurrentUser().getUid();
 
             LayoutInflater layoutInflater = LayoutInflater.from(context);
-            View view = layoutInflater.inflate(R.layout.dialog_report_post, null);
+            @SuppressLint("InflateParams") View view = layoutInflater.inflate(R.layout.dialog_report_post, null);
 
             final AppCompatEditText reportEditText = view.findViewById(R.id.reportEditText);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Zgłoś post");
-            builder.setView(view);
-            builder.setPositiveButton("Wyślij", (dialog, which) -> {
-                if (reportEditText.getText() != null && reportEditText.getText() != null) {
-                    // do każdego reportu dodaje automatycznie ID postu, który został zreportowany
-                    String reportText = reportEditText.getText().toString() + "+PostId" + postId;
-                    submitReportToFirebase(reportText, view);
-                    dialog.dismiss();
-                }
-            });
-            builder.setNegativeButton("Anuluj", (dialog, which) -> dialog.dismiss());
+            AlertDialog.Builder builder = getBuilder(postId, view, reportEditText);
             builder.create().show();
         }
+    }
+
+    @NonNull
+    private AlertDialog.Builder getBuilder(String postId, View view, AppCompatEditText reportEditText) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Zgłoś post");
+        builder.setView(view);
+        builder.setPositiveButton("Wyślij", (dialog, which) -> {
+            if (reportEditText.getText() != null && reportEditText.getText() != null) {
+                // do każdego reportu dodaje automatycznie ID postu, który został zreportowany
+                String reportText = reportEditText.getText().toString() + "+PostId" + postId;
+                submitReportToFirebase(reportText, view);
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("Anuluj", (dialog, which) -> dialog.dismiss());
+        return builder;
     }
 
     private void submitReportToFirebase(@NonNull String reportText, @NonNull View view) {
