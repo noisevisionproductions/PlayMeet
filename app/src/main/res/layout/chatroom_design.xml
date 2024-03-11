@@ -11,7 +11,8 @@
     android:paddingEnd="16dp"
     android:paddingBottom="8dp">
 
-    <include
+
+<include
         layout="@layout/avatar_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp" />
