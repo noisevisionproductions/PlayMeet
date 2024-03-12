@@ -70,38 +70,6 @@
                     android:textColor="@color/text"
                     android:textSize="24sp"
                     android:visibility="gone" />
-
-                <!-- tekst oraz ikonka ładowania podczas pobierania postów z bazy -->
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/loadingMorePostsLayout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical"
-                    android:paddingBottom="50dp"
-                    android:visibility="visible">
-
-                    <ProgressBar
-                        android:id="@+id/loadMorePostsIndicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:indeterminateTint="@color/accent"
-                        android:padding="5dp"
-                        android:visibility="gone" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/loadingPostsText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/loadingMorePosts"
-                        android:textColor="@color/text"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
             </RelativeLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

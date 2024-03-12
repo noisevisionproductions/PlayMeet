@@ -13,8 +13,10 @@ public class FirestorePostsDisplay implements PostDisplay {
     private final FirebaseFirestore postReference = FirebaseFirestore.getInstance();
     private Query query;
 
-    @Override
-    public void filterAllPosts(boolean isUserLoggedIn, String userId, OnPostsFetchedListener listener) {
+    public FirestorePostsDisplay() {
+    }
+
+    public FirestorePostsDisplay(boolean isUserLoggedIn, String userId) {
         if (isUserLoggedIn) {
             query = postReference.collection("PostCreating")
                     .whereNotEqualTo("userId", userId)
@@ -23,18 +25,6 @@ public class FirestorePostsDisplay implements PostDisplay {
             query = postReference.collection("PostCreating")
                     .whereEqualTo("activityFull", false);
         }
-
-        query.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                List<PostModel> posts = new ArrayList<>();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    posts.add(document.toObject(PostModel.class));
-                }
-                listener.onPostsFetched(posts, null);
-            } else {
-                listener.onPostsFetched(null, task.getException());
-            }
-        });
         setQuery(query);
     }
 

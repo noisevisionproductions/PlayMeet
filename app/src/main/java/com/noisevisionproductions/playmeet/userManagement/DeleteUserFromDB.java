@@ -143,7 +143,7 @@ public class DeleteUserFromDB {
     }
 
     private void deleteUserWithEmailAuth(@NonNull String password, String reasonText) {
-        if (!isCurrentUserAvailable()) {
+        if (isCurrentUserAvailable()) {
             logError("Current user is not available");
             return;
         }
@@ -157,7 +157,7 @@ public class DeleteUserFromDB {
     }
 
     private void deleteUserWithGoogleAuth() {
-        if (!isCurrentUserAvailable()) {
+        if (isCurrentUserAvailable()) {
             logError("Current user is not available");
             return;
         }
@@ -183,7 +183,7 @@ public class DeleteUserFromDB {
     }
 
     private void authenticateAndDeleteUser(@NonNull AuthCredential credential, @Nullable String reasonText) {
-        if (!isCurrentUserAvailable()) {
+        if (isCurrentUserAvailable()) {
             logError("Current user is not available");
             return;
         }
@@ -216,7 +216,7 @@ public class DeleteUserFromDB {
     }
 
     private void deleteAllUserPosts() {
-        if (!isCurrentUserAvailable()) {
+        if (isCurrentUserAvailable()) {
             logError("Current user is not available");
             return;
         }
@@ -275,7 +275,7 @@ public class DeleteUserFromDB {
     }
 
     private boolean isCurrentUserAvailable() {
-        return currentUser != null;
+        return currentUser == null;
     }
 
     private void getToastErrorFromDeleting() {

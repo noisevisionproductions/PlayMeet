@@ -66,6 +66,7 @@ android {
 }
 
 dependencies {
+    implementation("androidx.paging:paging-runtime:3.2.1")
     implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
     implementation("com.google.firebase:firebase-database:20.3.1")
     implementation("com.google.firebase:firebase-firestore:24.10.3")

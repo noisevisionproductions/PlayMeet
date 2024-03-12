@@ -16,8 +16,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.firebase.ui.firestore.paging.FirestorePagingAdapter;
+import com.firebase.ui.firestore.paging.FirestorePagingOptions;
 import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
@@ -28,11 +28,11 @@ import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class AdapterAllPosts extends FirestoreRecyclerAdapter<PostModel, AdapterAllPosts.MyViewHolder> {
+public class AdapterAllPosts extends FirestorePagingAdapter<PostModel, AdapterAllPosts.MyViewHolder> {
     private final FragmentManager fragmentManager;
     private final Context context;
 
-    public AdapterAllPosts(@NonNull FirestoreRecyclerOptions<PostModel> options, FragmentManager fragmentManager, Context context) {
+    public AdapterAllPosts(@NonNull FirestorePagingOptions<PostModel> options, FragmentManager fragmentManager, Context context) {
         super(options);
         this.fragmentManager = fragmentManager;
         this.context = context;
@@ -63,7 +63,7 @@ public class AdapterAllPosts extends FirestoreRecyclerAdapter<PostModel, Adapter
 
     @NonNull
     @Override
-    public AdapterAllPosts.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.post_design_all_content, parent, false);
         return new MyViewHolder(v);
     }
