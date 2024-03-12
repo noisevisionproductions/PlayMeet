@@ -8,6 +8,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.RegistrationModel;
@@ -34,6 +35,27 @@ public class FirestorePostRepository implements PostRepository {
         postReference.collection("PostCreating").document(postId).set(postModel)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(listener::onFailure);
+    }
+
+    @Override
+    public void getPost(String postId, PostCompletionListenerList listener) {
+        postReference.collection("registrations")
+                .whereEqualTo("postId", postId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        List<String> userIdsSignedUp = new ArrayList<>();
+                        for (QueryDocumentSnapshot registrationSnapshot : task.getResult()) {
+                            String userId = registrationSnapshot.getString("userId");
+                            if (userId != null) {
+                                userIdsSignedUp.add(userId);
+                            }
+                        }
+                        listener.onSuccess(userIdsSignedUp);
+                    } else {
+                        listener.onFailure(task.getException());
+                    }
+                });
     }
 
     @Override

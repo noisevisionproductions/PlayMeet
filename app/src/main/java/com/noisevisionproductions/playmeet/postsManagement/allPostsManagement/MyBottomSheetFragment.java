@@ -23,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.postsManagement.FirestorePostRepository;
+import com.noisevisionproductions.playmeet.postsManagement.PostCompletionListenerList;
 import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
@@ -89,7 +91,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
 
         getUserDataFromFirebase();
         setupEditableFieldsPostInfo(view, postInfo);
-        //signedUpUsersList();
+        signedUpUsersList();
 
         handleButtons(view);
     }
@@ -107,8 +109,8 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                             EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                     new EditableField("Godzina:", postInfo.getHourTime(), false, false, false,
                             EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
-                    /* new EditableField("Post ID:", postInfo.getPostId(), false, false, false,
-                             EditableField.FieldType.FIELD_TYPE_TEXT_VIEW), */
+                    new EditableField("Post ID:", postInfo.getPostId(), false, false, false,
+                            EditableField.FieldType.FIELD_TYPE_TEXT_VIEW),
                     new EditableField("Info:", postInfo.getAdditionalInfo(), false, false, false,
                             EditableField.FieldType.FIELD_TYPE_TEXT_VIEW)};
         }
@@ -194,29 +196,18 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     private void signedUpUsersList() {
-        if (this.postInfo != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("PostCreating");
-            userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    List<String> userIdsSignedUp = new ArrayList<>();
-                    if (snapshot.exists()) {
-                        for (DataSnapshot userIdSnapshot : snapshot.getChildren()) {
-                            String userId = userIdSnapshot.getValue(String.class);
-                            if (userId != null) {
-                                userIdsSignedUp.add(userId);
-                            }
-                        }
-                    }
-                    fetchUserInformation(userIdsSignedUp);
-                }
+        FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
+        firestorePostRepository.getPost(postInfo.getPostId(), new PostCompletionListenerList() {
+            @Override
+            public void onSuccess(List<String> userIdsSignedUp) {
+                fetchUserInformation(userIdsSignedUp);
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Firebase RealmTime Database error", "Signed up user list posts " + error.getMessage());
-                }
-            });
-        }
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("Firebase Firestore error", "Signed up user list posts " + e.getMessage());
+            }
+        });
     }
 
     private void fetchUserInformation(@NonNull List<String> userIdsSingedUp) {

@@ -34,6 +34,7 @@ import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private FirestorePostsDisplay firestorePostsDisplay;
+    private AdapterAllPosts adapterAllPosts;
     private ProgressBar progressBar;
     private AppCompatButton filterButton;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -49,6 +50,7 @@ public class PostsOfTheGamesFragment extends Fragment {
 
         setRecyclerView();
         handleBackPressed();
+        filterAllPosts(view);
 
         return view;
     }
@@ -79,7 +81,7 @@ public class PostsOfTheGamesFragment extends Fragment {
                 .setQuery(query, config, PostModel.class)
                 .build();
 
-        AdapterAllPosts adapterAllPosts = new AdapterAllPosts(options, getChildFragmentManager(), getContext());
+        adapterAllPosts = new AdapterAllPosts(options, getChildFragmentManager(), getContext());
         recyclerView.setAdapter(adapterAllPosts);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
@@ -107,16 +109,15 @@ public class PostsOfTheGamesFragment extends Fragment {
         }, refreshLength);
     }
 
-/*    private void filterAllPosts(@NonNull View view) {
-        AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
+    private void filterAllPosts(@NonNull View view) {
+     /*   AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
         filterButton.setOnClickListener(v -> {
             PostsFilter postsFilter = new PostsFilter(adapterAllPosts, posts, filterButton, deleteFilters, noPostFound);
             if (getContext() != null) {
                 postsFilter.filterPostsWindow((Activity) getContext());
             }
-        });
-    }*/
-
+        });*/
+    }
 
     private void handleBackPressed() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {

@@ -8,6 +8,8 @@ public interface PostRepository {
 
     void updatePost(String postId, PostModel postModel, OnCompletionListener listener);
 
+    void getPost(String postId, PostCompletionListenerList listener);
+
     void deleteUserPost(String postId, PostModel postModel, OnCompletionListener listener);
 
     void removeUserFromRegistration(String postId, String userId, OnCompletionListener listener);
