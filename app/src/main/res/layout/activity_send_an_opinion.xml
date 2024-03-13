@@ -8,7 +8,7 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:baselineAligned="false"
         android:orientation="vertical"
@@ -44,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="10dp"
+            android:paddingTop="50dp"
             android:paddingBottom="10dp"
             android:text="@string/sendAnEmail"
             android:textColor="@color/text"
@@ -52,38 +52,20 @@
             android:textStyle="bold"
             android:typeface="serif" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/myEmail"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/myEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:paddingTop="10dp"
-                android:text="@string/myEmail"
-                android:textColor="@color/accent"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:typeface="serif" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/copyButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/copyEmail"
-                android:drawableTop="@drawable/icon_copy"
-                android:foreground="?attr/selectableItemBackground"
-                android:paddingTop="10dp" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
+            android:layout_gravity="center"
+            android:background="@drawable/ripple_effect"
+            android:drawableEnd="@drawable/icon_copy"
+            android:drawablePadding="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/myEmail"
+            android:textColor="@color/accent"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat

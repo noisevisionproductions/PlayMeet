@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.utilities;
+package com.noisevisionproductions.playmeet.userManagement;
 
 import androidx.annotation.NonNull;
 

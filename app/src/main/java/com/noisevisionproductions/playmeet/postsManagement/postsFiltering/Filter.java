@@ -1,17 +1,13 @@
 package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
-import com.noisevisionproductions.playmeet.PostModel;
+import com.google.firebase.firestore.Query;
 
 public abstract class Filter {
-    private final boolean isEnabled;
+    protected boolean isEnabled;
 
     public Filter(boolean isEnabled) {
         this.isEnabled = isEnabled;
     }
 
-    public boolean isEnabled() {
-        return isEnabled;
-    }
-
-    public abstract boolean apply(PostModel post);
+    public abstract Query applyFilter(Query baseQuery);
 }

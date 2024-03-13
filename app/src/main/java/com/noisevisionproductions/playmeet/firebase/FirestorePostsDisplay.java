@@ -1,10 +1,12 @@
-package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
+package com.noisevisionproductions.playmeet.firebase;
 
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.noisevisionproductions.playmeet.PostModel;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnPostsFetchedListener;
+import com.noisevisionproductions.playmeet.firebase.interfaces.PostDisplay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +22,10 @@ public class FirestorePostsDisplay implements PostDisplay {
         if (isUserLoggedIn) {
             query = postReference.collection("PostCreating")
                     .whereNotEqualTo("userId", userId)
-                    .whereEqualTo("activityFull", false);
+                    .whereEqualTo("isActivityFull", false);
         } else {
             query = postReference.collection("PostCreating")
-                    .whereEqualTo("activityFull", false);
+                    .whereEqualTo("isActivityFull", false);
         }
         setQuery(query);
     }

@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.view.Gravity;
@@ -17,43 +18,41 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.recyclerview.widget.DiffUtil;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.noisevisionproductions.playmeet.PostModel;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapterForFilterMenu;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
-import com.noisevisionproductions.playmeet.dataManagement.PostDiffCallback;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.AdapterAllPosts;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.FirestoreRecyclerViewHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PostsFilter {
-    private final List<PostModel> originalPosts = new ArrayList<>();
-    private final List<PostModel> posts;
-    private final RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter;
-    private final AppCompatButton filterButton, deleteFilters;
-    private final AppCompatTextView noPostFound;
+public class FilterPostsDialog {
+    private final FragmentManager fragmentManager;
+    private final Context context;
+    private final AppCompatButton filterButton;
     private AutoCompleteTextView cityTextView;
     private Spinner spinnerSport, spinnerDifficulty;
     private EditText postIdText;
+    private final RecyclerView recyclerView;
+    private Query baseQuery;
+    private final View view;
     @NonNull
     private final boolean[] checkedItems;
 
-    public PostsFilter(RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, @NonNull List<PostModel> posts, AppCompatButton filterButton, AppCompatButton deleteFilters, AppCompatTextView noPostFound) {
-        this.adapter = adapter;
-        this.posts = posts;
+    public FilterPostsDialog(AppCompatButton filterButton, RecyclerView recyclerView, FragmentManager fragmentManager, Context context, View view) {
         this.filterButton = filterButton;
-        this.deleteFilters = deleteFilters;
-        this.noPostFound = noPostFound;
         this.checkedItems = new boolean[4];
-        for (PostModel post : posts) {
-            originalPosts.add(post.copyOfAllPosts());
-        }
+        this.recyclerView = recyclerView;
+        this.fragmentManager = fragmentManager;
+        this.context = context;
+        this.view = view;
     }
 
     @NonNull
@@ -99,7 +98,6 @@ public class PostsFilter {
         builder.setView(layout);
 
         setDialogButtons(builder);
-        deleteFilters();
 
         AlertDialog dialog = builder.create();
         dialog.setOnDismissListener(dialog1 -> {
@@ -158,36 +156,36 @@ public class PostsFilter {
 
         //logika ustawiania przycisku "OK"
         builder.setPositiveButton("OK", (dialog, which) -> {
-
-            // pobiera wybrane / wprowadzone wartości
-            String selectedSport = spinnerSport.getSelectedItem().toString();
-            String selectedCity = cityTextView.getText().toString();
-            String selectedDifficulty = spinnerDifficulty.getSelectedItem().toString();
-            String selectedPostId = postIdText.getText().toString();
-
-            boolean anyFilterChecked = false;
-            for (boolean isChecked : checkedItems) {
-                if (isChecked) {
-                    anyFilterChecked = true;
-                    break;
-                }
-            }
-
-            // na podstawie wprowadzonych wartości, filtruje posty
-            Filter sportFilter = new SportFilter(checkedItems[0], selectedSport);
-            Filter cityFilter = new CityFilter(checkedItems[1], selectedCity);
-            Filter difficultyFilter = new DifficultyFilter(checkedItems[2], selectedDifficulty);
-            Filter postIdFilter = new PostIDFilter(checkedItems[3], selectedPostId);
-
-            List<Filter> newFilters = Arrays.asList(sportFilter, cityFilter, difficultyFilter, postIdFilter);
-            filterPostsByQuery(newFilters);
-
-            filterButton.setSelected(anyFilterChecked);
+            activateFilters();
         });
         builder.setNegativeButton("Anuluj", (dialog, which) -> {
             filterButton.setSelected(false);
             dialog.cancel();
         });
+    }
+
+    private void activateFilters() {
+        List<Filter> activeFilters = new ArrayList<>();
+        if (checkedItems[0]) {
+            Filter sportFilter = FilterFactory.createFilter("Sport", true, spinnerSport.getSelectedItem().toString());
+            activeFilters.add(sportFilter);
+        }
+        if (checkedItems[1]) {
+            Filter cityFilter = FilterFactory.createFilter("City", true, cityTextView.getText().toString());
+            activeFilters.add(cityFilter);
+        }
+        if (checkedItems[2]) {
+            Filter difficultyFilter = FilterFactory.createFilter("Difficulty", true, spinnerDifficulty.getSelectedItem().toString());
+            activeFilters.add(difficultyFilter);
+        }
+        if (checkedItems[3]) {
+            Filter postIdFilter = FilterFactory.createFilter("PostID", true, postIdText.getText().toString());
+            activeFilters.add(postIdFilter);
+        }
+
+        filterPostsByQuery(activeFilters);
+        filterButton.setSelected(!activeFilters.isEmpty());
+        deleteFilters();
     }
 
     @NonNull
@@ -227,80 +225,42 @@ public class PostsFilter {
         textViewCity.setDropDownBackgroundResource(R.drawable.rounded_menu_background_for_spinner);
 
         List<String> cityList = new ArrayList<>(CityXmlParser.parseCityNames(activity.getApplicationContext()));
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(activity.getApplicationContext(), android.R.layout.simple_list_item_1, cityList) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity.getApplicationContext(), android.R.layout.simple_list_item_1, cityList) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                TextView textView = view.findViewById(android.R.id.text1);
                 textView.setTextColor(activity.getColor(R.color.text));
                 return view;
             }
         };
         textViewCity.setAdapter(adapter);
-
-
         return textViewCity;
-    }
-
-    public interface PostFilter {
-        boolean filter(PostModel post);
-    }
-
-    public void filterPostsByQuery(@NonNull List<Filter> filters) {
-        filterPostsLogic(adapter, posts, post -> {
-            for (Filter filter : filters) {
-                if (filter.isEnabled() && !filter.apply(post)) {
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        // Set the filterButton based on the overall state of filter options
-        filterButton.setSelected(false);
-
-        if (posts.isEmpty()) {
-            noPostFound.setVisibility(View.VISIBLE);
-        } else {
-            noPostFound.setVisibility(View.GONE);
-        }
-    }
-
-    public static void filterPostsLogic(@NonNull RecyclerView.Adapter<AdapterAllPosts.MyViewHolder> adapter, @NonNull List<PostModel> posts, @NonNull PostFilter filter) {
-        List<PostModel> filteredPosts = new ArrayList<>();
-
-        for (PostModel post : posts) {
-            if (filter.filter(post)) {
-                filteredPosts.add(post);
-            }
-        }
-
-        PostDiffCallback diffCallback = new PostDiffCallback(posts, filteredPosts);
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
-        posts.clear();
-        posts.addAll(filteredPosts);
-        diffResult.dispatchUpdatesTo(adapter);
-    }
-
-    public void deleteFilters() {
-        deleteFilters.setOnClickListener(v -> {
-            Arrays.fill(checkedItems, false);
-            List<PostModel> newPosts = new ArrayList<>(originalPosts);
-            PostDiffCallback diffCallback = new PostDiffCallback(posts, newPosts);
-            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-            posts.clear();
-            posts.addAll(newPosts);
-            diffResult.dispatchUpdatesTo(adapter);
-            filterButton.setSelected(false);
-            noPostFound.setVisibility(View.GONE);
-        });
     }
 
     private Integer getMinHeightDPScale(Activity activity) {
         int minHeightInDp = 60;
         float scale = activity.getResources().getDisplayMetrics().density;
         return (int) (minHeightInDp * scale + 0.5f);
+    }
+
+    private void filterPostsByQuery(List<Filter> activeFilters) {
+        baseQuery = FirebaseFirestore.getInstance().collection("PostCreating");
+
+        for (Filter filter : activeFilters) {
+            baseQuery = filter.applyFilter(baseQuery);
+        }
+        FirestoreRecyclerViewHelper.setupRecyclerView(baseQuery, recyclerView, fragmentManager, context, (LifecycleOwner) context, view);
+
+    }
+
+    public void deleteFilters() {
+        AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
+        deleteFilters.setOnClickListener(v -> {
+            baseQuery = FirebaseFirestore.getInstance().collection("PostCreating");
+            FirestoreRecyclerViewHelper.setupRecyclerView(baseQuery, recyclerView, fragmentManager, context, (LifecycleOwner) context, view);
+            filterButton.setSelected(false);
+        });
     }
 }

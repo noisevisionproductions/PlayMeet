@@ -14,7 +14,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.utilities.CoolDownManager;
 import com.noisevisionproductions.playmeet.utilities.ReportPost;
 
-public class AdapterAllPostsManagement {
+public class AdapterAllPostsHelper {
 
     public static void getSkillLevel(@NonNull PostModel postModel, @NonNull AdapterAllPosts.MyViewHolder holder) {
         String skillLevel = postModel.getSkillLevel();

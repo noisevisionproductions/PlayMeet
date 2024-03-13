@@ -2,7 +2,7 @@ package com.noisevisionproductions.playmeet;
 
 import androidx.annotation.NonNull;
 
-import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
+import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 
 import java.util.UUID;
 

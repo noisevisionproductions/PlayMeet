@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.userManagement;
+package com.noisevisionproductions.playmeet.firebase.interfaces;
 
 public interface OnResultListener<T> {
     void onSuccess(T result);

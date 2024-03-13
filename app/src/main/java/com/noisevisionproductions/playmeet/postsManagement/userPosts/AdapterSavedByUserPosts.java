@@ -21,9 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.postsManagement.FirestorePostRepository;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.ButtonsForChatAndSignIn;
-import com.noisevisionproductions.playmeet.userManagement.OnCompletionListener;
+import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
+import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
+import com.noisevisionproductions.playmeet.firebase.interfaces.ViewHolderUpdater;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment.ButtonsForChatAndSignIn;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.List;
@@ -98,6 +100,7 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
         firestorePostRepository.removeUserFromRegistration(postId, userId, new OnCompletionListener() {
             @Override
             public void onSuccess() {
+                decrementJoinedPostsCount(userId);
                 ToastManager.showToast(context, "Zostałeś wypisany!");
             }
 
@@ -105,6 +108,21 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
             public void onFailure(Exception e) {
                 ToastManager.showToast(context, "Błąd podczas usuwania rejestracji: " + e.getMessage());
                 Log.e("Firebase Update Error", "Removing signed up user when saved post is removed " + e.getMessage());
+            }
+        });
+    }
+
+    private void decrementJoinedPostsCount(String userId) {
+        FirebaseUserRepository firebaseUserRepository = new FirebaseUserRepository();
+        firebaseUserRepository.decrementJoinedPostsCount(userId, new OnCompletionListener() {
+            @Override
+            public void onSuccess() {
+                Log.d("User joined posts updated", "User joined posts updated");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("User joined posts error ", "User joined posts error " + e.getMessage());
             }
         });
     }

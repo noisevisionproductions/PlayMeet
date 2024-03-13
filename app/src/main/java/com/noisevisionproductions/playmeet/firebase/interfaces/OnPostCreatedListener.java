@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement;
+package com.noisevisionproductions.playmeet.firebase.interfaces;
 
 import com.google.firebase.firestore.DocumentReference;
 

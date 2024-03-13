@@ -29,8 +29,9 @@ import com.google.firebase.storage.UploadTask;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
+import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
-import com.noisevisionproductions.playmeet.postsManagement.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.nio.charset.StandardCharsets;

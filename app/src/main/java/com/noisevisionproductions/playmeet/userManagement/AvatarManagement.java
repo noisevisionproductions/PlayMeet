@@ -37,6 +37,7 @@ import com.google.firebase.storage.StorageReference;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.io.ByteArrayOutputStream;

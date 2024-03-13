@@ -1,22 +1,20 @@
 package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
-import androidx.annotation.Nullable;
-
-import com.noisevisionproductions.playmeet.PostModel;
+import com.google.firebase.firestore.Query;
 
 public class DifficultyFilter extends Filter {
-    private final String difficulty;
+    private final String skillLevel;
 
-    public DifficultyFilter(boolean isEnabled, String difficulty) {
+    public DifficultyFilter(boolean isEnabled, String skillLevel) {
         super(isEnabled);
-        this.difficulty = difficulty;
+        this.skillLevel = skillLevel;
     }
 
     @Override
-    public boolean apply(@Nullable PostModel post) {
-        if (post == null || post.getSkillLevel() == null) {
-            return false;
+    public Query applyFilter(Query baseQuery) {
+        if (!isEnabled) {
+            return baseQuery;
         }
-        return post.getSkillLevel().equals(difficulty);
+        return baseQuery.whereEqualTo("skillLevel", skillLevel);
     }
 }

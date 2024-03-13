@@ -1,9 +1,7 @@
 package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
 
-import androidx.annotation.Nullable;
-
-import com.noisevisionproductions.playmeet.PostModel;
+import com.google.firebase.firestore.Query;
 
 public class CityFilter extends Filter {
     private final String city;
@@ -14,10 +12,10 @@ public class CityFilter extends Filter {
     }
 
     @Override
-    public boolean apply(@Nullable PostModel post) {
-        if (post == null || post.getCityName() == null) {
-            return false;
+    public Query applyFilter(Query baseQuery) {
+        if (!isEnabled) {
+            return baseQuery;
         }
-        return post.getCityName().equals(city);
+        return baseQuery.whereEqualTo("cityName", city);
     }
 }

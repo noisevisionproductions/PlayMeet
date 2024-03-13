@@ -1,8 +1,6 @@
 package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 
-import androidx.annotation.Nullable;
-
-import com.noisevisionproductions.playmeet.PostModel;
+import com.google.firebase.firestore.Query;
 
 public class PostIDFilter extends Filter {
     private final String postId;
@@ -15,11 +13,10 @@ public class PostIDFilter extends Filter {
     }
 
     @Override
-    public boolean apply(@Nullable PostModel post) {
-        // nie filtruje postów, jesli postId nie jest ustawione
-        if (post == null || post.getPostId() == null) {
-            return false;
+    public Query applyFilter(Query baseQuery) {
+        if (!isEnabled) {
+            return baseQuery;
         }
-        return post.getPostId().contains(postId);
+        return baseQuery.whereEqualTo("postId", postId);
     }
 }

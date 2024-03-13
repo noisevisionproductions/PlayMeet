@@ -32,11 +32,11 @@ import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
-import com.noisevisionproductions.playmeet.utilities.AESDataEncryption;
-import com.noisevisionproductions.playmeet.utilities.NicknameValidation;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
-import com.noisevisionproductions.playmeet.utilities.UserModelDecryptor;
+import com.noisevisionproductions.playmeet.utilities.dataEncryption.AESDataEncryption;
+import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecryptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

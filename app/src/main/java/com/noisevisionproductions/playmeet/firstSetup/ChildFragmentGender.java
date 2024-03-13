@@ -22,11 +22,11 @@ import com.google.firebase.database.DatabaseError;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
-import com.noisevisionproductions.playmeet.userManagement.OnCompletionListener;
-import com.noisevisionproductions.playmeet.utilities.AESDataEncryption;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.dataEncryption.AESDataEncryption;
 
 import java.util.HashMap;
 import java.util.Objects;

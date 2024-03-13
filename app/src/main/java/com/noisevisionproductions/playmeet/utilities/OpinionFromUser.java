@@ -1,8 +1,5 @@
 package com.noisevisionproductions.playmeet.utilities;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -40,8 +37,7 @@ public class OpinionFromUser extends TopMenuLayout {
         firebaseHelper = new FirebaseHelper();
         getText = findViewById(R.id.textWithOpinion);
         myEmail = findViewById(R.id.myEmail);
-        AppCompatButton copyButton = findViewById(R.id.copyButton);
-        copyButton.setOnClickListener(v -> copyTextOnClick(myEmail.getText().toString()));
+        myEmail.setOnClickListener(v -> copyTextOnClick(myEmail.getText().toString()));
 
         // ustawianie wysyłania opini za pomocą przycisku
         setUpSendOpinionButton();
@@ -120,9 +116,7 @@ public class OpinionFromUser extends TopMenuLayout {
     }
 
     private void copyTextOnClick(String text) {
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-        ClipData clipData = ClipData.newPlainText("email", text);
-        clipboardManager.setPrimaryClip(clipData);
+        ProjectUtils.copyTextOnClick(getApplicationContext(), "email", text);
     }
 
     private void setUpBackToMainMenuButton() {

@@ -1,6 +1,8 @@
 package com.noisevisionproductions.playmeet.utilities;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -90,5 +92,11 @@ public class ProjectUtils extends AppCompatActivity {
     public static boolean isCityChosenFromTheList(String cityName, Context context) {
         List<String> cityList = new ArrayList<>(CityXmlParser.parseCityNames(context));
         return cityList.contains(cityName);
+    }
+
+    public static void copyTextOnClick(Context context, String label, String copiedText) {
+        ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText(label, copiedText);
+        clipboardManager.setPrimaryClip(clipData);
     }
 }

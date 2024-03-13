@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
+package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,8 +17,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.chat.ChatActivity;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment;
-import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 

@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement;
+package com.noisevisionproductions.playmeet.firebase;
 
 import android.util.Log;
 
@@ -12,7 +12,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.Transaction;
 import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.RegistrationModel;
-import com.noisevisionproductions.playmeet.userManagement.OnCompletionListener;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnPostCreatedListener;
+import com.noisevisionproductions.playmeet.firebase.interfaces.PostCompletionListenerList;
+import com.noisevisionproductions.playmeet.firebase.interfaces.PostRepository;
 
 import java.util.ArrayList;
 import java.util.Date;

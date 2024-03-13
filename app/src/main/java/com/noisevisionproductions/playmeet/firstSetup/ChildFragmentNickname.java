@@ -19,7 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.utilities.NicknameValidation;
+import com.noisevisionproductions.playmeet.userManagement.NicknameValidation;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
 public class ChildFragmentNickname extends Fragment implements NicknameValidation.NicknameValidationCallback {

@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement;
+package com.noisevisionproductions.playmeet.firebase.interfaces;
 
 public interface PostInfo {
     String getUserId();

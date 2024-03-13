@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement.userPosts;
+package com.noisevisionproductions.playmeet.firebase.interfaces;
 
 import android.content.Context;
 

@@ -22,8 +22,9 @@ import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.interfaces.ViewHolderUpdater;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment.ButtonsForChatAndSignIn;
 import com.noisevisionproductions.playmeet.postsManagement.userPosts.PostHelperSignedUpUser;
-import com.noisevisionproductions.playmeet.postsManagement.userPosts.ViewHolderUpdater;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,8 +44,8 @@ public class AdapterAllPosts extends FirestorePagingAdapter<PostModel, AdapterAl
         holder.applyAnimation();
         String userId = postModel.getUserId();
 
-        AdapterAllPostsManagement.getSkillLevel(postModel, holder);
-        AdapterAllPostsManagement.reportPost(holder, postModel.getPostId(), context);
+        AdapterAllPostsHelper.getSkillLevel(postModel, holder);
+        AdapterAllPostsHelper.reportPost(holder, postModel.getPostId(), context);
 
         PostHelperSignedUpUser.getPeopleStatus(postModel.getPostId(), holder);
 

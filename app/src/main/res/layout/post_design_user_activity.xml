@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:layout_margin="5dp"
         android:background="@color/secondary20"
-        android:minHeight="110dp"
+        android:minHeight="160dp"
         android:orientation="horizontal">
 
         <include layout="@layout/avatar_image_view" />
@@ -126,13 +126,13 @@
         <!--przyciski-->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/buttonContainer"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/chatButtonSavedPosts"

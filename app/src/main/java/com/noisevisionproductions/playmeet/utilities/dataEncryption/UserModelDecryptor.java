@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.utilities;
+package com.noisevisionproductions.playmeet.utilities.dataEncryption;
 
 import android.content.Context;
 import android.util.Log;

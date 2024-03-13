@@ -85,10 +85,4 @@ public class UserModel {
     public void setJoinedPostsCount(int joinedPostsCount) {
         this.joinedPostsCount = joinedPostsCount;
     }
-
-    public void decrementJoinedPostsCount() {
-        if (this.joinedPostsCount > 0) {
-            this.joinedPostsCount -= 1;
-        }
-    }
 }

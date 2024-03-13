@@ -21,7 +21,7 @@ import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.dataManagement.PostDiffCallback;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.FirestorePostsDisplay;
+import com.noisevisionproductions.playmeet.firebase.FirestorePostsDisplay;
 
 import java.util.ArrayList;
 import java.util.List;

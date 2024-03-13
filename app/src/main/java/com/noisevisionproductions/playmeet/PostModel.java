@@ -3,14 +3,14 @@ package com.noisevisionproductions.playmeet;
 import androidx.annotation.NonNull;
 
 import com.google.firebase.database.PropertyName;
-import com.noisevisionproductions.playmeet.postsManagement.PostInfo;
+import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 
 public class PostModel implements PostInfo {
     @PropertyName("postId")
     private String postId;
     @PropertyName("createdByUser")
     private Boolean createdByUser = false;
-    @PropertyName("activityFull")
+    @PropertyName("isActivityFull")
     private Boolean isActivityFull = false;
     @PropertyName("userId")
     private String userId;
@@ -36,43 +36,13 @@ public class PostModel implements PostInfo {
     public PostModel() {
     }
 
-    @NonNull
-    public PostModel copyOfAllPosts() {
-        PostModel copyOfAllPosts = new PostModel();
-        // copyOfAllPosts.setPostId(postId);
-        // copyOfAllPosts.getCreatedByUser(createdByUser);
-        copyOfAllPosts.setActivityFull(isActivityFull);
-        // copyOfAllPosts.setUserId(userId);
-        copyOfAllPosts.setSportType(sportType);
-        copyOfAllPosts.setCityName(cityName);
-        copyOfAllPosts.setDateTime(dateTime);
-        copyOfAllPosts.setHourTime(hourTime);
-        copyOfAllPosts.setSkillLevel(skillLevel);
-        copyOfAllPosts.setAdditionalInfo(additionalInfo);
-        return copyOfAllPosts;
-    }
-
-
-    public int getPeopleSignedUp() {
+    public int getSignedUpCount() {
         return signedUpCount;
     }
 
-    public void userSignedUp() {
-        signedUpCount++;
-        isActivityFull = signedUpCount >= howManyPeopleNeeded;
-        updatePeopleStatus();
-    }
-
-    public void deleteSignedUpUser() {
-        if (signedUpCount > 0) {
-            signedUpCount--;
-            isActivityFull = signedUpCount >= howManyPeopleNeeded;
-            updatePeopleStatus();
-        }
-    }
 
     public void updatePeopleStatus() {
-        peopleStatus = getPeopleSignedUp() + "/" + howManyPeopleNeeded;
+        peopleStatus = getSignedUpCount() + "/" + howManyPeopleNeeded;
     }
 
     @NonNull
@@ -98,12 +68,12 @@ public class PostModel implements PostInfo {
         this.createdByUser = createdByUser;
     }
 
-    public Boolean getActivityFull() {
+    public Boolean getIsActivityFull() {
         return isActivityFull;
     }
 
-    public void setActivityFull(Boolean activityFull) {
-        isActivityFull = activityFull;
+    public void setIsActivityFull(Boolean isActivityFull) {
+        this.isActivityFull = isActivityFull;
     }
 
     @Override
@@ -178,10 +148,6 @@ public class PostModel implements PostInfo {
 
     public void setAdditionalInfo(String additionalInfo) {
         this.additionalInfo = additionalInfo;
-    }
-
-    public int getSignedUpCount() {
-        return signedUpCount;
     }
 
     public void setSignedUpCount(int signedUpCount) {

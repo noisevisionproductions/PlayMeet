@@ -35,7 +35,9 @@ import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.userManagement.OnCompletionListener;
+import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnPostCreatedListener;
 import com.noisevisionproductions.playmeet.utilities.DateChoosingLogic;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
@@ -100,6 +102,7 @@ public class PostCreatingLogic extends Fragment {
     private void createNewPost() {
         setHowManyPeopleNeeded();
         postModel.setCreatedByUser(true);
+        postModel.setIsActivityFull(false);
         if (firebaseHelper.getCurrentUser() != null) {
             postModel.setUserId(firebaseHelper.getCurrentUser().getUid());
             setAdditionalInfo();
@@ -142,7 +145,7 @@ public class PostCreatingLogic extends Fragment {
 
                     @Override
                     public void onFailure(Exception e) {
-
+                        ToastManager.showToast(requireContext(), "Błąd podczas tworzenia postu " + e.getMessage());
                     }
                 });
             }

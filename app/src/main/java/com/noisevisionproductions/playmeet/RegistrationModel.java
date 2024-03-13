@@ -1,22 +1,17 @@
 package com.noisevisionproductions.playmeet;
 
 import com.google.firebase.Timestamp;
+import com.google.firebase.database.PropertyName;
 
 public class RegistrationModel {
-    private String registrationId;
+    @PropertyName("postId")
     private String postId;
+    @PropertyName("userId")
     private String userId;
+    @PropertyName("registrationDate")
     private Timestamp registrationDate;
 
     public RegistrationModel() {
-    }
-
-    public String getRegistrationId() {
-        return registrationId;
-    }
-
-    public void setRegistrationId(String registrationId) {
-        this.registrationId = registrationId;
     }
 
     public String getPostId() {

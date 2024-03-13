@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
+package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
-import com.noisevisionproductions.playmeet.utilities.UserModelDecryptor;
+import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecryptor;
 
 import java.util.List;
 
