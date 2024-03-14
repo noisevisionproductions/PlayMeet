@@ -155,9 +155,7 @@ public class FilterPostsDialog {
         });
 
         //logika ustawiania przycisku "OK"
-        builder.setPositiveButton("OK", (dialog, which) -> {
-            activateFilters();
-        });
+        builder.setPositiveButton("OK", (dialog, which) -> activateFilters());
         builder.setNegativeButton("Anuluj", (dialog, which) -> {
             filterButton.setSelected(false);
             dialog.cancel();
@@ -252,7 +250,6 @@ public class FilterPostsDialog {
             baseQuery = filter.applyFilter(baseQuery);
         }
         FirestoreRecyclerViewHelper.setupRecyclerView(baseQuery, recyclerView, fragmentManager, context, (LifecycleOwner) context, view);
-
     }
 
     public void deleteFilters() {

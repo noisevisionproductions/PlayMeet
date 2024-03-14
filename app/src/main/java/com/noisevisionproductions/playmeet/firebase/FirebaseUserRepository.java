@@ -34,8 +34,7 @@ public class FirebaseUserRepository implements UserRepository {
             if (task.isSuccessful()) {
                 DataSnapshot dataSnapshot = task.getResult();
                 if (dataSnapshot.exists()) {
-                    UserModel user = dataSnapshot.getValue(UserModel.class);
-                    listener.onSuccess(user);
+                    listener.onSuccess();
                 } else {
                     listener.onFailure(new Exception("Nie znaleziono użytkownika"));
                 }
@@ -50,7 +49,7 @@ public class FirebaseUserRepository implements UserRepository {
         // Najpierw pobieramy aktualne dane użytkownika
         getUser(userId, new OnResultListener<>() {
             @Override
-            public void onSuccess(UserModel user) {
+            public void onSuccess() {
                 // Następnie aktualizujemy dane w bazie
                 userReference.child("UserModel").child(userId).updateChildren(updates)
                         .addOnSuccessListener(aVoid -> listener.onSuccess())

@@ -50,6 +50,8 @@ public class PostsOfTheGamesFragment extends Fragment {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         if (firebaseHelper.getCurrentUser() != null) {
             firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, firebaseHelper.getCurrentUser().getUid());
+        } else {
+            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, null);
         }
         filterButton = view.findViewById(R.id.postsFilter);
         recyclerView = view.findViewById(R.id.recycler_view_posts);

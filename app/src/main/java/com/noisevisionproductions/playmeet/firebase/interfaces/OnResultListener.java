@@ -1,7 +1,7 @@
 package com.noisevisionproductions.playmeet.firebase.interfaces;
 
 public interface OnResultListener<T> {
-    void onSuccess(T result);
+    void onSuccess();
 
     void onFailure(Exception e);
 }

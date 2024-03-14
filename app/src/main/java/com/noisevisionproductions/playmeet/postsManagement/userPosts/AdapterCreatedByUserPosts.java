@@ -24,7 +24,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.ViewHolderUpdater;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment.ButtonsForChatAndSignIn;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment.ButtonsForChatAndSignIn;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.List;
@@ -107,7 +107,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
                     new AlertDialog.Builder(v.getContext())
                             .setMessage("Czy na pewno chcesz usunąć ten post?")
                             .setPositiveButton("Tak", (dialog, which) -> {
-                                deletePostFromDB(postId, postModel);
+                                deletePostFromDB(postId);
                                 listOfPostModel.remove(position);
                                 notifyItemRemoved(position);
                                 notifyItemRangeChanged(position, listOfPostModel.size());
@@ -121,9 +121,9 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         }
     }
 
-    private void deletePostFromDB(String postId, PostModel postModel) {
+    private void deletePostFromDB(String postId) {
         FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
-        firestorePostRepository.deleteUserPost(postId, postModel, new OnCompletionListener() {
+        firestorePostRepository.deleteUserPost(postId, new OnCompletionListener() {
             @Override
             public void onSuccess() {
                 ToastManager.showToast(context, "Post został usunięty");

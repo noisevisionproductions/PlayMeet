@@ -23,7 +23,7 @@ import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.interfaces.ViewHolderUpdater;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment.ButtonsForChatAndSignIn;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment.ButtonsForChatAndSignIn;
 import com.noisevisionproductions.playmeet.postsManagement.userPosts.PostHelperSignedUpUser;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 

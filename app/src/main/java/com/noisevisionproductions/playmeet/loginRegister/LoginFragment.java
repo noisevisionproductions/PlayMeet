@@ -74,6 +74,10 @@ public class LoginFragment extends Fragment {
 
         AppCompatTextView passwordForgotten = view.findViewById(R.id.passwordForgotten);
         passwordForgotten.setOnClickListener(v -> passwordForgottenDialog());
+
+        PrivacyInfoDialog privacyInfoDialog = new PrivacyInfoDialog();
+        AppCompatTextView howWeHandleYourData = view.findViewById(R.id.howWeHandleYourData);
+        howWeHandleYourData.setOnClickListener(v -> privacyInfoDialog.show(requireActivity().getSupportFragmentManager(), "privacyDialog"));
     }
 
     private void verifyLogin() {
@@ -88,7 +92,7 @@ public class LoginFragment extends Fragment {
                 navigateToMainMenu();
             }
         }
-        loginButton.setOnClickListener(this::loginUser);
+        loginButton.setOnClickListener(v -> loginUser());
         googleSignIn.setOnClickListener(v -> logInWithGoogle());
     }
 
@@ -103,7 +107,7 @@ public class LoginFragment extends Fragment {
         launcher.launch(intent);
     }
 
-    private void loginUser(View view) {
+    private void loginUser() {
         emailString = String.valueOf(emailInput.getText());
         passwordString = String.valueOf(passwordInput.getText());
 

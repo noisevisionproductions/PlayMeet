@@ -146,9 +146,7 @@ public class ActivityMainMenu extends TopMenuLayout {
     }
 
     private void switchToMainMenu() {
-        showAllPostsMenu.setOnClickListener(view -> {
-            switchToMainMenuFragment();
-        });
+        showAllPostsMenu.setOnClickListener(view -> switchToMainMenuFragment());
     }
 
     private void switchToMainMenuFragment() {

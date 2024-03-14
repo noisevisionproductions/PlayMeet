@@ -83,11 +83,6 @@ public class FirebaseHelper {
         userReferenceForNickname.addListenerForSingleValueEvent(listener);
     }
 
-    public void getJoinedPeopleStatus(@NonNull String postId, @NonNull ValueEventListener listener) {
-        DatabaseReference postReference = FirebaseDatabase.getInstance().getReference().child("PostCreating").child(postId).child("peopleStatus");
-        postReference.addListenerForSingleValueEvent(listener);
-    }
-
     // tworzenie nowego ChatRoom po wywołaniu tej metody
     public void getExistingChatRoomId(String user1Id, String user2Id, @NonNull OnChatRoomIdFetched callback) {
         databaseReference.child("ChatRooms")

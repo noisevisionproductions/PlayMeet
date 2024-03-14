@@ -15,17 +15,15 @@ import com.noisevisionproductions.playmeet.RegistrationModel;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnPostCreatedListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostCompletionListenerList;
-import com.noisevisionproductions.playmeet.firebase.interfaces.PostRepository;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-public class FirestorePostRepository implements PostRepository {
+public class FirestorePostRepository {
     private final FirebaseFirestore postReference = FirebaseFirestore.getInstance();
 
-    @Override
     public void addPost(PostModel postModel, OnPostCreatedListener listener) {
         postReference.collection("PostCreating").add(postModel)
                 .addOnSuccessListener(listener::onSuccess)
@@ -40,7 +38,6 @@ public class FirestorePostRepository implements PostRepository {
                 .addOnFailureListener(listener::onFailure);
     }
 
-    @Override
     public void getPost(String postId, PostCompletionListenerList listener) {
         postReference.collection("registrations")
                 .whereEqualTo("postId", postId)
@@ -61,14 +58,13 @@ public class FirestorePostRepository implements PostRepository {
                 });
     }
 
-    @Override
-    public void deleteUserPost(String postId, PostModel postModel, OnCompletionListener listener) {
+    public void deleteUserPost(String postId, OnCompletionListener listener) {
         postReference.collection("PostCreating").document(postId).delete()
                 .addOnSuccessListener(aVoid -> updateSignedUpCount(postId, false, listener))
                 .addOnFailureListener(listener::onFailure);
     }
 
-    @Override
+
     public void registerUserToPost(String postId, String userId, OnCompletionListener listener) {
         RegistrationModel registrationModel = new RegistrationModel();
         registrationModel.setPostId(postId);
@@ -79,7 +75,6 @@ public class FirestorePostRepository implements PostRepository {
                 .addOnFailureListener(listener::onFailure);
     }
 
-    @Override
     public void removeUserFromRegistration(String postId, String userId, OnCompletionListener listener) {
         Query registrationQuery = postReference.collection("registrations")
                 .whereEqualTo("postId", postId)
@@ -127,7 +122,6 @@ public class FirestorePostRepository implements PostRepository {
                 .addOnFailureListener(listener::onFailure);
     }
 
-    @Override
     public void deleteAllUserPosts(String userId, OnCompletionListener listener, Runnable onComplete) {
         postReference.collection("PostCreating")
                 .whereEqualTo("userId", userId)
@@ -148,7 +142,6 @@ public class FirestorePostRepository implements PostRepository {
                 });
     }
 
-    @Override
     public void deleteAllUserRegistrationsAndUpdatePosts(String userId, OnCompletionListener listener) {
         CollectionReference registrationReference = postReference.collection("registrations");
         registrationReference.whereEqualTo("userId", userId)

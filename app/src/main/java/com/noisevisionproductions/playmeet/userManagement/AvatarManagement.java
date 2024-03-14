@@ -235,7 +235,7 @@ public class AvatarManagement {
     }
 
     @Nullable
-    private Bitmap rotateImage(@NonNull Uri imageUri, @NonNull Bitmap bitmap) throws IOException {
+    private Bitmap rotateImage(@NonNull Uri imageUri, @NonNull Bitmap bitmap) {
         //String imagePath = getImagePathFromUri(imageUri);
         try (InputStream inputStream = fragment.requireContext().getContentResolver().openInputStream(imageUri)) {
             if (inputStream != null) {

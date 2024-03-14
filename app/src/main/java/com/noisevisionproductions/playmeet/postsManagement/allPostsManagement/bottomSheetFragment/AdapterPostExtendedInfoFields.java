@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment;
+package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment;
 
 import android.content.Context;
 import android.view.LayoutInflater;

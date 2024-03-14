@@ -19,10 +19,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.utilities.OpinionFromUser;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public abstract class TopMenuLayout extends AppCompatActivity {
-    protected CircleImageView userAvatar;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

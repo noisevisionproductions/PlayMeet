@@ -25,7 +25,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.ViewHolderUpdater;
-import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment.ButtonsForChatAndSignIn;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment.ButtonsForChatAndSignIn;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 import java.util.List;

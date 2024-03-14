@@ -128,11 +128,7 @@ public class ChildFragmentNickname extends Fragment implements NicknameValidatio
                 hideLayout();
 
                 // ustawiam kolejny fragment, który ma się pojawić i zastępuje aktualny fragment nowym
-                ChildFragmentCity childFragmentCity = new ChildFragmentCity();
-                // tworzę Bundle, który przechowuje podany nickname w celu przeniesienia go do kolejnego fragmentu, ponieważ dopiero na ostatnim fragmencie zostaną wszystkie zebrane dane zapisywane w bazie danych
-                Bundle args = new Bundle();
-                args.putString("nickname", nickname);
-                childFragmentCity.setArguments(args);
+                ChildFragmentCity childFragmentCity = getChildFragmentCity(nickname);
 
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                 // animacja, gdzie stary fragment chowa się za ekran w lewo, a nowy fragment pojawia się spoza okna z prawej strony
@@ -155,6 +151,16 @@ public class ChildFragmentNickname extends Fragment implements NicknameValidatio
             }
         });
         view.startAnimation(animation);
+    }
+
+    @NonNull
+    private static ChildFragmentCity getChildFragmentCity(String nickname) {
+        ChildFragmentCity childFragmentCity = new ChildFragmentCity();
+        // tworzę Bundle, który przechowuje podany nickname w celu przeniesienia go do kolejnego fragmentu, ponieważ dopiero na ostatnim fragmencie zostaną wszystkie zebrane dane zapisywane w bazie danych
+        Bundle args = new Bundle();
+        args.putString("nickname", nickname);
+        childFragmentCity.setArguments(args);
+        return childFragmentCity;
     }
 
     private void hideLayout() {

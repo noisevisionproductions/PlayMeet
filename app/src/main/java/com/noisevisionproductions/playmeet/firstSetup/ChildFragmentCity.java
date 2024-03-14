@@ -86,13 +86,7 @@ public class ChildFragmentCity extends Fragment {
                 FrameLayout cityFragmentLayout = view.findViewById(R.id.cityFragmentLayout);
 
                 // tworzę nowy fragment, który pojawi się jako kolejny i będzie zastępować aktualny
-                ChildFragmentGender childFragmentGender = new ChildFragmentGender();
-                // dodaje do Bundle nickname z poprzedniego fragmentu oraz city z aktualnego.
-                // Dzięki temu oba te Stringi będą dostępne w ostatnim fragmencie
-                Bundle args = new Bundle();
-                args.putString("nickname", getNickname());
-                args.putString("city", city);
-                childFragmentGender.setArguments(args);
+                ChildFragmentGender childFragmentGender = getChildFragmentGender();
 
                 FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
@@ -106,6 +100,18 @@ public class ChildFragmentCity extends Fragment {
                 // ustawiam aktualny fragment jako niewidzialny, aby animacja była płynna i wyglądała jak należy
 
                 fragmentTransaction.commit();
+            }
+
+            @NonNull
+            private ChildFragmentGender getChildFragmentGender() {
+                ChildFragmentGender childFragmentGender = new ChildFragmentGender();
+                // dodaje do Bundle nickname z poprzedniego fragmentu oraz city z aktualnego.
+                // Dzięki temu oba te Stringi będą dostępne w ostatnim fragmencie
+                Bundle args = new Bundle();
+                args.putString("nickname", getNickname());
+                args.putString("city", city);
+                childFragmentGender.setArguments(args);
+                return childFragmentGender;
             }
 
             @Override

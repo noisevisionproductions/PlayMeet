@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.BottomSheetFragment;
+package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment;
 
 import android.os.Bundle;
 import android.util.Log;
