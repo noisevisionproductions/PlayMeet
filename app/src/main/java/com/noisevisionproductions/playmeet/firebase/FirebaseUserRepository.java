@@ -29,7 +29,7 @@ public class FirebaseUserRepository implements UserRepository {
     }
 
     @Override
-    public void getUser(String userId, OnResultListener<UserModel> listener) {
+    public void getUser(String userId, OnResultListener listener) {
         userReference.child("UserModel").child(userId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DataSnapshot dataSnapshot = task.getResult();
@@ -47,7 +47,7 @@ public class FirebaseUserRepository implements UserRepository {
     @Override
     public void updateUser(String userId, Map<String, Object> updates, OnCompletionListener listener) {
         // Najpierw pobieramy aktualne dane użytkownika
-        getUser(userId, new OnResultListener<>() {
+        getUser(userId, new OnResultListener() {
             @Override
             public void onSuccess() {
                 // Następnie aktualizujemy dane w bazie

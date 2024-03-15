@@ -67,7 +67,7 @@ android {
 
 dependencies {
     implementation("androidx.paging:paging-runtime:3.2.1")
-    implementation(platform("com.google.firebase:firebase-bom:32.7.3"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-database:20.3.1")
     implementation("com.google.firebase:firebase-firestore:24.10.3")
     implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
@@ -82,7 +82,6 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation("androidx.exifinterface:exifinterface:1.3.7")
-    implementation("io.reactivex.rxjava2:rxjava:2.2.21")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.android.material:material:1.11.0")

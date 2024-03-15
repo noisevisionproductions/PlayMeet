@@ -101,6 +101,7 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     ChatMessageModel lastMessage = snapshot.getValue(ChatMessageModel.class);
                                     if (lastMessage != null) {
+                                        setLoading(false, holder);
                                         holder.lastMessage.setText(lastMessage.getMessage());
                                     }
                                 }

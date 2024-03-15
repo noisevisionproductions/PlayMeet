@@ -57,8 +57,8 @@ public class LoginFragment extends Fragment {
         guestButton(view);
 
         verifyLogin();
-
         LinearLayoutCompat mainLayout = view.findViewById(R.id.mainLayout);
+
         mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(requireActivity()));
 
         return view;
