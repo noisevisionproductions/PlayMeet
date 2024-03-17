@@ -25,7 +25,6 @@ import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 public class AppOptions extends TopMenuLayout {
     private AppCompatTextView versionInfo;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
