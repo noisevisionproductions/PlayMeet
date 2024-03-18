@@ -88,4 +88,8 @@ By accessing and viewing this project, you acknowledge and agree that you have r
 these restrictions, and agree to be bound by them. If you do not agree with these terms, you are
 prohibited from using or accessing this site and its code.
 
+<<<<<<< HEAD
 "All Rights Reserved"
+=======
+"All Rights Reserved"
+>>>>>>> 3158d87615899215dc5785e7ceb6785d9e26c7f5
