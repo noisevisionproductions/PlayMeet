@@ -20,6 +20,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
         // inicjalizuje Firebase zaraz na starcie aplikacji
         FirebaseApp.initializeApp(this);
+
         setContentView(R.layout.activity_welcome_screen);
 
         ImageView img = findViewById(R.id.welcomeImage);

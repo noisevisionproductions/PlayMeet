@@ -1,9 +1,11 @@
-package com.noisevisionproductions.playmeet.utilities;
+package com.noisevisionproductions.playmeet.notifications;
 
 import androidx.annotation.NonNull;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private NotificationHelper notificationHelper;
@@ -17,10 +19,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        if (remoteMessage.getNotification() != null) {
-            String message = remoteMessage.getNotification().getBody();
+
+        if (notificationHelper == null) {
+            notificationHelper = new NotificationHelper(this);
+        }
+
+        if (!remoteMessage.getData().isEmpty()) {
+            // Dane można przetworzyć nawet gdy aplikacja jest w tle
+            Map<String, String> data = remoteMessage.getData();
+            String message = data.get("message");
+            String title = data.get("title");
             if (message != null) {
-                notificationHelper.sendChatMessageNotification(message);
+                notificationHelper.sendChatMessageNotification(message, title);
             }
         }
     }

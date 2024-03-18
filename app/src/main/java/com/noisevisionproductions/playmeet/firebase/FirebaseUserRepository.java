@@ -1,5 +1,7 @@
 package com.noisevisionproductions.playmeet.firebase;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -13,6 +15,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnJoinedPostsCountListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnResultListener;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnTokenFound;
 import com.noisevisionproductions.playmeet.firebase.interfaces.UserRepository;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 
@@ -71,6 +74,29 @@ public class FirebaseUserRepository implements UserRepository {
                 .removeValue()
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(listener::onFailure);
+    }
+
+    @Override
+    public void getUserToken(String userId, OnTokenFound listener) {
+        userReference.child("UserModel").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                UserModel userModel = snapshot.getValue(UserModel.class);
+                if (userModel != null) {
+                    String otherUserToken = userModel.getFcmToken();
+                    if (otherUserToken != null) {
+                        listener.onTokenFound(otherUserToken);
+                    } else {
+                        listener.onFailure(new Exception("Brak tokenu"));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError e) {
+                Log.e("usermodel info for notification error", "usermodel info for notification error " + e.getMessage());
+            }
+        });
     }
 
     @Override

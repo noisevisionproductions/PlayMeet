@@ -30,6 +30,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.ChatMessageAdapter;
+import com.noisevisionproductions.playmeet.notifications.NotificationHelper;
 
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -92,7 +93,6 @@ public class ChatActivity extends AppCompatActivity {
 
             scrollToBottomOnMessageSent();
         }
-
     }
 
     private void sendMessage() {
@@ -102,6 +102,9 @@ public class ChatActivity extends AppCompatActivity {
                 if (!messageText.isEmpty()) {
                     String messageId = messagesReference.push().getKey();
                     if (currentUser != null && messageId != null) {
+                        NotificationHelper notificationHelper = new NotificationHelper(getApplicationContext());
+                        notificationHelper.getNotificationInfoForChatMessage(currentRoomId, messageText, currentUser.getUid(), currentUser.getDisplayName());
+
                         ChatMessageModel newMessage = new ChatMessageModel(messageId, currentUser.getUid(), currentUser.getDisplayName(), messageText, System.currentTimeMillis());
                         messagesReference.child(messageId).setValue(newMessage);
                         messageSent = true;

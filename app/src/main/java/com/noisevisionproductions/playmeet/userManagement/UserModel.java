@@ -1,6 +1,7 @@
 package com.noisevisionproductions.playmeet.userManagement;
 
 public class UserModel {
+    private String fcmToken;
     private String userId;
     private String nickname;
     private String name;
@@ -84,5 +85,13 @@ public class UserModel {
 
     public void setJoinedPostsCount(int joinedPostsCount) {
         this.joinedPostsCount = joinedPostsCount;
+    }
+
+    public String getFcmToken() {
+        return fcmToken;
+    }
+
+    public void setFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
     }
 }

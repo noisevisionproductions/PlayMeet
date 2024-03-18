@@ -28,6 +28,14 @@
         android:theme="@style/AppTheme"
         tools:targetApi="tiramisu">
 
+        <meta-data
+            android:name="com.google.firebase.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/main_logo" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -38,8 +46,10 @@
                 android:resource="@xml/file_paths_for_user_photos" />
         </provider>
 
+        <receiver android:name=".notifications.NotificationActionReceiver" />
+
         <service
-            android:name=".utilities.MyFirebaseMessagingService"
+            android:name=".notifications.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

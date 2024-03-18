@@ -26,10 +26,10 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_chat"
-            android:contentDescription="@string/chatMessages"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/messageInputLayout" />
+            android:layout_above="@id/messageInputLayout"
+            android:contentDescription="@string/chatMessages" />
 
         <RelativeLayout
             android:id="@+id/messageInputLayout"
@@ -48,6 +48,7 @@
                 android:background="@android:color/transparent"
                 android:hint="@string/writeMessage"
                 android:inputType="textCapSentences"
+                android:maxLength="150"
                 android:minHeight="50dp"
                 android:textColor="#000"
                 android:textColorHint="@color/background" />

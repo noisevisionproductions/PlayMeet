@@ -26,6 +26,7 @@ import com.noisevisionproductions.playmeet.chat.ChatRoomList;
 import com.noisevisionproductions.playmeet.design.TopMenuLayout;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment;
+import com.noisevisionproductions.playmeet.notifications.NotificationPermissionDialog;
 import com.noisevisionproductions.playmeet.postsManagement.PostCreatingLogic;
 import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.PostsOfTheGamesFragment;
 import com.noisevisionproductions.playmeet.postsManagement.userPosts.UserPostsFragment;
@@ -63,6 +64,9 @@ public class ActivityMainMenu extends TopMenuLayout {
         switchToCreatePost();
         switchToChatRoom();
         switchToUserProfile();
+
+        NotificationPermissionDialog notificationPermissionDialog = new NotificationPermissionDialog(this);
+        notificationPermissionDialog.requestNotificationsPermission();
     }
 
     @Override
@@ -235,4 +239,6 @@ public class ActivityMainMenu extends TopMenuLayout {
         chatRoomMenu.setSelected(false);
         userProfileMenu.setSelected(false);
     }
+
+
 }

@@ -140,5 +140,6 @@
     <string name="close">Zamknij</string>
     <string name="howWeHandlePrivacy">W naszej aplikacji Android stawiamy na bezpieczeństwo i prywatność użytkowników.\n Wykorzystujemy Firebase, który jest wszechstronnym narzędziem od Google, które zapewnia szyfrowanie danych użytkownika.\n Dzięki temu osobiste informacje użytkowników są chronione przed nieautoryzowanym dostępem.\n Firebase oferuje również bezpieczne metody logowania, utrzymując konta użytkowników w bezpieczeństwie.\n Korzystając z infrastruktury Google, gwarantujemy ciągłe aktualizacje bezpieczeństwa, aby nasza aplikacja była zawsze zabezpieczona według najnowszych standardów.</string>
     <string name="howWeHandleYourData">Jak dbamy o Twoje dane?</string>
+    <string name="default_notification_channel_id">chat_messages</string>
 
 </resources>

@@ -11,7 +11,7 @@
     android:paddingEnd="16dp"
     android:paddingBottom="8dp">
 
-<include
+    <include
         layout="@layout/avatar_image_view"
         android:layout_width="50dp"
         android:layout_height="50dp" />
@@ -63,14 +63,4 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/statusIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center|end"
-        android:layout_marginEnd="5dp"
-        android:minWidth="10dp"
-        android:minHeight="10dp"
-        android:src="@drawable/status_icon"
-        android:visibility="gone" />
 </androidx.appcompat.widget.LinearLayoutCompat>

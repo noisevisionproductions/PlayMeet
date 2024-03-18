@@ -20,3 +20,4 @@ firebase.json
 .firebaserc
 Run
 /app/google-services.json
+/app/src/main/assets/key.properties

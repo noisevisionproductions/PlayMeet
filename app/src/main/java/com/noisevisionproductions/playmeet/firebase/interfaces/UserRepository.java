@@ -14,6 +14,8 @@ public interface UserRepository {
 
     void deleteUser(String userId, OnCompletionListener listener);
 
+    void getUserToken(String userId, OnTokenFound listener);
+
     void getJoinedPostsCount(String userId, OnJoinedPostsCountListener listener);
 
     void incrementJoinedPostsCount(String userId, OnCompletionListener listener);

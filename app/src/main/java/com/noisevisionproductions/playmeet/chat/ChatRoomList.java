@@ -23,7 +23,6 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 
 public class ChatRoomList extends Fragment {
     private ListOfChatRoomsAdapter listOfChatRoomsAdapter;
-    // private ProgressBar chatRoomsLoading;
     private AppCompatTextView noChatRoomsFound;
     private RecyclerView recyclerView;
 
@@ -45,7 +44,6 @@ public class ChatRoomList extends Fragment {
             initializeChatRoomsAdapter();
         }
         recyclerView.setAdapter(listOfChatRoomsAdapter);
-
     }
 
     private void initializeChatRoomsAdapter() {
