@@ -219,7 +219,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private void fetchUserInformation(@NonNull List<String> userIdsSingedUp) {
         List<UserModel> signedUpUsers = new ArrayList<>();
         RecyclerView recyclerViewSignedUsers = requireView().findViewById(R.id.recycler_view_signed_users);
-        AdapterSignedUpUsers adapterSignedUpUsers = new AdapterSignedUpUsers(signedUpUsers, getContext());
+        AdapterSignedUpUsers adapterSignedUpUsers = new AdapterSignedUpUsers(signedUpUsers, getContext(), postInfo);
         recyclerViewSignedUsers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewSignedUsers.setAdapter(adapterSignedUpUsers);
 
@@ -272,13 +272,22 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         }
     }
 
+    // Obsługa przycisków do zapisania się do aktywności lub napisania do organizatora
+    // Jeżeli zalogowany użytkownik jest właścicielem posta, to ukrywam te przyciski
     private void handleButtons(@NonNull View view) {
         if (this.postInfo != null) {
             SavePostHandler savePostHandler = new SavePostHandler(view, postInfo.getPostId());
             if (firebaseHelper.getCurrentUser() != null) {
                 String currentUserId = firebaseHelper.getCurrentUser().getUid();
-                savePostButton.setOnClickListener(v -> ButtonsForChatAndSignIn.checkNicknameAndPerformAction(currentUserId, savePostHandler::savePostInDBLogic, getChildFragmentManager()));
-                chatButton.setOnClickListener(v -> ButtonsForChatAndSignIn.handleChatButtonClick(view, postInfo.getUserId(), getChildFragmentManager()));
+                if (postInfo.getUserId().equals(currentUserId)) {
+                    savePostButton.setVisibility(View.GONE);
+                    chatButton.setVisibility(View.GONE);
+                } else {
+                    savePostButton.setVisibility(View.VISIBLE);
+                    chatButton.setVisibility(View.VISIBLE);
+                    savePostButton.setOnClickListener(v -> ButtonsForChatAndSignIn.checkNicknameAndPerformAction(currentUserId, savePostHandler::savePostInDBLogic, getChildFragmentManager()));
+                    chatButton.setOnClickListener(v -> ButtonsForChatAndSignIn.handleChatButtonClick(view, postInfo.getUserId(), getChildFragmentManager()));
+                }
             }
         }
     }

@@ -164,10 +164,12 @@ public class FirebaseUserRepository implements UserRepository {
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 Integer count = currentData.getValue(Integer.class);
-                if (count == null || count <= 0) {
-                    return Transaction.abort();
-                } else {
+                if (count == null) {
+                    currentData.setValue(1);
+                } else if (count > 0) {
                     currentData.setValue(count - 1);
+                } else {
+                    return Transaction.abort();
                 }
                 return Transaction.success(currentData);
             }

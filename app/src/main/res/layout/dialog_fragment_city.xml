@@ -24,7 +24,7 @@
         <!--nazwa miasta-->
         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
             android:id="@+id/cityTextField"
-            style="@style/MyAutoCompleteTextViewStyle"
+            style="@style/MyAutoCompleteTextViewStyleForFirstSetup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

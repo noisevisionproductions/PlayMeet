@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     android:foreground="@drawable/ripple_effect"
     app:cardBackgroundColor="@color/background"
-    app:cardCornerRadius="10dp"
-    app:cardElevation="5dp"
+    app:cardCornerRadius="15dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -17,8 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
-        android:background="@color/secondary20"
+        android:background="@drawable/rounded_background_user_post"
         android:minHeight="160dp"
         android:orientation="horizontal">
 
@@ -130,6 +128,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
+            android:padding="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -142,7 +141,8 @@
                 android:layout_weight="1"
                 android:accessibilityTraversalBefore="@id/deletePost"
                 android:background="@drawable/button_style"
-                android:text="@string/openChat" />
+                android:text="@string/messageToTheCreator"
+                android:textSize="13sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/deletePost"
@@ -152,7 +152,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_style"
                 android:backgroundTint="@color/error"
-                android:text="@string/signOutFromThePost" />
+                android:text="@string/signOutFromThePost"
+                android:textSize="13sp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

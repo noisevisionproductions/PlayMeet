@@ -59,7 +59,7 @@ public class ButtonsForChatAndSignIn {
         }
     }
 
-    private static void navigateToChatRoom(@NonNull View view, String roomId) {
+    public static void navigateToChatRoom(@NonNull View view, String roomId) {
         Intent intent = new Intent(view.getContext(), ChatActivity.class);
         intent.putExtra("roomId", roomId);
         view.getContext().startActivity(intent);

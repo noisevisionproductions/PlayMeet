@@ -10,7 +10,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/mainLayout"
+            android:id="@+id/mainLayoutUserPage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
@@ -161,7 +161,7 @@
 
                         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                             android:id="@+id/nameInput"
-                            style="@style/MyAutoCompleteTextViewStyle"
+                            style="@style/MyAutoCompleteTextViewStyleForFirstSetup"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
@@ -188,7 +188,7 @@
 
                         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                             android:id="@+id/aboutYouInput"
-                            style="@style/MyAutoCompleteTextViewStyle"
+                            style="@style/MyAutoCompleteTextViewStyleForFirstSetup"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
@@ -216,7 +216,7 @@
                         <!--nazwa miasta-->
                         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                             android:id="@+id/cityTextField"
-                            style="@style/MyAutoCompleteTextViewStyle"
+                            style="@style/MyAutoCompleteTextViewStyleForFirstSetup"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
@@ -250,16 +250,14 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="5dp"
                             android:layout_weight="1"
-                            android:minHeight="60dp"
+                            android:minHeight="50dp"
                             android:visibility="visible" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
-
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
-
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

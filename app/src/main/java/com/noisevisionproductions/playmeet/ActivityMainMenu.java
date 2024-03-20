@@ -29,6 +29,7 @@ import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment
 import com.noisevisionproductions.playmeet.notifications.NotificationPermissionDialog;
 import com.noisevisionproductions.playmeet.postsManagement.PostCreatingLogic;
 import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.PostsOfTheGamesFragment;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment.ButtonsForChatAndSignIn;
 import com.noisevisionproductions.playmeet.postsManagement.userPosts.UserPostsFragment;
 import com.noisevisionproductions.playmeet.userManagement.UserAccountLogic;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
@@ -40,6 +41,7 @@ public class ActivityMainMenu extends TopMenuLayout {
     private AppCompatButton yourPostsMenu, createPostMenu, showAllPostsMenu, chatRoomMenu, userProfileMenu, updateUserInfoBar;
     private FragmentContainerView fragmentContainerActivePosts;
     private DialogFragment dialogFragment;
+    private FirebaseUser currentUser;
     private final PostCreatingLogic postCreatingLogic = new PostCreatingLogic();
 
     @Override
@@ -91,7 +93,7 @@ public class ActivityMainMenu extends TopMenuLayout {
     }
 
     public void checkUsersForNickname() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
 
         if (currentUser != null) {
             DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUser.getUid());
@@ -182,15 +184,17 @@ public class ActivityMainMenu extends TopMenuLayout {
     private void switchToCreatePost() {
         createPostMenu.setOnClickListener(view -> {
             if (FirebaseAuthManager.isUserLoggedInUsingGoogle() || FirebaseAuthManager.isUserLoggedIn()) {
+                Runnable action = () -> {
+                    yourPostsMenu.setSelected(false);
+                    createPostMenu.setSelected(true);
+                    showAllPostsMenu.setSelected(false);
+                    chatRoomMenu.setSelected(false);
+                    userProfileMenu.setSelected(false);
 
-                yourPostsMenu.setSelected(false);
-                createPostMenu.setSelected(true);
-                showAllPostsMenu.setSelected(false);
-                chatRoomMenu.setSelected(false);
-                userProfileMenu.setSelected(false);
-
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, postCreatingLogic).addToBackStack("PostsOfTheGamesFragment").commit();
+                    FragmentManager fragmentManager = getSupportFragmentManager();
+                    fragmentManager.beginTransaction().replace(R.id.fragmentContainerActivePosts, postCreatingLogic).addToBackStack("PostsOfTheGamesFragment").commit();
+                };
+                ButtonsForChatAndSignIn.checkNicknameAndPerformAction(currentUser.getUid(), action, getSupportFragmentManager());
             } else {
                 ProjectUtils.showLoginSnackBar(this);
             }

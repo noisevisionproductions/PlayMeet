@@ -5,10 +5,11 @@
     android:id="@+id/layoutOfPost"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_margin="8dp"
     android:foreground="@drawable/ripple_effect"
     android:minHeight="200dp"
-    app:cardBackgroundColor="@color/secondary20"
+    app:cardBackgroundColor="@color/background"
+    app:cardCornerRadius="15dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -16,7 +17,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/rounded_background_user_post">
 
         <!--avatar-->
         <include layout="@layout/avatar_image_view" />

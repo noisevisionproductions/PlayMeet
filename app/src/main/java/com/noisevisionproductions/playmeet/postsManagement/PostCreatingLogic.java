@@ -339,7 +339,7 @@ public class PostCreatingLogic extends Fragment {
         AppCompatImageView infoIcon = view.findViewById(R.id.infoIcon);
         ToastManager.createToolTip(getString(R.string.limitOfPosts), infoIcon);
 
-        LinearLayoutCompat linearLayout = view.findViewById(R.id.linearLayout);
+        LinearLayoutCompat linearLayout = view.findViewById(R.id.linearLayoutPostCreating);
         linearLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(requireActivity()));
     }
 }

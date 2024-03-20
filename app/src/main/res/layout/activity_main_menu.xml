@@ -47,40 +47,45 @@
             style="@style/MainMenuButtonsStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawableTop="@drawable/icon_home"
-            android:text="@string/start" />
+            android:drawableTop="@drawable/selector_home"
+            android:text="@string/start"
+            android:textColor="@color/selector_text_menu_icons" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/yourPostsMenu"
             style="@style/MainMenuButtonsStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawableTop="@drawable/icon_user_posts"
+            android:drawableTop="@drawable/selector_user_posts"
             android:gravity="center"
-            android:text="@string/postsAddedByYou" />
+            android:text="@string/postsAddedByYou"
+            android:textColor="@color/selector_text_menu_icons" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/createPostMenu"
             style="@style/MainMenuButtonsStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawableTop="@drawable/icon_add_post"
-            android:text="@string/add" />
+            android:drawableTop="@drawable/selector_add_post"
+            android:text="@string/add"
+            android:textColor="@color/selector_text_menu_icons" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/chatRoomMenu"
             style="@style/MainMenuButtonsStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawableTop="@drawable/icon_chat"
-            android:text="@string/chat" />
+            android:drawableTop="@drawable/selector_chat"
+            android:text="@string/chat"
+            android:textColor="@color/selector_text_menu_icons" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/userProfileMenu"
             style="@style/MainMenuButtonsStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:drawableTop="@drawable/icon_user_account"
-            android:text="@string/you" />
+            android:drawableTop="@drawable/selector_user_account"
+            android:text="@string/you"
+            android:textColor="@color/selector_text_menu_icons" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </RelativeLayout>

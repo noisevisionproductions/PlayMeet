@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
+    android:padding="10dp"
     tools:context=".chat.ChatActivity"
     tools:openDrawer="end">
 
@@ -17,6 +18,41 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".chat.ChatRoomList">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/textWithFriendsListLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/friendsListButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/friendsList"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:padding="10dp"
+                    android:src="@drawable/icon_friends_list"
+                    android:visibility="gone" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    style="@style/MyAppCompatTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="@string/chatRoomsText"
+                    android:textColor="@color/text"
+                    android:textSize="25sp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/noChatRoomsFound"
@@ -32,14 +68,21 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@+id/textWithFriendsListLayout" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewFriendsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/textWithFriendsListLayout" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewChatRoomList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="visible"
-                app:layout_constraintTop_toBottomOf="@+id/noChatRoomsFound" />
+                app:layout_constraintTop_toBottomOf="@+id/textWithFriendsListLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

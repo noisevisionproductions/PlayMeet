@@ -42,11 +42,17 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="MyAutoCompleteTextViewStyle" parent="Widget.AppCompat.AutoCompleteTextView">
+    <style name="MyAutoCompleteTextViewStyleForFirstSetup" parent="Widget.AppCompat.AutoCompleteTextView">
         <item name="background">@drawable/my_autocomplete_background</item>
         <item name="android:gravity">center</item>
         <item name="android:inputType">textCapSentences</item>
         <item name="android:minHeight">60dp</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="MyAutoCompleteTextViewStyleDefault" parent="Widget.AppCompat.AutoCompleteTextView">
+        <item name="android:background">@drawable/rounded_background_user_post</item>
+        <item name="android:gravity">center</item>
         <item name="android:textSize">15sp</item>
     </style>
 
@@ -63,7 +69,7 @@
 
     <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/button_style</item>
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/selector_text_menu_icons</item>
         <item name="android:padding">10dp</item>
         <item name="android:maxWidth">320dp</item>
         <item name="android:layout_margin">2dp</item>

@@ -15,6 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.chat.ChatRoomModel;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
@@ -61,6 +62,10 @@ public class NotificationHelper {
     protected void createMessageNotification(String message, String title) {
         int notificationId = (int) System.currentTimeMillis();
 
+        Intent intent = new Intent(context, ActivityMainMenu.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
         Intent markAsReadIntent = new Intent(context, NotificationActionReceiver.class);
         markAsReadIntent.putExtra("action", "mark_as_read");
         markAsReadIntent.putExtra("notification_id", notificationId);
@@ -73,25 +78,12 @@ public class NotificationHelper {
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .addAction(0, "Przeczytane", markAsReadPendingIntent)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         notificationManager.notify(notificationId, builder.build());
         handleMultipleMessages();
     }
-
-    protected void createSomeoneJoinedNotification() {
-        int notificationId = (int) System.currentTimeMillis() / 1000;
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "user_registered_to_your_post")
-                .setSmallIcon(R.drawable.icon_p_for_notification)
-                .setContentTitle("Ktoś dołączył do Twojej aktywności!")
-                .setContentText("Wejdź do aplikacji, aby poznać więcej szczegółów.")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setAutoCancel(true);
-
-        notificationManager.notify(notificationId, builder.build());
-    }
-
 
     private void handleMultipleMessages() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "chat_messages")

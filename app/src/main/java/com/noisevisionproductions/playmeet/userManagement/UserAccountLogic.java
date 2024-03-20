@@ -68,6 +68,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         getUserData();
         setUserAvatar();
         chooseCity();
+        setButtons(view);
 
         return view;
     }
@@ -88,8 +89,6 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         ageSpinner = view.findViewById(R.id.ageSpinner);
         linearLayout = view.findViewById(R.id.linearLayout);
         infoIconUserAccount = view.findViewById(R.id.infoIconUserAccount);
-
-        setButtons(view);
     }
 
     private void setButtons(View view) {
@@ -114,7 +113,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
             }
         });
 
-        LinearLayoutCompat mainLayout = view.findViewById(R.id.mainLayout);
+        LinearLayoutCompat mainLayout = view.findViewById(R.id.mainLayoutUserPage);
         mainLayout.setOnClickListener(v -> ProjectUtils.hideSoftKeyboard(requireActivity()));
     }
 

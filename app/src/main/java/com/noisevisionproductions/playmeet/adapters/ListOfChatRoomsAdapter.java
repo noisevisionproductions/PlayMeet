@@ -102,7 +102,9 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
                                     ChatMessageModel lastMessage = snapshot.getValue(ChatMessageModel.class);
                                     if (lastMessage != null) {
                                         setLoading(false, holder);
-                                        holder.lastMessage.setText(lastMessage.getMessage());
+                                        String fullMessage = lastMessage.getMessage();
+                                        String shorterMessage = fullMessage.length() > 30 ? fullMessage.substring(0, 30) + "..." : fullMessage;
+                                        holder.lastMessage.setText(shorterMessage);
                                     }
                                 }
                             }
@@ -133,8 +135,7 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        private final AppCompatTextView username;
-        private final AppCompatTextView lastMessage;
+        private final AppCompatTextView username, lastMessage;
         private final CircleImageView userAvatar;
         private final LinearLayoutCompat chatRoomLayout;
         private final ProgressBar chatroomProgressBar;

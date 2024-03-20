@@ -12,7 +12,7 @@
         android:layout_above="@+id/submitPost">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/linearLayout"
+            android:id="@+id/linearLayoutPostCreating"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
@@ -56,7 +56,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-                android:background="@color/secondary20"
                 android:entries="@array/arrays_sport_names"
                 android:minHeight="60dp"
                 android:textSize="30sp" />
@@ -68,7 +67,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:background="@color/secondary20"
                 android:entries="@array/arrays_skill_level"
                 android:minHeight="60dp"
                 android:textSize="30sp" />
@@ -76,31 +74,30 @@
             <!--nazwa miasta-->
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/cities_in_poland"
+                style="@style/MyAutoCompleteTextViewStyleDefault"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:background="@color/secondary20"
                 android:hint="@string/provideCityHint"
                 android:inputType="textAutoComplete"
                 android:maxLength="50"
-                android:minHeight="50dp"
+                android:minHeight="60dp"
                 android:padding="10dp"
                 android:popupBackground="@drawable/rounded_menu_background_for_spinner"
-                android:textAlignment="center"
-                android:textSize="15sp" />
+                android:textAlignment="center" />
 
             <!--Ilość osób potrzebnych-->
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/howManyPeopleNeeded"
+                style="@style/MyAutoCompleteTextViewStyleDefault"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-                android:background="@color/secondary20"
                 android:gravity="center"
                 android:hint="@string/howManyPeopleNeeded"
                 android:inputType="number"
                 android:maxLength="2"
-                android:minHeight="50dp"
+                android:minHeight="60dp"
                 android:padding="10dp"
                 android:textAlignment="center"
                 android:textSize="15sp" />
@@ -122,14 +119,14 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/chooseDate"
+                        style="@style/MyAutoCompleteTextViewStyleDefault"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@color/secondary20"
                         android:gravity="center"
                         android:hint="@string/chooseDate"
                         android:inputType="date"
-                        android:textSize="15sp" />
+                        android:minHeight="60dp" />
 
                     <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/dateNegotiable"
@@ -150,14 +147,14 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/chooseHour"
+                        style="@style/MyAutoCompleteTextViewStyleDefault"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@color/secondary20"
                         android:hint="@string/chooseHour"
                         android:inputType="date"
-                        android:textAlignment="center"
-                        android:textSize="15sp" />
+                        android:minHeight="60dp"
+                        android:textAlignment="center" />
 
                     <androidx.appcompat.widget.AppCompatCheckBox
                         android:id="@+id/hourNegotiable"
@@ -177,9 +174,9 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/addInfo"
+                    style="@style/MyAutoCompleteTextViewStyleDefault"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/secondary20"
                     android:hint="@string/extraInfo"
                     android:inputType="textAutoCorrect|textMultiLine"
                     android:maxLength="220"

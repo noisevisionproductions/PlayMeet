@@ -48,7 +48,7 @@
                 android:background="@android:color/transparent"
                 android:hint="@string/writeMessage"
                 android:inputType="textCapSentences"
-                android:maxLength="150"
+                android:maxLength="250"
                 android:minHeight="50dp"
                 android:textColor="#000"
                 android:textColorHint="@color/background" />
@@ -58,13 +58,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:background="@drawable/button_send_message"
+                android:background="@drawable/ripple_effect"
                 android:contentDescription="@string/sendMessage"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
+                android:foreground="@drawable/button_send_message"
                 android:minWidth="50dp"
                 android:minHeight="50dp" />
-
         </RelativeLayout>
 
     </RelativeLayout>

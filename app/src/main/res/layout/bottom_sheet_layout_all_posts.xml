@@ -148,6 +148,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.core.widget.NestedScrollView>
+
     <!--Przyciski-->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/extraInfoContainer"
