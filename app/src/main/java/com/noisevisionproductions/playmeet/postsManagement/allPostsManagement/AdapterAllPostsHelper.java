@@ -16,7 +16,7 @@ import com.noisevisionproductions.playmeet.utilities.ReportPost;
 
 public class AdapterAllPostsHelper {
 
-    public static void getSkillLevel(@NonNull PostModel postModel, @NonNull AdapterAllPosts.MyViewHolder holder) {
+    public static void getSkillLevel(@NonNull PostModel postModel, @NonNull AdapterAllPosts.MyViewHolder holder, Context context) {
         String skillLevel = postModel.getSkillLevel();
         int drawableId = switch (skillLevel) {
             case "Pierwszy raz" -> R.drawable.d1_10;
@@ -49,7 +49,7 @@ public class AdapterAllPostsHelper {
                             reportPost.show(postId);
                             return true;
                         } else {
-                            Snackbar.make(v, "Zbyt częste zgłaszanie", Snackbar.LENGTH_SHORT).setTextColor(Color.RED).show();
+                            Snackbar.make(v, context.getString(R.string.reportingToOften), Snackbar.LENGTH_SHORT).setTextColor(Color.RED).show();
                         }
                     }
                     return false;

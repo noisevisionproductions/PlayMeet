@@ -65,7 +65,7 @@ public class DeleteUserFromDB {
         builder.setTitle(context.getString(R.string.safetyPasswordCheck))
                 .setView(dialogView)
                 .setPositiveButton("OK", null)
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+                .setNegativeButton(context.getString(R.string.cancelButtonString), (dialog, which) -> dialog.dismiss());
 
         dialog = builder.create();
         setupDialogOnShow();
@@ -106,7 +106,7 @@ public class DeleteUserFromDB {
             if (!password.isEmpty()) {
                 deleteUserWithEmailAuth(password, reasonText);
             } else {
-                ToastManager.showToast(context, "Hasło nie może być puste");
+                ToastManager.showToast(context, context.getString(R.string.passwordCanNotBeEmpty));
             }
         }
     }
@@ -136,7 +136,7 @@ public class DeleteUserFromDB {
     }
 
     private void showToast() {
-        ToastManager.showToast(context, "Błąd uwierzytelnienia");
+        ToastManager.showToast(context, context.getString(R.string.authError));
     }
 
     private void logError(@NonNull String message) {
@@ -239,7 +239,7 @@ public class DeleteUserFromDB {
             public void onFailure(Exception e) {
                 Log.e("Firestore removing user posts error", "Firestore removing user posts error " + e.getMessage());
             }
-        }, () -> deleteAllUserRegistrationsAndUpdatePosts(() -> Log.d("User removing", "User removed completelly")));
+        }, () -> deleteAllUserRegistrationsAndUpdatePosts(() -> Log.d("User removing", "User removed completely")));
     }
 
     private void deleteAllUserRegistrationsAndUpdatePosts(Runnable onComplete) {
@@ -280,11 +280,11 @@ public class DeleteUserFromDB {
     }
 
     private void getToastErrorFromDeleting() {
-        ToastManager.showToast(context, "Wystąpił błąd. Skontaktuj się z administratorem");
+        ToastManager.showToast(context, context.getString(R.string.errorWhileRemovingAccount));
     }
 
     private void getToastDeleteSuccessful() {
-        ToastManager.showToast(context, "Pomyślnie usunięto profil");
+        ToastManager.showToast(context, context.getString(R.string.accountRemoved));
     }
 
 }

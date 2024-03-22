@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    android:padding="20dp">
+    android:padding="15dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/closePrivacyDialogButton"
@@ -22,16 +22,57 @@
         android:layout_gravity="center"
         android:fillViewport="true">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="match_parent"
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lineSpacingExtra="6dp"
-            android:padding="5dp"
-            android:text="@string/howWeHandlePrivacy"
-            android:textAlignment="center"
-            android:textColor="@color/accent"
-            android:textSize="18sp" />
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="6dp"
+                android:maxWidth="350dp"
+                android:padding="5dp"
+                android:text="@string/howWeHandlePrivacy"
+                android:textColor="@color/accent"
+                android:textSize="18sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="6dp"
+                android:maxWidth="350dp"
+                android:padding="5dp"
+                android:text="@string/privacyInfo2"
+                android:textColor="@color/accent"
+                android:textSize="18sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:lineSpacingExtra="6dp"
+                android:maxWidth="350dp"
+                android:padding="5dp"
+                android:text="@string/privacyInfo3"
+                android:textColor="@color/accent"
+                android:textSize="18sp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyAppCompatTextViewStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:lineSpacingExtra="6dp"
+                android:maxWidth="350dp"
+                android:padding="5dp"
+                android:text="@string/myEmail"
+                android:textColor="@color/accent"
+                android:textSize="18sp" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
     </ScrollView>
 
 </FrameLayout>

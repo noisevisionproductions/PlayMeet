@@ -86,15 +86,15 @@ public class PostCreatingLogic extends Fragment {
                             postModel.setCityName(selectedCity);
                             createNewPost();
                         } else {
-                            ToastManager.showToast(requireContext(), "Osiągnięto limit tworzenia postów");
+                            ToastManager.showToast(requireContext(), getString(R.string.postsCreatingLimitReached));
                         }
                     });
                 } else {
-                    ToastManager.showToast(requireContext(), "Użytkownik nie autoryzowany");
+                    ToastManager.showToast(requireContext(), getString(R.string.userDontExists));
                 }
             } else {
                 handleInvalidSelection();
-                ProjectUtils.createSnackBarUsingViewVeryShort(view, "Uzupełnij wymagane pola");
+                ProjectUtils.createSnackBarUsingViewVeryShort(view, getString(R.string.fillAllNeededFields));
             }
         });
     }
@@ -138,14 +138,14 @@ public class PostCreatingLogic extends Fragment {
                 firestorePostRepository.updatePost(postId, postModel, new OnCompletionListener() {
                     @Override
                     public void onSuccess() {
-                        ToastManager.showToast(requireContext(), "Post utworzony!");
+                        ToastManager.showToast(requireContext(), getString(R.string.postCreated));
                         Intent intent = new Intent(requireContext(), ActivityMainMenu.class);
                         startActivity(intent);
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        ToastManager.showToast(requireContext(), "Błąd podczas tworzenia postu " + e.getMessage());
+                        ToastManager.showToast(requireContext(), getString(R.string.errorWhileCreatingPost) + " " + e.getMessage());
                     }
                 });
             }
@@ -221,11 +221,11 @@ public class PostCreatingLogic extends Fragment {
             if (numberOfPeople > 0) {
                 return true;
             } else {
-                peopleNeededEditText.setError("Podaj poprawną liczbę osób");
+                peopleNeededEditText.setError(getString(R.string.provideCorrectNumber));
                 return false;
             }
         } else {
-            peopleNeededEditText.setError("Pojad liczbę osób");
+            peopleNeededEditText.setError(getString(R.string.provideNumberOfPeople));
             return false;
         }
     }
@@ -290,7 +290,7 @@ public class PostCreatingLogic extends Fragment {
     }
 
     private boolean isValidSportSelection() {
-        return !sportSpinner.getSelectedItem().equals("Wybierz sport");
+        return !sportSpinner.getSelectedItem().equals(getString(R.string.provideCorrectSport));
     }
 
     private boolean isValidCitySelection() {
@@ -300,22 +300,22 @@ public class PostCreatingLogic extends Fragment {
 
 
     private boolean isValidSkillSelection() {
-        return !skillSpinner.getSelectedItem().equals("Wybierz poziom");
+        return !skillSpinner.getSelectedItem().equals(getString(R.string.provideCorrectDifficulty));
     }
 
     private void handleInvalidSelection() {
         if (!isValidSportSelection()) {
-            setSpinnerError(sportSpinner, "Wybierz sport");
+            setSpinnerError(sportSpinner, getString(R.string.provideCorrectSport));
         } else {
             clearSpinnerError(sportSpinner);
         }
         if (!isValidCitySelection()) {
-            cityTextView.setError("Wprowadź prawidłowe miasto lub wybierz z listy");
+            cityTextView.setError(getString(R.string.provideCorrectCityOrChooseFromTheList));
         } else {
             cityTextView.setError(null);
         }
         if (!isValidSkillSelection()) {
-            setSpinnerError(skillSpinner, "Wybierz poziom");
+            setSpinnerError(skillSpinner, getString(R.string.provideCorrectDifficulty));
         } else {
             clearSpinnerError(skillSpinner);
         }

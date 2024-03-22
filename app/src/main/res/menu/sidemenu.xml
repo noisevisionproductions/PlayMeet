@@ -17,5 +17,5 @@
     <item
         android:id="@+id/logoutAccount"
         android:enabled="true"
-        android:title="@string/wylogujKonto" />
+        android:title="@string/logoutAccount" />
 </menu>

@@ -116,11 +116,11 @@ public class ChildFragmentGender extends Fragment {
         if (getActivity() instanceof ActivityMainMenu) {
             ((ActivityMainMenu) getActivity()).onUserInfoUpdated();
         }
-        ToastManager.showToast(requireContext(), "Dane zostały zapisane");
+        ToastManager.showToast(requireContext(), getString(R.string.dataSaved));
     }
 
     private void handleTransactionError(@NonNull DatabaseError error) {
-        ToastManager.showToast(requireContext(), "Błąd: " + error.getMessage());
+        ToastManager.showToast(requireContext(), getString(R.string.error) + error.getMessage());
         Log.e("Firebase RealmTime Database error", "Saving first setup data in DB " + error.getMessage());
     }
 

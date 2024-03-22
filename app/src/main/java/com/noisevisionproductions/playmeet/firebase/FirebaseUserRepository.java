@@ -24,6 +24,7 @@ import java.util.Map;
 public class FirebaseUserRepository implements UserRepository {
     private final DatabaseReference userReference = FirebaseDatabase.getInstance().getReference();
 
+
     @Override
     public void addUser(UserModel user, OnCompletionListener listener) {
         userReference.child("UserModel").child(user.getUserId()).setValue(user)
@@ -39,7 +40,7 @@ public class FirebaseUserRepository implements UserRepository {
                 if (dataSnapshot.exists()) {
                     listener.onSuccess();
                 } else {
-                    listener.onFailure(new Exception("Nie znaleziono użytkownika"));
+                    listener.onFailure(new Exception("User not found"));
                 }
             } else {
                 listener.onFailure(task.getException());
@@ -87,7 +88,7 @@ public class FirebaseUserRepository implements UserRepository {
                     if (otherUserToken != null) {
                         listener.onTokenFound(otherUserToken);
                     } else {
-                        listener.onFailure(new Exception("Brak tokenu"));
+                        listener.onFailure(new Exception("Token not found"));
                     }
                 }
             }
@@ -112,7 +113,7 @@ public class FirebaseUserRepository implements UserRepository {
                             if (count != null) {
                                 listener.onCountReceived(count);
                             } else {
-                                listener.onFailure(new Exception("Nie udało się odczytać liczby dołączonych postów."));
+                                listener.onFailure(new Exception("Error while getting user posts count."));
                             }
                         } else {
                             listener.onCountReceived(0);
@@ -149,7 +150,7 @@ public class FirebaseUserRepository implements UserRepository {
                 if (error != null) {
                     listener.onFailure(error.toException());
                 } else if (!committed) {
-                    listener.onFailure(new Exception("Osiągnięto limit dołączonych postów."));
+                    listener.onFailure(new Exception("Limit of posts registered into reached."));
                 } else {
                     listener.onSuccess();
                 }
@@ -179,7 +180,7 @@ public class FirebaseUserRepository implements UserRepository {
                 if (error != null) {
                     listener.onFailure(error.toException());
                 } else if (!committed) {
-                    listener.onFailure(new Exception("Brak postów do odłączenia."));
+                    listener.onFailure(new Exception("No posts to join into found."));
                 } else {
                     listener.onSuccess();
                 }

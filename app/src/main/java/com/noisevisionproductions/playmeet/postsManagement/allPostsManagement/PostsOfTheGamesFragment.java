@@ -94,17 +94,20 @@ public class PostsOfTheGamesFragment extends Fragment {
 
     private void showExitDialog() {
         if (FirebaseAuthManager.isUserLoggedIn()) {
-            new AlertDialog.Builder(getContext()).setTitle("Wyjście").setMessage("Wylogować, czy zamknąć aplikację?").setPositiveButton("Wyloguj się", (dialog, which) -> {
-                FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-                if (currentUser != null) {
-                    firebaseAuth.signOut();
-                    ToastManager.showToast(requireContext(), "Pomyślnie wylogowano");
-                    Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-            }).setNegativeButton("Wyjście", (dialog, which) -> requireActivity().finishAffinity()).setNeutralButton("Anuluj", null).show();
+            new AlertDialog.Builder(getContext())
+                    .setTitle(getString(R.string.exit))
+                    .setMessage(getString(R.string.logoutOrCloseApp))
+                    .setPositiveButton(getString(R.string.logoutAccount), (dialog, which) -> {
+                        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                        if (currentUser != null) {
+                            firebaseAuth.signOut();
+                            ToastManager.showToast(requireContext(), getString(R.string.logoutSuccessful));
+                            Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    }).setNegativeButton(getString(R.string.exit), (dialog, which) -> requireActivity().finishAffinity()).setNeutralButton(getString(R.string.cancelButtonString), null).show();
         } else {
             Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

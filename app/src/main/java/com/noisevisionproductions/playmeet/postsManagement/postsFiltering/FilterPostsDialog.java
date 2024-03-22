@@ -59,7 +59,7 @@ public class FilterPostsDialog {
     private AlertDialog.Builder createDialogBuilder(Activity activity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
-        builder.setTitle("Filtruj posty");
+        builder.setTitle(context.getString(R.string.filterPosts));
         return builder;
     }
 
@@ -117,7 +117,7 @@ public class FilterPostsDialog {
 
     private void setDialogButtons(@NonNull AlertDialog.Builder builder) {
         // tworzy AlertDialog z przyciskami do filtrowania
-        final CharSequence[] items = {"Sport", "Miasto", "Poziom gry", "ID postu"};
+        final CharSequence[] items = {context.getString(R.string.sport), context.getString(R.string.city), context.getString(R.string.gameDifficulty), context.getString(R.string.postID)};
 
         // na starcie chowa wszystkie opcje filtrowania
         spinnerSport.setVisibility(View.GONE);
@@ -128,13 +128,13 @@ public class FilterPostsDialog {
         InputFilter[] textFilter = new InputFilter[1];
         textFilter[0] = new InputFilter.LengthFilter(40);
         postIdText.setFilters(textFilter);
-        postIdText.setHint("Wprowadź ID postu...");
+        postIdText.setHint(context.getString(R.string.writePostID));
         postIdText.setGravity(Gravity.CENTER);
         postIdText.setOnFocusChangeListener((view, hasFocus) -> {
             if (hasFocus) {
                 postIdText.setHint("");
             } else {
-                postIdText.setHint("Wprowadź ID postu...");
+                postIdText.setHint(context.getString(R.string.writePostID));
             }
         });
         postIdText.setVisibility(View.GONE);
@@ -156,7 +156,7 @@ public class FilterPostsDialog {
 
         //logika ustawiania przycisku "OK"
         builder.setPositiveButton("OK", (dialog, which) -> activateFilters());
-        builder.setNegativeButton("Anuluj", (dialog, which) -> {
+        builder.setNegativeButton(context.getString(R.string.cancelButtonString), (dialog, which) -> {
             filterButton.setSelected(false);
             dialog.cancel();
         });

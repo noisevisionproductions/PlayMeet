@@ -36,11 +36,11 @@ public class AESDataEncryption {
             String keyString = prop.getProperty("key");
             this.key = keyString.getBytes(StandardCharsets.UTF_8);
         } catch (Resources.NotFoundException e) {
-            System.err.println("Nie znaleziono pliku config.properties w folderze res/raw");
+            System.err.println("file config.properties not found in res/raw");
             Log.e("Error While encrypting", "Error While encrypting " + e.getMessage());
         } catch (IOException e) {
             Log.e("Error While encrypting", "Error While encrypting " + e.getMessage());
-            System.err.println("Błąd podczas ładowania pliku config.properties");
+            System.err.println("error while loading file config.properties");
         }
     }
 

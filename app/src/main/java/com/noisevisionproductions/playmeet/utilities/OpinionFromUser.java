@@ -59,10 +59,10 @@ public class OpinionFromUser extends TopMenuLayout {
                     if (coolDownManager.canSendReport()) {
                         submitOpinion();
                     } else {
-                        ProjectUtils.createSnackBarOnTop(this, "Zbyt częste zgłaszanie", Color.RED);
+                        ProjectUtils.createSnackBarOnTop(this, getString(R.string.toOftenSubmitting), Color.RED);
                     }
                 } else {
-                    ProjectUtils.createSnackBarOnTop(this, "Pole nie może być puste", Color.RED);
+                    ProjectUtils.createSnackBarOnTop(this, getString(R.string.fieldCantBeEmpty), Color.RED);
                 }
             });
         }
@@ -76,13 +76,16 @@ public class OpinionFromUser extends TopMenuLayout {
 
     private void submitOpinionToFirebase(@NonNull String textWithOpinion) {
         String opinionId = getRefractoredString();
-        StorageReference opinionReference = FirebaseStorage.getInstance().getReference().child("UserOpinions").child(opinionId);
+        StorageReference opinionReference = FirebaseStorage.getInstance()
+                .getReference()
+                .child("UserOpinions")
+                .child(opinionId);
         byte[] data = textWithOpinion.getBytes(StandardCharsets.UTF_8);
 
         UploadTask uploadTask = opinionReference.putBytes(data);
 
         uploadTask.addOnFailureListener(e -> {
-                    ProjectUtils.createSnackBarOnTop(this, "Wystąpił błąd podczas wysyłania " + e, Color.RED);
+                    ProjectUtils.createSnackBarOnTop(this, getString(R.string.errorWhileSending) + " " + e, Color.RED);
                     Log.e("Firebase Database error", "Saving opinion to DB " + e.getMessage());
                 })
                 .addOnSuccessListener(taskSnapshot -> {
@@ -112,7 +115,7 @@ public class OpinionFromUser extends TopMenuLayout {
     }
 
     private void showOpinionSentMessage() {
-        ProjectUtils.createSnackBarOnTop(this, "Opinia została wysłana!", Color.GREEN);
+        ProjectUtils.createSnackBarOnTop(this, getString(R.string.opinionSent), Color.GREEN);
     }
 
     private void copyTextOnClick(String text) {

@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
@@ -54,7 +55,7 @@ public class GoogleSignInHelper {
                     saveIdTokenInCache();
                     firebaseAuthGoogle(account.getIdToken());
                 } catch (ApiException e) {
-                    Log.e("google login", "Google login error " + e.getMessage());
+                    Log.e("Google login error", "Google login error " + e.getMessage());
                     throw new RuntimeException(e);
                 }
             }
@@ -73,13 +74,13 @@ public class GoogleSignInHelper {
 
                             saveUserIdInDatabase(userId);
 
-                            ToastManager.showToast(fragment.requireActivity(), "Pomyślnie zalogowano");
+                            ToastManager.showToast(fragment.requireActivity(), fragment.getString(R.string.loginSuccessful));
                             Intent intent = new Intent(fragment.requireActivity(), ActivityMainMenu.class);
                             intent.putExtra("loggedIn", true);
                             fragment.startActivity(intent);
                         }
                     } else {
-                        Snackbar.make(fragment.requireView(), "Błąd logowania" + Objects.requireNonNull(task.getException()).getMessage(), Snackbar.LENGTH_LONG)
+                        Snackbar.make(fragment.requireView(), fragment.getString(R.string.errorWhileLoggingIn) + Objects.requireNonNull(task.getException()).getMessage(), Snackbar.LENGTH_LONG)
                                 .setTextColor(Color.RED).show();
                     }
                 });
@@ -100,7 +101,7 @@ public class GoogleSignInHelper {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 if (fragment.getContext() != null) {
-                    ToastManager.showToast(fragment.getContext(), "Błąd podczas zapisu ID. Skontaktuj się z developerem " + error.getMessage());
+                    ToastManager.showToast(fragment.getContext(), fragment.getString(R.string.errorWhileLoggingIn) + error.getMessage());
                     Log.e("Firebase save userId", "Saving userID to database " + error.getMessage());
                 }
             }

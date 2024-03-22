@@ -52,12 +52,12 @@ public class ChildFragmentCity extends Fragment {
         setCityButton.setOnClickListener(v -> {
             String enteredCity = cityTextView.getText().toString();
             if (enteredCity.isEmpty()) {
-                cityTextView.setError("Wprowadź miasto");
+                cityTextView.setError(getString(R.string.provideCityInText));
                 cityTextView.requestFocus();
             } else if (ProjectUtils.isCityChosenFromTheList(enteredCity, requireContext())) {
                 onCityChosen(enteredCity, view);
             } else {
-                cityTextView.setError("Wybierz miasto z listy");
+                cityTextView.setError(getString(R.string.chooseCityFromTheList));
                 cityTextView.requestFocus();
             }
         });
@@ -98,7 +98,6 @@ public class ChildFragmentCity extends Fragment {
                 }
                 cityFragmentLayout.setVisibility(View.INVISIBLE);
                 // ustawiam aktualny fragment jako niewidzialny, aby animacja była płynna i wyglądała jak należy
-
                 fragmentTransaction.commit();
             }
 

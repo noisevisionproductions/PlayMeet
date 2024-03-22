@@ -136,7 +136,7 @@ public class AvatarManagement {
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(
                 fragment.requireContext(),
                 android.R.layout.simple_list_item_1,
-                new CharSequence[]{"Aparat", "Galeria"}) {
+                new CharSequence[]{fragment.getString(R.string.camera), fragment.getString(R.string.gallery)}) {
             @NonNull
             @Override
             public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -274,7 +274,7 @@ public class AvatarManagement {
                     Glide.with(fragment)
                             .load(imageUrl)
                             .into(circleImageView);
-                    ToastManager.showToast(fragment.requireContext(), "Avatar zapisany");
+                    ToastManager.showToast(fragment.requireContext(), fragment.getString(R.string.avatarSaved));
                 }
 
                 @Override
@@ -287,6 +287,6 @@ public class AvatarManagement {
     }
 
     private void getErrorToast(@NonNull Exception e) {
-        ToastManager.showToast(fragment.requireContext(), "Błąd!" + e.getMessage());
+        ToastManager.showToast(fragment.requireContext(), fragment.getString(R.string.error) + e.getMessage());
     }
 }

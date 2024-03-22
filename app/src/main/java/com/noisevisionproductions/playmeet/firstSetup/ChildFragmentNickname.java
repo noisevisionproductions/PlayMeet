@@ -71,8 +71,8 @@ public class ChildFragmentNickname extends Fragment implements NicknameValidatio
         setUserInfoButton.setOnClickListener(v -> {
             nickname = getNicknameInput.getText().toString().trim();
 
-            if (NicknameValidation.validateNickname(nickname, this)) {
-                NicknameValidation.isNicknameAvailable(nickname, this);
+            if (NicknameValidation.validateNickname(getContext(), nickname, this)) {
+                NicknameValidation.isNicknameAvailable(getContext(), nickname, this);
             }
         });
 

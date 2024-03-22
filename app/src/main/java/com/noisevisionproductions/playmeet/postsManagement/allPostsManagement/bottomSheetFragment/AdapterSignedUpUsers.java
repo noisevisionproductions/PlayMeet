@@ -19,7 +19,7 @@ import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
-import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecryptor;
+import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
 
 import java.util.List;
 
@@ -54,7 +54,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         holder.signedUsersLayout.setVisibility(View.GONE);
         AsyncTask.execute(() -> {
             try {
-                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(context, userModel);
+                UserModel decryptedUserModel = UserModelDecrypt.decryptUserModel(context, userModel);
                 // Aktualizuj interfejs użytkownika w wątku UI
                 mainThreadHandler.post(() -> {
                     holder.progressBarLayout.setVisibility(View.GONE);
@@ -65,7 +65,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
             } catch (Exception e) {
                 mainThreadHandler.post(() -> {
                     holder.progressBarLayout.setVisibility(View.GONE);
-                    UserModelDecryptor.getDercyptionError("signed users adapter error " + e.getMessage());
+                    UserModelDecrypt.getDecryptionError("signed users adapter error " + e.getMessage());
                 });
             }
         });

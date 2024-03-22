@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
@@ -35,7 +36,7 @@ public class NotificationPermissionDialog {
                         FirebaseMessaging.getInstance().subscribeToTopic("notifications");
                         getFCMToken();
                     } else {
-                        ToastManager.showToast(activity, "Powiadomienia nie będą się pojawiać.");
+                        ToastManager.showToast(activity, activity.getString(R.string.notificationsTurnedOff));
                     }
                 });
     }
@@ -65,11 +66,11 @@ public class NotificationPermissionDialog {
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     private void showDialog() {
         new AlertDialog.Builder(activity)
-                .setTitle("Potrzebujemy Twojej zgody")
-                .setMessage("Aplikacja potrzebuje zgody na wysyłanie powiadomień, aby informować Cię o nowych wiadomościach.")
+                .setTitle(activity.getString(R.string.weNeedYourConsent))
+                .setMessage(activity.getString(R.string.weNeedYourConsentForNotifications))
                 .setPositiveButton("OK", ((dialog, which) -> requestPermissionLauncherForNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)))
-                .setNegativeButton("Nie, dziękuję", ((dialog, which) -> dialog.dismiss()))
-                .setNegativeButton("Nie pokazuj ponownie", (((dialog, which) -> doNotAskForPermission())))
+                .setNegativeButton(activity.getString(R.string.noThanks), ((dialog, which) -> dialog.dismiss()))
+                .setNegativeButton(activity.getString(R.string.doNotShowAgain), (((dialog, which) -> doNotAskForPermission())))
                 .create()
                 .show();
     }

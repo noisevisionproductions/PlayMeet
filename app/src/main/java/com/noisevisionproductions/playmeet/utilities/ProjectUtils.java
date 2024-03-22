@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.firstSetup.ContainerForDialogFragment;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
@@ -56,10 +57,10 @@ public class ProjectUtils extends AppCompatActivity {
 
     public static void showLoginSnackBar(@NonNull Context context) {
         View view = ((Activity) context).findViewById(android.R.id.content);
-        Snackbar snackBarLogin = Snackbar.make(view, "Tylko dla zalogowanych użytkowników", Snackbar.LENGTH_SHORT)
+        Snackbar snackBarLogin = Snackbar.make(view, context.getString(R.string.onlyForLoggedInUsers), Snackbar.LENGTH_SHORT)
                 .setTextColor(Color.WHITE)
                 .setActionTextColor(Color.GREEN);
-        snackBarLogin.setAction("Zaloguj się", v -> {
+        snackBarLogin.setAction(context.getString(R.string.loginButton), v -> {
             Intent intent = new Intent(context, LoginAndRegisterActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             view.getContext().startActivity(intent);

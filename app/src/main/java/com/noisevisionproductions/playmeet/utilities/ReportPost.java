@@ -45,9 +45,9 @@ public class ReportPost {
     @NonNull
     private AlertDialog.Builder getBuilder(String postId, View view, AppCompatEditText reportEditText) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Zgłoś post");
+        builder.setTitle(context.getString(R.string.reportPost));
         builder.setView(view);
-        builder.setPositiveButton("Wyślij", (dialog, which) -> {
+        builder.setPositiveButton(context.getString(R.string.send), (dialog, which) -> {
             if (reportEditText.getText() != null && reportEditText.getText() != null) {
                 // do każdego reportu dodaje automatycznie ID postu, który został zreportowany
                 String reportText = reportEditText.getText().toString() + "+PostId" + postId;
@@ -55,22 +55,25 @@ public class ReportPost {
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton("Anuluj", (dialog, which) -> dialog.dismiss());
+        builder.setNegativeButton(context.getString(R.string.cancelButtonString), (dialog, which) -> dialog.dismiss());
         return builder;
     }
 
     private void submitReportToFirebase(@NonNull String reportText, @NonNull View view) {
         String reportId = getRefractoredString();
-        StorageReference reportReference = FirebaseStorage.getInstance().getReference().child("UserReports").child(reportId);
+        StorageReference reportReference = FirebaseStorage.getInstance()
+                .getReference()
+                .child("UserReports")
+                .child(reportId);
         byte[] data = reportText.getBytes(StandardCharsets.UTF_8);
 
         UploadTask uploadTask = reportReference.putBytes(data);
 
         uploadTask.addOnFailureListener(e -> {
-                    Snackbar.make(view, "Wystąpił błąd podczas wysyłania " + e, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, context.getString(R.string.errorWhileSending) + " " + e, Snackbar.LENGTH_SHORT).show();
                     Log.e("Firebase Database error", "Saving report to DB " + e.getMessage());
                 })
-                .addOnSuccessListener(taskSnapshot -> ToastManager.showToast(view.getContext(), "Zgłoszenie wysłane!"));
+                .addOnSuccessListener(taskSnapshot -> ToastManager.showToast(view.getContext(), context.getString(R.string.reportSent)));
     }
 
     @NonNull

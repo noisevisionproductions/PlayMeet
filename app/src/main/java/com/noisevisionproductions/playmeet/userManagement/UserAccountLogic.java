@@ -36,7 +36,7 @@ import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListe
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.AESDataEncryption;
-import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecryptor;
+import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,7 +100,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         deleteAvatarButton.setOnClickListener(v -> {
             deleteUserAvatar();
             avatarImageView.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.sample_avatar));
-            ToastManager.showToast(requireContext(), "Avatar usunięty");
+            ToastManager.showToast(requireContext(), getString(R.string.avatarSaved));
         });
 
         AppCompatButton saveInfoButton = view.findViewById(R.id.saveInfoButton);
@@ -138,13 +138,13 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
                 userUpdates.put("aboutMe", encryption.encrypt(about));
             }
             if (city.isEmpty() || !ProjectUtils.isCityChosenFromTheList(city, requireContext())) {
-                cityTextView.setError("Wybierz prawidłowe miasto");
+                cityTextView.setError(getString(R.string.provideCorrectCityOrChooseFromTheList));
                 return; // Przerywa metodę, jeśli miasto jest nieprawidłowe.
             } else {
                 userUpdates.put("location", encryption.encrypt(city));
             }
             if (!age.isEmpty()) {
-                if (!age.equals("Wybierz swój wiek")) {
+                if (!age.equals(getString(R.string.provideYourAge))) {
                     userUpdates.put("age", encryption.encrypt(age));
                 }
             }
@@ -152,7 +152,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
             firebaseUserRepository.updateUser(currentUser, userUpdates, new OnCompletionListener() {
                 @Override
                 public void onSuccess() {
-                    ToastManager.showToast(requireContext(), "Dane zapisane!");
+                    ToastManager.showToast(requireContext(), getString(R.string.dataSaved));
                     Log.d("Updating user info in DB", "Dane użytkownika zostały zaktualizowane.");
                 }
 
@@ -162,7 +162,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
                 }
             });
         } catch (Exception e) {
-            Log.e("Encryption Error", "Błąd szyfrowania danych: " + e.getMessage());
+            Log.e("Encryption Error", getString(R.string.errorWhileEncryption) + " " + e.getMessage());
         }
     }
 
@@ -180,7 +180,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
                     UserModel userModel = snapshot.getValue(UserModel.class);
                     if (userModel != null) {
                         try {
-                            UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(getContext(), userModel);
+                            UserModel decryptedUserModel = UserModelDecrypt.decryptUserModel(getContext(), userModel);
 
                             nameInput.setText(decryptedUserModel.getName());
                             aboutYouInput.setText(decryptedUserModel.getAboutMe());
@@ -236,15 +236,19 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         int minHeightInDp = 50;
         int minHeightInPx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, minHeightInDp, getResources().getDisplayMetrics());
         editText.setMinHeight(minHeightInPx);
-        editText.setHint("Wpisz nowy nick");
+        editText.setHint(getString(R.string.provideNewNickName));
 
-        dialog = new AlertDialog.Builder(getContext()).setTitle("Edycja nicku").setView(editText).setPositiveButton("Zapisz", null).setNegativeButton("Anuluj", (dialogInterface, i) -> dialogInterface.dismiss()).create();
+        dialog = new AlertDialog.Builder(getContext())
+                .setTitle(getString(R.string.editNickNameTitle))
+                .setView(editText).setPositiveButton(getString(R.string.Save), null)
+                .setNegativeButton(getString(R.string.cancelButtonString), (dialogInterface, i) -> dialogInterface.dismiss())
+                .create();
 
         dialog.setOnShowListener(dialogInterface -> {
             // nadpisuję domyślne zachowanie przycisku, aby zapobiec zamykaniu dialogu
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v -> {
                 newNickname = editText.getText().toString().trim().replace(" ", "");
-                NicknameValidation.validateNickname(newNickname, this);
+                NicknameValidation.validateNickname(getContext(), newNickname, this);
             });
         });
         dialog.show();
@@ -297,11 +301,11 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("UserModel").child(currentUser).child("nickname");
         userReference.setValue(newNickname).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                ToastManager.showToast(requireContext(), "Nick zapisany pomyślnie");
+                ToastManager.showToast(requireContext(), getString(R.string.nickNameSaved));
                 dialog.dismiss();
                 updateNickname();
             } else {
-                ToastManager.showToast(requireContext(), "Błąd przy zapisywaniu nicku");
+                ToastManager.showToast(requireContext(), getString(R.string.errorWhileSavingNickName));
             }
         });
     }

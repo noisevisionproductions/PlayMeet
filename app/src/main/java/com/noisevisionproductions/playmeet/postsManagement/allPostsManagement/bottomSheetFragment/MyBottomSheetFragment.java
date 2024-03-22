@@ -29,7 +29,7 @@ import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ToastManager;
-import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecryptor;
+import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,12 +101,12 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         if (this.postInfo != null) {
             editableFieldsPostInfo = new EditableField[]{
                     // pola związane z aktywnością
-                    new EditableField("Sport:", postInfo.getSportType(), false),
-                    new EditableField("Miasto:", postInfo.getCityName(), false),
-                    new EditableField("Data:", postInfo.getDateTime(), false),
-                    new EditableField("Godzina:", postInfo.getHourTime(), false),
-                    new EditableField("Info:", postInfo.getAdditionalInfo(), false),
-                    new EditableField("Post ID:", postInfo.getPostId(), true)
+                    new EditableField(getString(R.string.provideSports), postInfo.getSportType(), false),
+                    new EditableField(getString(R.string.provideCity), postInfo.getCityName(), false),
+                    new EditableField(getString(R.string.provideDate), postInfo.getDateTime(), false),
+                    new EditableField(getString(R.string.provideHour), postInfo.getHourTime(), false),
+                    new EditableField(getString(R.string.provideInfo), postInfo.getAdditionalInfo(), false),
+                    new EditableField(getString(R.string.providePostID), postInfo.getPostId(), true)
             };
         }
         createRecyclerViewForPostsInfo(view);
@@ -146,7 +146,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                         userModel = snapshot.getValue(UserModel.class);
                         if (userModel != null) {
                             try {
-                                UserModel decryptedUserModel = UserModelDecryptor.decryptUserModel(getContext(), userModel);
+                                UserModel decryptedUserModel = UserModelDecrypt.decryptUserModel(getContext(), userModel);
 
                                 if (getContext() == null) {
                                     ToastManager.showToast(getContext(), getString(R.string.error));
@@ -171,7 +171,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
                             }
                         }
                     } else {
-                        ToastManager.showToast(requireContext(), "Błąd podczas pobierania danych użytkownika");
+                        ToastManager.showToast(requireContext(), getString(R.string.errorWhileDownloadingUserData));
                     }
                 }
 

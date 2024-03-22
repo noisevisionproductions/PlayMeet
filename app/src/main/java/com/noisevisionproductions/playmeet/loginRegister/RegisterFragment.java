@@ -85,17 +85,17 @@ public class RegisterFragment extends Fragment {
         if (checkValidation()) {
             firebaseAuthManager.userRegister(emailString, firstPasswordString, task -> {
                 // użycie operatora trójargumentowego - rezultat = (warunek) ? wartoscGdyPrawda : wartoscGdyFalsz
-                String error = task.getException() != null ? task.getException().getMessage() : "Błąd rejestracji";
+                String error = task.getException() != null ? task.getException().getMessage() : getString(R.string.registerError);
                 if (task.isSuccessful()) {
                     if (getActivity() != null) {
                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         if (firebaseUser != null) {
                             firebaseUser.sendEmailVerification().addOnCompleteListener(verificationTask -> {
                                 if (verificationTask.isSuccessful()) {
-                                    ToastManager.showToast(getActivity(), "Rejestracja pomyślna. E-mail weryfikacyjny został wysłany!");
+                                    ToastManager.showToast(getActivity(), getString(R.string.registerSuccessfulEmailSent));
                                 } else {
-                                    String verificationError = verificationTask.getException() != null ? verificationTask.getException().getMessage() : "Nie udało się wysłać e-mail'a weryfikacyjnego";
-                                    ToastManager.showToast(getActivity(), "Rejestracja pomyślna, ale " + verificationError);
+                                    String verificationError = verificationTask.getException() != null ? verificationTask.getException().getMessage() : getString(R.string.errorWhileSendingLink);
+                                    ToastManager.showToast(getActivity(), getString(R.string.registerSuccessfulBut) + verificationError);
                                 }
                                 redirectToLoginScreen();
                             });
@@ -103,7 +103,7 @@ public class RegisterFragment extends Fragment {
                         }
                     }
                 } else {
-                    ToastManager.showToast(requireActivity(), "Błąd rejestracji: " + error);
+                    ToastManager.showToast(requireActivity(), getString(R.string.registerError) + " " + error);
                     Log.e("Register new user", "New user register error " + error);
                 }
             });
@@ -148,17 +148,17 @@ public class RegisterFragment extends Fragment {
     }
 
     private boolean checkValidation() {
-        if (validateAndSetError(emailInput, "Pole nie może być puste", this::isFieldNotEmpty))
+        if (validateAndSetError(emailInput, getString(R.string.fieldCantBeEmpty), this::isFieldNotEmpty))
             return false;
-        if (validateAndSetError(userPasswordFirstInput, "Pole nie może być puste", this::isFieldNotEmpty))
+        if (validateAndSetError(userPasswordFirstInput, getString(R.string.fieldCantBeEmpty), this::isFieldNotEmpty))
             return false;
-        if (validateAndSetError(userPasswordSecondInput, "Pole nie może być puste", this::isFieldNotEmpty))
+        if (validateAndSetError(userPasswordSecondInput, getString(R.string.fieldCantBeEmpty), this::isFieldNotEmpty))
             return false;
-        if (validateAndSetError(emailInput, "Niepoprawny adres e-mail", this::isValidEmail))
+        if (validateAndSetError(emailInput, getString(R.string.wrongFormat), this::isValidEmail))
             return false;
-        if (validateAndSetError(userPasswordSecondInput, "Hasła nie pasują do siebie", this::arePasswordsTheSame))
+        if (validateAndSetError(userPasswordSecondInput, getString(R.string.passwordDontMatch), this::arePasswordsTheSame))
             return false;
-        return !validateAndSetError(userPasswordFirstInput, "Hasło musi zawierać co najmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny, oraz musi mieć co najmniej 8 znaków", this::isValidPassword);
+        return !validateAndSetError(userPasswordFirstInput, getString(R.string.passwordRequirements), this::isValidPassword);
     }
 
     private boolean arePasswordsTheSame(String username) {

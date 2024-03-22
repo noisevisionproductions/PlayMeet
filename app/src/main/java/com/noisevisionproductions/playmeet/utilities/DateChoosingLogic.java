@@ -38,7 +38,7 @@ public class DateChoosingLogic {
 
         }, chosenYear, chosenMonth, chosenDay);
 
-        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Wyczyść", ((dialog, which) -> textInputEditText.setText("")));
+        datePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, context.getString(R.string.clear), ((dialog, which) -> textInputEditText.setText("")));
         datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
@@ -54,7 +54,7 @@ public class DateChoosingLogic {
             postModel.setHourTime(formattedHour);
         }, hour, minute, is24HourFormat);
 
-        timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Wyczyść", (((dialog, which) -> textInputEditText.setText(""))));
+        timePickerDialog.setButton(DialogInterface.BUTTON_NEUTRAL, context.getString(R.string.clear), (((dialog, which) -> textInputEditText.setText(""))));
         timePickerDialog.show();
     }
 

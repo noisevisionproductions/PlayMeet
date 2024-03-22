@@ -105,8 +105,8 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
             holder.deleteIcon.setOnClickListener(v -> {
                 if (postModel.getUserId().equals(currentUserId)) {
                     new AlertDialog.Builder(v.getContext())
-                            .setMessage("Czy na pewno chcesz usunąć ten post?")
-                            .setPositiveButton("Tak", (dialog, which) -> {
+                            .setMessage(context.getString(R.string.doYouReallyWantToDeletePost))
+                            .setPositiveButton(context.getString(R.string.yes), (dialog, which) -> {
                                 deletePostFromDB(postId);
                                 listOfPostModel.remove(position);
                                 notifyItemRemoved(position);
@@ -115,7 +115,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
                                     new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
                                 }
                             })
-                            .setNegativeButton("Nie", null).show();
+                            .setNegativeButton(context.getString(R.string.no), null).show();
                 }
             });
         }
@@ -126,13 +126,13 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         firestorePostRepository.deleteUserPost(postId, new OnCompletionListener() {
             @Override
             public void onSuccess() {
-                ToastManager.showToast(context, "Post został usunięty");
+                ToastManager.showToast(context, context.getString(R.string.postDeleted));
                 Log.d("Removing post", "Post removed");
             }
 
             @Override
             public void onFailure(Exception e) {
-                ToastManager.showToast(context, "Błąd podczas usuwania postu " + e.getMessage());
+                ToastManager.showToast(context, context.getString(R.string.errorWhileDeletingPost) + e.getMessage());
                 Log.e("Removing post", "Error removing post from DB" + e.getMessage());
             }
         });

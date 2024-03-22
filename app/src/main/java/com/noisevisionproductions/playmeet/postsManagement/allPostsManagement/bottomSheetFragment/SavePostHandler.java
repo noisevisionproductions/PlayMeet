@@ -7,6 +7,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.noisevisionproductions.playmeet.PostModel;
+import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
@@ -45,18 +46,18 @@ public class SavePostHandler {
                             PostModel postModel = documentSnapshot.toObject(PostModel.class);
                             if (postModel != null) {
                                 if (postModel.getUserId().equals(currentUserId)) {
-                                    ToastManager.showToast(view.getContext(), "To Twój post!");
+                                    ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.itIsYourPost));
                                 } else {
                                     handlePostSubscription(firebaseUserRepository, firestorePostRepository, postModel);
                                 }
                             } else {
-                                ToastManager.showToast(view.getContext(), "Wybrany post nie istnieje");
+                                ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.postDoNotExists));
                             }
                         } else {
-                            ToastManager.showToast(view.getContext(), "Nie udało się pobrać informacji o poście.");
+                            ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.errorWhileDownloadingPostData));
                         }
                     } else {
-                        ToastManager.showToast(view.getContext(), "Nie udało się pobrać informacji o poście: " + Objects.requireNonNull(task.getException()).getMessage());
+                        ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.errorWhileDownloadingPostData) + " " + Objects.requireNonNull(task.getException()).getMessage());
                     }
                 });
     }
@@ -67,7 +68,7 @@ public class SavePostHandler {
             @Override
             public void onCountReceived(int count) {
                 if (count >= 3) {
-                    ToastManager.showToast(view.getContext(), "Osiągnąłeś limit 3 zapisanych aktywności.");
+                    ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.limitForPostsRegisteredReached));
                     return;
                 }
                 checkRegistrationAndSignUpForPost(firebaseUserRepository, firestorePostRepository, postModel);
@@ -75,7 +76,7 @@ public class SavePostHandler {
 
             @Override
             public void onFailure(Exception e) {
-                ToastManager.showToast(view.getContext(), "Błąd podczas sprawdzania limitu postów: " + e.getMessage());
+                ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.errorWhileCheckingPostsLimit) + " " + e.getMessage());
             }
         });
     }
@@ -89,11 +90,11 @@ public class SavePostHandler {
                     if (registrationTask.isSuccessful()) {
                         QuerySnapshot querySnapshot = registrationTask.getResult();
                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                            ToastManager.showToast(view.getContext(), "Jesteś już zapisany do tej aktywności");
+                            ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.userAlreadyRegisteredIntoActivity));
                         } else {
                             if (postModel != null) {
                                 if (postModel.getSignedUpCount() >= postModel.getHowManyPeopleNeeded()) {
-                                    ToastManager.showToast(view.getContext(), "Ta aktywność jest już pełna.");
+                                    ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.activityIsFull));
                                     return;
                                 }
                                 firestorePostRepository.registerUserToPost(postId, currentUserId, new OnCompletionListener() {
@@ -113,18 +114,18 @@ public class SavePostHandler {
                                         NotificationHelper notificationHelper = new NotificationHelper(view.getContext());
                                         notificationHelper.sendJoinedNotification(postModel.getUserId());
 
-                                        ToastManager.showToast(view.getContext(), "Zapisano!");
+                                        ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.userRegistered));
                                     }
 
                                     @Override
                                     public void onFailure(Exception e) {
-                                        ToastManager.showToast(view.getContext(), "Błąd podczas zapisywania " + e.getMessage());
+                                        ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.errorWhileSingingUp) + " " + e.getMessage());
                                     }
                                 });
                             }
                         }
                     } else {
-                        ToastManager.showToast(view.getContext(), "Błąd podczas zapisywania " + Objects.requireNonNull(registrationTask.getException()).getMessage());
+                        ToastManager.showToast(view.getContext(), view.getContext().getString(R.string.errorWhileSingingUp) + " " + Objects.requireNonNull(registrationTask.getException()).getMessage());
                     }
                 });
     }

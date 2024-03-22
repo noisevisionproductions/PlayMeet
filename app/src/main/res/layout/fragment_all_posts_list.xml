@@ -16,7 +16,8 @@
             android:layout_height="wrap_content"
             android:background="@color/background"
             android:minHeight="55dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:padding="2dp">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/postsFilter"

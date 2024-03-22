@@ -38,8 +38,8 @@ android {
         applicationId = "com.noisevisionproductions.playmeet"
         minSdk = 26
         targetSdk = 34
-        versionCode = 6
-        versionName = "1.5.1"
+        versionCode = 7
+        versionName = "1.5.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

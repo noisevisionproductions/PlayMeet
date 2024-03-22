@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".loginRegister.LoginAndRegisterActivity">
 
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
@@ -60,7 +61,6 @@
                 android:textColorHint="@color/textHint"
                 android:textSize="20sp"
                 tools:ignore="VisualLintTextFieldSize,TextContrastCheck" />
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -76,7 +76,6 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/Password"
             app:endIconMode="password_toggle"
-
             app:errorEnabled="true">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
@@ -112,19 +111,6 @@
             android:layout_height="wrap_content"
             android:padding="15dp" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/howWeHandleYourData"
-            style="@style/MyAppCompatTextViewStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:foreground="?attr/selectableItemBackground"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/howWeHandleYourData"
-            android:textColor="@color/accent"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -155,6 +141,16 @@
                 android:textStyle="italic" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/howWeHandleYourData"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:padding="10dp"
+            android:text="@string/aboutPlayMeet"
+            android:textSize="18sp"
+            android:textStyle="italic" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </FrameLayout>

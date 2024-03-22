@@ -77,7 +77,7 @@ public class NotificationHelper {
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .addAction(0, "Przeczytane", markAsReadPendingIntent)
+                .addAction(0, context.getString(R.string.read), markAsReadPendingIntent)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
@@ -87,16 +87,16 @@ public class NotificationHelper {
 
     private void handleMultipleMessages() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "chat_messages")
-                .setContentTitle("Nowe wiadomości")
-                .setContentText("Masz nowe wiadomości")
+                .setContentTitle(context.getString(R.string.newMessages))
+                .setContentText(context.getString(R.string.youHaveNewMessages))
                 .setSmallIcon(R.drawable.icon_p_for_notification)
                 .setStyle(new NotificationCompat.InboxStyle()
-                        .addLine("Wiadomość 1")
-                        .addLine("Wiadomość 2")
-                        .addLine("Wiadomość 3")
-                        .addLine("Wiadomość 4")
-                        .setBigContentTitle("Nowe wiadomości")
-                        .setSummaryText("Masz nowe wiadomości"))
+                        .addLine(context.getString(R.string.message) + " 1")
+                        .addLine(context.getString(R.string.message) + " 2")
+                        .addLine(context.getString(R.string.message) + " 3")
+                        .addLine(context.getString(R.string.message) + " 4")
+                        .setBigContentTitle(context.getString(R.string.newMessages))
+                        .setSummaryText(context.getString(R.string.youHaveNewMessages)))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setGroup(GROUP_KEY_CHAT_MESSAGES)
                 .setGroupSummary(true);
@@ -147,8 +147,8 @@ public class NotificationHelper {
                     JSONObject jsonObject = new JSONObject();
 
                     JSONObject dataObject = new JSONObject();
-                    dataObject.put("message", "Wejdź do aplikacji, aby poznać więcej szczegółów.");
-                    dataObject.put("title", "Ktoś dołączył do Twojej aktywności!");
+                    dataObject.put("message", context.getString(R.string.openAppForMoreInfo));
+                    dataObject.put("title", context.getString(R.string.someoneRegisteredToYourPost));
 
                     jsonObject.put("data", dataObject);
                     jsonObject.put("to", token);
@@ -173,7 +173,7 @@ public class NotificationHelper {
             JSONObject dataObject = new JSONObject();
             dataObject.put("message", message);
             dataObject.put("userId", currentUserId);
-            dataObject.put("title", "Wiadomość od: " + currentUserName);
+            dataObject.put("title", context.getString(R.string.messageFrom) + currentUserName);
 
             jsonObject.put("data", dataObject);
             jsonObject.put("to", otherUserToken);

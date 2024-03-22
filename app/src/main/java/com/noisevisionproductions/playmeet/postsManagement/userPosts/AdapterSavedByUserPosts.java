@@ -82,8 +82,8 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
 
     private void createDialog(MyViewHolder holder, int position, String currentUserId, String postId) {
         holder.deletePost.setOnClickListener(v -> new AlertDialog.Builder(v.getContext())
-                .setMessage("Czy na pewno chcesz usunąć ten post?")
-                .setPositiveButton("Tak", (dialog, which) -> {
+                .setMessage(context.getString(R.string.doYouReallyWantToDeletePost))
+                .setPositiveButton(context.getString(R.string.yes), (dialog, which) -> {
                     removeRegistration(postId, currentUserId);
                     listOfRegisteredPosts.remove(position);
                     notifyItemRemoved(position);
@@ -92,7 +92,7 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
                         new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
                     }
                 })
-                .setNegativeButton("Nie", null).show());
+                .setNegativeButton(context.getString(R.string.no), null).show());
     }
 
     private void removeRegistration(String postId, String userId) {
@@ -101,12 +101,12 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
             @Override
             public void onSuccess() {
                 decrementJoinedPostsCount(userId);
-                ToastManager.showToast(context, "Zostałeś wypisany!");
+                ToastManager.showToast(context, context.getString(R.string.userUnregistered));
             }
 
             @Override
             public void onFailure(Exception e) {
-                ToastManager.showToast(context, "Błąd podczas usuwania rejestracji: " + e.getMessage());
+                ToastManager.showToast(context, context.getString(R.string.errorWhileRemovingRegistration) + " " + e.getMessage());
                 Log.e("Firebase Update Error", "Removing signed up user when saved post is removed " + e.getMessage());
             }
         });

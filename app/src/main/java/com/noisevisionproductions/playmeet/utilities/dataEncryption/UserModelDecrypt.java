@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 
-public class UserModelDecryptor {
+public class UserModelDecrypt {
     public static UserModel decryptUserModel(Context context, UserModel encryptedUserModel) throws Exception {
         UserModel decryptedUserModel = new UserModel();
         AESDataEncryption encryption = new AESDataEncryption(context);
@@ -18,7 +18,7 @@ public class UserModelDecryptor {
         return decryptedUserModel;
     }
 
-    public static void getDercyptionError(String message) {
+    public static void getDecryptionError(String message) {
         Log.e("Decryption Error", message);
     }
 }

@@ -25,6 +25,7 @@ import com.noisevisionproductions.playmeet.utilities.ToastManager;
 
 public class AppOptions extends TopMenuLayout {
     private AppCompatTextView versionInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +93,7 @@ public class AppOptions extends TopMenuLayout {
             FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
             if (currentUser != null) {
                 firebaseAuth.signOut();
-                ToastManager.showToast(this, "Pomyślnie wylogowano");
+                ToastManager.showToast(this, getString(R.string.logoutSuccessful));
                 Intent intent = new Intent(this, LoginAndRegisterActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

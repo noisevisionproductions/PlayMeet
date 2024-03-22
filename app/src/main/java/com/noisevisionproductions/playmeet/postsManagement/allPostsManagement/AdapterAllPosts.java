@@ -44,7 +44,7 @@ public class AdapterAllPosts extends FirestorePagingAdapter<PostModel, AdapterAl
         holder.applyAnimation();
         String userId = postModel.getUserId();
 
-        AdapterAllPostsHelper.getSkillLevel(postModel, holder);
+        AdapterAllPostsHelper.getSkillLevel(postModel, holder, context);
         AdapterAllPostsHelper.reportPost(holder, postModel.getPostId(), context);
 
         PostHelperSignedUpUser.getPeopleStatus(postModel.getPostId(), holder);

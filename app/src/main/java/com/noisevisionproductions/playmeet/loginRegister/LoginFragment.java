@@ -2,6 +2,7 @@ package com.noisevisionproductions.playmeet.loginRegister;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -77,6 +78,7 @@ public class LoginFragment extends Fragment {
 
         PrivacyInfoDialog privacyInfoDialog = new PrivacyInfoDialog();
         AppCompatTextView howWeHandleYourData = view.findViewById(R.id.howWeHandleYourData);
+        howWeHandleYourData.setPaintFlags(howWeHandleYourData.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         howWeHandleYourData.setOnClickListener(v -> privacyInfoDialog.show(requireActivity().getSupportFragmentManager(), "privacyDialog"));
     }
 
@@ -118,19 +120,19 @@ public class LoginFragment extends Fragment {
                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                         if (firebaseUser != null) {
                             if (firebaseUser.isEmailVerified()) {
-                                ToastManager.showToast(getActivity(), "Pomyślnie zalogowano");
+                                ToastManager.showToast(getActivity(), getString(R.string.loginSuccessful));
                                 navigateToMainMenu();
                             } else {
-                                ToastManager.showToast(getActivity(), "Zweryfikuj swój adres e-mail przed zalogowaniem");
+                                ToastManager.showToast(getActivity(), getString(R.string.verifyEmail));
                             }
                         } else {
-                            ToastManager.showToast(getActivity(), "Użytkownik nie istnieje");
+                            ToastManager.showToast(getActivity(), getString(R.string.userDontExists));
                         }
                     }
                 } else {
                     String errorMessage = Objects.requireNonNull(task.getException()).getMessage();
 
-                    Toast.makeText(requireContext(), "Błąd uwierzytelnienia: " + errorMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), getString(R.string.authError) + errorMessage, Toast.LENGTH_SHORT).show();
                     if (errorMessage != null) {
                         Log.d("Login error", "Login error " + errorMessage);
                     }
@@ -143,14 +145,13 @@ public class LoginFragment extends Fragment {
         boolean isError = false;
 
         if (TextUtils.isEmpty(emailString)) {
-            emailInput.setError("Wprowadź e-mail");
+            emailInput.setError(getString(R.string.provideEmail));
             isError = true;
         }
         if (TextUtils.isEmpty(passwordString)) {
-            passwordInput.setError("Wprowadź hasło");
+            passwordInput.setError(getString(R.string.providePassword));
             isError = true;
         }
-
         return isError;
     }
 
@@ -167,19 +168,19 @@ public class LoginFragment extends Fragment {
 
     private void passwordForgottenDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Resetowanie hasła");
+        builder.setTitle(getString(R.string.passwordReset));
 
         final EditText emailInput = new EditText(getContext());
         emailInput.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
-        emailInput.setHint("Wprowadź e-mail");
+        emailInput.setHint(getString(R.string.provideEmail));
         emailInput.setHeight(200);
         builder.setView(emailInput);
 
-        builder.setPositiveButton("Resetuj hasło", (dialog, which) -> {
+        builder.setPositiveButton(getString(R.string.passwordResetNow), (dialog, which) -> {
             String email = emailInput.getText().toString().trim();
             sendPasswordResetEmail(email);
         });
-        builder.setNegativeButton("Anuluj", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(getString(R.string.cancelButtonString), (dialog, which) -> dialog.cancel());
 
         builder.show();
     }
@@ -191,13 +192,13 @@ public class LoginFragment extends Fragment {
                 firebaseAuth.sendPasswordResetEmail(email)
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
-                                ToastManager.showToast(getContext(), "Link resetujący został wysłany na Twój adres email");
+                                ToastManager.showToast(getContext(), getString(R.string.passwordResetLinkSent));
                             } else {
-                                ToastManager.showToast(getContext(), "Błąd podczas wysyłania linku");
+                                ToastManager.showToast(getContext(), getString(R.string.errorWhileSendingLink));
                             }
                         });
             } else {
-                ToastManager.showToast(getContext(), "E-mail jest wymagany");
+                ToastManager.showToast(getContext(), getString(R.string.emailIsRequired));
             }
         }
     }

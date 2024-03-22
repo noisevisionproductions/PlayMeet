@@ -24,7 +24,7 @@ public class CityXmlParser {
     @NonNull
     public static List<String> parseCityNames(@NonNull Context context) {
         List<String> cityNameList = new ArrayList<>();
-        cityNameList.add("Wybierz miasto");
+        cityNameList.add(context.getString(R.string.choose_city_string_from_spinner));
         // irytuje przez cały plik cities_in_poland
         try {
             XmlResourceParser xmlResourceParser = context.getResources().getXml(R.xml.cities_in_poland);

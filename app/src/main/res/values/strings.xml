@@ -5,9 +5,10 @@
     <!-- Account management -->
     <string name="login">Logowanie</string>
     <string name="loginButton">Zaloguj się</string>
-    <string name="wylogujKonto">Wyloguj się</string>=
     <string name="Email">przykład@email.com</string>
     <string name="Password">Wprowadź swoje hasło</string>
+    <string name="providePassword">Wprowadź hasło</string>
+    <string name="logoutSuccessful">Pomyślnie wylogowano</string>
     <string name="e_mail">E-mail</string>
     <string name="haslo">Hasło</string>
     <string name="rejestracja">Rejestracja</string>
@@ -16,18 +17,142 @@
     <string name="registerButton">Zarejestruj się</string>
     <string name="kliknijabyzalogowac">Zaloguj się</string>
     <string name="kliknijabyzarejestrowac">Załóż konto</string>
+    <string name="loginSuccessful">Zalogowano</string>
+    <string name="errorWhileLoggingIn">Błąd logowania: </string>
+    <string name="verifyEmail">Zweryfikuj swój adres e-mail przed zalogowaniem</string>
+    <string name="userDontExists">Użytkownik nie istnieje</string>
+    <string name="authError">Błąd uwierzytelnienia </string>
+    <string name="passwordReset">Resetowanie hasła</string>
+    <string name="provideEmail">Wprowadź e-mail</string>
+    <string name="passwordResetNow">Resetuj hasło</string>
+    <string name="passwordResetLinkSent">Link resetujący hasło został wysłany na Twój adres e-mail</string>
+    <string name="errorWhileSendingLink">Błąd podczas wysyłania linku</string>
+    <string name="emailIsRequired">E-mail jest wymagany</string>
+    <string name="registerError">Błąd rejestracji</string>
+    <string name="registerSuccessfulEmailSent">Rejestracja pomyślna. E-mail weryfikacyjny został wysłany.</string>
+    <string name="registerSuccessfulBut">Rejestracja pomyślna, ale </string>
+    <string name="wrongFormat">Niepoprawny format</string>
+    <string name="passwordDontMatch">Hasła nie pasują do siebie</string>
+    <string name="passwordRequirements">Hasło musi zawierać co najmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny, oraz musi mieć co najmniej 8 znaków</string>
+    <string name="errorWhileDownloadingUserData">Błąd podczas pobierania danych użytkownika</string>
+    <string name="provideYourAge">Wybierz swój wiek</string>
+    <string name="errorWhileEncryption">Błąd szyfrowania danych</string>
+    <string name="onlyForLoggedInUsers">Tylko dla zalogowanych użytkowników</string>
+
+    <!-- Nickname-->
+    <string name="nickNameRequirements">Nazwa użytkownika powinna mieć od </string>
+    <string name="nickNameRequirements2"> do </string>
+    <string name="nickNameRequirements3"> znaków</string>
+    <string name="nickNameRequirements4">Nazwa użytkownika może zawierać tylko litery i cyfry</string>
+    <string name="nickNameTaken">Nazwa użytkownika jest zajęta</string>
+    <string name="provideNewNickName">Wpisz nową nazwę użytkownika</string>
+    <string name="editNickNameTitle">Edycja nazwy użytkownika</string>
+    <string name="nickNameSaved">Nazwa użytkownika zapisana pomyślnie</string>
+    <string name="errorWhileSavingNickName">Błąd podczas zapisywania nazwy użytkownika</string>
 
     <!-- Side panel menu: -->
     <string name="navigation_drawer_open">Otwórz menu</string>
     <string name="navigation_drawer_close">Zamknij menu</string>
 
-    <!--Post creating-->
-    <string name="start">Start</string>
-    <string name="menu">Menu</string>
-    <string name="mainMenu">Menu główne</string>
-    <string name="submitPost">Utwórz post</string>
-    <string name="date_format">%1$d-%2$d-%3$d</string>
-    <string name="hour_format">%1$02d:%2$02d</string>
+    <!-- Notifications -->
+    <string name="read">Przeczytane</string>
+    <string name="newMessages">Nowe wiadomości</string>
+    <string name="youHaveNewMessages">Masz nowe wiadomości</string>
+    <string name="message">Wiadomość</string>
+    <string name="messageFrom">Wiadomość od: </string>
+    <string name="openAppForMoreInfo">Wejdź do aplikacji, aby poznać więcej szczegółów.</string>
+    <string name="someoneRegisteredToYourPost">Ktoś dołączył do Twojej aktywności!</string>
+    <string name="notificationsTurnedOff">Powiadomienia nie będą się pojawiać.</string>
+    <string name="weNeedYourConsent">Potrzebujemy Twojej zgody</string>
+    <string name="weNeedYourConsentForNotifications">Aplikacja potrzebuje zgody na wysyłanie powiadomień, aby informować Cię o nowych wiadomościach.</string>
+    <string name="noThanks">Nie, dziękuję</string>
+    <string name="doNotShowAgain">Nie pokazuj ponownie</string>
+
+    <!-- Avatar management -->
+    <string name="camera">Aparat</string>
+    <string name="gallery">Galeria</string>
+    <string name="chooseImageSource">Wybierz źródło zdjęcia</string>
+    <string name="deleteAvatar">Usuń Avatar</string>
+    <string name="addPhoto">Dodaj avatar</string>
+    <string name="avatarSaved">Avatar zapisany</string>
+
+    <!-- Difficulty -->
+    <string name="difficultyCase1">Pierwszy raz</string>
+    <string name="difficultyCase2">Nowicjusz</string>
+    <string name="difficultyCase3">Początkujący</string>
+    <string name="difficultyCase4">Amator</string>
+    <string name="difficultyCase5">Średnio-zaawansowany</string>
+    <string name="difficultyCase6">Zaawansowany</string>
+    <string name="difficultyCase7">Doświadczony</string>
+    <string name="difficultyCase8">Weteran</string>
+    <string name="difficultyCase9">Ekspert</string>
+    <string name="difficultyCase10">Profesjonalista</string>
+
+    <!-- Post Creating-->
+    <string name="postsCreatingLimitReached">Osiągnięto limit tworzenia postów</string>
+    <string name="fillAllNeededFields">Uzupełnij wymagane pola</string>
+    <string name="postCreated">Post utworzony!</string>
+    <string name="errorWhileCreatingPost">Błąd podczas tworzenia postu</string>
+    <string name="provideCorrectNumber">Podaj poprawną liczbę osób</string>
+    <string name="provideNumberOfPeople">Podaj liczbę osób</string>
+    <string name="provideCorrectSport">Wybierz sport</string>
+    <string name="provideCorrectDifficulty">Wybierz poziom</string>
+    <string name="provideCorrectCityOrChooseFromTheList">Wprowadź prawidłowe miasto lub wybierz z listy</string>
+
+    <!-- Removing user from DB -->
+    <string name="safetyPasswordCheck">Potwierdź usuwanie konta</string>
+    <string name="passwordCanNotBeEmpty">Hasło nie może być puste</string>
+    <string name="errorWhileRemovingAccount">Wystąpił błąd. Skontaktuj się z developerem</string>
+    <string name="accountRemoved">Pomyślnie usunięto profil</string>
+
+    <!-- Opinion and report -->
+    <string name="toOftenSubmitting">Zbyt częste zgłaszanie</string>
+    <string name="errorWhileSending">Wystąpił błąd podczas wysyłania</string>
+    <string name="opinionSent">Opinia zostałą wysłana!</string>
+    <string name="reportPost">Zgłoś post</string>
+    <string name="reportText">Treść zgłoszenia</string>
+    <string name="reportSent">Zgłoszenie wysłane</string>
+    <string name="sendAnOpinion">Podziel się opinią!</string>
+    <string name="whatToWriteAsOpinion">Napisz co myślisz o aplikacji,\njakie funkcję byłyby mile widziane,\njaki błąd napotkałeś</string>
+    <string name="send">Wyślij</string>
+    <string name="giveOpinion">Podziel się opinią</string>
+    <string name="sendAnEmail">Lub napisz na e-mail</string>
+    <string name="myEmail">support@playmeet.eu</string>
+    <string name="copyEmail">Kopiuj e-mail</string>
+    <string name="reportingToOften">Zbyt częste zgłaszanie</string>
+
+    <!--Posts-->
+    <string name="providePostID">Post ID:</string>
+    <string name="provideInfo">Info:</string>
+    <string name="provideDate">Data:</string>
+    <string name="provideHour">Godzina:</string>
+    <string name="provideName">Imię:</string>
+    <string name="provideGender">Płeć:</string>
+    <string name="provideCity">Miasto:</string>
+    <string name="provideNick">Nick:</string>
+    <string name="provideSports">Sport:</string>
+    <string name="provideAboutYou">O sobie:</string>
+    <string name="provideAge">Wiek:</string>
+    <string name="sport">Sport</string>
+    <string name="city">Miasto</string>
+    <string name="gameDifficulty">Poziom gry</string>
+    <string name="postID">ID postu</string>
+    <string name="writePostID">Wprowadź ID postu…</string>
+    <string name="itIsYourPost">To Twój post!</string>
+    <string name="postDeleted">Post usunięty</string>
+    <string name="errorWhileDeletingPost">Błąd podczas usuwania postu </string>
+    <string name="limitForPostsRegisteredReached">Osiągnąłeś limit zapisanych aktywności</string>
+    <string name="errorWhileDownloadingPostData">Nie udało się pobrać informacji o poście</string>
+    <string name="postDoNotExists">Wybrany post nie istnieje</string>
+    <string name="fieldCantBeEmpty">Pole nie może być puste</string>
+    <string name="errorWhileCheckingPostsLimit">Błąd podczas sprawdzania limitu postów</string>
+    <string name="errorWhileSingingUp">Błąd podczas zapisywania</string>
+    <string name="userAlreadyRegisteredIntoActivity">Jesteś już zapisany do tej aktywności</string>
+    <string name="userRegistered">Zapisano</string>
+    <string name="userUnregistered">Zostałeś wypisany!</string>
+    <string name="errorWhileRemovingRegistration">Błąd podczas usuwania rejestracji</string>
+    <string name="doYouReallyWantToDeletePost">Czy na pewno chcesz usunąć ten post?</string>
+    <string name="activityIsFull">Limit zapisanych użytkowników osiągnięty</string>
     <string name="signMeIn">Chcę dołączyć!</string>
     <string name="nickname">Nazwa użytkownika</string>
     <string name="postsAddedByYou">Ulubione</string>
@@ -45,15 +170,7 @@
     <string name="setUpProfileFirstTime">Ustaw profil w 3 krokach</string>
     <string name="chat">Czat</string>
     <string name="informationAboutProvidedData">Podane informacje są widoczne dla wszystkich!</string>
-    <string name="addPhoto">Dodaj avatar</string>
     <string name="nicknameIsEmpty">Nie ustawiono nicku</string>
-    <string name="provideName">Imię:</string>
-    <string name="provideGender">Płeć:</string>
-    <string name="provideCity">Miasto:</string>
-    <string name="provideNick">Nick:</string>
-    <string name="provideSports">Sport:</string>
-    <string name="provideAboutYou">O sobie:</string>
-    <string name="provideAge">Wiek:</string>
     <string name="Save">Zapisz</string>
     <string name="Edit">Edytuj</string>
     <string name="openChat">Chat</string>
@@ -63,7 +180,9 @@
     <string name="noPostFound">Nie znaleziono żadnych postów</string>
     <string name="loadingMorePosts">Ładowanie postów</string>
     <string name="resetFilters">Wyczyść filtry</string>
+    <string name="clear">Wyczyść</string>
     <string name="filters">Filtry</string>
+    <string name="filterPosts">Filtruj posty</string>
     <string name="noPostCreated">Nie stworzyłeś żadnych postów</string>
     <string name="noPostSaved">Jeszcze nigdzie się nie zapisałeś</string>
     <string name="continueAsGuest">Kontynuuj jako gość</string>
@@ -78,28 +197,16 @@
     <string name="noSkillLevelProvided">Nie podano poziomu</string>
     <string name="noNumberOfPeopleProvided">Nie podano\nilości osób</string>
     <string name="noAdditionalInfoProvided">Nie podano dodatkowych informacji</string>
-    <string name="giveOpinion">Podziel się opinią</string>
     <string name="howUserPostLooksLikeInfo">Tak widzą Twoje posty inni użytkownicy\n(przesuń w lewo, aby usunąć)</string>
-    <string name="error">Błąd</string>
+    <string name="error">Błąd: </string>
     <string name="writeMessage">Napisz wiadomość…</string>
     <string name="timeStamp">Timestamp</string>
-    <string name="message">Message</string>
     <string name="username">Username</string>
-    <string name="reportPost">Zgłoś post</string>
-    <string name="reportText">Treść zgłoszenia</string>
     <string name="noChatRoomsAvailable">Brak dostępnych czatów. Zacznij nową rozmowę!</string>
-    <string name="chooseImageSource">Wybierz źródło zdjęcia</string>
-    <string name="deleteAvatar">Usuń Avatar</string>
     <string name="welcomeScreen">Witamy</string>
     <string name="hourDateDoesntMatter">Godzina do uzgodnienia</string>
     <string name="signedInUsersLong">Zapisani użytkownicy</string>
     <string name="noUsersSignedUpInfo">Brak zapisanych</string>
-    <string name="sendAnOpinion">Podziel się opinią!</string>
-    <string name="whatToWriteAsOpinion">Napisz co myślisz o aplikacji,\njakie funkcję byłyby mile widziane,\njaki błąd napotkałeś</string>
-    <string name="send">Wyślij</string>
-    <string name="sendAnEmail">Lub napisz na e-mail</string>
-    <string name="myEmail">support@playmeet.eu</string>
-    <string name="copyEmail">Kopiuj e-mail</string>
     <string name="profile">Twój Profil</string>
     <string name="aboutApp">O aplikacji</string>
     <string name="privacyPolicy">Polityka prywatności</string>
@@ -109,13 +216,11 @@
     <string name="goBack">Wróć</string>
     <string name="options">Ustawienia</string>
     <string name="deleteAccount">Usuń konto</string>
-    <string name="safetyPasswordCheck">Potwierdź usuwanie konta</string>
     <string name="dateDoesntMatter">Data do uzgodnienia</string>
     <string name="passwordForgotten">Zapomniałeś hasła?</string>
     <string name="acceptDocuments">Rejestrując się, wyrażasz zgodę na naszą Politykę prywatności, Warunki świadczenia usług i Umowę licencyjną użytkownika końcowego</string>
     <string name="limitOfPosts">Limit stworzonych postów jednocześnie: 3</string>
     <string name="reasonForDelete">Powód usunięcia konta (opcjonalnie)</string>
-    <string name="you">Ty</string>
     <string name="yourName">Twoje imię</string>
     <string name="tellAboutYourself">Napisz coś o sobie</string>
     <string name="createNewPostButton">Stwórz nowy post</string>
@@ -124,7 +229,6 @@
     <string name="noMessages">Brak wiadomości</string>
     <string name="noNickname">Profil usunięty</string>
     <string name="nicknameChange">Zmiana nicku</string>
-    <string name="provideEmail">Wprowadź e-mail</string>
     <string name="postCreatingInfo">Informacje o tworzeniu postów</string>
     <string name="chatMessages">Wiadomości czatu</string>
     <string name="provideCityHint">Wprowadź nazwę miasta</string>
@@ -138,11 +242,30 @@
     <string name="registeredPosts">Posty do których się zapisałeś:</string>
     <string name="closePrivacyInfoWindow">Close current window</string>
     <string name="close">Zamknij</string>
-    <string name="howWeHandlePrivacy">W naszej aplikacji Android stawiamy na bezpieczeństwo i prywatność użytkowników.\n Wykorzystujemy Firebase, który jest wszechstronnym narzędziem od Google, które zapewnia szyfrowanie danych użytkownika.\n Dzięki temu osobiste informacje użytkowników są chronione przed nieautoryzowanym dostępem.\n Firebase oferuje również bezpieczne metody logowania, utrzymując konta użytkowników w bezpieczeństwie.\n Korzystając z infrastruktury Google, gwarantujemy ciągłe aktualizacje bezpieczeństwa, aby nasza aplikacja była zawsze zabezpieczona według najnowszych standardów.</string>
-    <string name="howWeHandleYourData">Jak dbamy o Twoje dane?</string>
     <string name="default_notification_channel_id">chat_messages</string>
     <string name="friendsList">Lista znajomych</string>
     <string name="chatRoomsText">Twoje rozmowy</string>
     <string name="messageToTheCreator">Chat z organizatorem</string>
+    <string name="userNotFound">Nie znaleziono użytkownika</string>
+    <string name="tokenNotFound">Brak tokenu</string>
+    <string name="provideCityInText">Wprowadź miasto</string>
+    <string name="chooseCityFromTheList">Wybierz miasto z listy</string>
+    <string name="dataSaved">Dane zostały zapisane</string>
 
+    <!-- App -->
+    <string name="howWeHandlePrivacy">W PlayMeet stawiamy na bezpieczeństwo i prywatność użytkowników, używając narzędzi od Google. Dzięki temu gwarantujemy bezpieczne logowanie oraz ochronę osobistych danych użytkowników poprzez szyfrowanie.    </string>
+    <string name="privacyInfo2">Aplikacja jest w fazie testów, więc błędy są spodziewane, natomiast zapewniamy częste aktualizacje wraz z nowymi funkcjami.</string>
+    <string name="privacyInfo3">Zachęcamy do bezpośredniego kontaktu z deweloperem w celu wysłania opinii, wykrycia błędów, bądź zaproponowania współpracy na e-mail:</string>
+    <string name="aboutPlayMeet">O PlayMeet</string>
+    <string name="start">Start</string>
+    <string name="menu">Menu</string>
+    <string name="mainMenu">Menu główne</string>
+    <string name="submitPost">Utwórz post</string>
+    <string name="you">Ty</string>
+    <string name="date_format">%1$d-%2$d-%3$d</string>
+    <string name="hour_format">%1$02d:%2$02d</string>
+    <string name="exit">Wyjście</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="logoutOrCloseApp">Wylogować, czy zamknąć aplikację?</string>
 </resources>
