@@ -23,7 +23,7 @@ public class PostModel implements PostInfo {
     @PropertyName("hourTime")
     private String hourTime;
     @PropertyName("skillLevel")
-    private String skillLevel;
+    private int skillLevel;
     @PropertyName("peopleStatus")
     private String peopleStatus;
     @PropertyName("howManyPeopleNeeded")
@@ -121,11 +121,11 @@ public class PostModel implements PostInfo {
         this.hourTime = hourTime;
     }
 
-    public String getSkillLevel() {
+    public int getSkillLevel() {
         return skillLevel;
     }
 
-    public void setSkillLevel(String skillLevel) {
+    public void setSkillLevel(int skillLevel) {
         this.skillLevel = skillLevel;
     }
 

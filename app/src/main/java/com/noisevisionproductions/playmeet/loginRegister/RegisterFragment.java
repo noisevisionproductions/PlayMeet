@@ -27,7 +27,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.Objects;
 import java.util.function.Predicate;
@@ -156,7 +156,7 @@ public class RegisterFragment extends Fragment {
             return false;
         if (validateAndSetError(emailInput, getString(R.string.wrongFormat), this::isValidEmail))
             return false;
-        if (validateAndSetError(userPasswordSecondInput, getString(R.string.passwordDontMatch), this::arePasswordsTheSame))
+        if (validateAndSetError(userPasswordSecondInput, getString(R.string.passwordDoNotMatch), this::arePasswordsTheSame))
             return false;
         return !validateAndSetError(userPasswordFirstInput, getString(R.string.passwordRequirements), this::isValidPassword);
     }

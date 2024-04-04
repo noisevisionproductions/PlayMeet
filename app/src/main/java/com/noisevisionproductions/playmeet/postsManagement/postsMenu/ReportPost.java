@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.utilities;
+package com.noisevisionproductions.playmeet.postsManagement.postsMenu;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -16,6 +16,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.nio.charset.StandardCharsets;
 
@@ -27,7 +28,7 @@ public class ReportPost {
         this.context = context;
     }
 
-    public void show(String postId) {
+    public void showReportDialog(String postId) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         if (firebaseHelper.getCurrentUser() != null) {
             currentUserId = firebaseHelper.getCurrentUser().getUid();

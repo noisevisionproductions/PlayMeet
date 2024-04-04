@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
-import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.SpinnerManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,7 +41,6 @@ public class SpinnerUpdater {
             });
         }
         if (spinner.getId() == R.id.ageSpinner) {
-
             SpinnerManager.setupAgeSpinner(context, spinner, R.array.age_array, new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -60,7 +59,7 @@ public class SpinnerUpdater {
         if (spinnerAdapter != null) {
             int count = spinnerAdapter.getCount();
             for (int i = 0; i < count; i++) {
-                String item = spinnerAdapter.getItem(i);
+                String item = (String) spinnerAdapter.getItem(i);
 
                 if (item != null && item.equals(selectedValue)) {
                     spinner.setSelection(i);

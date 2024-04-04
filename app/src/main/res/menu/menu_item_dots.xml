@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/action_overflow"
-        android:icon="@drawable/icon_report"
-        android:title="@string/reportPost"
-        app:showAsAction="always" />
+        android:id="@+id/reportPost"
+        android:title="@string/reportPost" />
+
+    <item
+        android:id="@+id/help"
+        android:title="@string/help" />
 </menu>

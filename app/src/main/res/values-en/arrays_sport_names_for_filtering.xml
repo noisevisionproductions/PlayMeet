@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="arrays_sport_names_for_filtering">
+        <item>Badminton</item>
+        <item>Baseball</item>
+        <item>Boxing</item>
+        <item>Golf</item>
+        <item>Hockey</item>
+        <item>Yoga</item>
+        <item>Basketball</item>
+        <item>Skis</item>
+        <item>Skates</item>
+        <item>Soccer</item>
+        <item>Handball</item>
+        <item>Rollers</item>
+        <item>Bicycle</item>
+        <item>Ski jumping</item>
+        <item>Volleyball</item>
+        <item>Gym</item>
+        <item>Squash</item>
+        <item>Tennis</item>
+        <item>Climbing</item>
+    </string-array>
+</resources>

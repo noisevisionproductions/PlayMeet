@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutOfPost"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/fui_transparent"
+    android:foreground="@drawable/ripple_effect"
+    android:minHeight="200dp"
+    app:cardBackgroundColor="@color/background"
+    app:cardCornerRadius="15dp">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/secondary20"
+        android:minHeight="200dp"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/MyTextInputLayoutDesign"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/meaningOfInfo"
+            android:textColor="@color/accent90"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:typeface="serif" />
+
+        <!--nazwa sportu-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/sportNamesLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="30dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sportIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_sport" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sportNames"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/typeOfActivity"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--nazwa miasta-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/cityNameLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/locationIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_location" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/chosenCity"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/city"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--wybor poziomu-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/skillLevelIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_difficulty" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/gameDifficulty"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:typeface="serif" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--ilość osób-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/numberOfPeopleIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:minWidth="20dp"
+                android:minHeight="20dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
+                android:src="@drawable/icon_users" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/numberOfPeople"
+                style="@style/MyTextInputLayoutDesign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/meaningOfSignedPeople"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.cardview.widget.CardView>

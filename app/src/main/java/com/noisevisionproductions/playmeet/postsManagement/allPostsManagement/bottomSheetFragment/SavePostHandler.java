@@ -14,7 +14,7 @@ import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnJoinedPostsCountListener;
 import com.noisevisionproductions.playmeet.notifications.NotificationHelper;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.Objects;
 

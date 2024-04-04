@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_style"
             android:minHeight="50dp"
-            android:text="@string/kliknijabyzalogowac" />
+            android:text="@string/clickToLogin" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/kliknijabyzarejestrowac"
@@ -37,6 +37,6 @@
             android:layout_weight="1"
             android:background="@drawable/button_style"
             android:minHeight="50dp"
-            android:text="@string/kliknijabyzarejestrowac" />
+            android:text="@string/clickToRegister" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </RelativeLayout>

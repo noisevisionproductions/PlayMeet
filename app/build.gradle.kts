@@ -38,8 +38,8 @@ android {
         applicationId = "com.noisevisionproductions.playmeet"
         minSdk = 26
         targetSdk = 34
-        versionCode = 7
-        versionName = "1.5.2"
+        versionCode = 8
+        versionName = "1.5.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -67,16 +67,16 @@ android {
 
 dependencies {
     implementation("androidx.paging:paging-runtime:3.2.1")
-    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
     implementation("com.google.firebase:firebase-database:20.3.1")
-    implementation("com.google.firebase:firebase-firestore:24.10.3")
+    implementation("com.google.firebase:firebase-firestore:24.11.0")
     implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
     implementation("com.google.firebase:firebase-storage:20.3.0")
     implementation("com.google.firebase:firebase-auth:22.3.1")
     implementation("com.google.firebase:firebase-messaging:23.4.1")
     implementation("com.firebaseui:firebase-ui-database:8.0.2")
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
-    implementation("com.google.firebase:firebase-analytics:21.5.1")
+    implementation("com.google.firebase:firebase-analytics:21.6.1")
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.google.android.gms:play-services-identity:18.0.1")
     implementation("com.github.bumptech.glide:glide:4.16.0")

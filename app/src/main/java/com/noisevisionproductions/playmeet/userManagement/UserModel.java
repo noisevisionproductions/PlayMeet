@@ -10,7 +10,7 @@ public class UserModel {
     private String location;
     private String aboutMe;
     private String avatar;
-    private int joinedPostsCount = 0; // śledzi liczbę postów, do których dołączył użytkownik
+    private int joinedPostsCount = 0;
 
     public UserModel() {
     }

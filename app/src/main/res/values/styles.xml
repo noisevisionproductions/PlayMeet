@@ -71,7 +71,8 @@
         <item name="android:background">@drawable/button_style</item>
         <item name="android:textColor">@color/selector_text_menu_icons</item>
         <item name="android:padding">10dp</item>
-        <item name="android:maxWidth">320dp</item>
+        <item name="android:maxWidth">100dp</item>
+        <item name="maxWidth">300dp</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAllCaps">false</item>

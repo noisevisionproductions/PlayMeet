@@ -30,7 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.Objects;
 

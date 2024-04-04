@@ -32,6 +32,9 @@ import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.ChatMessageAdapter;
 import com.noisevisionproductions.playmeet.notifications.NotificationHelper;
 
+/**
+ * Class that is responsible for displaying chat messages in the given chat rooms.
+ */
 public class ChatActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DatabaseReference messagesReference;
@@ -45,34 +48,52 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private boolean messageSent = false;
 
+    /**
+     * Loading layout and its functionality.
+     * Making sure that on the layout click, it hides the keyboard
+     * and cancel the input focus.
+     * Also, after that, making sure that it hides the keyboard after sending the message.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_and_history);
 
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        currentRoomId = getIntent().getStringExtra("roomId");
+        setLayout();
+        setRecyclerView();
+        sendMessage();
 
         View layoutMain = findViewById(R.id.layoutMain);
         hideKeyboardOnLayoutClick(layoutMain);
-
-        setRecyclerView();
-        openChat();
-
-        sendMessage();
-
         hideKeyboardAfterSendingMsg();
     }
 
-    private void setRecyclerView() {
+    /**
+     * Defining objects from chat layout.
+     */
+    private void setLayout() {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        currentRoomId = getIntent().getStringExtra("roomId");
         recyclerView = findViewById(R.id.recycler_view_chat);
         loadMorePostsIndicator = findViewById(R.id.loadMorePostsIndicator);
         loadMorePostsIndicator.setVisibility(View.VISIBLE);
         messageInputFromUser = findViewById(R.id.messageInputFromUser);
+        messageInputFromUser = findViewById(R.id.messageInputFromUser);
+        sendMessageButton = findViewById(R.id.sendMessageButton);
+    }
 
+    /**
+     * Setting up RecyclerView by retrieving messages from DB, by querying based on given chat room ID.
+     * Creating query with ordering by message timestamp to ensure they are displayed in chronological order.
+     */
+    private void setRecyclerView() {
         if (currentRoomId != null) {
-            messagesReference = FirebaseDatabase.getInstance().getReference().child("ChatRooms").child(currentRoomId).child("messages");
+            messagesReference = FirebaseDatabase
+                    .getInstance()
+                    .getReference()
+                    .child("ChatRooms")
+                    .child(currentRoomId)
+                    .child("messages");
 
             Query query = messagesReference.orderByChild("timestamp");
 
@@ -85,7 +106,9 @@ public class ChatActivity extends AppCompatActivity {
             recyclerView.setAdapter(chatMessageAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
 
-            // z powodu natury jak działa scrollToPosition, dodaję lekkie opóźnienie automatycznego scrollu na sam dół listy
+            /*
+             *Due to nature how scrollToPosition works, I'm adding slight delay into automatic scroll to the bottom of the screen.
+             * */
             recyclerView.postDelayed(() -> {
                 recyclerView.scrollToPosition(chatMessageAdapter.getItemCount() - 1);
                 loadMorePostsIndicator.setVisibility(View.GONE);
@@ -95,6 +118,10 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * On send message button click, after making sure that given text is not empty, the message ID is assigned to the
+     * sent message. When the message is sent, the notification for user which received the message, is shown.
+     */
     private void sendMessage() {
         sendMessageButton.setOnClickListener(v -> {
             if (messageInputFromUser.getText() != null) {
@@ -116,15 +143,9 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void scrollToBottom() {
-        if (recyclerView.getAdapter() != null) {
-            int itemCount = recyclerView.getAdapter().getItemCount();
-            if (itemCount > 0) {
-                recyclerView.smoothScrollToPosition(itemCount - 1);
-            }
-        }
-    }
-
+    /**
+     * Triggering scrollToBottom method only when a new object (message) is added, so recycler view will always stay on the bottom.
+     */
     private void scrollToBottomOnMessageSent() {
         messagesReference.addChildEventListener(new ChildEventListener() {
             @Override
@@ -154,9 +175,17 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    private void openChat() {
-        messageInputFromUser = findViewById(R.id.messageInputFromUser);
-        sendMessageButton = findViewById(R.id.sendMessageButton);
+    /**
+     * Scrolling RecyclerView to the last element on the list, by getting count of the item on the list.
+     * If the count is more than 0, then smooth scrolling is triggered.
+     */
+    private void scrollToBottom() {
+        if (recyclerView.getAdapter() != null) {
+            int itemCount = recyclerView.getAdapter().getItemCount();
+            if (itemCount > 0) {
+                recyclerView.smoothScrollToPosition(itemCount - 1);
+            }
+        }
     }
 
     @Override
@@ -164,6 +193,14 @@ public class ChatActivity extends AppCompatActivity {
         super.onStart();
         messageSent = false;
         chatMessageAdapter.startListening();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (chatMessageAdapter != null) {
+            chatMessageAdapter.stopListening();
+        }
     }
 
     @Override
@@ -188,28 +225,14 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (chatMessageAdapter != null) {
-            chatMessageAdapter.stopListening();
-        }
-    }
 
     public void hideKeyboardOnLayoutClick(View view) {
         // Ustawienie dotknięcia dla widoku niemającego pola tekstowego
         if (!(view instanceof EditText)) {
             view.setOnTouchListener((v, event) -> {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        // Kod do wykonania podczas naciśnięcia
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        hideKeyboardAfterSendingMsg();
-                        v.performClick();  // Wywołanie performClick po zwolnieniu
-                        break;
-                    default:
-                        break;
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    hideKeyboardAfterSendingMsg();
+                    v.performClick();  // Wywołanie performClick po zwolnieniu
                 }
                 return false;
             });

@@ -24,8 +24,9 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.ViewHolderUpdater;
+import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.AdapterAllPostsHelper;
 import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment.ButtonsForChatAndSignIn;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
         PostModel postModel = listOfPostModel.get(position);
 
         String userId = postModel.getUserId();
-        getSkillLevel(postModel, holder);
+        AdapterAllPostsHelper.getSkillLevel(postModel, holder.skillLevel);
 
         holder.setUserAvatar(context, userId);
         holder.sportNames.setText(postModel.getSportType());
@@ -75,24 +76,6 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
     @Override
     public int getItemCount() {
         return listOfPostModel.size();
-    }
-
-    private void getSkillLevel(@NonNull PostModel postModel, @NonNull MyViewHolder holder) {
-        String skillLevel = postModel.getSkillLevel();
-        int drawableId = switch (skillLevel) {
-            case "Pierwszy raz" -> R.drawable.d1_10;
-            case "Nowicjusz" -> R.drawable.d2_10;
-            case "Początkujący" -> R.drawable.d3_10;
-            case "Amator" -> R.drawable.d4_10;
-            case "Średnio-zaawansowany" -> R.drawable.d5_10;
-            case "Zaawansowany" -> R.drawable.d6_10;
-            case "Doświadczony" -> R.drawable.d7_10;
-            case "Weteran" -> R.drawable.d8_10;
-            case "Ekspert" -> R.drawable.d9_10;
-            case "Profesjonalista" -> R.drawable.d10_10;
-            default -> 0;
-        };
-        holder.skillLevel.setImageResource(drawableId);
     }
 
     private void removeAndUpdatePost(MyViewHolder holder, int position, PostModel postModel) {
@@ -158,7 +141,7 @@ public class AdapterCreatedByUserPosts extends RecyclerView.Adapter<AdapterCreat
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
             deleteIcon = v.findViewById(R.id.deleteIcon);
             deleteIcon.setVisibility(View.VISIBLE);
-            AppCompatImageView overflowIcon = v.findViewById(R.id.overflowIcon);
+            AppCompatImageView overflowIcon = v.findViewById(R.id.menuIconButton);
             overflowIcon.setVisibility(View.GONE);
         }
 

@@ -23,6 +23,9 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Adapter for chat messages that uses FirebaseRecyclerAdapter.
+ */
 public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel, ChatMessageAdapter.ChatViewHolder> {
     private final Context context;
     private String currentUserId;
@@ -52,6 +55,10 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
         bind(model, holder);
     }
 
+    /**
+     * Based on information if the message is sent or received by the current user,
+     * I'm loading the right layout for the context.
+     */
     @NonNull
     @Override
     public ChatMessageAdapter.ChatViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -66,17 +73,24 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
         return new ChatViewHolder(view);
     }
 
+    /**
+     * Setting up information which are shown on every chat message, like nickname, message or hour.
+     */
     public void bind(@NonNull ChatMessageModel chatMessageModel, @NonNull ChatViewHolder holder) {
-        // ustawienie informacji jakie pojawiają się przy wiadomości - nickname, wiadomość, godzina
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference("UserModel").child(chatMessageModel.getUserId());
+        DatabaseReference userReference = FirebaseDatabase
+                .getInstance()
+                .getReference("UserModel")
+                .child(chatMessageModel.getUserId());
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            /**
+             * If the user from message doesn't exists in DB (he could delete his account before),
+             * then I'm changing the nickname for "Profile deleted".
+             */
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    // Użytkownik istnieje, ustaw pseudonim na wartość z bazy danych
                     holder.usernameTextView.setText(chatMessageModel.getNickname());
                 } else {
-                    // Użytkownik nie istnieje, ustaw pseudonim na "Profil usunięty"
                     holder.usernameTextView.setText(context.getString(R.string.noNickname));
                 }
             }
@@ -98,7 +112,10 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
         }
     }
 
-    public void setMessagesLookBasedOnLoggedUser(@NonNull ChatViewHolder holder, @NonNull ChatMessageModel chatMessageModel) {
+    /**
+     * Loading users avatars from DB.
+     */
+    private void setMessagesLookBasedOnLoggedUser(@NonNull ChatViewHolder holder, @NonNull ChatMessageModel chatMessageModel) {
         if (chatMessageModel.getUserId().equals(currentUserId)) {
             firebaseHelper.getUserAvatar(context, currentUserId, holder.userAvatar);
         } else {

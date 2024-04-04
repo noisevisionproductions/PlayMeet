@@ -1,9 +1,11 @@
 package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.List;
 
@@ -48,7 +53,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         UserModel userModel = signedUpUserFields.get(position);
         getUserAvatar(userModel.getUserId(), holder);
-        unlockChatButton(holder, userModel);
+        unlockChatButton(holder, userModel, position);
         holder.nicknameText.setText(userModel.getNickname());
         holder.progressBarLayout.setVisibility(View.VISIBLE);
         holder.signedUsersLayout.setVisibility(View.GONE);
@@ -76,17 +81,49 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         return signedUpUserFields.size();
     }
 
-    private void unlockChatButton(ViewHolder holder, UserModel userModel) {
+    private void unlockChatButton(ViewHolder holder, UserModel userModel, int position) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         if (firebaseHelper.getCurrentUser() != null) {
             String currentUserId = firebaseHelper.getCurrentUser().getUid();
             if (this.postInfo.getUserId().equals(currentUserId)) {
                 holder.chatButtonSignedUsers.setVisibility(View.VISIBLE);
+                holder.kickUserButton.setVisibility(View.VISIBLE);
                 holder.chatButtonSignedUsers.setOnClickListener(v -> firebaseHelper.getExistingChatRoomId(this.postInfo.getUserId(), userModel.getUserId(), chatRoomId -> ButtonsForChatAndSignIn.navigateToChatRoom(v, chatRoomId)));
+                createDialog(holder, position, userModel);
             } else {
                 holder.chatButtonSignedUsers.setVisibility(View.GONE);
+                holder.kickUserButton.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void createDialog(ViewHolder holder, int position, UserModel userModel) {
+        holder.kickUserButton.setOnClickListener(v -> new AlertDialog.Builder(v.getContext())
+                .setMessage(context.getString(R.string.doYouReallyWantToDelete) + userModel.getNickname() + context.getString(R.string.fromActivity))
+                .setPositiveButton(context.getString(R.string.yes), (dialog, which) -> {
+                    removeRegistration(userModel);
+                    signedUpUserFields.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, signedUpUserFields.size());
+                })
+                .setNegativeButton(context.getString(R.string.no), null)
+                .show());
+    }
+
+    private void removeRegistration(UserModel userModel) {
+        FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
+        firestorePostRepository.removeUserFromRegistration(this.postInfo.getPostId(), userModel.getUserId(), new OnCompletionListener() {
+            @Override
+            public void onSuccess() {
+                ToastManager.showToast(context, context.getString(R.string.userRemoved));
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                ToastManager.showToast(context, context.getString(R.string.error) + e.getMessage());
+                Log.e("Firebase Update Error", "Removing signed up user when saved post is removed " + e.getMessage());
+            }
+        });
     }
 
     private void getUserAvatar(@NonNull String userId, @NonNull ViewHolder holder) {
@@ -99,7 +136,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         private final AppCompatTextView nicknameText, cityText, genderText;
         private final ProgressBar progressBarLayout;
         private final LinearLayoutCompat signedUsersLayout;
-        private final AppCompatButton chatButtonSignedUsers;
+        private final AppCompatButton chatButtonSignedUsers, kickUserButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -110,6 +147,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
             progressBarLayout = itemView.findViewById(R.id.progressBarLayout);
             signedUsersLayout = itemView.findViewById(R.id.signedUsersLayout);
             chatButtonSignedUsers = itemView.findViewById(R.id.chatButtonSignedUsers);
+            kickUserButton = itemView.findViewById(R.id.kickUserButton);
         }
     }
 }

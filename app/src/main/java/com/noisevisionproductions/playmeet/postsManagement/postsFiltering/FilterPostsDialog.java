@@ -8,6 +8,7 @@ import android.text.InputType;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -27,10 +28,13 @@ import com.google.firebase.firestore.Query;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapterForFilterMenu;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
+import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
+import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.FirestorePostsDisplay;
 import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.FirestoreRecyclerViewHelper;
+import com.noisevisionproductions.playmeet.utilities.DifficultyModel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class FilterPostsDialog {
@@ -41,10 +45,10 @@ public class FilterPostsDialog {
     private Spinner spinnerSport, spinnerDifficulty;
     private EditText postIdText;
     private final RecyclerView recyclerView;
-    private Query baseQuery;
     private final View view;
     @NonNull
     private final boolean[] checkedItems;
+    private static int selectedId;
 
     public FilterPostsDialog(AppCompatButton filterButton, RecyclerView recyclerView, FragmentManager fragmentManager, Context context, View view) {
         this.filterButton = filterButton;
@@ -173,7 +177,7 @@ public class FilterPostsDialog {
             activeFilters.add(cityFilter);
         }
         if (checkedItems[2]) {
-            Filter difficultyFilter = FilterFactory.createFilter("Difficulty", true, spinnerDifficulty.getSelectedItem().toString());
+            Filter difficultyFilter = FilterFactory.createFilter("Difficulty", true, selectedId);
             activeFilters.add(difficultyFilter);
         }
         if (checkedItems[3]) {
@@ -197,18 +201,47 @@ public class FilterPostsDialog {
     @NonNull
     private Spinner createDifficultySpinner(@NonNull Activity activity) {
         String[] items = activity.getResources().getStringArray(R.array.arrays_skill_level_for_filtering);
-        Spinner spinner = new Spinner(activity);
-        MySpinnerAdapterForFilterMenu adapter = new MySpinnerAdapterForFilterMenu(activity, android.R.layout.simple_spinner_item, Arrays.asList(items));
+        List<DifficultyModel> difficultyModels = new ArrayList<>();
+        for (String item : items) {
+            String[] parts = item.split("\\|");
+            int id = Integer.parseInt(parts[0]);
+            String name = parts[1];
+            difficultyModels.add(new DifficultyModel(id, name));
+        }
+        // Konwersja na List<Object> dla adaptera
+        List<Object> difficultiesAsObjects = new ArrayList<>(difficultyModels);
+        MySpinnerAdapterForFilterMenu adapter = new MySpinnerAdapterForFilterMenu(context, android.R.layout.simple_spinner_item, difficultiesAsObjects);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        return getSpinner(activity, adapter);
+    }
+
+    @NonNull
+    private static Spinner getSpinner(@NonNull Activity activity, MySpinnerAdapterForFilterMenu adapter) {
+        Spinner spinner = new Spinner(activity);
         spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                DifficultyModel selectedDifficulty = (DifficultyModel) parent.getItemAtPosition(position);
+                selectedId = selectedDifficulty.id();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
         return spinner;
     }
+
 
     @NonNull
     private Spinner createSportSpinner(@NonNull Activity activity) {
         String[] items = activity.getResources().getStringArray(R.array.arrays_sport_names_for_filtering);
         Spinner spinner = new Spinner(activity);
-        MySpinnerAdapterForFilterMenu adapter = new MySpinnerAdapterForFilterMenu(activity, android.R.layout.simple_spinner_item, Arrays.asList(items));
+        MySpinnerAdapterForFilterMenu adapter = new MySpinnerAdapterForFilterMenu(activity, android.R.layout.simple_spinner_item, List.of((Object[]) items));
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         return spinner;
@@ -244,7 +277,7 @@ public class FilterPostsDialog {
     }
 
     private void filterPostsByQuery(List<Filter> activeFilters) {
-        baseQuery = FirebaseFirestore.getInstance().collection("PostCreating");
+        Query baseQuery = FirebaseFirestore.getInstance().collection("PostCreating");
 
         for (Filter filter : activeFilters) {
             baseQuery = filter.applyFilter(baseQuery);
@@ -253,10 +286,18 @@ public class FilterPostsDialog {
     }
 
     public void deleteFilters() {
+        boolean isUserLoggedIn = FirebaseAuthManager.isUserLoggedIn();
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        FirestorePostsDisplay firestorePostsDisplay;
+        if (firebaseHelper.getCurrentUser() != null) {
+            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, firebaseHelper.getCurrentUser().getUid());
+        } else {
+            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, null);
+        }
         AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
         deleteFilters.setOnClickListener(v -> {
-            baseQuery = FirebaseFirestore.getInstance().collection("PostCreating");
-            FirestoreRecyclerViewHelper.setupRecyclerView(baseQuery, recyclerView, fragmentManager, context, (LifecycleOwner) context, view);
+            Query query = firestorePostsDisplay.getQuery();
+            FirestoreRecyclerViewHelper.setupRecyclerView(query, recyclerView, fragmentManager, context, (LifecycleOwner) context, view);
             filterButton.setSelected(false);
         });
     }

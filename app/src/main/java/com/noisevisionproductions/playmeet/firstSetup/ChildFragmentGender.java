@@ -24,9 +24,9 @@ import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.utilities.SpinnerManager;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.AESDataEncryption;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.SpinnerManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.HashMap;
 import java.util.Objects;

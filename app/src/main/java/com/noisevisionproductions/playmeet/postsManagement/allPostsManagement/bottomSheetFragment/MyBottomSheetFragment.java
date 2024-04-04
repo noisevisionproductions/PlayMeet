@@ -28,8 +28,8 @@ import com.noisevisionproductions.playmeet.firebase.interfaces.PostCompletionLis
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.ArrayList;
 import java.util.List;

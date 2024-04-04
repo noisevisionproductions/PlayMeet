@@ -21,12 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
-import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.ViewHolderUpdater;
 import com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.bottomSheetFragment.ButtonsForChatAndSignIn;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.List;
 
@@ -100,7 +99,6 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
         firestorePostRepository.removeUserFromRegistration(postId, userId, new OnCompletionListener() {
             @Override
             public void onSuccess() {
-                decrementJoinedPostsCount(userId);
                 ToastManager.showToast(context, context.getString(R.string.userUnregistered));
             }
 
@@ -112,20 +110,6 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
         });
     }
 
-    private void decrementJoinedPostsCount(String userId) {
-        FirebaseUserRepository firebaseUserRepository = new FirebaseUserRepository();
-        firebaseUserRepository.decrementJoinedPostsCount(userId, new OnCompletionListener() {
-            @Override
-            public void onSuccess() {
-                Log.d("User joined posts updated", "User joined posts updated");
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.e("User joined posts error ", "User joined posts error " + e.getMessage());
-            }
-        });
-    }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder implements ViewHolderUpdater {
         protected final CircleImageView userAvatar;

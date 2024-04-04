@@ -21,7 +21,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.userManagement.DeleteUserFromDB;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 public class AppOptions extends TopMenuLayout {
     private AppCompatTextView versionInfo;
@@ -29,7 +29,9 @@ public class AppOptions extends TopMenuLayout {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_options_menu);
+        Log.e("LanguageTest", getString(R.string.filters));
 
         loadLayout();
         printVersionInfo();

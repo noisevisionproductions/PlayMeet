@@ -10,21 +10,21 @@
     <string name="providePassword">Wprowadź hasło</string>
     <string name="logoutSuccessful">Pomyślnie wylogowano</string>
     <string name="e_mail">E-mail</string>
-    <string name="haslo">Hasło</string>
-    <string name="rejestracja">Rejestracja</string>
-    <string name="potwierdzhaslo">Potwierdź hasło</string>
-    <string name="hasloponownie">Wprowadź hasło ponownie</string>
+    <string name="password">Hasło</string>
+    <string name="register">Rejestracja</string>
+    <string name="confirmPassword">Potwierdź hasło</string>
+    <string name="confirmPasswordAgain">Wprowadź hasło ponownie</string>
     <string name="registerButton">Zarejestruj się</string>
-    <string name="kliknijabyzalogowac">Zaloguj się</string>
-    <string name="kliknijabyzarejestrowac">Załóż konto</string>
+    <string name="clickToLogin">Zaloguj się</string>
+    <string name="clickToRegister">Załóż konto</string>
     <string name="loginSuccessful">Zalogowano</string>
     <string name="errorWhileLoggingIn">Błąd logowania: </string>
     <string name="verifyEmail">Zweryfikuj swój adres e-mail przed zalogowaniem</string>
-    <string name="userDontExists">Użytkownik nie istnieje</string>
+    <string name="userDoNotExists">Użytkownik nie istnieje</string>
     <string name="authError">Błąd uwierzytelnienia </string>
     <string name="passwordReset">Resetowanie hasła</string>
     <string name="provideEmail">Wprowadź e-mail</string>
-    <string name="passwordResetNow">Resetuj hasło</string>
+    <string name="passwordResetNow">Zresetuj hasło</string>
     <string name="passwordResetLinkSent">Link resetujący hasło został wysłany na Twój adres e-mail</string>
     <string name="errorWhileSendingLink">Błąd podczas wysyłania linku</string>
     <string name="emailIsRequired">E-mail jest wymagany</string>
@@ -32,7 +32,7 @@
     <string name="registerSuccessfulEmailSent">Rejestracja pomyślna. E-mail weryfikacyjny został wysłany.</string>
     <string name="registerSuccessfulBut">Rejestracja pomyślna, ale </string>
     <string name="wrongFormat">Niepoprawny format</string>
-    <string name="passwordDontMatch">Hasła nie pasują do siebie</string>
+    <string name="passwordDoNotMatch">Hasła nie pasują do siebie</string>
     <string name="passwordRequirements">Hasło musi zawierać co najmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny, oraz musi mieć co najmniej 8 znaków</string>
     <string name="errorWhileDownloadingUserData">Błąd podczas pobierania danych użytkownika</string>
     <string name="provideYourAge">Wybierz swój wiek</string>
@@ -89,7 +89,6 @@
     <string name="difficultyCase10">Profesjonalista</string>
 
     <!-- Post Creating-->
-    <string name="postsCreatingLimitReached">Osiągnięto limit tworzenia postów</string>
     <string name="fillAllNeededFields">Uzupełnij wymagane pola</string>
     <string name="postCreated">Post utworzony!</string>
     <string name="errorWhileCreatingPost">Błąd podczas tworzenia postu</string>
@@ -204,7 +203,7 @@
     <string name="username">Username</string>
     <string name="noChatRoomsAvailable">Brak dostępnych czatów. Zacznij nową rozmowę!</string>
     <string name="welcomeScreen">Witamy</string>
-    <string name="hourDateDoesntMatter">Godzina do uzgodnienia</string>
+    <string name="hourDateDoesNotMatter">Godzina do uzgodnienia</string>
     <string name="signedInUsersLong">Zapisani użytkownicy</string>
     <string name="noUsersSignedUpInfo">Brak zapisanych</string>
     <string name="profile">Twój Profil</string>
@@ -216,7 +215,7 @@
     <string name="goBack">Wróć</string>
     <string name="options">Ustawienia</string>
     <string name="deleteAccount">Usuń konto</string>
-    <string name="dateDoesntMatter">Data do uzgodnienia</string>
+    <string name="dateDoesNotMatter">Data do uzgodnienia</string>
     <string name="passwordForgotten">Zapomniałeś hasła?</string>
     <string name="acceptDocuments">Rejestrując się, wyrażasz zgodę na naszą Politykę prywatności, Warunki świadczenia usług i Umowę licencyjną użytkownika końcowego</string>
     <string name="limitOfPosts">Limit stworzonych postów jednocześnie: 3</string>
@@ -268,4 +267,13 @@
     <string name="yes">Tak</string>
     <string name="no">Nie</string>
     <string name="logoutOrCloseApp">Wylogować, czy zamknąć aplikację?</string>
+    <string name="postsCreatingLimitReached">Osiągnąłeś limit 3 postów. Zrób miejsce na nowe, usuwając jeden ze starych.</string>
+    <string name="help">Pomoc</string>
+    <string name="meaningOfInfo">Co oznaczają podane informacje?</string>
+    <string name="typeOfActivity">Rodzaj aktywności</string>
+    <string name="meaningOfSignedPeople">Ilość zapisanych osób / ilość potrzebnych</string>
+    <string name="kick">Wyrzuć</string>
+    <string name="doYouReallyWantToDelete">"Czy na pewno chcesz usunąć "</string>
+    <string name="fromActivity">" z aktywności?"</string>
+    <string name="userRemoved">Użytkownik usunięty.</string>
 </resources>

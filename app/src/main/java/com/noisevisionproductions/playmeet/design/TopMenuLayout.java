@@ -17,7 +17,7 @@ import com.noisevisionproductions.playmeet.AppOptions;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.utilities.OpinionFromUser;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 public abstract class TopMenuLayout extends AppCompatActivity {
 

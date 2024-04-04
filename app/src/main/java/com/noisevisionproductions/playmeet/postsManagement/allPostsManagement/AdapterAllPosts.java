@@ -44,8 +44,8 @@ public class AdapterAllPosts extends FirestorePagingAdapter<PostModel, AdapterAl
         holder.applyAnimation();
         String userId = postModel.getUserId();
 
-        AdapterAllPostsHelper.getSkillLevel(postModel, holder, context);
-        AdapterAllPostsHelper.reportPost(holder, postModel.getPostId(), context);
+        AdapterAllPostsHelper.getSkillLevel(postModel, holder.skillLevel);
+        AdapterAllPostsHelper.openPostMenu(holder, postModel.getPostId(), context, fragmentManager);
 
         PostHelperSignedUpUser.getPeopleStatus(postModel.getPostId(), holder);
 
@@ -76,7 +76,7 @@ public class AdapterAllPosts extends FirestorePagingAdapter<PostModel, AdapterAl
         private final AppCompatTextView addInfo;
         protected final AppCompatTextView numberOfPeople;
         protected final AppCompatImageView skillLevel;
-        protected final AppCompatImageView overflowIcon;
+        protected final AppCompatImageView menuIconButton;
         protected final CardView layoutOfPost;
 
         public MyViewHolder(@NonNull View v) {
@@ -88,7 +88,7 @@ public class AdapterAllPosts extends FirestorePagingAdapter<PostModel, AdapterAl
             addInfo = v.findViewById(R.id.addInfoPost);
             numberOfPeople = v.findViewById(R.id.numberOfPeople);
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
-            overflowIcon = v.findViewById(R.id.overflowIcon);
+            menuIconButton = v.findViewById(R.id.menuIconButton);
         }
 
         @Override

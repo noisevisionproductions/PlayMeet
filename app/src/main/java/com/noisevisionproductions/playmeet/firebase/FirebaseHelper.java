@@ -86,7 +86,8 @@ public class FirebaseHelper {
     // tworzenie nowego ChatRoom po wywołaniu tej metody lub dołączenie do istniejącego
     public void getExistingChatRoomId(String user1Id, String user2Id, @NonNull OnChatRoomIdFetched callback) {
         databaseReference.child("ChatRooms")
-                .orderByChild("participants/" + user1Id).equalTo(true)
+                .orderByChild("participants/" + user1Id)
+                .equalTo(true)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

@@ -24,7 +24,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostsDisplay;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.postsManagement.postsFiltering.FilterPostsDialog;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 public class PostsOfTheGamesFragment extends Fragment {
     private FirestorePostsDisplay firestorePostsDisplay;
@@ -89,7 +89,9 @@ public class PostsOfTheGamesFragment extends Fragment {
                 showExitDialog();
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        requireActivity()
+                .getOnBackPressedDispatcher()
+                .addCallback(getViewLifecycleOwner(), callback);
     }
 
     private void showExitDialog() {
@@ -107,7 +109,10 @@ public class PostsOfTheGamesFragment extends Fragment {
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                         }
-                    }).setNegativeButton(getString(R.string.exit), (dialog, which) -> requireActivity().finishAffinity()).setNeutralButton(getString(R.string.cancelButtonString), null).show();
+                    }).setNegativeButton(getString(R.string.exit), (dialog, which) -> requireActivity()
+                            .finishAffinity())
+                    .setNeutralButton(getString(R.string.cancelButtonString), null)
+                    .show();
         } else {
             Intent intent = new Intent(requireContext(), LoginAndRegisterActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

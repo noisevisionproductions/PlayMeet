@@ -22,29 +22,22 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
-import com.noisevisionproductions.playmeet.adapters.MySpinnerAdapter;
 import com.noisevisionproductions.playmeet.dataManagement.CityXmlParser;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnPostCreatedListener;
 import com.noisevisionproductions.playmeet.utilities.DateChoosingLogic;
+import com.noisevisionproductions.playmeet.utilities.DifficultyModel;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.SpinnerManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
-import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class PostCreatingLogic extends Fragment {
     private View view;
@@ -75,12 +68,13 @@ public class PostCreatingLogic extends Fragment {
     }
 
     private void checkIfPostCanBeCreated(View view) {
+        FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
         AppCompatButton createPost = view.findViewById(R.id.submitPost);
 
         createPost.setOnClickListener(v -> {
             if (isValidHowManyPeopleNeeded() && isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
                 if (firebaseHelper.getCurrentUser() != null) {
-                    checkPostLimit(firebaseHelper.getCurrentUser().getUid(), canCreatePost -> {
+                    firestorePostRepository.checkPostLimit(firebaseHelper.getCurrentUser().getUid(), canCreatePost -> {
                         if (canCreatePost) {
                             String selectedCity = cityTextView.getText().toString();
                             postModel.setCityName(selectedCity);
@@ -90,7 +84,7 @@ public class PostCreatingLogic extends Fragment {
                         }
                     });
                 } else {
-                    ToastManager.showToast(requireContext(), getString(R.string.userDontExists));
+                    ToastManager.showToast(requireContext(), getString(R.string.userDoNotExists));
                 }
             } else {
                 handleInvalidSelection();
@@ -110,8 +104,8 @@ public class PostCreatingLogic extends Fragment {
         }
     }
 
-    private void checkPostLimit(String userId, @NonNull Consumer<Boolean> callback) {
-        DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
+    /*   private void checkPostLimit(String userId, @NonNull Consumer<Boolean> callback) {
+     *//*  DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
         Query query = postsReference.orderByChild("userId").equalTo(userId);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -125,8 +119,21 @@ public class PostCreatingLogic extends Fragment {
                 Log.e("FirebaseHelper", "Error checking post limit", error.toException());
                 callback.accept(false);
             }
+
+        });*//*
+        FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
+        firestorePostRepository.getPost(userId, new PostCompletionListenerList() {
+            @Override
+            public void onSuccess(List<String> userIdsSignedUp) {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
         });
-    }
+    }*/
 
     private void savePostToDB() {
         FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
@@ -158,23 +165,20 @@ public class PostCreatingLogic extends Fragment {
     }
 
     private void setSportType() {
-        String[] items = getResources().getStringArray(R.array.arrays_sport_names);
-        MySpinnerAdapter adapter = new MySpinnerAdapter(requireContext(), android.R.layout.simple_spinner_item, Arrays.asList(items));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sportSpinner = view.findViewById(R.id.arrays_sport_names);
-        sportSpinner.setAdapter(adapter);
-
-        sportSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        String[] arrayListXml = getResources().getStringArray(R.array.arrays_sport_names);
+        SpinnerManager.setupSportSpinner(requireContext(), sportSpinner, arrayListXml, new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(@NonNull AdapterView<?> adapterView, View view, int position, long l) {
-                String selectedSport = (String) adapterView.getItemAtPosition(position);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedSport = (String) parent.getItemAtPosition(position);
                 if (position > 0) {
                     postModel.setSportType(selectedSport);
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
     }
@@ -187,25 +191,20 @@ public class PostCreatingLogic extends Fragment {
     }
 
     private void setSkillLevel() {
-        String[] items = getResources().getStringArray(R.array.arrays_skill_level);
-        MySpinnerAdapter adapter = new MySpinnerAdapter(requireContext(), android.R.layout.simple_spinner_item, Arrays.asList(items));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         skillSpinner = view.findViewById(R.id.arrays_skill_level);
-        skillSpinner.setAdapter(adapter);
-        skillSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        String[] levels = getResources().getStringArray(R.array.arrays_skill_level);
+        SpinnerManager.setupDifficultySpinner(requireContext(), skillSpinner, levels, new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(@NonNull AdapterView<?> adapterView, View view, int position, long l) {
-                String selectedSkillLevel = (String) adapterView.getItemAtPosition(position);
-
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                DifficultyModel selectedDifficulty = (DifficultyModel) parent.getItemAtPosition(position);
                 if (position > 0) {
-
-                    postModel.setSkillLevel(selectedSkillLevel);
-
+                    int selectedId = selectedDifficulty.id();
+                    postModel.setSkillLevel(selectedId);
                 }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
         });

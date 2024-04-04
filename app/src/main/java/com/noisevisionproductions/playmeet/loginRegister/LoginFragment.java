@@ -31,7 +31,7 @@ import com.noisevisionproductions.playmeet.ActivityMainMenu;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
-import com.noisevisionproductions.playmeet.utilities.ToastManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import java.util.Objects;
 
@@ -126,7 +126,7 @@ public class LoginFragment extends Fragment {
                                 ToastManager.showToast(getActivity(), getString(R.string.verifyEmail));
                             }
                         } else {
-                            ToastManager.showToast(getActivity(), getString(R.string.userDontExists));
+                            ToastManager.showToast(getActivity(), getString(R.string.userDoNotExists));
                         }
                     }
                 } else {

@@ -10,15 +10,29 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.noisevisionproductions.playmeet.utilities.DifficultyModel;
+
 import java.util.List;
 
-// Ustawiam wlasciwosci AppSpinnerAdapter przy tworzeniu postów
-public class MySpinnerAdapter extends ArrayAdapter<String> {
+/**
+ * Custom adapter for Spinner, which supports various types of objects.
+ * Allows for displaying Spinner elements with custom styles and text.
+ */
+public class MySpinnerAdapter extends ArrayAdapter<Object> {
 
-    public MySpinnerAdapter(@NonNull Context context, int resource, @NonNull List<String> items) {
+    /**
+     * @param context  Context, in which adapter is used.
+     * @param resource ID of layout, which has to be used to inflate view for single element.
+     * @param items    List with objects that has to be shown in the Spinner.
+     */
+    public MySpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Object> items) {
         super(context, resource, items);
     }
 
+    /**
+     * Changes the view of current Spinner position (not expanded).
+     * I'm setting up the text and how it should behave based on the type of object.
+     */
     @NonNull
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
@@ -28,9 +42,17 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
         textView.setGravity(Gravity.CENTER);
         textView.setTextColor(Color.WHITE);
 
+        setTextBasedOnItem(textView, position);
+
         return view;
     }
 
+    /**
+     * Layout of expanded Spinner menu.
+     * I'm making sure that when the spinner is on the index 0, then the text inside is
+     * unable to click on and is grayed out. (because the first item on the list is always text, that explains
+     * current spinner, for example "Choose city").
+     */
     @NonNull
     public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
         // wygląd rozwijanego menu
@@ -38,7 +60,6 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
         TextView textView = view.findViewById(android.R.id.text1);
         textView.setGravity(Gravity.CENTER);
 
-        // jeżeli spinner jest na indeksie 0 (1 pozycja na spinerze), to ustawiam tekst na przezroczysty tryb, z kolorem szarym oraz niemożliwym do kliknięcia, ponieważ w plikach .xml stworzonych przeze mnie, w których są dane, które spinner wyświetla, są na pierwszej pozycji informacje na temat kontentu spinnera, np. "Wybierz płeć"
         if (position == 0) {
             textView.setBackgroundColor(Color.TRANSPARENT);
             textView.setTextColor(Color.GRAY);
@@ -47,6 +68,8 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
             textView.setTextColor(Color.parseColor("#e9e8f0"));
         }
 
+        setTextBasedOnItem(textView, position);
+
         return view;
     }
 
@@ -54,5 +77,14 @@ public class MySpinnerAdapter extends ArrayAdapter<String> {
     public boolean isEnabled(int position) {
         // Wyłącza pierwszy element
         return position != 0;
+    }
+
+    private void setTextBasedOnItem(TextView textView, int position) {
+        Object item = getItem(position);
+        if (item instanceof String) {
+            textView.setText((String) item);
+        } else if (item instanceof DifficultyModel) {
+            textView.setText(((DifficultyModel) item).name());
+        }
     }
 }

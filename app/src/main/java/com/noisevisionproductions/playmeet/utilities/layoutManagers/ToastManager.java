@@ -1,4 +1,4 @@
-package com.noisevisionproductions.playmeet.utilities;
+package com.noisevisionproductions.playmeet.utilities.layoutManagers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

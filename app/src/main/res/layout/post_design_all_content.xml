@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:foreground="@drawable/ripple_effect"
-    android:minHeight="200dp"
     app:cardBackgroundColor="@color/background"
     app:cardCornerRadius="15dp"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -18,10 +17,13 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/rounded_background_user_post">
+        android:background="@drawable/rounded_background_user_post"
+        android:minHeight="220dp">
 
         <!--avatar-->
-        <include layout="@layout/avatar_image_view" />
+        <include
+            android:id="@+id/userAvatar"
+            layout="@layout/avatar_image_view" />
 
         <!--ikonka usuniecia postu-->
         <androidx.appcompat.widget.AppCompatImageView
@@ -40,7 +42,7 @@
 
         <!--ikonka z dodatkowym menu-->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/overflowIcon"
+            android:id="@+id/menuIconButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
@@ -48,25 +50,40 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:padding="16dp"
-            android:src="@drawable/icon_report"
+            android:src="@drawable/icon_menu_dots"
             android:visibility="visible"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/start_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@+id/userAvatar" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_below_sportNames"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="sportNamesLayout" />
+
         <!--nazwa sportu-->
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/sportNamesLayout"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
             android:paddingTop="10dp"
-            app:layout_constraintStart_toEndOf="@+id/userAvatar"
+            app:layout_constraintEnd_toStartOf="@+id/menuIconButton"
+            app:layout_constraintStart_toEndOf="@id/start_guideline"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/sportIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:minWidth="20dp"
                 android:minHeight="20dp"
                 android:paddingStart="10dp"
@@ -78,25 +95,30 @@
                 style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
+                android:ellipsize="end"
                 android:hint="@string/noSportProvided"
+                android:maxLines="1"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:typeface="serif" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--nazwa miasta-->
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
+            android:id="@+id/cityNameLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingTop="15dp"
-            app:layout_constraintLeft_toRightOf="@+id/userAvatar"
-            app:layout_constraintTop_toBottomOf="@+id/sportNamesLayout">
+            app:layout_constraintEnd_toStartOf="@+id/menuIconButton"
+            app:layout_constraintStart_toEndOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/barrier_below_sportNames">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/locationIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:minWidth="20dp"
                 android:minHeight="20dp"
                 android:paddingStart="10dp"
@@ -108,30 +130,30 @@
                 style="@style/MyTextInputLayoutDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                android:gravity="bottom"
+                android:ellipsize="end"
                 android:hint="@string/noCityProvided"
+                android:maxLines="1"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:typeface="serif"
-                app:layout_constraintBottom_toBottomOf="@+id/locationIcon"
-                app:layout_constraintLeft_toRightOf="@+id/locationIcon"
-                tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
+                android:typeface="serif" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--wybor poziomu-->
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="wrap_content"
+            android:id="@+id/difficultyLayou"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingTop="15dp"
-            app:layout_constraintBottom_toBottomOf="@+id/userAvatar"
-            app:layout_constraintLeft_toRightOf="@+id/userAvatar">
+            app:layout_constraintEnd_toStartOf="@+id/menuIconButton"
+            app:layout_constraintStart_toEndOf="@id/start_guideline"
+            app:layout_constraintTop_toBottomOf="@+id/cityNameLayout">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/skillLevelIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:minWidth="20dp"
                 android:minHeight="20dp"
                 android:paddingStart="10dp"
@@ -143,7 +165,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="@string/noSkillLevelProvided"
-                android:minWidth="130dp" />
+                android:minWidth="130dp"
+                android:minHeight="20dp" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--ilość osób-->
@@ -160,6 +183,7 @@
                 android:id="@+id/numberOfPeopleIcon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:minWidth="20dp"
                 android:minHeight="20dp"
                 android:paddingStart="5dp"
@@ -177,22 +201,21 @@
                 android:textSize="15sp"
                 android:textStyle="bold"
                 tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
-
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <!--dodatkowe info-->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/addInfoPost"
             style="@style/MyTextInputLayoutDesign"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginTop="15dp"
+            android:ellipsize="end"
             android:hint="@string/noAdditionalInfoProvided"
-            android:minHeight="80dp"
-            android:textSize="15sp"
+            android:padding="10dp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:typeface="serif"
-            app:layout_constraintEnd_toStartOf="@+id/numberOfPeople"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/userAvatar"
             tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />

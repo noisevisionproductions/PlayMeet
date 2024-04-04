@@ -3,9 +3,9 @@ package com.noisevisionproductions.playmeet.postsManagement.postsFiltering;
 import com.google.firebase.firestore.Query;
 
 public class DifficultyFilter extends Filter {
-    private final String skillLevel;
+    private final int skillLevel;
 
-    public DifficultyFilter(boolean isEnabled, String skillLevel) {
+    public DifficultyFilter(boolean isEnabled, int skillLevel) {
         super(isEnabled);
         this.skillLevel = skillLevel;
     }

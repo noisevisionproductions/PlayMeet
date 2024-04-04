@@ -133,7 +133,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minHeight="60dp"
-                        android:text="@string/dateDoesntMatter"
+                        android:text="@string/dateDoesNotMatter"
                         android:textColor="@color/text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -161,7 +161,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:minHeight="60dp"
-                        android:text="@string/hourDateDoesntMatter"
+                        android:text="@string/hourDateDoesNotMatter"
                         android:textColor="@color/text" />
                 </com.google.android.material.textfield.TextInputLayout>
 

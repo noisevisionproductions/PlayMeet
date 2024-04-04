@@ -76,6 +76,16 @@
             android:text="@string/openChat"
             android:visibility="gone" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/kickUserButton"
+            style="@style/MyButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/button_style"
+            android:backgroundTint="@color/error"
+            android:text="@string/kick"
+            android:visibility="gone" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.appcompat.widget.LinearLayoutCompat>
