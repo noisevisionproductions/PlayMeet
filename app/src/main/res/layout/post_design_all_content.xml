@@ -22,7 +22,7 @@
 
         <!--avatar-->
         <include
-            android:id="@+id/userAvatar"
+            android:id="@+id/userAvatarUserProfile"
             layout="@layout/avatar_image_view" />
 
         <!--ikonka usuniecia postu-->
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@+id/userAvatar" />
+            app:layout_constraintStart_toEndOf="@+id/userAvatarUserProfile" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier_below_sportNames"
@@ -217,7 +217,7 @@
             android:textStyle="bold"
             android:typeface="serif"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/userAvatarUserProfile"
             tools:ignore="TextSizeCheck,TouchTargetSizeCheck" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

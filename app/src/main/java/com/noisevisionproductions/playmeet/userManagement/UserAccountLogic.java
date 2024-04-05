@@ -65,7 +65,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
 
         setupUI(view);
         greetNickname(view);
-        getUserData();
+        getUserData(view);
         setUserAvatar();
         chooseCity();
         setButtons(view);
@@ -82,7 +82,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         progressBarLayout = view.findViewById(R.id.progressBarLayout);
         addPhotoButton = view.findViewById(R.id.addPhotoButton);
         deleteAvatarButton = view.findViewById(R.id.deleteAvatarButton);
-        avatarImageView = view.findViewById(R.id.userAvatar);
+        avatarImageView = view.findViewById(R.id.userAvatarUserProfile);
         nameInput = view.findViewById(R.id.nameInput);
         aboutYouInput = view.findViewById(R.id.aboutYouInput);
         cityTextView = view.findViewById(R.id.cityTextField);
@@ -166,15 +166,16 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         }
     }
 
-    private void getUserData() {
+    private void getUserData(View view) {
+        LinearLayoutCompat nicknameUserPageLayout = view.findViewById(R.id.nicknameUserPageLayout);
         progressBarLayout.setVisibility(View.VISIBLE);
         DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(currentUser);
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 progressBarLayout.setVisibility(View.GONE);
                 linearLayout.setVisibility(View.VISIBLE);
+                nicknameUserPageLayout.setVisibility(View.VISIBLE);
 
                 if (snapshot.exists()) {
                     UserModel userModel = snapshot.getValue(UserModel.class);

@@ -40,7 +40,6 @@ import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager
 import java.util.Objects;
 
 public class PostCreatingLogic extends Fragment {
-    private View view;
     private final PostModel postModel = new PostModel();
     private final FirebaseHelper firebaseHelper = new FirebaseHelper();
     private AppCompatAutoCompleteTextView cityTextView;
@@ -48,15 +47,15 @@ public class PostCreatingLogic extends Fragment {
     private DateChoosingLogic dateChoosingLogic;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_post_creating, container, false);
+        View view = inflater.inflate(R.layout.fragment_post_creating, container, false);
 
-        setSportType();
-        setSkillLevel();
-        setCityName();
-        setDate();
-        setHour();
+        setSportType(view);
+        setSkillLevel(view);
+        setCityName(view);
+        setDate(view);
+        setHour(view);
         checkIfPostCanBeCreated(view);
-        setButtons();
+        setButtons(view);
 
         return view;
     }
@@ -72,13 +71,13 @@ public class PostCreatingLogic extends Fragment {
         AppCompatButton createPost = view.findViewById(R.id.submitPost);
 
         createPost.setOnClickListener(v -> {
-            if (isValidHowManyPeopleNeeded() && isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
+            if (isValidHowManyPeopleNeeded(view) && isValidSportSelection() && isValidCitySelection() && isValidSkillSelection()) {
                 if (firebaseHelper.getCurrentUser() != null) {
                     firestorePostRepository.checkPostLimit(firebaseHelper.getCurrentUser().getUid(), canCreatePost -> {
                         if (canCreatePost) {
                             String selectedCity = cityTextView.getText().toString();
                             postModel.setCityName(selectedCity);
-                            createNewPost();
+                            createNewPost(view);
                         } else {
                             ToastManager.showToast(requireContext(), getString(R.string.postsCreatingLimitReached));
                         }
@@ -93,47 +92,16 @@ public class PostCreatingLogic extends Fragment {
         });
     }
 
-    private void createNewPost() {
-        setHowManyPeopleNeeded();
+    private void createNewPost(View view) {
+        setHowManyPeopleNeeded(view);
         postModel.setCreatedByUser(true);
         postModel.setIsActivityFull(false);
         if (firebaseHelper.getCurrentUser() != null) {
             postModel.setUserId(firebaseHelper.getCurrentUser().getUid());
-            setAdditionalInfo();
+            setAdditionalInfo(view);
             savePostToDB();
         }
     }
-
-    /*   private void checkPostLimit(String userId, @NonNull Consumer<Boolean> callback) {
-     *//*  DatabaseReference postsReference = FirebaseDatabase.getInstance().getReference("PostCreating");
-        Query query = postsReference.orderByChild("userId").equalTo(userId);
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                int postsCount = (int) snapshot.getChildrenCount();
-                callback.accept(postsCount < 3);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseHelper", "Error checking post limit", error.toException());
-                callback.accept(false);
-            }
-
-        });*//*
-        FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
-        firestorePostRepository.getPost(userId, new PostCompletionListenerList() {
-            @Override
-            public void onSuccess(List<String> userIdsSignedUp) {
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
-    }*/
 
     private void savePostToDB() {
         FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
@@ -164,7 +132,7 @@ public class PostCreatingLogic extends Fragment {
         });
     }
 
-    private void setSportType() {
+    private void setSportType(View view) {
         sportSpinner = view.findViewById(R.id.arrays_sport_names);
         String[] arrayListXml = getResources().getStringArray(R.array.arrays_sport_names);
         SpinnerManager.setupSportSpinner(requireContext(), sportSpinner, arrayListXml, new AdapterView.OnItemSelectedListener() {
@@ -183,14 +151,14 @@ public class PostCreatingLogic extends Fragment {
         });
     }
 
-    private void setCityName() {
+    private void setCityName(View view) {
         cityTextView = view.findViewById(R.id.cities_in_poland);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, CityXmlParser.parseCityNames(requireContext()));
         cityTextView.setAdapter(adapter);
     }
 
-    private void setSkillLevel() {
+    private void setSkillLevel(View view) {
         skillSpinner = view.findViewById(R.id.arrays_skill_level);
         String[] levels = getResources().getStringArray(R.array.arrays_skill_level);
         SpinnerManager.setupDifficultySpinner(requireContext(), skillSpinner, levels, new AdapterView.OnItemSelectedListener() {
@@ -210,7 +178,7 @@ public class PostCreatingLogic extends Fragment {
         });
     }
 
-    private boolean isValidHowManyPeopleNeeded() {
+    private boolean isValidHowManyPeopleNeeded(View view) {
         TextInputEditText peopleNeededEditText = view.findViewById(R.id.howManyPeopleNeeded);
         String typedInfo = Objects.requireNonNull(peopleNeededEditText.getText()).toString();
 
@@ -229,7 +197,7 @@ public class PostCreatingLogic extends Fragment {
         }
     }
 
-    private void setHowManyPeopleNeeded() {
+    private void setHowManyPeopleNeeded(View view) {
         TextInputEditText peopleNeededEditText = view.findViewById(R.id.howManyPeopleNeeded);
         String typedInfo = Objects.requireNonNull(peopleNeededEditText.getText()).toString();
         if (!typedInfo.isEmpty()) {
@@ -240,7 +208,7 @@ public class PostCreatingLogic extends Fragment {
         }
     }
 
-    private void setAdditionalInfo() {
+    private void setAdditionalInfo(View view) {
         TextInputEditText addInfo = view.findViewById(R.id.addInfo);
 
         String typedInfo = Objects.requireNonNull(addInfo.getText()).toString();
@@ -251,7 +219,7 @@ public class PostCreatingLogic extends Fragment {
         }
     }
 
-    private void setDate() {
+    private void setDate(View view) {
         TextInputEditText chooseDate = view.findViewById(R.id.chooseDate);
         chooseDate.setFocusable(false);
         chooseDate.setOnClickListener(v -> dateChoosingLogic.pickDate(chooseDate));
@@ -269,7 +237,7 @@ public class PostCreatingLogic extends Fragment {
         dateChoosingLogic.noDateGiven();
     }
 
-    private void setHour() {
+    private void setHour(View view) {
         TextInputEditText chooseHour = view.findViewById(R.id.chooseHour);
         chooseHour.setFocusable(false);
         chooseHour.setOnClickListener(v -> dateChoosingLogic.pickHour(chooseHour));
@@ -334,7 +302,7 @@ public class PostCreatingLogic extends Fragment {
         }
     }
 
-    private void setButtons() {
+    private void setButtons(View view) {
         AppCompatImageView infoIcon = view.findViewById(R.id.infoIcon);
         ToastManager.createToolTip(getString(R.string.limitOfPosts), infoIcon);
 

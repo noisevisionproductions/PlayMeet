@@ -27,6 +27,40 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp">
 
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/postCreatorProfileLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ripple_effect"
+                android:minWidth="150dp"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userAvatarPostCreator"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/border_gray"
+                    android:padding="2dp"
+                    android:src="@drawable/sample_avatar" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/nicknameTextPostCreator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:hint="@string/nickname"
+                    android:padding="5dp"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/textHint"
+                    android:textSize="16sp"
+                    android:typeface="serif" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
             <!--Informacje o grze-->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -58,32 +92,6 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
                 android:visibility="gone" />
-
-            <!--Informacje o użytkowniku-->
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/aboutUserText"
-                    style="@style/MyAppCompatTextViewStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ripple_effect"
-                    android:clickable="true"
-                    android:drawableEnd="@drawable/menu_down"
-                    android:drawablePadding="10dp"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:minHeight="50dp"
-                    android:padding="20dp"
-                    android:text="@string/moreInfoAboutUser"
-                    android:textColor="@color/accent"
-                    android:textSize="20sp" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_user_info"

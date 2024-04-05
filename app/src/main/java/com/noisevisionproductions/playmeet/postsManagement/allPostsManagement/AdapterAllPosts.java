@@ -81,7 +81,7 @@ public class AdapterAllPosts extends FirestorePagingAdapter<PostModel, AdapterAl
 
         public MyViewHolder(@NonNull View v) {
             super(v);
-            userAvatar = v.findViewById(R.id.userAvatar);
+            userAvatar = v.findViewById(R.id.userAvatarUserProfile);
             sportNames = v.findViewById(R.id.sportNames);
             cityNames = v.findViewById(R.id.chosenCity);
             skillLevel = v.findViewById(R.id.skillLevel);

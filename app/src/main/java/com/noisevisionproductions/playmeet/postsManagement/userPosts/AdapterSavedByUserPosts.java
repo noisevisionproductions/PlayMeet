@@ -81,9 +81,9 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
 
     private void createDialog(MyViewHolder holder, int position, String currentUserId, String postId) {
         holder.deletePost.setOnClickListener(v -> new AlertDialog.Builder(v.getContext())
-                .setMessage(context.getString(R.string.doYouReallyWantToDeletePost))
+                .setMessage(R.string.doYouReallyWantToSignOf)
                 .setPositiveButton(context.getString(R.string.yes), (dialog, which) -> {
-                    removeRegistration(postId, currentUserId);
+                    removeRegistrationFromSignOf(postId, currentUserId);
                     listOfRegisteredPosts.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, listOfRegisteredPosts.size());
@@ -91,10 +91,11 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
                         new Handler().postDelayed(() -> noPostInfo.setVisibility(View.VISIBLE), 100);
                     }
                 })
-                .setNegativeButton(context.getString(R.string.no), null).show());
+                .setNegativeButton(context.getString(R.string.no), null)
+                .show());
     }
 
-    private void removeRegistration(String postId, String userId) {
+    private void removeRegistrationFromSignOf(String postId, String userId) {
         FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
         firestorePostRepository.removeUserFromRegistration(postId, userId, new OnCompletionListener() {
             @Override
@@ -123,7 +124,7 @@ public class AdapterSavedByUserPosts extends RecyclerView.Adapter<AdapterSavedBy
         public MyViewHolder(@NonNull View v) {
             super(v);
             layoutOfPost = v.findViewById(R.id.layoutOfPost);
-            userAvatar = v.findViewById(R.id.userAvatar);
+            userAvatar = v.findViewById(R.id.userAvatarUserProfile);
             sportNames = v.findViewById(R.id.sportNames);
             cityNames = v.findViewById(R.id.chosenCity);
             numberOfPeople = v.findViewById(R.id.numberOfPeople);

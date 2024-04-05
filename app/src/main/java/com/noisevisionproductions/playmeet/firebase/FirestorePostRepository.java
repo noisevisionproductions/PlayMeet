@@ -77,9 +77,24 @@ public class FirestorePostRepository {
     }
 
     public void deleteUserPost(String postId, OnCompletionListener listener) {
-        postReference.collection("PostCreating").document(postId).delete()
-                .addOnSuccessListener(aVoid -> updateSignedUpCount(postId, false, listener))
-                .addOnFailureListener(listener::onFailure);
+        getPost(postId, new PostCompletionListenerList() {
+            @Override
+            public void onSuccess(List<String> userIdsSignedUp) {
+                for (String userId : userIdsSignedUp) {
+                    decrementJoinedPostsCount(userId);
+                }
+                postReference.collection("PostCreating")
+                        .document(postId)
+                        .delete()
+                        .addOnSuccessListener(aVoid -> updateSignedUpCount(postId, false, listener))
+                        .addOnFailureListener(listener::onFailure);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                listener.onFailure(e);
+            }
+        });
     }
 
 

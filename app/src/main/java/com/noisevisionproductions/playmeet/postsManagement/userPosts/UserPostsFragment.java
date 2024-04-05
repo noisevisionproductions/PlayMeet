@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.noisevisionproductions.playmeet.PostModel;
 import com.noisevisionproductions.playmeet.R;
@@ -27,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserPostsFragment extends Fragment {
-    private View view;
     private final List<PostModel> postsCreatedByUser = new ArrayList<>();
     private final List<PostModel> savedPosts = new ArrayList<>();
     private ProgressBar progress_bar_yourPosts, progress_bar_registeredPosts;
@@ -36,16 +36,18 @@ public class UserPostsFragment extends Fragment {
     private FirestorePostsDisplay firestorePostsDisplay;
     private RecyclerView postsCreatedByUserRecyclerView, postsSignedIntoByUserRecyclerView;
     private AppCompatTextView noPostsCreatedInfo, noPostsSignedIntoInfo;
+    private SwipeRefreshLayout swipeRefreshLayoutUserPosts;
     private String currentUserId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_user_posts, container, false);
+        View view = inflater.inflate(R.layout.fragment_user_posts, container, false);
 
-        setupView();
+        setupView(view);
+        swipeRefreshLayoutUserPosts.setOnRefreshListener(() -> new Handler().postDelayed(() -> refreshData(view), 100));
 
-        setPostsCreatedByUserRecyclerView();
-        setPostsSignedIntoByUserRecyclerView();
+        setPostsCreatedByUserRecyclerView(view);
+        setPostsSignedIntoByUserRecyclerView(view);
 
         showPostsCreatedByUser();
         showPostsSignedUpIntoByUser();
@@ -53,11 +55,12 @@ public class UserPostsFragment extends Fragment {
         return view;
     }
 
-    private void setupView() {
+    private void setupView(View view) {
         noPostsCreatedInfo = view.findViewById(R.id.noPostsCreatedInfo);
         noPostsSignedIntoInfo = view.findViewById(R.id.noPostsSignedIntoInfo);
         progress_bar_yourPosts = view.findViewById(R.id.progress_bar_yourPosts);
         progress_bar_registeredPosts = view.findViewById(R.id.progress_bar_registeredPosts);
+        swipeRefreshLayoutUserPosts = view.findViewById(R.id.swipeRefreshLayoutUserPosts);
         firestorePostsDisplay = new FirestorePostsDisplay();
 
         FirebaseHelper firebaseHelper = new FirebaseHelper();
@@ -66,14 +69,25 @@ public class UserPostsFragment extends Fragment {
         }
     }
 
-    private void setPostsCreatedByUserRecyclerView() {
+    private void refreshData(View view) {
+        int refreshLength = 300;
+        swipeRefreshLayoutUserPosts.setRefreshing(true);
+        new Handler().postDelayed(() -> {
+            setPostsCreatedByUserRecyclerView(view);
+            setPostsSignedIntoByUserRecyclerView(view);
+
+            swipeRefreshLayoutUserPosts.setRefreshing(false);
+        }, refreshLength);
+    }
+
+    private void setPostsCreatedByUserRecyclerView(View view) {
         postsCreatedByUserRecyclerView = view.findViewById(R.id.expandableListOfUserPosts);
         adapterCreatedByUserPosts = new AdapterCreatedByUserPosts(getContext(), getChildFragmentManager(), postsCreatedByUser, noPostsCreatedInfo);
         postsCreatedByUserRecyclerView.setAdapter(adapterCreatedByUserPosts);
         postsCreatedByUserRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
     }
 
-    private void setPostsSignedIntoByUserRecyclerView() {
+    private void setPostsSignedIntoByUserRecyclerView(View view) {
         postsSignedIntoByUserRecyclerView = view.findViewById(R.id.expandableListOfSavedPosts);
         adapterSavedByUserPosts = new AdapterSavedByUserPosts(getContext(), getParentFragmentManager(), savedPosts, noPostsSignedIntoInfo);
         postsSignedIntoByUserRecyclerView.setAdapter(adapterSavedByUserPosts);

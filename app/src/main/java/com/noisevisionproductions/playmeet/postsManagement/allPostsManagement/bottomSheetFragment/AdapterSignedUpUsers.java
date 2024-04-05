@@ -3,6 +3,7 @@ package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.b
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.noisevisionproductions.playmeet.R;
@@ -23,6 +25,8 @@ import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
+import com.noisevisionproductions.playmeet.userManagement.userProfile.ConstantUserId;
+import com.noisevisionproductions.playmeet.userManagement.userProfile.UserProfile;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
 import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
@@ -35,18 +39,28 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
     private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
     private final Context context;
     private final PostInfo postInfo;
+    private final FragmentManager fragmentManager;
 
-    public AdapterSignedUpUsers(List<UserModel> signedUpUserFields, Context context, PostInfo postInfo) {
+    public AdapterSignedUpUsers(List<UserModel> signedUpUserFields, Context context, PostInfo postInfo, FragmentManager fragmentManager) {
         this.signedUpUserFields = signedUpUserFields;
         this.context = context;
         this.postInfo = postInfo;
+        this.fragmentManager = fragmentManager;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_signed_users, parent, false);
-        return new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view);
+        view.setOnClickListener(v -> {
+            int position = viewHolder.getAbsoluteAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                UserModel userModel = signedUpUserFields.get(position);
+                openUserProfile(userModel.getUserId());
+            }
+        });
+        return viewHolder;
     }
 
     @Override
@@ -101,7 +115,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         holder.kickUserButton.setOnClickListener(v -> new AlertDialog.Builder(v.getContext())
                 .setMessage(context.getString(R.string.doYouReallyWantToDelete) + userModel.getNickname() + context.getString(R.string.fromActivity))
                 .setPositiveButton(context.getString(R.string.yes), (dialog, which) -> {
-                    removeRegistration(userModel);
+                    removeRegistrationFromKickedUser(userModel);
                     signedUpUserFields.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, signedUpUserFields.size());
@@ -110,7 +124,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
                 .show());
     }
 
-    private void removeRegistration(UserModel userModel) {
+    private void removeRegistrationFromKickedUser(UserModel userModel) {
         FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
         firestorePostRepository.removeUserFromRegistration(this.postInfo.getPostId(), userModel.getUserId(), new OnCompletionListener() {
             @Override
@@ -126,10 +140,22 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         });
     }
 
+    private void openUserProfile(String userId) {
+        if (fragmentManager.findFragmentByTag("userProfile") == null) {
+            UserProfile userProfile = new UserProfile();
+            Bundle args = new Bundle();
+            args.putString(ConstantUserId.USER_ID_KEY, userId);
+            userProfile.setArguments(args);
+
+            userProfile.show(fragmentManager, "userProfile");
+        }
+    }
+
     private void getUserAvatar(@NonNull String userId, @NonNull ViewHolder holder) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         firebaseHelper.getUserAvatar(context, userId, holder.userAvatar);
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final CircleImageView userAvatar;
@@ -140,7 +166,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            userAvatar = itemView.findViewById(R.id.userAvatar);
+            userAvatar = itemView.findViewById(R.id.userAvatarUserProfile);
             nicknameText = itemView.findViewById(R.id.nicknameText);
             cityText = itemView.findViewById(R.id.cityText);
             genderText = itemView.findViewById(R.id.genderText);

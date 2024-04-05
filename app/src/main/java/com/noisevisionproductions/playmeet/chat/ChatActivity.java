@@ -101,7 +101,7 @@ public class ChatActivity extends AppCompatActivity {
                     .setQuery(query, ChatMessageModel.class)
                     .build();
 
-            chatMessageAdapter = new ChatMessageAdapter(options, getApplicationContext());
+            chatMessageAdapter = new ChatMessageAdapter(options, getApplicationContext(), getSupportFragmentManager());
 
             recyclerView.setAdapter(chatMessageAdapter);
             recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));

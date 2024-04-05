@@ -1,112 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layoutOfCreatedPosts"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipeRefreshLayoutUserPosts"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutOfCreatedPosts"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/layoutOfPostsList"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                style="@style/MyAppCompatTextViewStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="20dp"
-                android:text="@string/postsManagement"
-                android:textSize="25sp" />
+            android:layout_height="match_parent">
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layoutOfPostsList"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     style="@style/MyAppCompatTextViewStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="20dp"
+                    android:text="@string/postsManagement"
+                    android:textSize="25sp" />
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:padding="10dp"
-                    android:text="@string/yourPosts"
-                    android:textColor="@color/accent90"
-                    android:textSize="20sp"
-                    android:visibility="visible" />
+                    android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/noPostsCreatedInfo"
-                    style="@style/MyAppCompatTextViewStyle"
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/MyAppCompatTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:padding="10dp"
+                        android:text="@string/yourPosts"
+                        android:textColor="@color/accent90"
+                        android:textSize="20sp"
+                        android:visibility="visible" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/noPostsCreatedInfo"
+                        style="@style/MyAppCompatTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/emptyField"
+                        android:textColor="@color/text"
+                        android:textSize="24sp"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/progress_bar_yourPosts"
+                        layout="@layout/progress_bar_layout"
+                        android:visibility="visible" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/expandableListOfUserPosts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="30dp"
+                        android:visibility="gone" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="@string/emptyField"
-                    android:textColor="@color/text"
-                    android:textSize="24sp"
-                    android:visibility="gone" />
+                    android:orientation="vertical">
 
-                <include
-                    android:id="@+id/progress_bar_yourPosts"
-                    layout="@layout/progress_bar_layout"
-                    android:visibility="visible" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        style="@style/MyAppCompatTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:padding="10dp"
+                        android:text="@string/registeredPosts"
+                        android:textColor="@color/accent90"
+                        android:textSize="20sp"
+                        android:visibility="visible" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/expandableListOfUserPosts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingBottom="30dp"
-                    android:visibility="gone" />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/noPostsSignedIntoInfo"
+                        style="@style/MyAppCompatTextViewStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="@string/emptyField"
+                        android:textColor="@color/text"
+                        android:textSize="24sp"
+                        android:visibility="gone" />
+
+                    <include
+                        android:id="@+id/progress_bar_registeredPosts"
+                        layout="@layout/progress_bar_layout"
+                        android:visibility="visible" />
+
+                    <!--wyswietlanie postow stworzonych przez uzytkownika-->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/expandableListOfSavedPosts"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    style="@style/MyAppCompatTextViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:padding="10dp"
-                    android:text="@string/registeredPosts"
-                    android:textColor="@color/accent90"
-                    android:textSize="20sp"
-                    android:visibility="visible" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/noPostsSignedIntoInfo"
-                    style="@style/MyAppCompatTextViewStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="@string/emptyField"
-                    android:textColor="@color/text"
-                    android:textSize="24sp"
-                    android:visibility="gone" />
-
-                <include
-                    android:id="@+id/progress_bar_registeredPosts"
-                    layout="@layout/progress_bar_layout"
-                    android:visibility="visible" />
-
-                <!--wyswietlanie postow stworzonych przez uzytkownika-->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/expandableListOfSavedPosts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone" />
-            </androidx.appcompat.widget.LinearLayoutCompat>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.core.widget.NestedScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

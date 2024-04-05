@@ -210,7 +210,7 @@ public class ListOfChatRoomsAdapter extends FirebaseRecyclerAdapter<ChatRoomMode
             super(itemView);
             username = itemView.findViewById(R.id.username);
             lastMessage = itemView.findViewById(R.id.lastMessage);
-            userAvatar = itemView.findViewById(R.id.userAvatar);
+            userAvatar = itemView.findViewById(R.id.userAvatarUserProfile);
             chatRoomLayout = itemView.findViewById(R.id.chatRoomLayout);
             chatroomProgressBar = itemView.findViewById(R.id.chatroomProgressBar);
         }

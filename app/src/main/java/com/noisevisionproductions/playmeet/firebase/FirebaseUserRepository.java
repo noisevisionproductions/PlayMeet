@@ -16,6 +16,7 @@ import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListe
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnJoinedPostsCountListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnResultListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnTokenFound;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnUserModelCompleted;
 import com.noisevisionproductions.playmeet.firebase.interfaces.UserRepository;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 
@@ -27,7 +28,10 @@ public class FirebaseUserRepository implements UserRepository {
 
     @Override
     public void addUser(UserModel user, OnCompletionListener listener) {
-        userReference.child("UserModel").child(user.getUserId()).setValue(user)
+        userReference
+                .child("UserModel")
+                .child(user.getUserId())
+                .setValue(user)
                 .addOnSuccessListener(aVoid -> listener.onSuccess())
                 .addOnFailureListener(listener::onFailure);
     }
@@ -46,6 +50,26 @@ public class FirebaseUserRepository implements UserRepository {
                 listener.onFailure(task.getException());
             }
         });
+    }
+
+    @Override
+    public void getUserAllData(String userId, OnUserModelCompleted listener) {
+        userReference.child("UserModel")
+                .child(userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DataSnapshot dataSnapshot = task.getResult();
+                        if (dataSnapshot.exists()) {
+                            UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                            listener.onSuccess(userModel);
+                        } else {
+                            listener.onFailure(new Exception("User not found"));
+                        }
+                    } else {
+                        listener.onFailure(task.getException());
+                    }
+                });
     }
 
     @Override
@@ -159,7 +183,11 @@ public class FirebaseUserRepository implements UserRepository {
     }
 
     public void decrementJoinedPostsCount(String userId, OnCompletionListener listener) {
-        DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(userId);
+        DatabaseReference userReference = FirebaseDatabase
+                .getInstance()
+                .getReference()
+                .child("UserModel")
+                .child(userId);
         userReference.child("joinedPostsCount").runTransaction(new Transaction.Handler() {
             @NonNull
             @Override

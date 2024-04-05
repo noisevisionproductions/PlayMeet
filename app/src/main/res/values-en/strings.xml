@@ -276,4 +276,5 @@
     <string name="doYouReallyWantToDelete">"Do you really want to delete "</string>
     <string name="fromActivity">" from activity?"</string>
     <string name="userRemoved">User removed.</string>
+    <string name="doYouReallyWantToSignOf">Czy na pewno chcesz się wypisać?</string>
 </resources>

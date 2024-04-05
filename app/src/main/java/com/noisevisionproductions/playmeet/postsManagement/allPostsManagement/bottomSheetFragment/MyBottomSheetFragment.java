@@ -10,6 +10,8 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,27 +25,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnUserModelCompleted;
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostCompletionListenerList;
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
-import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
-import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
+import com.noisevisionproductions.playmeet.userManagement.userProfile.ConstantUserId;
+import com.noisevisionproductions.playmeet.userManagement.userProfile.UserProfile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private FirebaseHelper firebaseHelper;
     private AppCompatButton savePostButton, chatButton;
-    private AppCompatTextView aboutGameText, aboutUserText, signedInUsersText, noUsersSignedUpInfo;
+    private AppCompatTextView aboutGameText, signedInUsersText, noUsersSignedUpInfo;
     private PostInfo postInfo;
-    @Nullable
-    private UserModel userModel;
-    private EditableField[] editableFieldsUserInfo, editableFieldsPostInfo;
+    private EditableField[] editableFieldsPostInfo;
 
     @NonNull
     public static MyBottomSheetFragment newInstance(PostInfo postInfo) {
@@ -83,17 +87,59 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         chatButton = view.findViewById(R.id.chatButtonSavedPosts);
 
         aboutGameText = view.findViewById(R.id.aboutGameText);
-        aboutUserText = view.findViewById(R.id.aboutUserText);
         signedInUsersText = view.findViewById(R.id.signedInUsersText);
         noUsersSignedUpInfo = view.findViewById(R.id.noUsersSignedUpInfo);
 
         switchToScrollPriority();
 
-        getUserDataFromFirebase();
+        getCreatorUserData(view);
         setupEditableFieldsPostInfo(view, postInfo);
         signedUpUsersList();
 
         handleButtons(view);
+    }
+
+    private void getCreatorUserData(View view) {
+        String postCreatorUserId = this.postInfo.getUserId();
+        new FirebaseUserRepository().getUserAllData(postCreatorUserId, new OnUserModelCompleted() {
+            @Override
+            public void onSuccess(UserModel userModel) {
+                if (getActivity() == null) return;
+                try {
+                    getActivity().runOnUiThread(() -> {
+                        CircleImageView userAvatarPostCreator = view.findViewById(R.id.userAvatarPostCreator);
+                        new FirebaseHelper().getUserAvatar(requireContext(), postCreatorUserId, userAvatarPostCreator);
+
+                        AppCompatTextView nicknameTextPostCreator = view.findViewById(R.id.nicknameTextPostCreator);
+                        nicknameTextPostCreator.setText(userModel.getNickname());
+
+                        openCreatorProfile(view);
+                    });
+                } catch (Exception e) {
+                    Log.e("Decryption error", "Error decrypting user data in user post " + e.getMessage());
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
+    private void openCreatorProfile(View view) {
+        LinearLayoutCompat postCreatorProfileLayout = view.findViewById(R.id.postCreatorProfileLayout);
+        postCreatorProfileLayout.setOnClickListener(v -> {
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            if (fragmentManager.findFragmentByTag("userProfile") == null) {
+                UserProfile userProfile = new UserProfile();
+                Bundle args = new Bundle();
+                args.putString(ConstantUserId.USER_ID_KEY, this.postInfo.getUserId());
+                userProfile.setArguments(args);
+
+                userProfile.show(fragmentManager, "userProfile");
+            }
+        });
     }
 
     private void setupEditableFieldsPostInfo(@NonNull View view, @NonNull PostInfo postInfo) {
@@ -136,71 +182,6 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         });
     }
 
-    private void getUserDataFromFirebase() {
-        if (this.postInfo != null) {
-            DatabaseReference userReference = FirebaseDatabase.getInstance().getReference().child("UserModel").child(postInfo.getUserId());
-            userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        userModel = snapshot.getValue(UserModel.class);
-                        if (userModel != null) {
-                            try {
-                                UserModel decryptedUserModel = UserModelDecrypt.decryptUserModel(getContext(), userModel);
-
-                                if (getContext() == null) {
-                                    ToastManager.showToast(getContext(), getString(R.string.error));
-                                } else {
-                                    editableFieldsUserInfo = new EditableField[]{
-                                            new EditableField(getString(R.string.provideName), decryptedUserModel.getName(), false),
-                                            new EditableField(getString(R.string.provideNick), userModel.getNickname(), false),
-                                            new EditableField(getString(R.string.provideAge), decryptedUserModel.getAge(), false),
-                                            new EditableField(getString(R.string.provideCity), decryptedUserModel.getLocation(), false),
-                                            new EditableField(getString(R.string.provideGender), decryptedUserModel.getGender(), false),
-                                            new EditableField(getString(R.string.provideAboutYou), decryptedUserModel.getAboutMe(), false)
-                                    };
-                                    RecyclerView recyclerViewUserInfo = requireView().findViewById(R.id.recycler_view_user_info);
-                                    recyclerViewUserInfo.setLayoutManager(new LinearLayoutManager(getContext()));
-                                    AdapterPostExtendedInfoFields adapterUser = new AdapterPostExtendedInfoFields(editableFieldsUserInfo, getContext());
-                                    recyclerViewUserInfo.setAdapter(adapterUser);
-
-                                    handleAboutUserTextClick(recyclerViewUserInfo);
-                                }
-                            } catch (Exception e) {
-                                Log.e("Decryption error", "Error decrypting user data in user post " + e.getMessage());
-                            }
-                        }
-                    } else {
-                        ToastManager.showToast(requireContext(), getString(R.string.errorWhileDownloadingUserData));
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("Firebase RealmTime Database error", "Downloading user data from DB where more info about post is " + error.getMessage());
-                }
-            });
-        }
-    }
-
-    private void handleAboutUserTextClick(RecyclerView recyclerViewUserInfo) {
-        aboutUserText.setOnClickListener(new View.OnClickListener() {
-            boolean isListExpanded = false; //śledzę stan rozwinięcia listy
-
-            @Override
-            public void onClick(View v) {
-                if (isListExpanded) {
-                    collapseAboutInfo(recyclerViewUserInfo);
-                    aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_down, 0);
-                } else {
-                    expandAboutInfo(recyclerViewUserInfo);
-                    aboutUserText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.menu_up, 0);
-                }
-                isListExpanded = !isListExpanded;
-            }
-        });
-    }
-
     private void signedUpUsersList() {
         FirestorePostRepository firestorePostRepository = new FirestorePostRepository();
         firestorePostRepository.getPost(postInfo.getPostId(), new PostCompletionListenerList() {
@@ -219,7 +200,7 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
     private void fetchUserInformation(@NonNull List<String> userIdsSingedUp) {
         List<UserModel> signedUpUsers = new ArrayList<>();
         RecyclerView recyclerViewSignedUsers = requireView().findViewById(R.id.recycler_view_signed_users);
-        AdapterSignedUpUsers adapterSignedUpUsers = new AdapterSignedUpUsers(signedUpUsers, getContext(), postInfo);
+        AdapterSignedUpUsers adapterSignedUpUsers = new AdapterSignedUpUsers(signedUpUsers, getContext(), postInfo, requireActivity().getSupportFragmentManager());
         recyclerViewSignedUsers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewSignedUsers.setAdapter(adapterSignedUpUsers);
 

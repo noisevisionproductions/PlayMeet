@@ -1,6 +1,7 @@
 package com.noisevisionproductions.playmeet.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,6 +22,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.userManagement.userProfile.ConstantUserId;
+import com.noisevisionproductions.playmeet.userManagement.userProfile.UserProfile;
+
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -28,14 +34,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel, ChatMessageAdapter.ChatViewHolder> {
     private final Context context;
+    private final FragmentManager fragmentManager;
     private String currentUserId;
     private FirebaseHelper firebaseHelper;
     private static final int SENT_MESSAGE_TYPE = 1;
     private static final int RECEIVED_MESSAGE_TYPE = 2;
 
-    public ChatMessageAdapter(@NonNull FirebaseRecyclerOptions<ChatMessageModel> options, Context context) {
+    public ChatMessageAdapter(@NonNull FirebaseRecyclerOptions<ChatMessageModel> options, Context context, FragmentManager fragmentManager) {
         super(options);
         this.context = context;
+        this.fragmentManager = fragmentManager;
         setCurrentUserId();
     }
 
@@ -90,6 +98,9 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     holder.usernameTextView.setText(chatMessageModel.getNickname());
+                    if (!Objects.equals(chatMessageModel.getUserId(), currentUserId)) {
+                        showUserProfile(holder, chatMessageModel);
+                    }
                 } else {
                     holder.usernameTextView.setText(context.getString(R.string.noNickname));
                 }
@@ -102,6 +113,19 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
         });
         holder.messageTextView.setText(chatMessageModel.getMessage());
         holder.timestampTextView.setText(chatMessageModel.formatDate());
+    }
+
+    private void showUserProfile(ChatViewHolder holder, ChatMessageModel chatMessageModel) {
+        holder.userAvatar.setOnClickListener(v -> {
+            if (fragmentManager.findFragmentByTag("userProfile") == null) {
+                UserProfile userProfile = new UserProfile();
+                Bundle args = new Bundle();
+                args.putString(ConstantUserId.USER_ID_KEY, chatMessageModel.getUserId());
+                userProfile.setArguments(args);
+
+                userProfile.show(fragmentManager, "userProfile");
+            }
+        });
     }
 
 
@@ -133,7 +157,7 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
             usernameTextView = itemView.findViewById(R.id.usernameTextView);
             messageTextView = itemView.findViewById(R.id.messageTextView);
             timestampTextView = itemView.findViewById(R.id.timestampTextView);
-            userAvatar = itemView.findViewById(R.id.userAvatar);
+            userAvatar = itemView.findViewById(R.id.userAvatarUserProfile);
 
         }
     }
