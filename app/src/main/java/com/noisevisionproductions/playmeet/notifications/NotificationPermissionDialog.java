@@ -40,7 +40,6 @@ public class NotificationPermissionDialog {
                     }
                 });
     }
-
     public void requestNotificationsPermission() {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);
         boolean hasDeniedWithNeverAskAgain = sharedPreferences.getBoolean("DeniedNotificationPermission", false);
@@ -53,10 +52,8 @@ public class NotificationPermissionDialog {
             if (ContextCompat.checkSelfPermission(activity, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
                 FirebaseMessaging.getInstance().subscribeToTopic("chat_messages");
                 getFCMToken();
-            } else if (activity.shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
-                showDialog();
             } else {
-                requestPermissionLauncherForNotifications.launch(Manifest.permission.POST_NOTIFICATIONS);
+                showDialog();
             }
         } else {
             FirebaseMessaging.getInstance().subscribeToTopic("chat_messages");
@@ -68,12 +65,15 @@ public class NotificationPermissionDialog {
         new AlertDialog.Builder(activity)
                 .setTitle(activity.getString(R.string.weNeedYourConsent))
                 .setMessage(activity.getString(R.string.weNeedYourConsentForNotifications))
-                .setPositiveButton("OK", ((dialog, which) -> requestPermissionLauncherForNotifications.launch(Manifest.permission.POST_NOTIFICATIONS)))
+                .setPositiveButton("OK", ((dialog, which) -> {
+                    requestPermissionLauncherForNotifications.launch(Manifest.permission.POST_NOTIFICATIONS);
+                }))
                 .setNegativeButton(activity.getString(R.string.noThanks), ((dialog, which) -> dialog.dismiss()))
                 .setNegativeButton(activity.getString(R.string.doNotShowAgain), (((dialog, which) -> doNotAskForPermission())))
                 .create()
                 .show();
     }
+
 
     private void doNotAskForPermission() {
         SharedPreferences sharedPreferences = activity.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE);

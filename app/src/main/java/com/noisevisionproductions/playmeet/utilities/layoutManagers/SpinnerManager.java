@@ -82,4 +82,13 @@ public class SpinnerManager {
 
         spinner.setOnItemSelectedListener(listener);
     }
+
+    public static void setupUserInfoListToDelete(Context context, @NonNull AppCompatSpinner spinner, String[] arrayListXml, AdapterView.OnItemSelectedListener listener) {
+        MySpinnerAdapter adapter = new MySpinnerAdapter(context, android.R.layout.simple_spinner_item, Arrays.asList(arrayListXml));
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinner.setAdapter(adapter);
+
+        spinner.setOnItemSelectedListener(listener);
+    }
 }

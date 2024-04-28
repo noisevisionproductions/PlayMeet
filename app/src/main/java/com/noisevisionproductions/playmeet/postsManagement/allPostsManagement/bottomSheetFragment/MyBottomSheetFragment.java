@@ -34,6 +34,7 @@ import com.noisevisionproductions.playmeet.userManagement.EditableField;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.userManagement.userProfile.ConstantUserId;
 import com.noisevisionproductions.playmeet.userManagement.userProfile.UserProfile;
+import com.noisevisionproductions.playmeet.utilities.admin.AdminTools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +98,9 @@ public class MyBottomSheetFragment extends BottomSheetDialogFragment {
         signedUpUsersList();
 
         handleButtons(view);
+
+        AdminTools adminTools = new AdminTools(postInfo, requireContext());
+        adminTools.deletePostAsAdmin(view);
     }
 
     private void getCreatorUserData(View view) {

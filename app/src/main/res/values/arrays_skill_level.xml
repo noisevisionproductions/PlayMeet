@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="arrays_skill_level">
-        <item>Wybierz poziom</item>
-        <item>Pierwszy raz</item>
-        <item>Nowicjusz</item>
-        <item>Początkujący</item>
-        <item>Amator</item>
-        <item>Średnio-zaawansowany</item>
-        <item>Zaawansowany</item>
-        <item>Doświadczony</item>
-        <item>Weteran</item>
-        <item>Ekspert</item>
-        <item>Profesjonalista</item>
+        <item>0|Select level</item>
+        <item>1|First time</item>
+        <item>2|Novice</item>
+        <item>3|Beginner</item>
+        <item>4|Amateur</item>
+        <item>5|Intermediate</item>
+        <item>6|Advanced</item>
+        <item>7|Experienced</item>
+        <item>8|Veteran</item>
+        <item>9|Expert</item>
+        <item>10|Professional</item>
     </string-array>
 </resources>

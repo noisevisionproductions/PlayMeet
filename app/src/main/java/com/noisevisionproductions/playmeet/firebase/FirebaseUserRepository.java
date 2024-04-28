@@ -17,9 +17,12 @@ import com.noisevisionproductions.playmeet.firebase.interfaces.OnJoinedPostsCoun
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnResultListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnTokenFound;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnUserModelCompleted;
+import com.noisevisionproductions.playmeet.firebase.interfaces.OnUserModelListCompleted;
 import com.noisevisionproductions.playmeet.firebase.interfaces.UserRepository;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class FirebaseUserRepository implements UserRepository {
@@ -38,19 +41,45 @@ public class FirebaseUserRepository implements UserRepository {
 
     @Override
     public void getUser(String userId, OnResultListener listener) {
-        userReference.child("UserModel").child(userId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DataSnapshot dataSnapshot = task.getResult();
-                if (dataSnapshot.exists()) {
-                    listener.onSuccess();
-                } else {
-                    listener.onFailure(new Exception("User not found"));
-                }
-            } else {
-                listener.onFailure(task.getException());
-            }
-        });
+        userReference.child("UserModel")
+                .child(userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DataSnapshot dataSnapshot = task.getResult();
+                        if (dataSnapshot.exists()) {
+                            listener.onSuccess();
+                        } else {
+                            listener.onFailure(new Exception("User not found"));
+                        }
+                    } else {
+                        listener.onFailure(task.getException());
+                    }
+                });
     }
+
+    @Override
+    public void getAllUsers(OnUserModelListCompleted listener) {
+        userReference
+                .child("UserModel")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        List<UserModel> users = new ArrayList<>();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            UserModel userModel = dataSnapshot.getValue(UserModel.class);
+                            users.add(userModel);
+                        }
+                        listener.onSuccess(users);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        listener.onFailure(error.toException());
+                    }
+                });
+    }
+
 
     @Override
     public void getUserAllData(String userId, OnUserModelCompleted listener) {

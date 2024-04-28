@@ -18,6 +18,20 @@ public class FirestorePostsDisplay implements PostDisplay {
     public FirestorePostsDisplay() {
     }
 
+    public FirestorePostsDisplay(boolean isUserLoggedIn, String userId, String city) {
+        if (isUserLoggedIn) {
+            query = postReference.collection("PostCreating")
+                    .whereNotEqualTo("userId", userId)
+                    .whereEqualTo("isActivityFull", false)
+                    .whereEqualTo("cityName", city);
+        } else {
+            query = postReference.collection("PostCreating")
+                    .whereEqualTo("isActivityFull", false)
+                    .whereEqualTo("cityName", city);
+        }
+        setQuery(query);
+    }
+
     public FirestorePostsDisplay(boolean isUserLoggedIn, String userId) {
         if (isUserLoggedIn) {
             query = postReference.collection("PostCreating")

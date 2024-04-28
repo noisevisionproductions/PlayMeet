@@ -1,6 +1,7 @@
 package com.noisevisionproductions.playmeet.userManagement;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
@@ -34,6 +35,8 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
+import com.noisevisionproductions.playmeet.utilities.admin.AdminManager;
+import com.noisevisionproductions.playmeet.utilities.admin.AdminPage;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.AESDataEncryption;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
 import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
@@ -69,6 +72,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         setUserAvatar();
         chooseCity();
         setButtons(view);
+        adminIconOnClick(view);
 
         return view;
     }
@@ -328,5 +332,24 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
         List<String> cityList = new ArrayList<>(CityXmlParser.parseCityNames(requireContext()));
         ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, cityList);
         cityTextView.setAdapter(cityAdapter);
+    }
+
+    private void adminIconOnClick(View view) {
+        AppCompatImageView adminIcon = view.findViewById(R.id.adminIcon);
+        AdminManager adminManager = new AdminManager();
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        if (firebaseHelper.getCurrentUser() != null) {
+            adminManager.checkAdmin(firebaseHelper.getCurrentUser().getUid(), isAdmin -> {
+                if (isAdmin) {
+                    adminIcon.setVisibility(View.VISIBLE);
+                    adminIcon.setOnClickListener(v -> {
+                        Intent intent = new Intent(requireContext(), AdminPage.class);
+                        startActivity(intent);
+                    });
+                } else {
+                    adminIcon.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 }

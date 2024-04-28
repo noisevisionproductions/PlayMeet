@@ -20,6 +20,15 @@
             android:text="@string/options"
             android:textSize="25sp" />
 
+        <CheckBox
+            android:id="@+id/enableLocationWhileSearchingForPosts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="300dp"
+            android:padding="20dp"
+            android:text="@string/takeLocationIntoAccount"
+            android:textSize="20sp" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/logoutAccount"
             style="@style/MyAppCompatTextViewStyle"
@@ -30,6 +39,7 @@
             android:focusable="true"
             android:padding="20dp"
             android:text="@string/logoutAccount"
+            android:textColor="@color/errorBlank"
             android:textSize="20sp" />
 
         <View
@@ -112,8 +122,13 @@
             android:gravity="bottom"
             android:orientation="vertical">
 
-            <include layout="@layout/menu_button" />
-
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/backToMainMenu"
+                style="@style/MyButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:text="@string/menu" />
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

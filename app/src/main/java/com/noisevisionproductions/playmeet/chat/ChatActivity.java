@@ -31,6 +31,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.adapters.ChatMessageAdapter;
 import com.noisevisionproductions.playmeet.notifications.NotificationHelper;
+import com.noisevisionproductions.playmeet.notifications.NotificationPermissionDialog;
 
 /**
  * Class that is responsible for displaying chat messages in the given chat rooms.
@@ -58,6 +59,9 @@ public class ChatActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_and_history);
+
+        NotificationPermissionDialog notificationPermissionDialog = new NotificationPermissionDialog(this);
+        notificationPermissionDialog.requestNotificationsPermission();
 
         setLayout();
         setRecyclerView();

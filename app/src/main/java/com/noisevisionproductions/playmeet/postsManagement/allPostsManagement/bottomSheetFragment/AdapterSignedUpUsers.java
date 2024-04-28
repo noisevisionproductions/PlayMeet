@@ -3,7 +3,6 @@ package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement.b
 import android.app.AlertDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -25,8 +24,7 @@ import com.noisevisionproductions.playmeet.firebase.FirestorePostRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnCompletionListener;
 import com.noisevisionproductions.playmeet.firebase.interfaces.PostInfo;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
-import com.noisevisionproductions.playmeet.userManagement.userProfile.ConstantUserId;
-import com.noisevisionproductions.playmeet.userManagement.userProfile.UserProfile;
+import com.noisevisionproductions.playmeet.userManagement.userProfile.OpenUserProfile;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
 import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
@@ -57,7 +55,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
             int position = viewHolder.getAbsoluteAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
                 UserModel userModel = signedUpUserFields.get(position);
-                openUserProfile(userModel.getUserId());
+                OpenUserProfile.openUserProfile(userModel.getUserId(), fragmentManager);
             }
         });
         return viewHolder;
@@ -140,7 +138,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
         });
     }
 
-    private void openUserProfile(String userId) {
+  /*  private void openUserProfile(String userId) {
         if (fragmentManager.findFragmentByTag("userProfile") == null) {
             UserProfile userProfile = new UserProfile();
             Bundle args = new Bundle();
@@ -149,7 +147,7 @@ public class AdapterSignedUpUsers extends RecyclerView.Adapter<AdapterSignedUpUs
 
             userProfile.show(fragmentManager, "userProfile");
         }
-    }
+    }*/
 
     private void getUserAvatar(@NonNull String userId, @NonNull ViewHolder holder) {
         FirebaseHelper firebaseHelper = new FirebaseHelper();

@@ -103,7 +103,7 @@ public class ChatRoomList extends Fragment {
         });
     }
 
-    public void onChatClicked(@NonNull ChatRoomModel chat) {
+    private void onChatClicked(@NonNull ChatRoomModel chat) {
         // gdy użytkownik kliknie w wybrany czat room z listy, to go do niego przenosi
         Intent intent = new Intent(requireView().getContext(), ChatActivity.class);
         intent.putExtra("roomId", chat.getRoomId());

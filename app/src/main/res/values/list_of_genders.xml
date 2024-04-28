@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="list_of_genders">
-        <item>Wybierz płeć</item>
-        <item>Kobieta</item>
-        <item>Mężczyzna</item>
+        <item>Choose your gender</item>
+        <item>Woman</item>
+        <item>Male</item>
     </string-array>
 </resources>

@@ -10,6 +10,8 @@ public interface UserRepository {
 
     void getUser(String userId, OnResultListener listener);
 
+    void getAllUsers(OnUserModelListCompleted listener);
+
     void getUserAllData(String userId, OnUserModelCompleted listener);
 
     void updateUser(String userId, Map<String, Object> updates, OnCompletionListener listener);

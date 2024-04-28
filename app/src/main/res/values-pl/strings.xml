@@ -63,7 +63,7 @@
     <string name="openAppForMoreInfo">Wejdź do aplikacji, aby poznać więcej szczegółów.</string>
     <string name="someoneRegisteredToYourPost">Ktoś dołączył do Twojej aktywności!</string>
     <string name="notificationsTurnedOff">Powiadomienia nie będą się pojawiać.</string>
-    <string name="weNeedYourConsent">Potrzebujemy Twojej zgody</string>
+    <string name="weNeedYourConsent">Zgoda na powiadomienia</string>
     <string name="weNeedYourConsentForNotifications">Aplikacja potrzebuje zgody na wysyłanie powiadomień, aby informować Cię o nowych wiadomościach.</string>
     <string name="noThanks">Nie, dziękuję</string>
     <string name="doNotShowAgain">Nie pokazuj ponownie</string>
@@ -277,4 +277,10 @@
     <string name="fromActivity">" z aktywności?"</string>
     <string name="userRemoved">Użytkownik usunięty.</string>
     <string name="doYouReallyWantToSignOf">Czy na pewno chcesz się wypisać?</string>
+    <string name="deleted">Usunięto</string>
+    <string name="activitiesFromTheCity">"Aktywności z miasta "</string>
+    <string name="takeLocationIntoAccount">Uwzględniaj swoją lokalizację podczas przeglądania postów</string>
+    <string name="locationIsRequired">Wymagane uprawnienie do lokalizacji</string>
+    <string name="locationIsRequiredContinuation">Ta aplikacja wymaga dostępu do Twojej lokalizacji, aby korzystać z tej funkcji. Czy możemy poprosić o to uprawnienie?</string>
+    <string name="welcomeScreenText">Poznawaj nowych przyjaciół odkrywając świat sportu</string>
 </resources>

@@ -1,18 +1,22 @@
 package com.noisevisionproductions.playmeet;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.noisevisionproductions.playmeet.appOptions.CheckBoxHandler;
 import com.noisevisionproductions.playmeet.design.TopMenuLayout;
 import com.noisevisionproductions.playmeet.design.aboutApp.ActivityPrivacyPolicy;
 import com.noisevisionproductions.playmeet.design.aboutApp.ActivityToS;
@@ -20,6 +24,7 @@ import com.noisevisionproductions.playmeet.design.aboutApp.ActivityUELA;
 import com.noisevisionproductions.playmeet.firebase.FirebaseAuthManager;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.userManagement.DeleteUserFromDB;
+import com.noisevisionproductions.playmeet.utilities.LocationManager;
 import com.noisevisionproductions.playmeet.utilities.ProjectUtils;
 import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
@@ -35,6 +40,7 @@ public class AppOptions extends TopMenuLayout {
 
         loadLayout();
         printVersionInfo();
+        enableLocationWhileSearchingForPosts();
     }
 
     private void loadLayout() {
@@ -42,7 +48,7 @@ public class AppOptions extends TopMenuLayout {
 
         AppCompatButton backToMainMenu = findViewById(R.id.backToMainMenu);
         if (!FirebaseAuthManager.isUserLoggedIn() || !FirebaseAuthManager.isUserLoggedInUsingGoogle()) {
-            backToMainMenu.setVisibility(View.GONE);
+            backToMainMenu.setVisibility(View.VISIBLE);
         }
         ProjectUtils.backToMainMenuButton(backToMainMenu, AppOptions.this);
 
@@ -120,5 +126,31 @@ public class AppOptions extends TopMenuLayout {
 
     private boolean isUserLoggedIn() {
         return !FirebaseAuthManager.isUserLoggedInUsingGoogle() && !FirebaseAuthManager.isUserLoggedIn();
+    }
+
+    private void enableLocationWhileSearchingForPosts() {
+        CheckBox enableLocationWhileSearchingForPosts = findViewById(R.id.enableLocationWhileSearchingForPosts);
+        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
+        boolean isLocationEnabled = sharedPreferences.getBoolean("isLocationEnabled", false);
+        enableLocationWhileSearchingForPosts.setChecked(isLocationEnabled);
+
+        CheckBoxHandler checkBoxHandler = getCheckBoxHandler(sharedPreferences);
+        checkBoxHandler.handleCheckBox(enableLocationWhileSearchingForPosts);
+    }
+
+    @NonNull
+    private CheckBoxHandler getCheckBoxHandler(SharedPreferences sharedPreferences) {
+        CheckBoxHandler checkBoxHandler = new CheckBoxHandler();
+        checkBoxHandler.setOnCheckedChangeListener(isChecked -> {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isLocationEnabled", isChecked);
+            editor.apply();
+
+            LocationManager locationManager = new LocationManager(this);
+            if (isChecked && locationManager.isLocationPermissionGranted()) {
+                locationManager.requestLocationPermission();
+            }
+        });
+        return checkBoxHandler;
     }
 }

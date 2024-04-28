@@ -13,6 +13,7 @@
         <item name="android:windowBackground">@color/background</item>
         <item name="background">@color/background</item>
         <item name="windowActionBar">true</item>
+        <item name="colorAccent">@color/secondary70</item>
         <item name="colorPrimary">@android:color/transparent</item>
     </style>
 

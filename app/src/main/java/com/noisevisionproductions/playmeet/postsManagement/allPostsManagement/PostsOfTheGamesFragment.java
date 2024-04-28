@@ -1,7 +1,9 @@
 package com.noisevisionproductions.playmeet.postsManagement.allPostsManagement;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -24,6 +26,7 @@ import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirestorePostsDisplay;
 import com.noisevisionproductions.playmeet.loginRegister.LoginAndRegisterActivity;
 import com.noisevisionproductions.playmeet.postsManagement.postsFiltering.FilterPostsDialog;
+import com.noisevisionproductions.playmeet.utilities.LocationManager;
 import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 public class PostsOfTheGamesFragment extends Fragment {
@@ -31,12 +34,13 @@ public class PostsOfTheGamesFragment extends Fragment {
     private AppCompatButton filterButton;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private View view;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_all_posts_list, container, false);
+        view = inflater.inflate(R.layout.fragment_all_posts_list, container, false);
 
         setupView(view);
-        setRecyclerView(view);
+        getUserLocation();
         handleBackPressed();
         filterAllPosts(view);
 
@@ -46,16 +50,49 @@ public class PostsOfTheGamesFragment extends Fragment {
     }
 
     private void setupView(@NonNull View view) {
-        boolean isUserLoggedIn = FirebaseAuthManager.isUserLoggedIn();
-        FirebaseHelper firebaseHelper = new FirebaseHelper();
-        if (firebaseHelper.getCurrentUser() != null) {
-            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, firebaseHelper.getCurrentUser().getUid());
-        } else {
-            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, null);
-        }
         filterButton = view.findViewById(R.id.postsFilter);
         recyclerView = view.findViewById(R.id.recycler_view_posts);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+    }
+
+    private void getUserLocation() {
+        LocationManager locationManager = new LocationManager(getActivity());
+        if (!locationManager.isLocationPermissionGranted()) {
+            locationManager.getLastLocation(new LocationManager.LocationListener() {
+                @Override
+                public void onLocationReceived(String city) {
+                    setupFirestorePostsDisplayAndRecyclerView(city);
+                }
+
+                @Override
+                public void onLocationFailed(String errorMessage) {
+                    ToastManager.showToast(requireContext(), errorMessage);
+                }
+            });
+        } else {
+            setupFirestorePostsDisplayAndRecyclerView(null);
+        }
+
+    }
+
+    private void setupFirestorePostsDisplayAndRecyclerView(String city) {
+        boolean isUserLoggedIn = FirebaseAuthManager.isUserLoggedIn();
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+
+        String uid = firebaseHelper.getCurrentUser() != null ? firebaseHelper.getCurrentUser().getUid() : null;
+
+        if (getActivity() != null) {
+            SharedPreferences sharedPreferences = getActivity().getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
+            boolean isLocationEnabled = sharedPreferences.getBoolean("isLocationEnabled", false); // false jest domyślną wartością
+
+            if (city == null || !isLocationEnabled) {
+                firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, uid);
+            } else {
+                ToastManager.showToast(requireContext(), getString(R.string.activitiesFromTheCity) + city);
+                firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, uid, city);
+            }
+        }
+        setRecyclerView(view);
     }
 
     private void setRecyclerView(@NonNull View view) {

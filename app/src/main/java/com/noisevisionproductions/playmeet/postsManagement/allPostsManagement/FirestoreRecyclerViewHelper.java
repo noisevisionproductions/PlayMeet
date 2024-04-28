@@ -21,8 +21,8 @@ public class FirestoreRecyclerViewHelper {
     public static void setupRecyclerView(Query query, RecyclerView recyclerView, FragmentManager fragmentManager, Context context, LifecycleOwner lifecycleOwner, View view) {
         ProgressBar progressBar = view.findViewById(R.id.progressBarLayout);
         AppCompatTextView noPostFound = view.findViewById(R.id.noPostFound);
-        int pageSize = 5;
-        PagingConfig config = new PagingConfig(pageSize, 1, true, 10, 100);
+        int pageSize = 20;
+        PagingConfig config = new PagingConfig(pageSize, 1, true, 10, 200);
 
         FirestorePagingOptions<PostModel> options = new FirestorePagingOptions.Builder<PostModel>()
                 .setLifecycleOwner(lifecycleOwner)

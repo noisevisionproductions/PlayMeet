@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -18,12 +17,20 @@
             android:orientation="vertical"
             android:padding="15dp">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top"
+                android:background="@color/background"
+                android:gravity="center"
                 android:padding="30dp"
-                android:src="@drawable/welcome_screen_text" />
+                android:shadowColor="@color/text"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="1"
+                android:text="@string/welcomeScreenText"
+                android:textColor="@color/accent"
+                android:textSize="25sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 style="@style/MyAppCompatTextViewStyle"

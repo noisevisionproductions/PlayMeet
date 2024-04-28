@@ -10,24 +10,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
 import com.noisevisionproductions.playmeet.firebase.FirebaseUserRepository;
 import com.noisevisionproductions.playmeet.firebase.interfaces.OnUserModelCompleted;
 import com.noisevisionproductions.playmeet.userManagement.UserModel;
+import com.noisevisionproductions.playmeet.utilities.admin.AdminManager;
 import com.noisevisionproductions.playmeet.utilities.dataEncryption.UserModelDecrypt;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.SpinnerManager;
+import com.noisevisionproductions.playmeet.utilities.layoutManagers.ToastManager;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UserProfile extends DialogFragment {
+
+    private String userId;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater layoutInflater, @Nullable ViewGroup viewGroup, @Nullable Bundle savedInstanceState) {
@@ -44,6 +53,7 @@ public class UserProfile extends DialogFragment {
         view.findViewById(R.id.closeUserProfileButton).setOnClickListener(v -> dismiss());
 
         getUserData(view);
+        deleteChosenFieldFromSpinner(view);
     }
 
     @Override
@@ -58,8 +68,6 @@ public class UserProfile extends DialogFragment {
     private void setDialogFragmentMetrics() {
         Dialog dialog = getDialog();
         if (dialog != null && dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
             DisplayMetrics displayMetrics = new DisplayMetrics();
             if (getActivity() != null && getActivity().getWindowManager() != null) {
                 getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -81,7 +89,7 @@ public class UserProfile extends DialogFragment {
         progressBar.setVisibility(View.VISIBLE);
 
         if (getArguments() != null) {
-            String userId = getArguments().getString(ConstantUserId.USER_ID_KEY);
+            userId = getArguments().getString(ConstantUserId.USER_ID_KEY);
             if (userId != null) {
                 new FirebaseUserRepository().getUserAllData(userId, new OnUserModelCompleted() {
                     @Override
@@ -132,5 +140,69 @@ public class UserProfile extends DialogFragment {
                 });
             }
         }
+    }
+
+    private void deleteChosenFieldFromSpinner(View view) {
+        AdminManager adminManager = new AdminManager();
+        FirebaseHelper firebaseHelper = new FirebaseHelper();
+        AppCompatSpinner listWithUserInfoToDelete = view.findViewById(R.id.listWithUserInfoToDelete);
+
+        if (firebaseHelper.getCurrentUser() != null) {
+            adminManager.checkAdmin(firebaseHelper.getCurrentUser().getUid(), isAdmin -> {
+                if (isAdmin) {
+                    listWithUserInfoToDelete.setVisibility(View.VISIBLE);
+                    setupUserInfoSpinner(listWithUserInfoToDelete);
+                } else {
+                    listWithUserInfoToDelete.setVisibility(View.GONE);
+                }
+            });
+
+        }
+    }
+
+    private void setupUserInfoSpinner(AppCompatSpinner listWithUserInfoToDelete) {
+        String[] userInfoList = getResources().getStringArray(R.array.list_of_user_info);
+        SpinnerManager.setupUserInfoListToDelete(requireContext(), listWithUserInfoToDelete, userInfoList, new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (userId != null) {
+                    DatabaseReference userReference = FirebaseDatabase
+                            .getInstance()
+                            .getReference()
+                            .child("UserModel")
+                            .child(userId);
+
+                    switch (position) {
+                        case 1:
+                            deleteField(userReference, "avatar");
+                            break;
+                        case 2:
+                            deleteField(userReference, "nickname");
+                            break;
+                        case 3:
+                            deleteField(userReference, "name");
+                            break;
+                        case 4:
+                            deleteField(userReference, "aboutMe");
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void deleteField(DatabaseReference userReference, String field) {
+        userReference.child(field).setValue(null)
+                .addOnSuccessListener(aVoid -> showToast(getString(R.string.deleted)))
+                .addOnFailureListener(e -> showToast("Error " + e.getMessage()));
+    }
+
+    private void showToast(String message) {
+        ToastManager.showToast(requireContext(), message);
     }
 }

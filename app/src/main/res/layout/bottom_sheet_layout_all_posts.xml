@@ -27,6 +27,19 @@
             android:paddingStart="5dp"
             android:paddingEnd="5dp">
 
+            <!--Icon for deleting the post-->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/deletePostIconAsAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ripple_effect"
+                android:minWidth="230dp"
+                android:minHeight="20dp"
+                android:padding="20dp"
+                android:src="@drawable/icon_delete_for_admin"
+                android:visibility="visible" />
+
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/postCreatorProfileLayout"
                 android:layout_width="match_parent"

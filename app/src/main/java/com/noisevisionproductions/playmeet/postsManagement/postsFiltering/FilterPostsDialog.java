@@ -290,9 +290,9 @@ public class FilterPostsDialog {
         FirebaseHelper firebaseHelper = new FirebaseHelper();
         FirestorePostsDisplay firestorePostsDisplay;
         if (firebaseHelper.getCurrentUser() != null) {
-            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, firebaseHelper.getCurrentUser().getUid());
+            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, firebaseHelper.getCurrentUser().getUid(), null);
         } else {
-            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, null);
+            firestorePostsDisplay = new FirestorePostsDisplay(isUserLoggedIn, null, null);
         }
         AppCompatButton deleteFilters = view.findViewById(R.id.deleteFilters);
         deleteFilters.setOnClickListener(v -> {

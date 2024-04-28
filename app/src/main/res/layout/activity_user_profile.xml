@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_dark">
+    android:background="@drawable/background_with_radius"
+    tools:context=".userManagement.userProfile.UserProfile">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/closeUserProfileButton"
@@ -29,6 +31,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-25dp"
+        android:backgroundTintMode="src_atop"
+        android:contentDescription="@string/Edit"
+        android:src="@drawable/icon_double_arrow_down"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/topHalf"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <!--Guideline, that divides the screen to half-->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/horizontalGuideline"
@@ -36,6 +49,20 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.appcompat.widget.AppCompatSpinner
+        android:id="@+id/listWithUserInfoToDelete"
+        style="@style/MySpinnerStyleForDefaultInput"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_menu_background_for_spinner"
+        android:entries="@array/list_of_user_info"
+        android:minWidth="60dp"
+        android:minHeight="60dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/bottomHalf"
+        app:layout_constraintRight_toLeftOf="@+id/userAvatarUserProfile"
+        app:layout_constraintTop_toTopOf="@id/topHalf" />
 
     <!--User avatar-->
     <de.hdodenhof.circleimageview.CircleImageView
@@ -67,6 +94,7 @@
 
     <!--Bottom layout-->
     <View
+        android:id="@+id/bottomHalf"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/rounded_corners_user_profile_bottom"

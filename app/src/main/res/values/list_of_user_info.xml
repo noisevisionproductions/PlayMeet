@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="list_of_user_info">
+        <item>Choose</item>
+        <item>Avatar</item>
+        <item>Nickname</item>
+        <item>Name</item>
+        <item>About me</item>
+    </string-array>
+</resources>

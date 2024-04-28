@@ -63,7 +63,7 @@
     <string name="openAppForMoreInfo">Enter the app for more details.</string>
     <string name="someoneRegisteredToYourPost">Someone joined your activity!</string>
     <string name="notificationsTurnedOff">Notifications will not appear.</string>
-    <string name="weNeedYourConsent">We need your consent</string>
+    <string name="weNeedYourConsent">Consent to notifications</string>
     <string name="weNeedYourConsentForNotifications">The app needs your consent to send notifications to inform you about new messages.</string>
     <string name="noThanks">No, thank you</string>
     <string name="doNotShowAgain">Do not show again</string>
@@ -276,5 +276,11 @@
     <string name="doYouReallyWantToDelete">"Do you really want to delete "</string>
     <string name="fromActivity">" from activity?"</string>
     <string name="userRemoved">User removed.</string>
-    <string name="doYouReallyWantToSignOf">Czy na pewno chcesz się wypisać?</string>
+    <string name="doYouReallyWantToSignOf">Are you sure you want to sign off?</string>
+    <string name="deleted">Deleted</string>
+    <string name="activitiesFromTheCity">"Activities from the city "</string>
+    <string name="takeLocationIntoAccount">Take your location into account when viewing posts</string>
+    <string name="locationIsRequired">Location permission required</string>
+    <string name="locationIsRequiredContinuation">This app requires access to your location to use this feature. Can we request this permission?</string>
+    <string name="welcomeScreenText">Make new friends while discovering the world of sports</string>
 </resources>
