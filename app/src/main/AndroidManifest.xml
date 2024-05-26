@@ -59,6 +59,10 @@
         </service>
 
         <activity
+            android:name=".loginRegister.onboarding.OnboardingActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".design.aboutApp.ActivityUELA"
             android:exported="true"
             android:theme="@style/AppTheme" />

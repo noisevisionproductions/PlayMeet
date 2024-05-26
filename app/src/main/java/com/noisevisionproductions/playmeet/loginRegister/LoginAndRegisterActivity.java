@@ -1,5 +1,7 @@
 package com.noisevisionproductions.playmeet.loginRegister;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.OnBackPressedCallback;
@@ -8,6 +10,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentManager;
 
 import com.noisevisionproductions.playmeet.R;
+import com.noisevisionproductions.playmeet.loginRegister.onboarding.OnboardingActivity;
 
 public class LoginAndRegisterActivity extends AppCompatActivity {
     private AppCompatButton buttonLogin, buttonRegister;
@@ -23,9 +26,23 @@ public class LoginAndRegisterActivity extends AppCompatActivity {
 
         buttonLogin.setSelected(true);
 
+        onboardingSetup();
         switchToLogin();
         switchToRegister();
         backPressed();
+    }
+
+    private void onboardingSetup() {
+        SharedPreferences preferences = getSharedPreferences("MySharedPref", 0);
+        boolean firstStart = preferences.getBoolean("firstStart", true);
+
+        if (firstStart) {
+            startActivity(new Intent(this, OnboardingActivity.class));
+
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean("firstStart", false);
+            editor.apply();
+        }
     }
 
     public void switchToLogin() {

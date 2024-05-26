@@ -38,8 +38,8 @@ android {
         applicationId = "com.noisevisionproductions.playmeet"
         minSdk = 26
         targetSdk = 34
-        versionCode = 10
-        versionName = "1.5.5"
+        versionCode = 15
+        versionName = "1.6.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -58,6 +58,7 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     buildFeatures {
         viewBinding = true
         dataBinding = true
@@ -66,18 +67,21 @@ android {
 }
 
 dependencies {
-    implementation("androidx.paging:paging-runtime:3.2.1")
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
-    implementation("com.google.firebase:firebase-database:20.3.1")
-    implementation("com.google.firebase:firebase-firestore:24.11.1")
+    implementation("androidx.paging:paging-runtime:3.3.0")
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-database:21.0.0")
+    implementation("com.google.firebase:firebase-firestore:25.0.0")
     implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
-    implementation("com.google.firebase:firebase-storage:20.3.0")
-    implementation("com.google.firebase:firebase-auth:22.3.1")
-    implementation("com.google.firebase:firebase-messaging:23.4.1")
+    implementation("com.google.firebase:firebase-storage:21.0.0")
+    implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation("com.google.firebase:firebase-messaging:24.0.0")
     implementation("com.firebaseui:firebase-ui-database:8.0.2")
     implementation("com.firebaseui:firebase-ui-auth:8.0.2")
-    implementation("com.google.firebase:firebase-analytics:21.6.2")
-    implementation("com.google.android.gms:play-services-auth:21.1.0")
+    implementation("com.google.firebase:firebase-analytics:22.0.0")
+    implementation("androidx.credentials:credentials:1.2.2")
+    implementation("androidx.credentials:credentials-play-services-auth:1.2.2")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
     implementation("com.google.android.gms:play-services-identity:18.0.1")
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.github.bumptech.glide:glide:4.16.0")
@@ -85,7 +89,7 @@ dependencies {
     implementation("androidx.exifinterface:exifinterface:1.3.7")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
-    implementation("com.google.android.material:material:1.11.0")
+    implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.navigation:navigation-fragment:2.7.7")
     implementation("androidx.navigation:navigation-ui:2.7.7")

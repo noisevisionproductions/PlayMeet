@@ -10,6 +10,6 @@ buildscript {
 }
 
 plugins {
-    id("com.google.gms.google-services") version "4.4.0" apply false
     id("com.autonomousapps.dependency-analysis") version "1.29.0"
+    id("com.google.gms.google-services") version "4.4.0" apply false
 }

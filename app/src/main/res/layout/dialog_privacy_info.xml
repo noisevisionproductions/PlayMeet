@@ -35,7 +35,6 @@
                 android:maxWidth="350dp"
                 android:padding="5dp"
                 android:text="@string/howWeHandlePrivacy"
-                android:textColor="@color/accent"
                 android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -46,7 +45,6 @@
                 android:maxWidth="350dp"
                 android:padding="5dp"
                 android:text="@string/privacyInfo2"
-                android:textColor="@color/accent"
                 android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -57,7 +55,6 @@
                 android:maxWidth="350dp"
                 android:padding="5dp"
                 android:text="@string/privacyInfo3"
-                android:textColor="@color/accent"
                 android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatTextView

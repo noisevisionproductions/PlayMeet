@@ -283,4 +283,10 @@
     <string name="locationIsRequired">Wymagane uprawnienie do lokalizacji</string>
     <string name="locationIsRequiredContinuation">Ta aplikacja wymaga dostępu do Twojej lokalizacji, aby korzystać z tej funkcji. Czy możemy poprosić o to uprawnienie?</string>
     <string name="welcomeScreenText">Poznawaj nowych przyjaciół odkrywając świat sportu</string>
+    <string name="findFavoriteActivity">Znajdź ulubione aktywności</string>
+    <string name="onboardingActivity">Filtrując na podstawie sportu, miejsca oraz poziomu</string>
+    <string name="onboardingOrganizeMeeting">Zorganizuj spotkanie</string>
+    <string name="onboardingDeterminingRequirements">Określając swoje wymagania</string>
+    <string name="onboardingDiscussDetails">Omów szczegóły</string>
+    <string name="onboardingCommunicateWIthOthers">Komunikując się z innymi</string>
 </resources>

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView;
 import androidx.appcompat.widget.AppCompatButton;
@@ -21,10 +20,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.noisevisionproductions.playmeet.ActivityMainMenu;
@@ -40,8 +35,8 @@ public class LoginFragment extends Fragment {
     private String emailString, passwordString;
     private AppCompatAutoCompleteTextView emailInput, passwordInput;
     private AppCompatButton loginButton;
-    private SignInButton googleSignIn;
-    private ActivityResultLauncher<Intent> launcher;
+    //private SignInButton googleSignIn;
+    //private ActivityResultLauncher<Intent> launcher;
 
     public LoginFragment() {
     }
@@ -51,8 +46,8 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
 
         // tworze instancje, aby wywolac metode, ktora pozwolic na zalogowanie sie za pomoca google
-        GoogleSignInHelper googleSignInHelper = new GoogleSignInHelper(this);
-        launcher = googleSignInHelper.getActivityResultLauncher();
+        //  GoogleSignInHelper googleSignInHelper = new GoogleSignInHelper(this);
+        // launcher = googleSignInHelper.getActivityResultLauncher();
 
         getUIObjects(view);
         guestButton(view);
@@ -71,7 +66,7 @@ public class LoginFragment extends Fragment {
         emailInput = view.findViewById(R.id.emailInput);
         passwordInput = view.findViewById(R.id.passwordInput);
         loginButton = view.findViewById(R.id.loginButton);
-        googleSignIn = view.findViewById(R.id.googleSignIn);
+        // googleSignIn = view.findViewById(R.id.googleSignIn);
 
         AppCompatTextView passwordForgotten = view.findViewById(R.id.passwordForgotten);
         passwordForgotten.setOnClickListener(v -> passwordForgottenDialog());
@@ -95,10 +90,10 @@ public class LoginFragment extends Fragment {
             }
         }
         loginButton.setOnClickListener(v -> loginUser());
-        googleSignIn.setOnClickListener(v -> logInWithGoogle());
+        //googleSignIn.setOnClickListener(v -> logInWithGoogle());
     }
 
-    private void logInWithGoogle() {
+  /*  private void logInWithGoogle() {
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(com.firebase.ui.auth.R.string.default_web_client_id))
                 .requestEmail()
@@ -107,7 +102,7 @@ public class LoginFragment extends Fragment {
 
         Intent intent = googleSignInClient.getSignInIntent();
         launcher.launch(intent);
-    }
+    }*/
 
     private void loginUser() {
         emailString = String.valueOf(emailInput.getText());

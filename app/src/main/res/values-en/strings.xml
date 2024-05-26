@@ -283,4 +283,11 @@
     <string name="locationIsRequired">Location permission required</string>
     <string name="locationIsRequiredContinuation">This app requires access to your location to use this feature. Can we request this permission?</string>
     <string name="welcomeScreenText">Make new friends while discovering the world of sports</string>
+    <string name="findFavoriteActivity">Find your favorite activities</string>
+    <string name="onboardingActivity">By filtering based on sport, place and level</string>
+    <string name="onboardingOrganizeMeeting">Organize a meeting</string>
+    <string name="onboardingDeterminingRequirements">Determining your requirements</string>
+    <string name="onboardingDiscussDetails">Discuss the details</string>
+    <string name="onboardingCommunicateWIthOthers">By communicating with others</string>
+
 </resources>

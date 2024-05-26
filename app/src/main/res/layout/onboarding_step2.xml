@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+
+        <TextView
+            android:id="@+id/titleStep1"
+            style="@style/MyAppCompatTextViewStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@string/onboardingOrganizeMeeting"
+            android:textColor="@color/accent"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/descriptionStep1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/titleStep1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:paddingBottom="20dp"
+            android:text="@string/onboardingDeterminingRequirements"
+            android:textSize="20sp"
+            android:typeface="serif" />
+
+        <ImageView
+            android:id="@+id/imageStep1"
+            android:layout_width="300dp"
+            android:layout_height="500dp"
+            android:contentDescription="@string/postCreatingInfo"
+            android:layout_below="@id/descriptionStep1"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/mockup_post_creating" />
+
+    </RelativeLayout>
+</ScrollView>
