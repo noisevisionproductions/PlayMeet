@@ -33,7 +33,7 @@
     <string name="registerSuccessfulBut">Rejestracja pomyślna, ale </string>
     <string name="wrongFormat">Niepoprawny format</string>
     <string name="passwordDoNotMatch">Hasła nie pasują do siebie</string>
-    <string name="passwordRequirements">Hasło musi zawierać co najmniej jedną dużą literę, jedną małą literę, jedną cyfrę i jeden znak specjalny, oraz musi mieć co najmniej 8 znaków</string>
+    <string name="passwordRequirements">Hasło musi mieć co najmniej 8 znaków i zawierać litery oraz cyfry</string>
     <string name="errorWhileDownloadingUserData">Błąd podczas pobierania danych użytkownika</string>
     <string name="provideYourAge">Wybierz swój wiek</string>
     <string name="errorWhileEncryption">Błąd szyfrowania danych</string>

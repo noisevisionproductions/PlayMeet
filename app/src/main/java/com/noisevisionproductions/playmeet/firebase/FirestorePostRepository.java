@@ -147,7 +147,13 @@ public class FirestorePostRepository {
                     int currentSignedUpCount = Objects.requireNonNull(postSnapshot.getLong("signedUpCount")).intValue();
                     int howManyPeopleNeeded = Objects.requireNonNull(postSnapshot.getLong("howManyPeopleNeeded")).intValue();
 
-                    int newSignedUpCount = increment ? currentSignedUpCount + 1 : currentSignedUpCount - 1;
+                    int newSignedUpCount;
+                    if (increment) {
+                        newSignedUpCount = currentSignedUpCount + 1;
+                    } else {
+                        newSignedUpCount = Math.max(0, currentSignedUpCount - 1);
+                    }
+
                     boolean isActivityNowFull = newSignedUpCount >= howManyPeopleNeeded;
                     String newPeopleStatus = newSignedUpCount + "/" + howManyPeopleNeeded;
 

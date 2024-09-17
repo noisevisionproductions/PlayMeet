@@ -64,8 +64,8 @@
                     android:contentDescription="@string/postCreatingInfo"
                     android:foreground="?attr/selectableItemBackground"
                     android:padding="10dp"
-                    android:visibility="gone"
-                    android:src="@drawable/icon_admin" />
+                    android:src="@drawable/icon_admin"
+                    android:visibility="gone" />
 
                 <include layout="@layout/avatar_image_view" />
 
@@ -157,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <!-- Etykieta i pole imienia -->
                     <androidx.appcompat.widget.LinearLayoutCompat

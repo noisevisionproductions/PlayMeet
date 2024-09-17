@@ -5,7 +5,8 @@ public class UserModel {
     private String userId;
     private String nickname;
     private String name;
-    private String age;
+    private String birthdate;
+    private int age;
     private String gender;
     private String location;
     private String aboutMe;
@@ -55,11 +56,19 @@ public class UserModel {
         this.aboutMe = aboutMe;
     }
 
-    public String getAge() {
+    public String getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(String birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public int getAge() {
         return age;
     }
 
-    public void setAge(String age) {
+    public void setAge(int age) {
         this.age = age;
     }
 

@@ -135,12 +135,9 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
             AESDataEncryption encryption = new AESDataEncryption(getContext());
 
             Map<String, Object> userUpdates = new HashMap<>();
-            if (!name.isEmpty()) {
-                userUpdates.put("name", encryption.encrypt(name));
-            }
-            if (!about.isEmpty()) {
-                userUpdates.put("aboutMe", encryption.encrypt(about));
-            }
+            userUpdates.put("name", encryption.encrypt(name));
+            userUpdates.put("aboutMe", encryption.encrypt(about));
+
             if (city.isEmpty() || !ProjectUtils.isCityChosenFromTheList(city, requireContext())) {
                 cityTextView.setError(getString(R.string.provideCorrectCityOrChooseFromTheList));
                 return; // Przerywa metodę, jeśli miasto jest nieprawidłowe.
@@ -191,7 +188,7 @@ public class UserAccountLogic extends Fragment implements NicknameValidation.Nic
                             aboutYouInput.setText(decryptedUserModel.getAboutMe());
                             cityTextView.setText(decryptedUserModel.getLocation());
 
-                            SpinnerUpdater.updateSpinnerData(ageSpinner, decryptedUserModel.getAge(), requireContext());
+                            SpinnerUpdater.updateSpinnerData(ageSpinner, decryptedUserModel.getBirthdate(), requireContext());
                         } catch (Exception e) {
                             Log.e("Decryption error", "Error decrypting user data in user account " + e.getMessage());
                         }

@@ -38,8 +38,8 @@ android {
         applicationId = "com.noisevisionproductions.playmeet"
         minSdk = 26
         targetSdk = 34
-        versionCode = 15
-        versionName = "1.6.2"
+        versionCode = 16
+        versionName = "1.6.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -70,7 +70,7 @@ dependencies {
     implementation("androidx.paging:paging-runtime:3.3.0")
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-database:21.0.0")
-    implementation("com.google.firebase:firebase-firestore:25.0.0")
+    implementation("com.google.firebase:firebase-firestore:25.1.0")
     implementation("com.firebaseui:firebase-ui-firestore:8.0.2")
     implementation("com.google.firebase:firebase-storage:21.0.0")
     implementation("com.google.firebase:firebase-auth:23.0.0")

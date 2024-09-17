@@ -10,7 +10,7 @@ public class UserModelDecrypt {
         UserModel decryptedUserModel = new UserModel();
         AESDataEncryption encryption = new AESDataEncryption(context);
         decryptedUserModel.setName(encryptedUserModel.getName() != null ? encryption.decrypt(encryptedUserModel.getName()) : null);
-        decryptedUserModel.setAge(encryptedUserModel.getAge() != null ? encryption.decrypt(encryptedUserModel.getAge()) : null);
+        decryptedUserModel.setBirthdate(encryptedUserModel.getBirthdate() != null ? encryption.decrypt(encryptedUserModel.getBirthdate()) : null);
         decryptedUserModel.setLocation(encryptedUserModel.getLocation() != null ? encryption.decrypt(encryptedUserModel.getLocation()) : null);
         decryptedUserModel.setGender(encryptedUserModel.getGender() != null ? encryption.decrypt(encryptedUserModel.getGender()) : null);
         decryptedUserModel.setAboutMe(encryptedUserModel.getAboutMe() != null ? encryption.decrypt(encryptedUserModel.getAboutMe()) : null);

@@ -118,7 +118,7 @@ public class UserProfile extends DialogFragment {
                                 cityUserProfile.setText(decryptedUserModel.getLocation());
 
                                 AppCompatTextView ageUserProfile = view.findViewById(R.id.ageUserProfile);
-                                ageUserProfile.setText(decryptedUserModel.getAge());
+                                ageUserProfile.setText(decryptedUserModel.getBirthdate());
 
                                 AppCompatTextView aboutUserProfile = view.findViewById(R.id.aboutUserProfile);
                                 aboutUserProfile.setText(decryptedUserModel.getAboutMe());

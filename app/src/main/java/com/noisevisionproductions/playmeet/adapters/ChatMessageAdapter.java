@@ -22,6 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.noisevisionproductions.playmeet.R;
 import com.noisevisionproductions.playmeet.chat.ChatMessageModel;
 import com.noisevisionproductions.playmeet.firebase.FirebaseHelper;
+import com.noisevisionproductions.playmeet.userManagement.UserModel;
 import com.noisevisionproductions.playmeet.userManagement.userProfile.ConstantUserId;
 import com.noisevisionproductions.playmeet.userManagement.userProfile.UserProfile;
 
@@ -90,14 +91,13 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
                 .getReference("UserModel")
                 .child(chatMessageModel.getUserId());
         userReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            /**
-             * If the user from message doesn't exists in DB (he could delete his account before),
-             * then I'm changing the nickname for "Profile deleted".
-             */
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    holder.usernameTextView.setText(chatMessageModel.getNickname());
+                    UserModel userModel = snapshot.getValue(UserModel.class);
+                    if (userModel != null) {
+                        holder.usernameTextView.setText(userModel.getNickname());
+                    }
                     if (!Objects.equals(chatMessageModel.getUserId(), currentUserId)) {
                         showUserProfile(holder, chatMessageModel);
                     }
@@ -127,7 +127,6 @@ public class ChatMessageAdapter extends FirebaseRecyclerAdapter<ChatMessageModel
             }
         });
     }
-
 
     private void setCurrentUserId() {
         firebaseHelper = new FirebaseHelper();
