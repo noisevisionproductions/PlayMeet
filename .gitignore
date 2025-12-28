@@ -12,12 +12,15 @@
 /captures
 .externalNativeBuild
 .cxx
-local.properties
 gradle.properties
-key.properties
 config.properties
 firebase.json
 .firebaserc
 Run
 /app/google-services.json
 /app/src/main/assets/key.properties
+local.properties
+**/google-services.json
+key.properties
+*.aab
+*.apk
